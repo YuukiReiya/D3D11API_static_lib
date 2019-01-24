@@ -1,0 +1,595 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>D3D11API: Camera クラス</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">D3D11API
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li><a href="namespaces.html"><span>名前空間</span></a></li>
+      <li class="current"><a href="annotated.html"><span>クラス</span></a></li>
+      <li><a href="files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>クラス一覧</span></a></li>
+      <li><a href="classes.html"><span>クラス索引</span></a></li>
+      <li><a href="hierarchy.html"><span>クラス階層</span></a></li>
+      <li><a href="functions.html"><span>クラスメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pub-static-attribs">静的公開変数類</a> &#124;
+<a href="#pri-methods">非公開メンバ関数</a> &#124;
+<a href="#pri-attribs">非公開変数類</a> &#124;
+<a href="#friends">フレンド</a> &#124;
+<a href="class_camera-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">Camera クラス</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Camera の継承関係図</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_camera.png" usemap="#Camera_map" alt=""/>
+  <map id="Camera_map" name="Camera_map">
+<area href="class_singleton.html" alt="Singleton&lt; Camera &gt;" shape="rect" coords="0,0,132,24"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:ab921e886e6f14e117eb8099ccb0a3775"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab921e886e6f14e117eb8099ccb0a3775"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#ab921e886e6f14e117eb8099ccb0a3775">~Camera</a> ()</td></tr>
+<tr class="memdesc:ab921e886e6f14e117eb8099ccb0a3775"><td class="mdescLeft">&#160;</td><td class="mdescRight">デストラクタ <br /></td></tr>
+<tr class="separator:ab921e886e6f14e117eb8099ccb0a3775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c93dc4a99a7b828fe37352e756e8df0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a6c93dc4a99a7b828fe37352e756e8df0">Initialize</a> (DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookPt={0.0f, 0.0f, 0.0f}, DirectX::XMFLOAT3 upVec=c_UpVector)</td></tr>
+<tr class="memdesc:a6c93dc4a99a7b828fe37352e756e8df0"><td class="mdescLeft">&#160;</td><td class="mdescRight">初期化  引数からビュー行列とプロジェクション行列を生成  <a href="#a6c93dc4a99a7b828fe37352e756e8df0">[詳解]</a><br /></td></tr>
+<tr class="separator:a6c93dc4a99a7b828fe37352e756e8df0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac52f3bff4cb1522f3b5c5046cf69003f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac52f3bff4cb1522f3b5c5046cf69003f"></a>
+DirectX::XMMATRIX&#160;</td><td class="memItemRight" valign="bottom"><b>GetViewMatrix</b> () const </td></tr>
+<tr class="separator:ac52f3bff4cb1522f3b5c5046cf69003f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a548bbd779fcad1c6ba5bd12dabf92560"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a548bbd779fcad1c6ba5bd12dabf92560"></a>
+DirectX::XMMATRIX&#160;</td><td class="memItemRight" valign="bottom"><b>GetProjMatrix</b> () const </td></tr>
+<tr class="separator:a548bbd779fcad1c6ba5bd12dabf92560"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af17532083692430478b8fd5006f30f0d"><td class="memItemLeft" align="right" valign="top">DirectX::XMFLOAT3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#af17532083692430478b8fd5006f30f0d">GetEyePt</a> () const </td></tr>
+<tr class="separator:af17532083692430478b8fd5006f30f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa387eb16c079b628eb624e44467bf759"><td class="memItemLeft" align="right" valign="top">DirectX::XMFLOAT3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#aa387eb16c079b628eb624e44467bf759">GetLookAtPt</a> () const </td></tr>
+<tr class="separator:aa387eb16c079b628eb624e44467bf759"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4c76305c15469fbe4eb04a493bc7b8a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4c76305c15469fbe4eb04a493bc7b8a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFieldOfView</b> (float fov)</td></tr>
+<tr class="separator:ab4c76305c15469fbe4eb04a493bc7b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e28bf6a3f046b81b863e23b967db7a2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e28bf6a3f046b81b863e23b967db7a2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetNearClip</b> (float nearClip)</td></tr>
+<tr class="separator:a3e28bf6a3f046b81b863e23b967db7a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecdc7fb7d7e3c7469b8e28d845a35b68"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aecdc7fb7d7e3c7469b8e28d845a35b68"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFarClip</b> (float farClip)</td></tr>
+<tr class="separator:aecdc7fb7d7e3c7469b8e28d845a35b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+静的公開変数類</h2></td></tr>
+<tr class="memitem:a54764981cc23a98b371bc5fc12d4e50e"><td class="memItemLeft" align="right" valign="top">static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a54764981cc23a98b371bc5fc12d4e50e">c_Pi</a> = 3.14159265358979323846</td></tr>
+<tr class="separator:a54764981cc23a98b371bc5fc12d4e50e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51712c894e0df64215aae12dc97985d3"><td class="memItemLeft" align="right" valign="top">static const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a51712c894e0df64215aae12dc97985d3">c_FieldOfView</a> = static_cast&lt;float&gt;(<a class="el" href="class_camera.html#a54764981cc23a98b371bc5fc12d4e50e">Camera::c_Pi</a>) / 4.0f</td></tr>
+<tr class="separator:a51712c894e0df64215aae12dc97985d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6af11ef8a84601a16811a8ef6d60fb1"><td class="memItemLeft" align="right" valign="top">static const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#aa6af11ef8a84601a16811a8ef6d60fb1">c_NearClip</a> = 0.1f</td></tr>
+<tr class="separator:aa6af11ef8a84601a16811a8ef6d60fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5db6879f82c2538b7bfa2ae6b9e5656"><td class="memItemLeft" align="right" valign="top">static const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#aa5db6879f82c2538b7bfa2ae6b9e5656">c_FarClip</a> = 100.0f</td></tr>
+<tr class="separator:aa5db6879f82c2538b7bfa2ae6b9e5656"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf00fed6aca14c9362356375d267251b"><td class="memItemLeft" align="right" valign="top">static const DirectX::XMFLOAT3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#adf00fed6aca14c9362356375d267251b">c_UpVector</a> = { 0.0f,1.0f,0.0f }</td></tr>
+<tr class="separator:adf00fed6aca14c9362356375d267251b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+非公開メンバ関数</h2></td></tr>
+<tr class="memitem:aa3f3efcb2fcc75de885df29041103cd2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#aa3f3efcb2fcc75de885df29041103cd2">Camera</a> ()</td></tr>
+<tr class="memdesc:aa3f3efcb2fcc75de885df29041103cd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ  <a href="#aa3f3efcb2fcc75de885df29041103cd2">[詳解]</a><br /></td></tr>
+<tr class="separator:aa3f3efcb2fcc75de885df29041103cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+非公開変数類</h2></td></tr>
+<tr class="memitem:a61ed8246ec6d6d78b046d88f3f5b8bc0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a61ed8246ec6d6d78b046d88f3f5b8bc0">m_FieldOfView</a></td></tr>
+<tr class="separator:a61ed8246ec6d6d78b046d88f3f5b8bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bea0bad40f6b75b9c5eb19801a684a7"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a4bea0bad40f6b75b9c5eb19801a684a7">m_NearClip</a></td></tr>
+<tr class="separator:a4bea0bad40f6b75b9c5eb19801a684a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a803e5e33c136572ec2c31b221d2ce67f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a803e5e33c136572ec2c31b221d2ce67f">m_FarClip</a></td></tr>
+<tr class="separator:a803e5e33c136572ec2c31b221d2ce67f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80c72afef85ca175279420cce520370d"><td class="memItemLeft" align="right" valign="top">DirectX::XMVECTOR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a80c72afef85ca175279420cce520370d">m_EyePt</a></td></tr>
+<tr class="separator:a80c72afef85ca175279420cce520370d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9dac33a4cb297f8ecdd55444df9a926"><td class="memItemLeft" align="right" valign="top">DirectX::XMVECTOR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#ab9dac33a4cb297f8ecdd55444df9a926">m_LookAtPt</a></td></tr>
+<tr class="separator:ab9dac33a4cb297f8ecdd55444df9a926"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1e1df300cece76a2d49ee2a1d678301"><td class="memItemLeft" align="right" valign="top">DirectX::XMVECTOR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#ac1e1df300cece76a2d49ee2a1d678301">m_UpVec</a></td></tr>
+<tr class="separator:ac1e1df300cece76a2d49ee2a1d678301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06ae0945a26221c132c14896d09d1a3b"><td class="memItemLeft" align="right" valign="top">DirectX::XMMATRIX&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a06ae0945a26221c132c14896d09d1a3b">m_ViewMat</a></td></tr>
+<tr class="separator:a06ae0945a26221c132c14896d09d1a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb229fa24074664a441b129fef4cce87"><td class="memItemLeft" align="right" valign="top">DirectX::XMMATRIX&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#afb229fa24074664a441b129fef4cce87">m_ProjMat</a></td></tr>
+<tr class="separator:afb229fa24074664a441b129fef4cce87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+フレンド</h2></td></tr>
+<tr class="memitem:a6f66ad73633ee0655fdb0e0468c1086a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6f66ad73633ee0655fdb0e0468c1086a"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera.html#a6f66ad73633ee0655fdb0e0468c1086a">Singleton&lt; Camera &gt;</a></td></tr>
+<tr class="memdesc:a6f66ad73633ee0655fdb0e0468c1086a"><td class="mdescLeft">&#160;</td><td class="mdescRight">シングルトンデザインパターンのテンプレート継承 <br /></td></tr>
+<tr class="separator:a6f66ad73633ee0655fdb0e0468c1086a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+その他の継承メンバ</h2></td></tr>
+<tr class="inherit_header pub_static_methods_class_singleton"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_class_singleton')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="class_singleton.html">Singleton&lt; Camera &gt;</a> に属する継承静的公開メンバ関数</td></tr>
+<tr class="memitem:a0866aab4257483326c469dcef942f0e1 inherit pub_static_methods_class_singleton"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_camera.html">Camera</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_singleton.html#a0866aab4257483326c469dcef942f0e1">GetInstance</a> ()</td></tr>
+<tr class="separator:a0866aab4257483326c469dcef942f0e1 inherit pub_static_methods_class_singleton"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_singleton"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_singleton')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="class_singleton.html">Singleton&lt; Camera &gt;</a> に属する継承限定公開メンバ関数</td></tr>
+<tr class="memitem:a04783ca27b0280a844368faf849c8ddb inherit pro_methods_class_singleton"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_singleton.html#a04783ca27b0280a844368faf849c8ddb">Singleton</a> ()</td></tr>
+<tr class="separator:a04783ca27b0280a844368faf849c8ddb inherit pro_methods_class_singleton"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d833a82cba7b9c4083d4c071a771cfc inherit pro_methods_class_singleton"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_singleton.html#a7d833a82cba7b9c4083d4c071a771cfc">~Singleton</a> ()</td></tr>
+<tr class="separator:a7d833a82cba7b9c4083d4c071a771cfc inherit pro_methods_class_singleton"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">構築子と解体子</h2>
+<a class="anchor" id="aa3f3efcb2fcc75de885df29041103cd2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_camera.html">Camera</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>コンストラクタ </p>
+<p>デフォルト設定スコープ</p>
+<p>行列の生成 </p>
+
+</div>
+</div>
+<h2 class="groupheader">関数詳解</h2>
+<a class="anchor" id="af17532083692430478b8fd5006f30f0d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DirectX::XMFLOAT3 GetEyePt </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>VECTOR型をFLOAT3に変換 </p>
+
+</div>
+</div>
+<a class="anchor" id="aa387eb16c079b628eb624e44467bf759"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DirectX::XMFLOAT3 GetLookAtPt </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>VECTOR型をFLOAT3に変換 </p>
+
+</div>
+</div>
+<a class="anchor" id="a6c93dc4a99a7b828fe37352e756e8df0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Initialize </td>
+          <td>(</td>
+          <td class="paramtype">DirectX::XMFLOAT3&#160;</td>
+          <td class="paramname"><em>eyePt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DirectX::XMFLOAT3&#160;</td>
+          <td class="paramname"><em>lookPt</em> = <code>{&#160;0.0f,0.0f,0.0f&#160;}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DirectX::XMFLOAT3&#160;</td>
+          <td class="paramname"><em>upVec</em> = <code><a class="el" href="class_camera.html#adf00fed6aca14c9362356375d267251b">c_UpVector</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>初期化  引数からビュー行列とプロジェクション行列を生成 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">視点位置</td><td></td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">注視点</td><td></td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">上向きベクトル</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<p>FLOAT3をVECTOR型に変換</p>
+<p>ビュー行列</p>
+<p>&lt; 視点位置</p>
+<p>&lt; 注視点</p>
+<p>&lt; 上向き方向</p>
+<p>プロジェクション行列</p>
+<p>&lt; 視野角</p>
+<p>&lt; アスペクト比</p>
+<p>&lt; クリッピング距離:近</p>
+<p>&lt; クリッピング距離:遠 </p>
+
+</div>
+</div>
+<h2 class="groupheader">メンバ詳解</h2>
+<a class="anchor" id="aa5db6879f82c2538b7bfa2ae6b9e5656"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const float c_FarClip = 100.0f</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>デフォルトクリッピング距離:遠</p>
+<p>デフォルトのクリッピング距離:遠 </p>
+
+</div>
+</div>
+<a class="anchor" id="a51712c894e0df64215aae12dc97985d3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const float c_FieldOfView = static_cast&lt;float&gt;(<a class="el" href="class_camera.html#a54764981cc23a98b371bc5fc12d4e50e">Camera::c_Pi</a>) / 4.0f</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>画角</p>
+<p>デフォルトの視野角(45度) </p>
+
+</div>
+</div>
+<a class="anchor" id="aa6af11ef8a84601a16811a8ef6d60fb1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const float c_NearClip = 0.1f</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>デフォルトクリッピング距離:近</p>
+<p>デフォルトのクリッピング距離:近 </p>
+
+</div>
+</div>
+<a class="anchor" id="a54764981cc23a98b371bc5fc12d4e50e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double c_Pi = 3.14159265358979323846</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>円周率π</p>
+<p>円周率π ※D3DX_PIと同値 </p>
+
+</div>
+</div>
+<a class="anchor" id="adf00fed6aca14c9362356375d267251b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const DirectX::XMFLOAT3 c_UpVector = { 0.0f,1.0f,0.0f }</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>デフォルトの上向きベクトル </p>
+
+</div>
+</div>
+<a class="anchor" id="a80c72afef85ca175279420cce520370d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DirectX::XMVECTOR m_EyePt</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>視点位置 </p>
+
+</div>
+</div>
+<a class="anchor" id="a803e5e33c136572ec2c31b221d2ce67f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float m_FarClip</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>デフォルトのクリッピング距離:遠 </p>
+
+</div>
+</div>
+<a class="anchor" id="a61ed8246ec6d6d78b046d88f3f5b8bc0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float m_FieldOfView</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>変数 視野角 </p>
+
+</div>
+</div>
+<a class="anchor" id="ab9dac33a4cb297f8ecdd55444df9a926"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DirectX::XMVECTOR m_LookAtPt</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>注視点 </p>
+
+</div>
+</div>
+<a class="anchor" id="a4bea0bad40f6b75b9c5eb19801a684a7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float m_NearClip</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>デフォルトのクリッピング距離:近 </p>
+
+</div>
+</div>
+<a class="anchor" id="afb229fa24074664a441b129fef4cce87"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DirectX::XMMATRIX m_ProjMat</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>プロジェクション行列 </p>
+
+</div>
+</div>
+<a class="anchor" id="ac1e1df300cece76a2d49ee2a1d678301"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DirectX::XMVECTOR m_UpVec</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>上向きベクトル </p>
+
+</div>
+</div>
+<a class="anchor" id="a06ae0945a26221c132c14896d09d1a3b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DirectX::XMMATRIX m_ViewMat</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>ビュー行列 </p>
+
+</div>
+</div>
+<hr/>このクラス詳解は次のファイルから抽出されました:<ul>
+<li>C:/Users/yuuki/Desktop/Doxygen_lib_source/include/<a class="el" href="_camera_8h_source.html">Camera.h</a></li>
+<li>C:/Users/yuuki/Desktop/Doxygen_lib_source/include/Camera.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

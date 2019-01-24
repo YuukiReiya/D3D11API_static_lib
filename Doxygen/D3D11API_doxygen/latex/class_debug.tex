@@ -1,0 +1,75 @@
+\hypertarget{class_debug}{}\section{Debug クラス}
+\label{class_debug}\index{Debug@{Debug}}
+
+
+デバッグ用シンボルの宣言  Releaseビルド時に有効にならないようマクロで囲む  
+
+
+
+
+{\ttfamily \#include $<$Debug.\+h$>$}
+
+\subsection*{静的公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+static bool \hyperlink{class_debug_a9010a273f655a34e0383917d2108a204}{Create\+Console\+Window} ()
+\item 
+static void {\bfseries Destroy\+Console\+Window} ()\hypertarget{class_debug_a8e316a9c6e380131ee036b41ab080bac}{}\label{class_debug_a8e316a9c6e380131ee036b41ab080bac}
+
+\item 
+static void \hyperlink{class_debug_ae62056266b5e3ea2c0532a7740ad3368}{Disable\+Close\+Button} ()
+\end{DoxyCompactItemize}
+\subsection*{静的非公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+static H\+W\+ND \hyperlink{class_debug_aac93c9dce14754b224b4f30c58301a41}{m\+\_\+h\+Wnd\+Console} = nullptr
+\item 
+static H\+M\+E\+NU \hyperlink{class_debug_afd3dd5f72cf90cc16b3aebc01e53bcf3}{m\+\_\+h\+Menu} = nullptr
+\end{DoxyCompactItemize}
+
+
+\subsection{詳解}
+デバッグ用シンボルの宣言  Releaseビルド時に有効にならないようマクロで囲む 
+
+デバッグクラス 
+
+\subsection{関数詳解}
+\index{Debug@{Debug}!Create\+Console\+Window@{Create\+Console\+Window}}
+\index{Create\+Console\+Window@{Create\+Console\+Window}!Debug@{Debug}}
+\subsubsection[{\texorpdfstring{Create\+Console\+Window()}{CreateConsoleWindow()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Create\+Console\+Window (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_debug_a9010a273f655a34e0383917d2108a204}{}\label{class_debug_a9010a273f655a34e0383917d2108a204}
+コンソール作成
+
+標準入出力に割り当てる
+
+新たなファイルを開きストリームと結びつける
+
+ウィンドウハンドラ取得
+
+メニューハンドラ取得 \index{Debug@{Debug}!Disable\+Close\+Button@{Disable\+Close\+Button}}
+\index{Disable\+Close\+Button@{Disable\+Close\+Button}!Debug@{Debug}}
+\subsubsection[{\texorpdfstring{Disable\+Close\+Button()}{DisableCloseButton()}}]{\setlength{\rightskip}{0pt plus 5cm}void Disable\+Close\+Button (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_debug_ae62056266b5e3ea2c0532a7740ad3368}{}\label{class_debug_ae62056266b5e3ea2c0532a7740ad3368}
+メニューの閉じるボタンを無効化 
+
+\subsection{メンバ詳解}
+\index{Debug@{Debug}!m\+\_\+h\+Menu@{m\+\_\+h\+Menu}}
+\index{m\+\_\+h\+Menu@{m\+\_\+h\+Menu}!Debug@{Debug}}
+\subsubsection[{\texorpdfstring{m\+\_\+h\+Menu}{m_hMenu}}]{\setlength{\rightskip}{0pt plus 5cm}H\+M\+E\+NU m\+\_\+h\+Menu = nullptr\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{class_debug_afd3dd5f72cf90cc16b3aebc01e53bcf3}{}\label{class_debug_afd3dd5f72cf90cc16b3aebc01e53bcf3}
+メニューハンドラ \index{Debug@{Debug}!m\+\_\+h\+Wnd\+Console@{m\+\_\+h\+Wnd\+Console}}
+\index{m\+\_\+h\+Wnd\+Console@{m\+\_\+h\+Wnd\+Console}!Debug@{Debug}}
+\subsubsection[{\texorpdfstring{m\+\_\+h\+Wnd\+Console}{m_hWndConsole}}]{\setlength{\rightskip}{0pt plus 5cm}H\+W\+ND m\+\_\+h\+Wnd\+Console = nullptr\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{class_debug_aac93c9dce14754b224b4f30c58301a41}{}\label{class_debug_aac93c9dce14754b224b4f30c58301a41}
+コンソールウィンドウハンドラ
+
+静的メンバ変数の初期化と宣言 
+
+このクラス詳解は次のファイルから抽出されました\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/\hyperlink{_debug_8h}{Debug.\+h}\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/\hyperlink{_debug_8cpp}{Debug.\+cpp}\end{DoxyCompactItemize}

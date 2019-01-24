@@ -1,0 +1,406 @@
+\hypertarget{class_d3_d11_1_1_direct3_d11}{}\section{Direct3\+D11 クラス}
+\label{class_d3_d11_1_1_direct3_d11}\index{Direct3\+D11@{Direct3\+D11}}
+
+
+Direct3\+D11デバイスclass.  
+
+
+
+
+{\ttfamily \#include $<$Direct3\+D11.\+h$>$}
+
+Direct3\+D11 の継承関係図\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_d3_d11_1_1_direct3_d11}
+\end{center}
+\end{figure}
+\subsection*{公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_d3_d11_1_1_direct3_d11_a99102e32e8ba1004955d94885322776b}{$\sim$\+Direct3\+D11} ()\hypertarget{class_d3_d11_1_1_direct3_d11_a99102e32e8ba1004955d94885322776b}{}\label{class_d3_d11_1_1_direct3_d11_a99102e32e8ba1004955d94885322776b}
+
+\begin{DoxyCompactList}\small\item\em デストラクタ \end{DoxyCompactList}\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_d3_d11_1_1_direct3_d11_a9567d2e7c0ccc19e447154f25335e006}{Initialize} (H\+W\+ND h\+Wnd)
+\item 
+void {\bfseries Release} ()\hypertarget{class_d3_d11_1_1_direct3_d11_a94c93747c8daa99d65c2a04c6be0748c}{}\label{class_d3_d11_1_1_direct3_d11_a94c93747c8daa99d65c2a04c6be0748c}
+
+\item 
+void \hyperlink{class_d3_d11_1_1_direct3_d11_aa71d36872f416feaa853788a7a7a7ef8}{Clear} ()
+\item 
+void \hyperlink{class_d3_d11_1_1_direct3_d11_a9b05a17ef5246aa3edb781748d58fd2b}{Present} ()
+\item 
+void \hyperlink{class_d3_d11_1_1_direct3_d11_a630f2a359e353bf01f907f1ed0efc3e4}{Report\+C\+O\+Ms} (std\+::string first\+Message=\char`\"{}\char`\"{})
+\item 
+I\+D3\+D11\+Device $\ast$ {\bfseries Get\+Device} () const \hypertarget{class_d3_d11_1_1_direct3_d11_a2d29a54e96836ca83181418a4d55ec28}{}\label{class_d3_d11_1_1_direct3_d11_a2d29a54e96836ca83181418a4d55ec28}
+
+\item 
+I\+D3\+D11\+Device\+Context $\ast$ {\bfseries Get\+Device\+Context} () const \hypertarget{class_d3_d11_1_1_direct3_d11_a7c867cc4d7cb092b0c17eb44704e2221}{}\label{class_d3_d11_1_1_direct3_d11_a7c867cc4d7cb092b0c17eb44704e2221}
+
+\end{DoxyCompactItemize}
+\subsection*{非公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_d3_d11_1_1_direct3_d11_aefd83bcdc7237ec876a4d4800d4e4707}{Direct3\+D11} ()\hypertarget{class_d3_d11_1_1_direct3_d11_aefd83bcdc7237ec876a4d4800d4e4707}{}\label{class_d3_d11_1_1_direct3_d11_aefd83bcdc7237ec876a4d4800d4e4707}
+
+\begin{DoxyCompactList}\small\item\em コンストラクタ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{非公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Device $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_a76be9b3348b0abf14aaf6fc74f1c6ce8}{m\+\_\+p\+Device}
+\begin{DoxyCompactList}\small\item\em メンバー変数の宣言  Com\+Ptrを使ったスマートポインタで宣言 \end{DoxyCompactList}\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Device\+Context $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_a96130435411c63bd3fbe61b3ea72cd1e}{m\+\_\+p\+Device\+Context}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D\+X\+G\+I\+Swap\+Chain $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_ac65621ae00fb1dc6918fad9de8777982}{m\+\_\+p\+Swap\+Chain}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Render\+Target\+View $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_a43a0f700bf837a8b14463a295aa78a0d}{m\+\_\+p\+Render\+Target\+View}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Depth\+Stencil\+View $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_aaf400f9f61eb658eafd0ca0c07bce101}{m\+\_\+p\+Depth\+Stencil\+View}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Texture2D $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_a57ba9b5b193de73e3832ed5afb20fc10}{m\+\_\+p\+Depth\+Stencil}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Depth\+Stencil\+State $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_a20316c9265ff7890678f87d99ba824c8}{m\+\_\+p\+Depth\+Stencil\+State}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Rasterizer\+State $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_a5332afbf9cb9c36f53b0c05219ed4ac0}{m\+\_\+p\+Rasterizer\+State}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Debug $>$ \hyperlink{class_d3_d11_1_1_direct3_d11_a2322202b2972971329f77e27a6c0373b}{m\+\_\+p\+Debug}
+\end{DoxyCompactItemize}
+\subsection*{静的非公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+static const float \hyperlink{class_d3_d11_1_1_direct3_d11_a34ce02602072a5783535c33d2c8ed6bc}{c\+\_\+\+Clear\+Color} \mbox{[}4\mbox{]} \{ 0.\+5f,0.\+5f,1.\+5f,1.\+0f \}
+\begin{DoxyCompactList}\small\item\em 描画ターゲットのクリアカラー \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{フレンド}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_d3_d11_1_1_direct3_d11_a391b0c96d3c9b1128f584cb6b46cdeeb}{Singleton$<$ Direct3\+D11 $>$}\hypertarget{class_d3_d11_1_1_direct3_d11_a391b0c96d3c9b1128f584cb6b46cdeeb}{}\label{class_d3_d11_1_1_direct3_d11_a391b0c96d3c9b1128f584cb6b46cdeeb}
+
+\begin{DoxyCompactList}\small\item\em シングルトンデザインパターンのテンプレート継承 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{その他の継承メンバ}
+
+
+\subsection{詳解}
+Direct3\+D11デバイスclass. 
+
+\subsection{関数詳解}
+\index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!Clear@{Clear}}
+\index{Clear@{Clear}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{Clear()}{Clear()}}]{\setlength{\rightskip}{0pt plus 5cm}void Clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_d3_d11_1_1_direct3_d11_aa71d36872f416feaa853788a7a7a7ef8}{}\label{class_d3_d11_1_1_direct3_d11_aa71d36872f416feaa853788a7a7a7ef8}
+レンダーターゲットビューのクリア
+
+$<$ クリアするレンダーターゲットビュー
+
+$<$ クリアカラー
+
+デプス・ステンシルビューのクリア
+
+$<$ クリアするデプス・ステンシルビュー
+
+$<$ クリアするデータの型
+
+$<$ 深度バッファのクリア値
+
+$<$ ステンシルバッファのクリア値 \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!Initialize@{Initialize}}
+\index{Initialize@{Initialize}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{Initialize(\+H\+W\+N\+D h\+Wnd)}{Initialize(HWND hWnd)}}]{\setlength{\rightskip}{0pt plus 5cm}H\+R\+E\+S\+U\+LT Initialize (
+\begin{DoxyParamCaption}
+\item[{H\+W\+ND}]{h\+Wnd}
+\end{DoxyParamCaption}
+)}\hypertarget{class_d3_d11_1_1_direct3_d11_a9567d2e7c0ccc19e447154f25335e006}{}\label{class_d3_d11_1_1_direct3_d11_a9567d2e7c0ccc19e447154f25335e006}
+デバイスとスワップ・チェイン作成
+
+$<$ バック・バッファ数
+
+$<$ バック・バッファの幅
+
+$<$ バック・バッファの高さ
+
+$<$ フォーマット
+
+$<$ リフレッシュ・レート(分子)
+
+$<$ リフレッシュ・レート(分母)
+
+スキャンライン描画モード
+
+スケーリング・モード
+
+$<$ バック・バッファの仕様
+
+$<$ 関連付けるウィンドウ
+
+アンチエイリアス処理無し
+
+$<$ マルチ・サンプルの数
+
+$<$ マルチ・サンプルのクオリティ
+
+$<$ ウィンドウ・モード
+
+$<$ スワップ・チェイン効果指定
+
+機能レベルを指定する配列
+
+$<$ 機能レベルを取得する変数
+
+デバイスとスワップ・チェインの作成
+
+$<$ 使用する\+I\+D\+X\+G\+I\+Adapter インターフェース
+
+$<$ Direct3D 11 デバイスの種類
+
+$<$ 使用する\+A\+PI レイヤーの指定
+
+$<$ 機能レベルを指定する配列
+
+$<$ 上記配列の要素数
+
+$<$ 使用している\+S\+D\+Kのバージョン
+
+$<$ スワップ・チェインの設定
+
+$<$ I\+D\+X\+G\+I\+Swap\+Chain インターフェースの変数
+
+$<$ I\+D3\+D11\+Device インターフェースの変数
+
+$<$ 機能レベルを取得する変数
+
+$<$ I\+D3\+D11\+Device\+Context インターフェースの変数
+
+$<$ デバイスの作成に失敗
+
+スワップ・チェインから最初のバックバッファを取得する
+
+$<$ バック・バッファ番号
+
+$<$ バッファにアクセスするインターフェース
+
+$<$ バッファを受け取る変数
+
+$<$ 取得失敗
+
+レンダーターゲットビューの作成
+
+$<$ ビューでアクセスするリソース
+
+$<$ レンダーターゲットビューの定義
+
+$<$ レンダーターゲットビューを受け取る変数
+
+バック・バッファは以降使わないので解放
+
+$<$ レンダーターゲットビューの作成に失敗
+
+深度テクスチャ / ステンシルビュー / ステンシルステートの作成
+
+深度 /ステンシル・ステート設定
+
+$<$ 深度テスト有り
+
+$<$ 書き込む
+
+$<$ 手前の物体を描画
+
+$<$ ステンシル・テスト無し
+
+$<$ ステンシル書き込みマスク
+
+$<$ ステンシル読み込みマスク
+
+面が表を向いている場合のステンシル・テストの設定
+
+$<$ ステンシルテストが失敗した時に実行されるステンシル処理
+
+$<$ ステンシルテストが合格で深度テストが不合格の場合に実行される処理
+
+$<$ ステンシルテストと深度テストの両方が合格の場合に実行されるステンシル処理
+
+$<$ 既存のデータに対するデータの比較方法
+
+面が裏を向いている場合のステンシル・テストの設定
+
+$<$ ステンシルテストが失敗した時に実行されるステンシル処理
+
+$<$ ステンシルテストが合格で深度テストが不合格の場合に実行される処理
+
+$<$ ステンシルテストと深度テストの両方が合格の場合に実行されるステンシル処理
+
+$<$ 既存のデータに対するデータの比較方法
+
+深度 /ステンシル・ステート作成
+
+$<$ 深度 /ステンシル・ステート設定情報
+
+$<$ 作成した 深度 /ステンシル・ステートを受け取る変数
+
+$<$ 深度 /ステンシル・ステート作成失敗
+
+深度 /ステンシル・ステート適応
+
+$<$ 深度 /ステンシル・ステート
+
+$<$ ステンシル・テストで参照値
+
+深度 / ステンシル・テクスチャの設定
+
+$<$ 幅
+
+$<$ 高さ
+
+$<$ ミップマップ・レベル数
+
+$<$ 配列サイズ
+
+$<$ フォーマット(深度のみ)
+
+$<$ マルチサンプリングの設定
+
+$<$ マルチサンプリングの品質
+
+$<$ デフォルトの仕様
+
+$<$ 深度 / ステンシルとして使用
+
+$<$ C\+P\+Uからはアクセスしない
+
+$<$ その他 設定なし
+
+深度 / ステンシル・テクスチャの作成
+
+$<$ 作成する2\+Dテクスチャの設定
+
+$<$ M\+S\+A\+Aを利用する場合 N\+U\+LL にする
+
+$<$ 作成したテクスチャを受けとる変数
+
+$<$ ステンシルテクスチャの作成に失敗
+
+深度 / ステンシル・ビュー設定
+
+$<$ ビューのフォーマット
+
+$<$ リソースの種類
+
+深度 / ステンシル・テクスチャに対しビューを作成
+
+$<$ 深度 / ステンシル・ビューを作るテクスチャ
+
+$<$ 深度 / ステンシル・ビューの設定
+
+$<$ 作成したビューを受け取る変数
+
+描画ターゲット・ビューを出力マネージャーのターゲットとして設定
+
+$<$ 描画ターゲット数
+
+$<$ 描画ターゲットビュー
+
+$<$ 深度 / ステンシルビュー
+
+ビューポートの設定
+
+$<$ ビューポート領域の幅
+
+$<$ ビューポート領域の高さ
+
+$<$ ビューポート領域の深度最大値(ファー・クリッピング距離)
+
+$<$ ビューポートの数
+
+$<$ 設定するビューポート配列
+
+ラスタライズ設定
+
+$<$ 普通に描画
+
+$<$ 両面を描画
+
+$<$ 深度バイアス「0」
+
+$<$ 深度クリッピング無し
+
+$<$ シザー矩形無し
+
+$<$ マルチサンプリング無し
+
+$<$ ライン・アンチエイリアシング無し
+
+ラスタライズ設定の作成
+
+$<$ ラスタライズ設定
+
+$<$ 設定を受け取る変数
+
+$<$ ラスタライザーステート作成失敗
+
+ラスタライズを設定
+
+初期化終了 \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!Present@{Present}}
+\index{Present@{Present}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{Present()}{Present()}}]{\setlength{\rightskip}{0pt plus 5cm}void Present (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_d3_d11_1_1_direct3_d11_a9b05a17ef5246aa3edb781748d58fd2b}{}\label{class_d3_d11_1_1_direct3_d11_a9b05a17ef5246aa3edb781748d58fd2b}
+$<$ 画面更新(D\+X\+G\+I\+\_\+\+P\+R\+E\+S\+E\+N\+T\+\_\+\+T\+E\+S\+Tだと更新は行わない) \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!Report\+C\+O\+Ms@{Report\+C\+O\+Ms}}
+\index{Report\+C\+O\+Ms@{Report\+C\+O\+Ms}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{Report\+C\+O\+Ms(std\+::string first\+Message="""")}{ReportCOMs(std::string firstMessage="")}}]{\setlength{\rightskip}{0pt plus 5cm}void Report\+C\+O\+Ms (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{first\+Message = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\hypertarget{class_d3_d11_1_1_direct3_d11_a630f2a359e353bf01f907f1ed0efc3e4}{}\label{class_d3_d11_1_1_direct3_d11_a630f2a359e353bf01f907f1ed0efc3e4}
+デバッグインターフェイスのチェック
+
+ウィンドウに任意の文字列を表示
+
+C\+O\+Mの生存状況を出力ウィンドウに出力 
+
+\subsection{メンバ詳解}
+\index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!c\+\_\+\+Clear\+Color@{c\+\_\+\+Clear\+Color}}
+\index{c\+\_\+\+Clear\+Color@{c\+\_\+\+Clear\+Color}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{c\+\_\+\+Clear\+Color}{c_ClearColor}}]{\setlength{\rightskip}{0pt plus 5cm}c\+\_\+\+Clear\+Color \{ 0.\+5f,0.\+5f,1.\+5f,1.\+0f \}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_a34ce02602072a5783535c33d2c8ed6bc}{}\label{class_d3_d11_1_1_direct3_d11_a34ce02602072a5783535c33d2c8ed6bc}
+
+
+描画ターゲットのクリアカラー 
+
+描画ターゲットクリアカラー \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Debug@{m\+\_\+p\+Debug}}
+\index{m\+\_\+p\+Debug@{m\+\_\+p\+Debug}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Debug}{m_pDebug}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Debug$>$ m\+\_\+p\+Debug\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_a2322202b2972971329f77e27a6c0373b}{}\label{class_d3_d11_1_1_direct3_d11_a2322202b2972971329f77e27a6c0373b}
+デバッグ \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Depth\+Stencil@{m\+\_\+p\+Depth\+Stencil}}
+\index{m\+\_\+p\+Depth\+Stencil@{m\+\_\+p\+Depth\+Stencil}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Depth\+Stencil}{m_pDepthStencil}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Texture2D$>$ m\+\_\+p\+Depth\+Stencil\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_a57ba9b5b193de73e3832ed5afb20fc10}{}\label{class_d3_d11_1_1_direct3_d11_a57ba9b5b193de73e3832ed5afb20fc10}
+デプスステンシル \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Depth\+Stencil\+State@{m\+\_\+p\+Depth\+Stencil\+State}}
+\index{m\+\_\+p\+Depth\+Stencil\+State@{m\+\_\+p\+Depth\+Stencil\+State}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Depth\+Stencil\+State}{m_pDepthStencilState}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Depth\+Stencil\+State$>$ m\+\_\+p\+Depth\+Stencil\+State\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_a20316c9265ff7890678f87d99ba824c8}{}\label{class_d3_d11_1_1_direct3_d11_a20316c9265ff7890678f87d99ba824c8}
+デプスステンシルステート \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Depth\+Stencil\+View@{m\+\_\+p\+Depth\+Stencil\+View}}
+\index{m\+\_\+p\+Depth\+Stencil\+View@{m\+\_\+p\+Depth\+Stencil\+View}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Depth\+Stencil\+View}{m_pDepthStencilView}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Depth\+Stencil\+View$>$ m\+\_\+p\+Depth\+Stencil\+View\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_aaf400f9f61eb658eafd0ca0c07bce101}{}\label{class_d3_d11_1_1_direct3_d11_aaf400f9f61eb658eafd0ca0c07bce101}
+デプスステンシルビュー \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Device@{m\+\_\+p\+Device}}
+\index{m\+\_\+p\+Device@{m\+\_\+p\+Device}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Device}{m_pDevice}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Device$>$ m\+\_\+p\+Device\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_a76be9b3348b0abf14aaf6fc74f1c6ce8}{}\label{class_d3_d11_1_1_direct3_d11_a76be9b3348b0abf14aaf6fc74f1c6ce8}
+
+
+メンバー変数の宣言  Com\+Ptrを使ったスマートポインタで宣言 
+
+デバイス \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Device\+Context@{m\+\_\+p\+Device\+Context}}
+\index{m\+\_\+p\+Device\+Context@{m\+\_\+p\+Device\+Context}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Device\+Context}{m_pDeviceContext}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Device\+Context$>$ m\+\_\+p\+Device\+Context\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_a96130435411c63bd3fbe61b3ea72cd1e}{}\label{class_d3_d11_1_1_direct3_d11_a96130435411c63bd3fbe61b3ea72cd1e}
+コンテキスト \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Rasterizer\+State@{m\+\_\+p\+Rasterizer\+State}}
+\index{m\+\_\+p\+Rasterizer\+State@{m\+\_\+p\+Rasterizer\+State}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Rasterizer\+State}{m_pRasterizerState}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Rasterizer\+State$>$ m\+\_\+p\+Rasterizer\+State\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_a5332afbf9cb9c36f53b0c05219ed4ac0}{}\label{class_d3_d11_1_1_direct3_d11_a5332afbf9cb9c36f53b0c05219ed4ac0}
+ラスタライザステート \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Render\+Target\+View@{m\+\_\+p\+Render\+Target\+View}}
+\index{m\+\_\+p\+Render\+Target\+View@{m\+\_\+p\+Render\+Target\+View}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Render\+Target\+View}{m_pRenderTargetView}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Render\+Target\+View$>$ m\+\_\+p\+Render\+Target\+View\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_a43a0f700bf837a8b14463a295aa78a0d}{}\label{class_d3_d11_1_1_direct3_d11_a43a0f700bf837a8b14463a295aa78a0d}
+レンダーターゲットビュー \index{D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}!m\+\_\+p\+Swap\+Chain@{m\+\_\+p\+Swap\+Chain}}
+\index{m\+\_\+p\+Swap\+Chain@{m\+\_\+p\+Swap\+Chain}!D3\+D11\+::\+Direct3\+D11@{D3\+D11\+::\+Direct3\+D11}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Swap\+Chain}{m_pSwapChain}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D\+X\+G\+I\+Swap\+Chain$>$ m\+\_\+p\+Swap\+Chain\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_d3_d11_1_1_direct3_d11_ac65621ae00fb1dc6918fad9de8777982}{}\label{class_d3_d11_1_1_direct3_d11_ac65621ae00fb1dc6918fad9de8777982}
+スワップチェイン 
+
+このクラス詳解は次のファイルから抽出されました\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/Direct3\+D11.\+h\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/Direct3\+D11.\+cpp\end{DoxyCompactItemize}

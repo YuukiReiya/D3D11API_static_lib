@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>D3D11API: ShaderManager クラス</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">D3D11API
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li><a href="namespaces.html"><span>名前空間</span></a></li>
+      <li class="current"><a href="annotated.html"><span>クラス</span></a></li>
+      <li><a href="files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>クラス一覧</span></a></li>
+      <li><a href="classes.html"><span>クラス索引</span></a></li>
+      <li><a href="hierarchy.html"><span>クラス階層</span></a></li>
+      <li><a href="functions.html"><span>クラスメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespace_d3_d11.html">D3D11</a></li><li class="navelem"><a class="el" href="namespace_d3_d11_1_1_graphic.html">Graphic</a></li><li class="navelem"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html">ShaderManager</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pub-static-attribs">静的公開変数類</a> &#124;
+<a href="#pri-methods">非公開メンバ関数</a> &#124;
+<a href="#pri-attribs">非公開変数類</a> &#124;
+<a href="#friends">フレンド</a> &#124;
+<a href="class_d3_d11_1_1_graphic_1_1_shader_manager-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">ShaderManager クラス</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>シェーダー管理クラス  シェーダーを作成せずとも描画出来るデフォルトシェーダーを用意する  
+ <a href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#details">[詳解]</a></p>
+
+<p><code>#include &lt;<a class="el" href="_shader_manager_8h_source.html">ShaderManager.h</a>&gt;</code></p>
+<div class="dynheader">
+ShaderManager の継承関係図</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_d3_d11_1_1_graphic_1_1_shader_manager.png" usemap="#ShaderManager_map" alt=""/>
+  <map id="ShaderManager_map" name="ShaderManager_map">
+<area href="class_singleton.html" alt="Singleton&lt; ShaderManager &gt;" shape="rect" coords="0,0,180,24"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:ade88b9cd89dfb4eb95b0cb874bf7168b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade88b9cd89dfb4eb95b0cb874bf7168b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#ade88b9cd89dfb4eb95b0cb874bf7168b">~ShaderManager</a> ()</td></tr>
+<tr class="memdesc:ade88b9cd89dfb4eb95b0cb874bf7168b"><td class="mdescLeft">&#160;</td><td class="mdescRight">デストラクタ <br /></td></tr>
+<tr class="separator:ade88b9cd89dfb4eb95b0cb874bf7168b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab30239875f87b8ad6c72cbc7eec479d4"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#ab30239875f87b8ad6c72cbc7eec479d4">AddNewShaderData</a> (std::string szKeyName, <a class="el" href="struct_d3_d11_1_1_graphic_1_1_shader_data.html">ShaderData</a> *pNewShaderData)</td></tr>
+<tr class="separator:ab30239875f87b8ad6c72cbc7eec479d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a206789dcc6ac911b3169d0dd706bfee6"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#a206789dcc6ac911b3169d0dd706bfee6">Initialize</a> (std::string directoryPath=&quot;&quot;)</td></tr>
+<tr class="separator:a206789dcc6ac911b3169d0dd706bfee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fee61d7a783cade1a3d07fe86284d27"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8fee61d7a783cade1a3d07fe86284d27"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Finalize</b> ()</td></tr>
+<tr class="separator:a8fee61d7a783cade1a3d07fe86284d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b52aad68e2e1517b8d6e74905d5d2f2"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#a5b52aad68e2e1517b8d6e74905d5d2f2">MakeShader</a> (std::string szFileName, std::string szFuncName, std::string szProfileName, void **ppShader, ID3DBlob **ppBlob)</td></tr>
+<tr class="separator:a5b52aad68e2e1517b8d6e74905d5d2f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af58328bedb1bcde75d4beed5cdb431c1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af58328bedb1bcde75d4beed5cdb431c1"></a>
+<a class="el" href="struct_d3_d11_1_1_graphic_1_1_shader_data.html">ShaderData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#af58328bedb1bcde75d4beed5cdb431c1">GetShaderData</a> (std::string szKeyName)</td></tr>
+<tr class="memdesc:af58328bedb1bcde75d4beed5cdb431c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">キー(文字列)から登録済みのシェーダー情報を取得する  探索文字列から情報を取得することに失敗した場合NULLを返す <br /></td></tr>
+<tr class="separator:af58328bedb1bcde75d4beed5cdb431c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+静的公開変数類</h2></td></tr>
+<tr class="memitem:a40c965cdd249ce2492b6f554987c9c71"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#a40c965cdd249ce2492b6f554987c9c71">c_szSimpleTextureShader</a> = &quot;SIMPLE_TEXTURE&quot;</td></tr>
+<tr class="memdesc:a40c965cdd249ce2492b6f554987c9c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">通常テクスチャで使うシェーダーのハッシュ  unordered_mapに追加したシェーダーデータの参照用のハッシュ  <a href="#a40c965cdd249ce2492b6f554987c9c71">[詳解]</a><br /></td></tr>
+<tr class="separator:a40c965cdd249ce2492b6f554987c9c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af418a1f0ddd33cf8dd7765f88c05aa3b"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#af418a1f0ddd33cf8dd7765f88c05aa3b">c_szTextureAtlasShader</a> = &quot;ATLAS_TEXTURE&quot;</td></tr>
+<tr class="memdesc:af418a1f0ddd33cf8dd7765f88c05aa3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">アトラステクスチャで使うシェーダーのハッシュ  unordered_mapに追加したシェーダーデータの参照用のハッシュ  <a href="#af418a1f0ddd33cf8dd7765f88c05aa3b">[詳解]</a><br /></td></tr>
+<tr class="separator:af418a1f0ddd33cf8dd7765f88c05aa3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1607cbc05176bb70e3699dd651b4674"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#ad1607cbc05176bb70e3699dd651b4674">c_DefaultMeshShader</a> = &quot;MESH_DEFAULT&quot;</td></tr>
+<tr class="memdesc:ad1607cbc05176bb70e3699dd651b4674"><td class="mdescLeft">&#160;</td><td class="mdescRight">デフォルト設定のメッシュで使うシェーダーのハッシュ  unordered_mapに追加したシェーダーデータの参照用のハッシュ  <a href="#ad1607cbc05176bb70e3699dd651b4674">[詳解]</a><br /></td></tr>
+<tr class="separator:ad1607cbc05176bb70e3699dd651b4674"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+非公開メンバ関数</h2></td></tr>
+<tr class="memitem:a2dbca1784769d0a8bdfdd0c86a85464b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2dbca1784769d0a8bdfdd0c86a85464b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#a2dbca1784769d0a8bdfdd0c86a85464b">ShaderManager</a> ()</td></tr>
+<tr class="memdesc:a2dbca1784769d0a8bdfdd0c86a85464b"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ <br /></td></tr>
+<tr class="separator:a2dbca1784769d0a8bdfdd0c86a85464b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+非公開変数類</h2></td></tr>
+<tr class="memitem:a6db27edfd24d67c38ce9d0d3d3903c97"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6db27edfd24d67c38ce9d0d3d3903c97"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#a6db27edfd24d67c38ce9d0d3d3903c97">m_DirectoryPath</a></td></tr>
+<tr class="memdesc:a6db27edfd24d67c38ce9d0d3d3903c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">シェーダー(.hlsl)が含まれているディレクトリのパス  MakeShaderはこのパス+ファイルの名前のパスに存在するHLSLファイルでシェーダーの作成を行う <br /></td></tr>
+<tr class="separator:a6db27edfd24d67c38ce9d0d3d3903c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ea8d31a9751d1cae5e578665a53868f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0ea8d31a9751d1cae5e578665a53868f"></a>
+<a class="el" href="struct_d3_d11_1_1_graphic_1_1_shader_data.html">ShaderData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#a0ea8d31a9751d1cae5e578665a53868f">m_pAddDataRef</a></td></tr>
+<tr class="memdesc:a0ea8d31a9751d1cae5e578665a53868f"><td class="mdescLeft">&#160;</td><td class="mdescRight">データ追加用の参照メンバ <br /></td></tr>
+<tr class="separator:a0ea8d31a9751d1cae5e578665a53868f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fe3ad1dce5bc1d7d5169ebb4e6bb975"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4fe3ad1dce5bc1d7d5169ebb4e6bb975"></a>
+std::unordered_map&lt; std::string, <a class="el" href="struct_d3_d11_1_1_graphic_1_1_shader_data.html">ShaderData</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#a4fe3ad1dce5bc1d7d5169ebb4e6bb975">m_pShaderDataUMap</a></td></tr>
+<tr class="memdesc:a4fe3ad1dce5bc1d7d5169ebb4e6bb975"><td class="mdescLeft">&#160;</td><td class="mdescRight">シェーダーデータの連想配列 <br /></td></tr>
+<tr class="separator:a4fe3ad1dce5bc1d7d5169ebb4e6bb975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+フレンド</h2></td></tr>
+<tr class="memitem:af5133f3fc6a5b6505ff2999082634c07"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af5133f3fc6a5b6505ff2999082634c07"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d3_d11_1_1_graphic_1_1_shader_manager.html#af5133f3fc6a5b6505ff2999082634c07">Singleton&lt; ShaderManager &gt;</a></td></tr>
+<tr class="memdesc:af5133f3fc6a5b6505ff2999082634c07"><td class="mdescLeft">&#160;</td><td class="mdescRight">シングルトンデザインパターンのテンプレート継承 <br /></td></tr>
+<tr class="separator:af5133f3fc6a5b6505ff2999082634c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+その他の継承メンバ</h2></td></tr>
+<tr class="inherit_header pub_static_methods_class_singleton"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_class_singleton')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="class_singleton.html">Singleton&lt; ShaderManager &gt;</a> に属する継承静的公開メンバ関数</td></tr>
+<tr class="memitem:a0866aab4257483326c469dcef942f0e1 inherit pub_static_methods_class_singleton"><td class="memItemLeft" align="right" valign="top">static ShaderManager &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_singleton.html#a0866aab4257483326c469dcef942f0e1">GetInstance</a> ()</td></tr>
+<tr class="separator:a0866aab4257483326c469dcef942f0e1 inherit pub_static_methods_class_singleton"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_singleton"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_singleton')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="class_singleton.html">Singleton&lt; ShaderManager &gt;</a> に属する継承限定公開メンバ関数</td></tr>
+<tr class="memitem:a04783ca27b0280a844368faf849c8ddb inherit pro_methods_class_singleton"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_singleton.html#a04783ca27b0280a844368faf849c8ddb">Singleton</a> ()</td></tr>
+<tr class="separator:a04783ca27b0280a844368faf849c8ddb inherit pro_methods_class_singleton"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d833a82cba7b9c4083d4c071a771cfc inherit pro_methods_class_singleton"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_singleton.html#a7d833a82cba7b9c4083d4c071a771cfc">~Singleton</a> ()</td></tr>
+<tr class="separator:a7d833a82cba7b9c4083d4c071a771cfc inherit pro_methods_class_singleton"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><p>シェーダー管理クラス  シェーダーを作成せずとも描画出来るデフォルトシェーダーを用意する </p>
+</div><h2 class="groupheader">関数詳解</h2>
+<a class="anchor" id="ab30239875f87b8ad6c72cbc7eec479d4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT AddNewShaderData </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>szKeyName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_d3_d11_1_1_graphic_1_1_shader_data.html">ShaderData</a> *&#160;</td>
+          <td class="paramname"><em>pNewShaderData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>登録可能か判定</p>
+<p>登録しようとしたキー名は既に登録済みのため追加しない</p>
+<p>キー名でリスト(map)に追加 </p>
+
+</div>
+</div>
+<a class="anchor" id="a206789dcc6ac911b3169d0dd706bfee6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT Initialize </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>directoryPath</em> = <code>&quot;&quot;</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>&lt; コンパイル用ブロブ</p>
+<p>リソースデイレクトリーの設定</p>
+<p>単純テクスチャのシェーダー設定作成</p>
+<p>バーテックスシェーダーの作成</p>
+<p>頂点インプットレイアウト定義</p>
+<p>&lt; ポインタ</p>
+<p>頂点インプットレイアウトを作成</p>
+<p>ピクセルシェーダーの作成</p>
+<p>コンスタントバッファ定義</p>
+<p>コンスタントバッファ作成</p>
+<p>アトラステクスチャのシェーダー設定作成</p>
+<p>・インプットレイアウト ・頂点シェーダー ・ピクセルシェーダー この三つは単純なテクスチャのShaderと同じものを使う</p>
+<p>インプットレイアウト</p>
+<p>頂点シェーダー</p>
+<p>ピクセルシェーダー</p>
+<p>コンスタントバッファ定義</p>
+<p>コンスタントバッファ作成</p>
+<p>ブロブの解放</p>
+<p>メッシュ用のデフォルト設定 </p>
+
+</div>
+</div>
+<a class="anchor" id="a5b52aad68e2e1517b8d6e74905d5d2f2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HRESULT MakeShader </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>szFileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>szFuncName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>szProfileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>ppShader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ID3DBlob **&#160;</td>
+          <td class="paramname"><em>ppBlob</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>UNICODE、マルチバイト両対応用文字列変換</p>
+<p>D3D11CompileFromFileの引数はマルチバイト</p>
+<p>ブロブのコンパイル</p>
+<p>終端文字を含まないバッファのメモリを変数にコピー</p>
+<p>&lt; 終端文字のバッファーを一つ確保しておく</p>
+<p>頂点シェーダー(Vertex Shader)</p>
+<p>ピクセルシェーダー(Pixel Shader)</p>
+<p>ジオメトリシェーダー(Geometry Shader)</p>
+<p>ハルシェーダー(Hull Shader)</p>
+<p>ドメインシェーダー(Domain Shader)</p>
+<p>コンピュートシェーダー(Compute Shader) </p>
+
+</div>
+</div>
+<h2 class="groupheader">メンバ詳解</h2>
+<a class="anchor" id="ad1607cbc05176bb70e3699dd651b4674"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">c_DefaultMeshShader = &quot;MESH_DEFAULT&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>デフォルト設定のメッシュで使うシェーダーのハッシュ  unordered_mapに追加したシェーダーデータの参照用のハッシュ </p>
+<p>メッシュシェーダーのデフォルト設定 </p>
+
+</div>
+</div>
+<a class="anchor" id="a40c965cdd249ce2492b6f554987c9c71"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">c_szSimpleTextureShader = &quot;SIMPLE_TEXTURE&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>通常テクスチャで使うシェーダーのハッシュ  unordered_mapに追加したシェーダーデータの参照用のハッシュ </p>
+<p>シンプルテクスチャのシェーダー </p>
+
+</div>
+</div>
+<a class="anchor" id="af418a1f0ddd33cf8dd7765f88c05aa3b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">c_szTextureAtlasShader = &quot;ATLAS_TEXTURE&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>アトラステクスチャで使うシェーダーのハッシュ  unordered_mapに追加したシェーダーデータの参照用のハッシュ </p>
+<p>アトラステクスチャのシェーダー </p>
+
+</div>
+</div>
+<hr/>このクラス詳解は次のファイルから抽出されました:<ul>
+<li>C:/Users/yuuki/Desktop/Doxygen_lib_source/include/<a class="el" href="_shader_manager_8h_source.html">ShaderManager.h</a></li>
+<li>C:/Users/yuuki/Desktop/Doxygen_lib_source/include/ShaderManager.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

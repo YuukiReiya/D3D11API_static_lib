@@ -1,0 +1,440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>D3D11API: abstract クラス</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">D3D11API
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li><a href="namespaces.html"><span>名前空間</span></a></li>
+      <li class="current"><a href="annotated.html"><span>クラス</span></a></li>
+      <li><a href="files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>クラス一覧</span></a></li>
+      <li><a href="classes.html"><span>クラス索引</span></a></li>
+      <li><a href="hierarchy.html"><span>クラス階層</span></a></li>
+      <li><a href="functions.html"><span>クラスメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespace_a_p_i.html">API</a></li><li class="navelem"><a class="el" href="class_a_p_i_1_1abstract.html">abstract</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">公開型</a> &#124;
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pub-attribs">公開変数類</a> &#124;
+<a href="#pro-methods">限定公開メンバ関数</a> &#124;
+<a href="#pro-attribs">限定公開変数類</a> &#124;
+<a href="#pro-static-attribs">静的限定公開変数類</a> &#124;
+<a href="class_a_p_i_1_1abstract-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">abstract クラス</div>  </div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+公開型</h2></td></tr>
+<tr class="memitem:a0a6f8b1d41f00f3b6bd7566adbcf4f36"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36">TileMode</a> { <br />
+&#160;&#160;<a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36a65cd6695b7f90c094cad51f9d69a1cbe">Clamp</a> = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP, 
+<a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36aa69f0f49b99456743880469971b657e5">Border</a> = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER, 
+<b>MirrorOnce</b> = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR_ONCE, 
+<a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36a7794c24dd1265ef91cd516a6a2fa40a5">Wrap</a> = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP, 
+<br />
+&#160;&#160;<a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36a938cfe42fc80a4916f2e6eda40959e9a">Mirror</a> = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR
+<br />
+ }<tr class="memdesc:a0a6f8b1d41f00f3b6bd7566adbcf4f36"><td class="mdescLeft">&#160;</td><td class="mdescRight">タイリングモードの設定  <a href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36">[詳解]</a><br /></td></tr>
+</td></tr>
+<tr class="separator:a0a6f8b1d41f00f3b6bd7566adbcf4f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a520ef65de715096fdca5c71afa9273a1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1">FilteringMode</a> { <a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1a5b577e188dc4657a3e573fb2dae1a924">Point</a> = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_POINT, 
+<a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1a657ab5c6571e53d74c63110cc8448c8b">Bilinear</a> = D3D11_FILTER::D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT, 
+<a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1ab9db546b92309fcc8cfd67b7b6bbe8d2">Trilinear</a> = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR, 
+<a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1a22690afbc2ee3a3ba2a141ab906f273c">Anisotropic</a> = D3D11_FILTER::D3D11_FILTER_ANISOTROPIC
+ }<tr class="memdesc:a520ef65de715096fdca5c71afa9273a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">フィルタリングモードの設定  <a href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1">[詳解]</a><br /></td></tr>
+</td></tr>
+<tr class="separator:a520ef65de715096fdca5c71afa9273a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:a296b1719c68831928574193a56a32791"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a296b1719c68831928574193a56a32791"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#a296b1719c68831928574193a56a32791">ITexture</a> ()</td></tr>
+<tr class="memdesc:a296b1719c68831928574193a56a32791"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ <br /></td></tr>
+<tr class="separator:a296b1719c68831928574193a56a32791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79a99935966ece5dbbd8be4439da47dd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a79a99935966ece5dbbd8be4439da47dd"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#a79a99935966ece5dbbd8be4439da47dd">~ITexture</a> ()</td></tr>
+<tr class="memdesc:a79a99935966ece5dbbd8be4439da47dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">仮想デストラクタ <br /></td></tr>
+<tr class="separator:a79a99935966ece5dbbd8be4439da47dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5659cae021514f6919def4b7f67402cf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5659cae021514f6919def4b7f67402cf"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>Finalize</b> ()</td></tr>
+<tr class="separator:a5659cae021514f6919def4b7f67402cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3e510a817d37307e790d4d414e956b5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac3e510a817d37307e790d4d414e956b5"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>SetSize</b> (const DirectX::XMINT2 size)</td></tr>
+<tr class="separator:ac3e510a817d37307e790d4d414e956b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e070ca1e8dfcf0404a2922dc1cd0bd6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2e070ca1e8dfcf0404a2922dc1cd0bd6"></a>
+DirectX::XMINT2&#160;</td><td class="memItemRight" valign="bottom"><b>GetSize</b> () const </td></tr>
+<tr class="separator:a2e070ca1e8dfcf0404a2922dc1cd0bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb362e0200295c54533c2491817ee356"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adb362e0200295c54533c2491817ee356"></a>
+ID3D11SamplerState **&#160;</td><td class="memItemRight" valign="bottom"><b>GetSamplerState</b> ()</td></tr>
+<tr class="separator:adb362e0200295c54533c2491817ee356"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad03203b23b31f1b5c3dad3bdf9f979c3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad03203b23b31f1b5c3dad3bdf9f979c3"></a>
+ID3D11ShaderResourceView **&#160;</td><td class="memItemRight" valign="bottom"><b>GetShaderResourceView</b> ()</td></tr>
+<tr class="separator:ad03203b23b31f1b5c3dad3bdf9f979c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa58242e8408771bda104c984a0e476bd"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#aa58242e8408771bda104c984a0e476bd">SetTileAndFiltering</a> (const <a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36">TileMode</a> tileMode, const <a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1">FilteringMode</a> filterMode)</td></tr>
+<tr class="memdesc:aa58242e8408771bda104c984a0e476bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">タイリングモードとフィルタリングモードの設定  <a href="#aa58242e8408771bda104c984a0e476bd">[詳解]</a><br /></td></tr>
+<tr class="separator:aa58242e8408771bda104c984a0e476bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+公開変数類</h2></td></tr>
+<tr class="memitem:a91f4e4cb69b7fa77ce4c2f224d7980cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#a91f4e4cb69b7fa77ce4c2f224d7980cc">m_Color</a></td></tr>
+<tr class="separator:a91f4e4cb69b7fa77ce4c2f224d7980cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+限定公開メンバ関数</h2></td></tr>
+<tr class="memitem:ad78bf31f9df322ccdc67c509a0283a37"><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#ad78bf31f9df322ccdc67c509a0283a37">Load</a> (std::string filePath)</td></tr>
+<tr class="memdesc:ad78bf31f9df322ccdc67c509a0283a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">画像の読み込みを行いSRVを作成  WICを使い画像データを読み込み、SRVを作成、メンバ変数にバインド  <a href="#ad78bf31f9df322ccdc67c509a0283a37">[詳解]</a><br /></td></tr>
+<tr class="separator:ad78bf31f9df322ccdc67c509a0283a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+限定公開変数類</h2></td></tr>
+<tr class="memitem:ac3e6155bd6f42e0485e99c91b99a1970"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36">TileMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#ac3e6155bd6f42e0485e99c91b99a1970">m_eTileMode</a></td></tr>
+<tr class="separator:ac3e6155bd6f42e0485e99c91b99a1970"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac28f3c414d9557e103174d98fb45ac80"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1">FilteringMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#ac28f3c414d9557e103174d98fb45ac80">m_eFilterMode</a></td></tr>
+<tr class="separator:ac28f3c414d9557e103174d98fb45ac80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb6dc678fde02000203c71a186713543"><td class="memItemLeft" align="right" valign="top">DirectX::XMINT2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#adb6dc678fde02000203c71a186713543">m_Size</a></td></tr>
+<tr class="separator:adb6dc678fde02000203c71a186713543"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94fdba7a2106647566ca2a907c0bd5e7"><td class="memItemLeft" align="right" valign="top">Microsoft::WRL::ComPtr&lt; ID3D11SamplerState &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#a94fdba7a2106647566ca2a907c0bd5e7">m_pSamplerState</a></td></tr>
+<tr class="separator:a94fdba7a2106647566ca2a907c0bd5e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46609e86f9414823aa6403ebbfcef380"><td class="memItemLeft" align="right" valign="top">Microsoft::WRL::ComPtr&lt; ID3D11ShaderResourceView &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#a46609e86f9414823aa6403ebbfcef380">m_pShaderResourceView</a></td></tr>
+<tr class="separator:a46609e86f9414823aa6403ebbfcef380"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+静的限定公開変数類</h2></td></tr>
+<tr class="memitem:ab4133323b5c23ce2ace79e33c0f99734"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4133323b5c23ce2ace79e33c0f99734"></a>
+static const DirectX::XMINT2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_p_i_1_1abstract.html#ab4133323b5c23ce2ace79e33c0f99734">c_DefaultSize</a></td></tr>
+<tr class="memdesc:ab4133323b5c23ce2ace79e33c0f99734"><td class="mdescLeft">&#160;</td><td class="mdescRight">デフォルトの画像サイズ  デフォルトで与えられている画像サイズ <br /></td></tr>
+<tr class="separator:ab4133323b5c23ce2ace79e33c0f99734"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">列挙型メンバ詳解</h2>
+<a class="anchor" id="a520ef65de715096fdca5c71afa9273a1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1">FilteringMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>フィルタリングモードの設定 </p>
+<table class="fieldtable">
+<tr><th colspan="2">列挙値</th></tr><tr><td class="fieldname"><a class="anchor" id="a520ef65de715096fdca5c71afa9273a1a5b577e188dc4657a3e573fb2dae1a924"></a>Point&#160;</td><td class="fielddoc">
+<p>ポイントフィルタリング:最悪品質でコスパ良 </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a520ef65de715096fdca5c71afa9273a1a657ab5c6571e53d74c63110cc8448c8b"></a>Bilinear&#160;</td><td class="fielddoc">
+<p>バイリニアテクスチャフィルタリング </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a520ef65de715096fdca5c71afa9273a1ab9db546b92309fcc8cfd67b7b6bbe8d2"></a>Trilinear&#160;</td><td class="fielddoc">
+<p>トリリニアテクスチャフィルタリング:デフォルト設定 </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a520ef65de715096fdca5c71afa9273a1a22690afbc2ee3a3ba2a141ab906f273c"></a>Anisotropic&#160;</td><td class="fielddoc">
+<p>異方性フィルタリング:最高品質でコスパ悪 </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="a0a6f8b1d41f00f3b6bd7566adbcf4f36"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36">TileMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>タイリングモードの設定 </p>
+<table class="fieldtable">
+<tr><th colspan="2">列挙値</th></tr><tr><td class="fieldname"><a class="anchor" id="a0a6f8b1d41f00f3b6bd7566adbcf4f36a65cd6695b7f90c094cad51f9d69a1cbe"></a>Clamp&#160;</td><td class="fielddoc">
+<p>繰り返し無し デフォルト </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a0a6f8b1d41f00f3b6bd7566adbcf4f36aa69f0f49b99456743880469971b657e5"></a>Border&#160;</td><td class="fielddoc">
+<p>SAMPLER_DESCまたはHLSLで指定した境界色を設定 </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a0a6f8b1d41f00f3b6bd7566adbcf4f36a7794c24dd1265ef91cd516a6a2fa40a5"></a>Wrap&#160;</td><td class="fielddoc">
+<p>タイリング 繰り返し </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a0a6f8b1d41f00f3b6bd7566adbcf4f36a938cfe42fc80a4916f2e6eda40959e9a"></a>Mirror&#160;</td><td class="fielddoc">
+<p>繰り返し反転 </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">関数詳解</h2>
+<a class="anchor" id="ad78bf31f9df322ccdc67c509a0283a37"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Load </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>filePath</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>画像の読み込みを行いSRVを作成  WICを使い画像データを読み込み、SRVを作成、メンバ変数にバインド </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">読み込むファイルのパス</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>読み取り結果 成功:S_OK 失敗:E_FAIL </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa58242e8408771bda104c984a0e476bd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SetTileAndFiltering </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36">TileMode</a>&#160;</td>
+          <td class="paramname"><em>tileMode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1">FilteringMode</a>&#160;</td>
+          <td class="paramname"><em>filterMode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>タイリングモードとフィルタリングモードの設定 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">設定するタイルモード</td><td></td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">設定するフィルタリング(アドレッシングモード)</td><td>サンプラーステートを作成 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">メンバ詳解</h2>
+<a class="anchor" id="a91f4e4cb69b7fa77ce4c2f224d7980cc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_color.html">Color</a> m_Color</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>カラー </p>
+
+</div>
+</div>
+<a class="anchor" id="ac28f3c414d9557e103174d98fb45ac80"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_a_p_i_1_1abstract.html#a520ef65de715096fdca5c71afa9273a1">FilteringMode</a> m_eFilterMode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>フィルタリングモード </p>
+
+</div>
+</div>
+<a class="anchor" id="ac3e6155bd6f42e0485e99c91b99a1970"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_a_p_i_1_1abstract.html#a0a6f8b1d41f00f3b6bd7566adbcf4f36">TileMode</a> m_eTileMode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>タイリングモード </p>
+
+</div>
+</div>
+<a class="anchor" id="a94fdba7a2106647566ca2a907c0bd5e7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Microsoft::WRL::ComPtr&lt;ID3D11SamplerState&gt; m_pSamplerState</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>サンプラーステート </p>
+
+</div>
+</div>
+<a class="anchor" id="a46609e86f9414823aa6403ebbfcef380"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Microsoft::WRL::ComPtr&lt;ID3D11ShaderResourceView&gt; m_pShaderResourceView</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>シェーダーリソースビュー(SRV) </p>
+
+</div>
+</div>
+<a class="anchor" id="adb6dc678fde02000203c71a186713543"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DirectX::XMINT2 m_Size</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>画像サイズ </p>
+
+</div>
+</div>
+<hr/>このクラス詳解は次のファイルから抽出されました:<ul>
+<li>C:/Users/yuuki/Desktop/Doxygen_lib_source/include/<a class="el" href="_i_texture_8h_source.html">ITexture.h</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

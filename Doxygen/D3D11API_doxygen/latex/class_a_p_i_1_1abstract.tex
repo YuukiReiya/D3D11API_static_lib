@@ -1,0 +1,185 @@
+\hypertarget{class_a_p_i_1_1abstract}{}\section{abstract クラス}
+\label{class_a_p_i_1_1abstract}\index{abstract@{abstract}}
+\subsection*{公開型}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36}{Tile\+Mode} \{ \\*
+\hyperlink{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a65cd6695b7f90c094cad51f9d69a1cbe}{Clamp} = D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+O\+DE\+:\+:D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+C\+L\+A\+MP, 
+\hyperlink{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36aa69f0f49b99456743880469971b657e5}{Border} = D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+O\+DE\+:\+:D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+B\+O\+R\+D\+ER, 
+{\bfseries Mirror\+Once} = D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+O\+DE\+:\+:D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+I\+R\+R\+O\+R\+\_\+\+O\+N\+CE, 
+\hyperlink{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a7794c24dd1265ef91cd516a6a2fa40a5}{Wrap} = D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+O\+DE\+:\+:D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+W\+R\+AP, 
+\\*
+\hyperlink{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a938cfe42fc80a4916f2e6eda40959e9a}{Mirror} = D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+O\+DE\+:\+:D3\+D11\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+I\+R\+R\+OR
+ \}\begin{DoxyCompactList}\small\item\em タイリングモードの設定 \end{DoxyCompactList}
+\item 
+enum \hyperlink{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1}{Filtering\+Mode} \{ \hyperlink{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a5b577e188dc4657a3e573fb2dae1a924}{Point} = D3\+D11\+\_\+\+F\+I\+L\+T\+ER\+:\+:D3\+D11\+\_\+\+F\+I\+L\+T\+E\+R\+\_\+\+M\+I\+N\+\_\+\+M\+A\+G\+\_\+\+M\+I\+P\+\_\+\+P\+O\+I\+NT, 
+\hyperlink{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a657ab5c6571e53d74c63110cc8448c8b}{Bilinear} = D3\+D11\+\_\+\+F\+I\+L\+T\+ER\+:\+:D3\+D11\+\_\+\+F\+I\+L\+T\+E\+R\+\_\+\+M\+I\+N\+\_\+\+M\+A\+G\+\_\+\+L\+I\+N\+E\+A\+R\+\_\+\+M\+I\+P\+\_\+\+P\+O\+I\+NT, 
+\hyperlink{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1ab9db546b92309fcc8cfd67b7b6bbe8d2}{Trilinear} = D3\+D11\+\_\+\+F\+I\+L\+T\+ER\+:\+:D3\+D11\+\_\+\+F\+I\+L\+T\+E\+R\+\_\+\+M\+I\+N\+\_\+\+M\+A\+G\+\_\+\+M\+I\+P\+\_\+\+L\+I\+N\+E\+AR, 
+\hyperlink{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a22690afbc2ee3a3ba2a141ab906f273c}{Anisotropic} = D3\+D11\+\_\+\+F\+I\+L\+T\+ER\+:\+:D3\+D11\+\_\+\+F\+I\+L\+T\+E\+R\+\_\+\+A\+N\+I\+S\+O\+T\+R\+O\+P\+IC
+ \}\begin{DoxyCompactList}\small\item\em フィルタリングモードの設定 \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_a_p_i_1_1abstract_a296b1719c68831928574193a56a32791}{I\+Texture} ()\hypertarget{class_a_p_i_1_1abstract_a296b1719c68831928574193a56a32791}{}\label{class_a_p_i_1_1abstract_a296b1719c68831928574193a56a32791}
+
+\begin{DoxyCompactList}\small\item\em コンストラクタ \end{DoxyCompactList}\item 
+virtual \hyperlink{class_a_p_i_1_1abstract_a79a99935966ece5dbbd8be4439da47dd}{$\sim$\+I\+Texture} ()\hypertarget{class_a_p_i_1_1abstract_a79a99935966ece5dbbd8be4439da47dd}{}\label{class_a_p_i_1_1abstract_a79a99935966ece5dbbd8be4439da47dd}
+
+\begin{DoxyCompactList}\small\item\em 仮想デストラクタ \end{DoxyCompactList}\item 
+virtual void {\bfseries Finalize} ()\hypertarget{class_a_p_i_1_1abstract_a5659cae021514f6919def4b7f67402cf}{}\label{class_a_p_i_1_1abstract_a5659cae021514f6919def4b7f67402cf}
+
+\item 
+bool {\bfseries Set\+Size} (const Direct\+X\+::\+X\+M\+I\+N\+T2 size)\hypertarget{class_a_p_i_1_1abstract_ac3e510a817d37307e790d4d414e956b5}{}\label{class_a_p_i_1_1abstract_ac3e510a817d37307e790d4d414e956b5}
+
+\item 
+Direct\+X\+::\+X\+M\+I\+N\+T2 {\bfseries Get\+Size} () const \hypertarget{class_a_p_i_1_1abstract_a2e070ca1e8dfcf0404a2922dc1cd0bd6}{}\label{class_a_p_i_1_1abstract_a2e070ca1e8dfcf0404a2922dc1cd0bd6}
+
+\item 
+I\+D3\+D11\+Sampler\+State $\ast$$\ast$ {\bfseries Get\+Sampler\+State} ()\hypertarget{class_a_p_i_1_1abstract_adb362e0200295c54533c2491817ee356}{}\label{class_a_p_i_1_1abstract_adb362e0200295c54533c2491817ee356}
+
+\item 
+I\+D3\+D11\+Shader\+Resource\+View $\ast$$\ast$ {\bfseries Get\+Shader\+Resource\+View} ()\hypertarget{class_a_p_i_1_1abstract_ad03203b23b31f1b5c3dad3bdf9f979c3}{}\label{class_a_p_i_1_1abstract_ad03203b23b31f1b5c3dad3bdf9f979c3}
+
+\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_a_p_i_1_1abstract_aa58242e8408771bda104c984a0e476bd}{Set\+Tile\+And\+Filtering} (const \hyperlink{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36}{Tile\+Mode} tile\+Mode, const \hyperlink{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1}{Filtering\+Mode} filter\+Mode)
+\begin{DoxyCompactList}\small\item\em タイリングモードとフィルタリングモードの設定 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_color}{Color} \hyperlink{class_a_p_i_1_1abstract_a91f4e4cb69b7fa77ce4c2f224d7980cc}{m\+\_\+\+Color}
+\end{DoxyCompactItemize}
+\subsection*{限定公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_a_p_i_1_1abstract_ad78bf31f9df322ccdc67c509a0283a37}{Load} (std\+::string file\+Path)
+\begin{DoxyCompactList}\small\item\em 画像の読み込みを行い\+S\+R\+Vを作成  W\+I\+Cを使い画像データを読み込み、\+S\+R\+Vを作成、メンバ変数にバインド \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{限定公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36}{Tile\+Mode} \hyperlink{class_a_p_i_1_1abstract_ac3e6155bd6f42e0485e99c91b99a1970}{m\+\_\+e\+Tile\+Mode}
+\item 
+\hyperlink{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1}{Filtering\+Mode} \hyperlink{class_a_p_i_1_1abstract_ac28f3c414d9557e103174d98fb45ac80}{m\+\_\+e\+Filter\+Mode}
+\item 
+Direct\+X\+::\+X\+M\+I\+N\+T2 \hyperlink{class_a_p_i_1_1abstract_adb6dc678fde02000203c71a186713543}{m\+\_\+\+Size}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Sampler\+State $>$ \hyperlink{class_a_p_i_1_1abstract_a94fdba7a2106647566ca2a907c0bd5e7}{m\+\_\+p\+Sampler\+State}
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Shader\+Resource\+View $>$ \hyperlink{class_a_p_i_1_1abstract_a46609e86f9414823aa6403ebbfcef380}{m\+\_\+p\+Shader\+Resource\+View}
+\end{DoxyCompactItemize}
+\subsection*{静的限定公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+static const Direct\+X\+::\+X\+M\+I\+N\+T2 \hyperlink{class_a_p_i_1_1abstract_ab4133323b5c23ce2ace79e33c0f99734}{c\+\_\+\+Default\+Size}\hypertarget{class_a_p_i_1_1abstract_ab4133323b5c23ce2ace79e33c0f99734}{}\label{class_a_p_i_1_1abstract_ab4133323b5c23ce2ace79e33c0f99734}
+
+\begin{DoxyCompactList}\small\item\em デフォルトの画像サイズ  デフォルトで与えられている画像サイズ \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{列挙型メンバ詳解}
+\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Filtering\+Mode@{Filtering\+Mode}}
+\index{Filtering\+Mode@{Filtering\+Mode}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{Filtering\+Mode}{FilteringMode}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Filtering\+Mode}}\hypertarget{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1}{}\label{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1}
+
+
+フィルタリングモードの設定 
+
+\begin{Desc}
+\item[列挙値]\par
+\begin{description}
+\index{Point@{Point}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Point@{Point}}\item[{\em 
+Point\hypertarget{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a5b577e188dc4657a3e573fb2dae1a924}{}\label{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a5b577e188dc4657a3e573fb2dae1a924}
+}]ポイントフィルタリング\+:最悪品質でコスパ良 \index{Bilinear@{Bilinear}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Bilinear@{Bilinear}}\item[{\em 
+Bilinear\hypertarget{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a657ab5c6571e53d74c63110cc8448c8b}{}\label{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a657ab5c6571e53d74c63110cc8448c8b}
+}]バイリニアテクスチャフィルタリング \index{Trilinear@{Trilinear}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Trilinear@{Trilinear}}\item[{\em 
+Trilinear\hypertarget{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1ab9db546b92309fcc8cfd67b7b6bbe8d2}{}\label{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1ab9db546b92309fcc8cfd67b7b6bbe8d2}
+}]トリリニアテクスチャフィルタリング\+:デフォルト設定 \index{Anisotropic@{Anisotropic}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Anisotropic@{Anisotropic}}\item[{\em 
+Anisotropic\hypertarget{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a22690afbc2ee3a3ba2a141ab906f273c}{}\label{class_a_p_i_1_1abstract_a520ef65de715096fdca5c71afa9273a1a22690afbc2ee3a3ba2a141ab906f273c}
+}]異方性フィルタリング\+:最高品質でコスパ悪 \end{description}
+\end{Desc}
+\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Tile\+Mode@{Tile\+Mode}}
+\index{Tile\+Mode@{Tile\+Mode}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{Tile\+Mode}{TileMode}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Tile\+Mode}}\hypertarget{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36}{}\label{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36}
+
+
+タイリングモードの設定 
+
+\begin{Desc}
+\item[列挙値]\par
+\begin{description}
+\index{Clamp@{Clamp}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Clamp@{Clamp}}\item[{\em 
+Clamp\hypertarget{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a65cd6695b7f90c094cad51f9d69a1cbe}{}\label{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a65cd6695b7f90c094cad51f9d69a1cbe}
+}]繰り返し無し デフォルト \index{Border@{Border}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Border@{Border}}\item[{\em 
+Border\hypertarget{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36aa69f0f49b99456743880469971b657e5}{}\label{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36aa69f0f49b99456743880469971b657e5}
+}]S\+A\+M\+P\+L\+E\+R\+\_\+\+D\+E\+S\+Cまたは\+H\+L\+S\+Lで指定した境界色を設定 \index{Wrap@{Wrap}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Wrap@{Wrap}}\item[{\em 
+Wrap\hypertarget{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a7794c24dd1265ef91cd516a6a2fa40a5}{}\label{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a7794c24dd1265ef91cd516a6a2fa40a5}
+}]タイリング 繰り返し \index{Mirror@{Mirror}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Mirror@{Mirror}}\item[{\em 
+Mirror\hypertarget{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a938cfe42fc80a4916f2e6eda40959e9a}{}\label{class_a_p_i_1_1abstract_a0a6f8b1d41f00f3b6bd7566adbcf4f36a938cfe42fc80a4916f2e6eda40959e9a}
+}]繰り返し反転 \end{description}
+\end{Desc}
+
+
+\subsection{関数詳解}
+\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Load@{Load}}
+\index{Load@{Load}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{Load(std\+::string file\+Path)}{Load(std::string filePath)}}]{\setlength{\rightskip}{0pt plus 5cm}Load (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{file\+Path}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_a_p_i_1_1abstract_ad78bf31f9df322ccdc67c509a0283a37}{}\label{class_a_p_i_1_1abstract_ad78bf31f9df322ccdc67c509a0283a37}
+
+
+画像の読み込みを行い\+S\+R\+Vを作成  W\+I\+Cを使い画像データを読み込み、\+S\+R\+Vを作成、メンバ変数にバインド 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 読み込むファイルのパス} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+読み取り結果 成功\+:S\+\_\+\+OK 失敗\+:E\+\_\+\+F\+A\+IL 
+\end{DoxyReturn}
+\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!Set\+Tile\+And\+Filtering@{Set\+Tile\+And\+Filtering}}
+\index{Set\+Tile\+And\+Filtering@{Set\+Tile\+And\+Filtering}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{Set\+Tile\+And\+Filtering(const Tile\+Mode tile\+Mode, const Filtering\+Mode filter\+Mode)}{SetTileAndFiltering(const TileMode tileMode, const FilteringMode filterMode)}}]{\setlength{\rightskip}{0pt plus 5cm}Set\+Tile\+And\+Filtering (
+\begin{DoxyParamCaption}
+\item[{const {\bf Tile\+Mode}}]{tile\+Mode, }
+\item[{const {\bf Filtering\+Mode}}]{filter\+Mode}
+\end{DoxyParamCaption}
+)}\hypertarget{class_a_p_i_1_1abstract_aa58242e8408771bda104c984a0e476bd}{}\label{class_a_p_i_1_1abstract_aa58242e8408771bda104c984a0e476bd}
+
+
+タイリングモードとフィルタリングモードの設定 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 設定するタイルモード} & \\
+\hline
+\mbox{\tt in}  & {\em 設定するフィルタリング(アドレッシングモード)} & サンプラーステートを作成 \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{メンバ詳解}
+\index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!m\+\_\+\+Color@{m\+\_\+\+Color}}
+\index{m\+\_\+\+Color@{m\+\_\+\+Color}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{m\+\_\+\+Color}{m_Color}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Color} m\+\_\+\+Color}\hypertarget{class_a_p_i_1_1abstract_a91f4e4cb69b7fa77ce4c2f224d7980cc}{}\label{class_a_p_i_1_1abstract_a91f4e4cb69b7fa77ce4c2f224d7980cc}
+カラー \index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!m\+\_\+e\+Filter\+Mode@{m\+\_\+e\+Filter\+Mode}}
+\index{m\+\_\+e\+Filter\+Mode@{m\+\_\+e\+Filter\+Mode}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{m\+\_\+e\+Filter\+Mode}{m_eFilterMode}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Filtering\+Mode} m\+\_\+e\+Filter\+Mode\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_a_p_i_1_1abstract_ac28f3c414d9557e103174d98fb45ac80}{}\label{class_a_p_i_1_1abstract_ac28f3c414d9557e103174d98fb45ac80}
+フィルタリングモード \index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!m\+\_\+e\+Tile\+Mode@{m\+\_\+e\+Tile\+Mode}}
+\index{m\+\_\+e\+Tile\+Mode@{m\+\_\+e\+Tile\+Mode}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{m\+\_\+e\+Tile\+Mode}{m_eTileMode}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Tile\+Mode} m\+\_\+e\+Tile\+Mode\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_a_p_i_1_1abstract_ac3e6155bd6f42e0485e99c91b99a1970}{}\label{class_a_p_i_1_1abstract_ac3e6155bd6f42e0485e99c91b99a1970}
+タイリングモード \index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!m\+\_\+p\+Sampler\+State@{m\+\_\+p\+Sampler\+State}}
+\index{m\+\_\+p\+Sampler\+State@{m\+\_\+p\+Sampler\+State}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Sampler\+State}{m_pSamplerState}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Sampler\+State$>$ m\+\_\+p\+Sampler\+State\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_a_p_i_1_1abstract_a94fdba7a2106647566ca2a907c0bd5e7}{}\label{class_a_p_i_1_1abstract_a94fdba7a2106647566ca2a907c0bd5e7}
+サンプラーステート \index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!m\+\_\+p\+Shader\+Resource\+View@{m\+\_\+p\+Shader\+Resource\+View}}
+\index{m\+\_\+p\+Shader\+Resource\+View@{m\+\_\+p\+Shader\+Resource\+View}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{m\+\_\+p\+Shader\+Resource\+View}{m_pShaderResourceView}}]{\setlength{\rightskip}{0pt plus 5cm}Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$I\+D3\+D11\+Shader\+Resource\+View$>$ m\+\_\+p\+Shader\+Resource\+View\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_a_p_i_1_1abstract_a46609e86f9414823aa6403ebbfcef380}{}\label{class_a_p_i_1_1abstract_a46609e86f9414823aa6403ebbfcef380}
+シェーダーリソースビュー(\+S\+R\+V) \index{A\+P\+I\+::abstract@{A\+P\+I\+::abstract}!m\+\_\+\+Size@{m\+\_\+\+Size}}
+\index{m\+\_\+\+Size@{m\+\_\+\+Size}!A\+P\+I\+::abstract@{A\+P\+I\+::abstract}}
+\subsubsection[{\texorpdfstring{m\+\_\+\+Size}{m_Size}}]{\setlength{\rightskip}{0pt plus 5cm}Direct\+X\+::\+X\+M\+I\+N\+T2 m\+\_\+\+Size\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_a_p_i_1_1abstract_adb6dc678fde02000203c71a186713543}{}\label{class_a_p_i_1_1abstract_adb6dc678fde02000203c71a186713543}
+画像サイズ 
+
+このクラス詳解は次のファイルから抽出されました\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/I\+Texture.\+h\end{DoxyCompactItemize}

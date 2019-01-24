@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>D3D11API: C:/Users/yuuki/Desktop/Doxygen_lib_source/include/Camera.h ソースファイル</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">D3D11API
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li><a href="namespaces.html"><span>名前空間</span></a></li>
+      <li><a href="annotated.html"><span>クラス</span></a></li>
+      <li class="current"><a href="files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>ファイル一覧</span></a></li>
+      <li><a href="globals.html"><span>ファイルメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d522931ffa1371640980b621734a4381.html">Users</a></li><li class="navelem"><a class="el" href="dir_e84259ce4919f4544c4e78887bbd06dd.html">yuuki</a></li><li class="navelem"><a class="el" href="dir_d8a3f14dc4d04eb68d699b0073cdb492.html">Desktop</a></li><li class="navelem"><a class="el" href="dir_254ffec8380f28e052c35b1272295c0b.html">Doxygen_lib_source</a></li><li class="navelem"><a class="el" href="dir_13b7e77b6c0db853f4a4d45adbd526d0.html">include</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Camera.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">    @file   Camera.h</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">    @date   2018/04/22</span></div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">    @author 番場 宥輝</span></div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    @brief  カメラ</span></div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">    @detail シングルトン</span></div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">*/</span></div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;DirectXMath.h&gt;</span></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;Singleton.h&quot;</span></div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">/****************************************/</span></div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/*          カメラの描画域(v)           */</span></div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">/*      NearClip &lt;= v &lt; FarClip         */</span></div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">/*  Ex)                                 */</span></div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">/*  NearClip = 0.1f, FarClip = 100.0f   */</span></div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">/*  描画されるオブジェクトはカメラの視  */</span></div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">/*  点+NearClipからカメラの視点+FarClip */</span></div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">/*  の範囲に収まっているものを描画する  */</span></div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">/****************************************/</span></div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div><div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="class_camera.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_camera.html">Camera</a></div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    :<span class="keyword">public</span> <a class="code" href="class_singleton.html">Singleton</a>&lt;Camera&gt;</div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="class_camera.html#ab921e886e6f14e117eb8099ccb0a3775">~Camera</a>();</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_camera.html#a6c93dc4a99a7b828fe37352e756e8df0">Initialize</a>(</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        DirectX::XMFLOAT3 eyePt,</div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        DirectX::XMFLOAT3 lookPt = { 0.0f,0.0f,0.0f },</div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        DirectX::XMFLOAT3 upVec = <a class="code" href="class_camera.html#adf00fed6aca14c9362356375d267251b">c_UpVector</a></div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    );</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div><div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="class_camera.html#a54764981cc23a98b371bc5fc12d4e50e">   45</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span>     <a class="code" href="class_camera.html#a54764981cc23a98b371bc5fc12d4e50e">c_Pi</a>;               </div><div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="class_camera.html#a51712c894e0df64215aae12dc97985d3">   46</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">float</span>      <a class="code" href="class_camera.html#a51712c894e0df64215aae12dc97985d3">c_FieldOfView</a>;      </div><div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="class_camera.html#aa6af11ef8a84601a16811a8ef6d60fb1">   47</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">float</span>      <a class="code" href="class_camera.html#aa6af11ef8a84601a16811a8ef6d60fb1">c_NearClip</a>;         </div><div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="class_camera.html#aa5db6879f82c2538b7bfa2ae6b9e5656">   48</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">float</span>      <a class="code" href="class_camera.html#aa5db6879f82c2538b7bfa2ae6b9e5656">c_FarClip</a>;          </div><div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="class_camera.html#adf00fed6aca14c9362356375d267251b">   49</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> DirectX::XMFLOAT3 <a class="code" href="class_camera.html#adf00fed6aca14c9362356375d267251b">c_UpVector</a>;  </div><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    DirectX::XMMATRIX GetViewMatrix()<span class="keyword">const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_camera.html#a06ae0945a26221c132c14896d09d1a3b">m_ViewMat</a>; }</div><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    DirectX::XMMATRIX GetProjMatrix()<span class="keyword">const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_camera.html#afb229fa24074664a441b129fef4cce87">m_ProjMat</a>; }</div><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    DirectX::XMFLOAT3 <a class="code" href="class_camera.html#af17532083692430478b8fd5006f30f0d">GetEyePt</a>()<span class="keyword">const</span>;</div><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div><div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    DirectX::XMFLOAT3 <a class="code" href="class_camera.html#aa387eb16c079b628eb624e44467bf759">GetLookAtPt</a>()<span class="keyword">const</span>;</div><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> SetFieldOfView(<span class="keywordtype">float</span> fov)  { <a class="code" href="class_camera.html#a61ed8246ec6d6d78b046d88f3f5b8bc0">m_FieldOfView</a> = fov; }</div><div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">void</span> SetNearClip(<span class="keywordtype">float</span> nearClip){ <a class="code" href="class_camera.html#a4bea0bad40f6b75b9c5eb19801a684a7">m_NearClip</a> = nearClip; }</div><div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span> SetFarClip(<span class="keywordtype">float</span> farClip)  { <a class="code" href="class_camera.html#a803e5e33c136572ec2c31b221d2ce67f">m_FarClip</a> = farClip; }</div><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div><div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">private</span>:</div><div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <a class="code" href="class_camera.html#aa3f3efcb2fcc75de885df29041103cd2">Camera</a>();</div><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div><div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="class_camera.html#a6f66ad73633ee0655fdb0e0468c1086a">  109</a></span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_singleton.html">Singleton</a>&lt;<a class="code" href="class_camera.html">Camera</a>&gt;;</div><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div><div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="class_camera.html#a61ed8246ec6d6d78b046d88f3f5b8bc0">  112</a></span>&#160;    <span class="keywordtype">float</span> <a class="code" href="class_camera.html#a61ed8246ec6d6d78b046d88f3f5b8bc0">m_FieldOfView</a>;            </div><div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="class_camera.html#a4bea0bad40f6b75b9c5eb19801a684a7">  113</a></span>&#160;    <span class="keywordtype">float</span> <a class="code" href="class_camera.html#a4bea0bad40f6b75b9c5eb19801a684a7">m_NearClip</a>;               </div><div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="class_camera.html#a803e5e33c136572ec2c31b221d2ce67f">  114</a></span>&#160;    <span class="keywordtype">float</span> <a class="code" href="class_camera.html#a803e5e33c136572ec2c31b221d2ce67f">m_FarClip</a>;                </div><div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="class_camera.html#a80c72afef85ca175279420cce520370d">  115</a></span>&#160;    DirectX::XMVECTOR <a class="code" href="class_camera.html#a80c72afef85ca175279420cce520370d">m_EyePt</a>;      </div><div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="class_camera.html#ab9dac33a4cb297f8ecdd55444df9a926">  116</a></span>&#160;    DirectX::XMVECTOR <a class="code" href="class_camera.html#ab9dac33a4cb297f8ecdd55444df9a926">m_LookAtPt</a>;   </div><div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="class_camera.html#ac1e1df300cece76a2d49ee2a1d678301">  117</a></span>&#160;    DirectX::XMVECTOR <a class="code" href="class_camera.html#ac1e1df300cece76a2d49ee2a1d678301">m_UpVec</a>;      </div><div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="class_camera.html#a06ae0945a26221c132c14896d09d1a3b">  118</a></span>&#160;    DirectX::XMMATRIX <a class="code" href="class_camera.html#a06ae0945a26221c132c14896d09d1a3b">m_ViewMat</a>;    </div><div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="class_camera.html#afb229fa24074664a441b129fef4cce87">  119</a></span>&#160;    DirectX::XMMATRIX <a class="code" href="class_camera.html#afb229fa24074664a441b129fef4cce87">m_ProjMat</a>;    </div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;};</div><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div><div class="ttc" id="class_camera_html_af17532083692430478b8fd5006f30f0d"><div class="ttname"><a href="class_camera.html#af17532083692430478b8fd5006f30f0d">Camera::GetEyePt</a></div><div class="ttdeci">DirectX::XMFLOAT3 GetEyePt() const </div><div class="ttdef"><b>Definition:</b> Camera.cpp:88</div></div>
+<div class="ttc" id="class_singleton_html"><div class="ttname"><a href="class_singleton.html">Singleton</a></div><div class="ttdef"><b>Definition:</b> Singleton.h:12</div></div>
+<div class="ttc" id="class_camera_html_afb229fa24074664a441b129fef4cce87"><div class="ttname"><a href="class_camera.html#afb229fa24074664a441b129fef4cce87">Camera::m_ProjMat</a></div><div class="ttdeci">DirectX::XMMATRIX m_ProjMat</div><div class="ttdef"><b>Definition:</b> Camera.h:119</div></div>
+<div class="ttc" id="class_camera_html_adf00fed6aca14c9362356375d267251b"><div class="ttname"><a href="class_camera.html#adf00fed6aca14c9362356375d267251b">Camera::c_UpVector</a></div><div class="ttdeci">static const DirectX::XMFLOAT3 c_UpVector</div><div class="ttdef"><b>Definition:</b> Camera.h:49</div></div>
+<div class="ttc" id="class_camera_html"><div class="ttname"><a href="class_camera.html">Camera</a></div><div class="ttdef"><b>Definition:</b> Camera.h:22</div></div>
+<div class="ttc" id="class_camera_html_a54764981cc23a98b371bc5fc12d4e50e"><div class="ttname"><a href="class_camera.html#a54764981cc23a98b371bc5fc12d4e50e">Camera::c_Pi</a></div><div class="ttdeci">static const double c_Pi</div><div class="ttdef"><b>Definition:</b> Camera.h:45</div></div>
+<div class="ttc" id="class_camera_html_a803e5e33c136572ec2c31b221d2ce67f"><div class="ttname"><a href="class_camera.html#a803e5e33c136572ec2c31b221d2ce67f">Camera::m_FarClip</a></div><div class="ttdeci">float m_FarClip</div><div class="ttdef"><b>Definition:</b> Camera.h:114</div></div>
+<div class="ttc" id="class_camera_html_a06ae0945a26221c132c14896d09d1a3b"><div class="ttname"><a href="class_camera.html#a06ae0945a26221c132c14896d09d1a3b">Camera::m_ViewMat</a></div><div class="ttdeci">DirectX::XMMATRIX m_ViewMat</div><div class="ttdef"><b>Definition:</b> Camera.h:118</div></div>
+<div class="ttc" id="class_camera_html_a61ed8246ec6d6d78b046d88f3f5b8bc0"><div class="ttname"><a href="class_camera.html#a61ed8246ec6d6d78b046d88f3f5b8bc0">Camera::m_FieldOfView</a></div><div class="ttdeci">float m_FieldOfView</div><div class="ttdef"><b>Definition:</b> Camera.h:112</div></div>
+<div class="ttc" id="class_camera_html_ab9dac33a4cb297f8ecdd55444df9a926"><div class="ttname"><a href="class_camera.html#ab9dac33a4cb297f8ecdd55444df9a926">Camera::m_LookAtPt</a></div><div class="ttdeci">DirectX::XMVECTOR m_LookAtPt</div><div class="ttdef"><b>Definition:</b> Camera.h:116</div></div>
+<div class="ttc" id="class_camera_html_ac1e1df300cece76a2d49ee2a1d678301"><div class="ttname"><a href="class_camera.html#ac1e1df300cece76a2d49ee2a1d678301">Camera::m_UpVec</a></div><div class="ttdeci">DirectX::XMVECTOR m_UpVec</div><div class="ttdef"><b>Definition:</b> Camera.h:117</div></div>
+<div class="ttc" id="class_camera_html_aa387eb16c079b628eb624e44467bf759"><div class="ttname"><a href="class_camera.html#aa387eb16c079b628eb624e44467bf759">Camera::GetLookAtPt</a></div><div class="ttdeci">DirectX::XMFLOAT3 GetLookAtPt() const </div><div class="ttdef"><b>Definition:</b> Camera.cpp:101</div></div>
+<div class="ttc" id="class_camera_html_a4bea0bad40f6b75b9c5eb19801a684a7"><div class="ttname"><a href="class_camera.html#a4bea0bad40f6b75b9c5eb19801a684a7">Camera::m_NearClip</a></div><div class="ttdeci">float m_NearClip</div><div class="ttdef"><b>Definition:</b> Camera.h:113</div></div>
+<div class="ttc" id="class_camera_html_a6c93dc4a99a7b828fe37352e756e8df0"><div class="ttname"><a href="class_camera.html#a6c93dc4a99a7b828fe37352e756e8df0">Camera::Initialize</a></div><div class="ttdeci">void Initialize(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookPt={0.0f, 0.0f, 0.0f}, DirectX::XMFLOAT3 upVec=c_UpVector)</div><div class="ttdoc">初期化  引数からビュー行列とプロジェクション行列を生成 </div><div class="ttdef"><b>Definition:</b> Camera.cpp:54</div></div>
+<div class="ttc" id="class_camera_html_a80c72afef85ca175279420cce520370d"><div class="ttname"><a href="class_camera.html#a80c72afef85ca175279420cce520370d">Camera::m_EyePt</a></div><div class="ttdeci">DirectX::XMVECTOR m_EyePt</div><div class="ttdef"><b>Definition:</b> Camera.h:115</div></div>
+<div class="ttc" id="class_camera_html_aa3f3efcb2fcc75de885df29041103cd2"><div class="ttname"><a href="class_camera.html#aa3f3efcb2fcc75de885df29041103cd2">Camera::Camera</a></div><div class="ttdeci">Camera()</div><div class="ttdoc">コンストラクタ </div><div class="ttdef"><b>Definition:</b> Camera.cpp:24</div></div>
+<div class="ttc" id="class_camera_html_a51712c894e0df64215aae12dc97985d3"><div class="ttname"><a href="class_camera.html#a51712c894e0df64215aae12dc97985d3">Camera::c_FieldOfView</a></div><div class="ttdeci">static const float c_FieldOfView</div><div class="ttdef"><b>Definition:</b> Camera.h:46</div></div>
+<div class="ttc" id="class_camera_html_ab921e886e6f14e117eb8099ccb0a3775"><div class="ttname"><a href="class_camera.html#ab921e886e6f14e117eb8099ccb0a3775">Camera::~Camera</a></div><div class="ttdeci">~Camera()</div><div class="ttdoc">デストラクタ </div><div class="ttdef"><b>Definition:</b> Camera.cpp:43</div></div>
+<div class="ttc" id="class_camera_html_aa5db6879f82c2538b7bfa2ae6b9e5656"><div class="ttname"><a href="class_camera.html#aa5db6879f82c2538b7bfa2ae6b9e5656">Camera::c_FarClip</a></div><div class="ttdeci">static const float c_FarClip</div><div class="ttdef"><b>Definition:</b> Camera.h:48</div></div>
+<div class="ttc" id="class_camera_html_aa6af11ef8a84601a16811a8ef6d60fb1"><div class="ttname"><a href="class_camera.html#aa6af11ef8a84601a16811a8ef6d60fb1">Camera::c_NearClip</a></div><div class="ttdeci">static const float c_NearClip</div><div class="ttdef"><b>Definition:</b> Camera.h:47</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

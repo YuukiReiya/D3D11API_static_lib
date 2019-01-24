@@ -1,0 +1,466 @@
+\hypertarget{class_a_p_i_1_1_sprite}{}\section{Sprite クラス}
+\label{class_a_p_i_1_1_sprite}\index{Sprite@{Sprite}}
+
+
+{\ttfamily \#include $<$Sprite.\+h$>$}
+
+\subsection*{公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_a_p_i_1_1_sprite_a637dbaba7024234f1dd304df1706c371}{Sprite} ()\hypertarget{class_a_p_i_1_1_sprite_a637dbaba7024234f1dd304df1706c371}{}\label{class_a_p_i_1_1_sprite_a637dbaba7024234f1dd304df1706c371}
+
+\begin{DoxyCompactList}\small\item\em コンストラクタ \end{DoxyCompactList}\item 
+\hyperlink{class_a_p_i_1_1_sprite_ae2ec7be3ca7853c7f3ac5d639b6b951d}{$\sim$\+Sprite} ()\hypertarget{class_a_p_i_1_1_sprite_ae2ec7be3ca7853c7f3ac5d639b6b951d}{}\label{class_a_p_i_1_1_sprite_ae2ec7be3ca7853c7f3ac5d639b6b951d}
+
+\begin{DoxyCompactList}\small\item\em デストラクタ \end{DoxyCompactList}\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_a_p_i_1_1_sprite_a81109341187e54cc3585f29a1306ca50}{Initialize} ()
+\item 
+void \hyperlink{class_a_p_i_1_1_sprite_a8fee61d7a783cade1a3d07fe86284d27}{Finalize} ()
+\item 
+void {\bfseries Release} ()\hypertarget{class_a_p_i_1_1_sprite_a94c93747c8daa99d65c2a04c6be0748c}{}\label{class_a_p_i_1_1_sprite_a94c93747c8daa99d65c2a04c6be0748c}
+
+\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_a_p_i_1_1_sprite_af9c6b795e8d45972269d3fdc8cf9a3c4}{Render} (\hyperlink{class_a_p_i_1_1_texture}{Texture} $\ast$p\+Texture)
+\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_a_p_i_1_1_sprite_abea1a725dece7f8198dd4f0f9e95afb8}{Render} (\hyperlink{class_a_p_i_1_1_texture_atlas}{Texture\+Atlas} $\ast$p\+Texture)
+\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_a_p_i_1_1_sprite_a0d7e8aacecb8e343ea166b614398ce12}{Render\+Tile} (\hyperlink{class_a_p_i_1_1_texture}{Texture} $\ast$p\+Texture, const Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T2 ratio)
+\item 
+Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 \hyperlink{class_a_p_i_1_1_sprite_a471a0be5d782804468865b18a3eca5f1}{Get\+Pos} () const 
+\item 
+void \hyperlink{class_a_p_i_1_1_sprite_a966d3c6ff7e6bee56d3d8576d4585037}{Set\+Pos} (Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 pos)\hypertarget{class_a_p_i_1_1_sprite_a966d3c6ff7e6bee56d3d8576d4585037}{}\label{class_a_p_i_1_1_sprite_a966d3c6ff7e6bee56d3d8576d4585037}
+
+\begin{DoxyCompactList}\small\item\em 座標のセッター \end{DoxyCompactList}\item 
+void \hyperlink{class_a_p_i_1_1_sprite_a40cf3dffabd00db79c9a7a70ade8ad16}{Set\+Pos} (Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T2 pos)\hypertarget{class_a_p_i_1_1_sprite_a40cf3dffabd00db79c9a7a70ade8ad16}{}\label{class_a_p_i_1_1_sprite_a40cf3dffabd00db79c9a7a70ade8ad16}
+
+\begin{DoxyCompactList}\small\item\em 座標のセッター  オーバーロード \end{DoxyCompactList}\item 
+void {\bfseries Set\+Rot} (Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 rot)\hypertarget{class_a_p_i_1_1_sprite_ac99b0e85c8f96e81093cbc13036aa07b}{}\label{class_a_p_i_1_1_sprite_ac99b0e85c8f96e81093cbc13036aa07b}
+
+\item 
+void \hyperlink{class_a_p_i_1_1_sprite_a4800713a43bf7b867abef7ad679ceb85}{Set\+Scale} (Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T2 scale)\hypertarget{class_a_p_i_1_1_sprite_a4800713a43bf7b867abef7ad679ceb85}{}\label{class_a_p_i_1_1_sprite_a4800713a43bf7b867abef7ad679ceb85}
+
+\begin{DoxyCompactList}\small\item\em スケールのセッター \end{DoxyCompactList}\item 
+void {\bfseries Set\+Stencil\+Mask} (uint32\+\_\+t mask)\hypertarget{class_a_p_i_1_1_sprite_a016dc5cfc0bd53f3653b1ba35b4e6a17}{}\label{class_a_p_i_1_1_sprite_a016dc5cfc0bd53f3653b1ba35b4e6a17}
+
+\item 
+void \hyperlink{class_a_p_i_1_1_sprite_a043d0d75b247c2db2f011dc8b8621e58}{Create\+Alpha\+Blend\+State} (D3\+D11\+\_\+\+B\+L\+E\+N\+D\+\_\+\+D\+E\+SC desc)
+\end{DoxyCompactItemize}
+\subsection*{非公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_a_p_i_1_1_sprite_a8629113e859e0772382f67b6de6036bc}{Create\+Vertex} (Direct\+X\+::\+X\+M\+I\+N\+T2 size)
+\item 
+H\+R\+E\+S\+U\+LT \hyperlink{class_a_p_i_1_1_sprite_acc51e83897641c917cf8e2883519bd7c}{Create\+Tiling\+Vertex} (Direct\+X\+::\+X\+M\+I\+N\+T2 size, Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T2 ratio)
+\end{DoxyCompactItemize}
+\subsection*{非公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t {\bfseries m\+\_\+\+Stencil\+Mask}\hypertarget{class_a_p_i_1_1_sprite_a14c9f660773821f8d9005b415e1b9c78}{}\label{class_a_p_i_1_1_sprite_a14c9f660773821f8d9005b415e1b9c78}
+
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Buffer $>$ {\bfseries m\+\_\+p\+Vertex\+Buffer}\hypertarget{class_a_p_i_1_1_sprite_aefe7709234a1ba240773c9794032a88c}{}\label{class_a_p_i_1_1_sprite_aefe7709234a1ba240773c9794032a88c}
+
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Blend\+State $>$ {\bfseries m\+\_\+p\+Blend\+State}\hypertarget{class_a_p_i_1_1_sprite_a63001d1ec2d9ac02687c99306af4a07f}{}\label{class_a_p_i_1_1_sprite_a63001d1ec2d9ac02687c99306af4a07f}
+
+\item 
+Microsoft\+::\+W\+R\+L\+::\+Com\+Ptr$<$ I\+D3\+D11\+Blend\+State $>$ {\bfseries m\+\_\+p\+Blend\+State\+Multiple}\hypertarget{class_a_p_i_1_1_sprite_a05d37dc5f363ce48454bc3bd9b508d9f}{}\label{class_a_p_i_1_1_sprite_a05d37dc5f363ce48454bc3bd9b508d9f}
+
+\item 
+Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 \hyperlink{class_a_p_i_1_1_sprite_ac4dfe78085ef0a056c1ec0b18bbf894b}{m\+\_\+\+Pos}
+\item 
+Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 {\bfseries m\+\_\+\+Rot}\hypertarget{class_a_p_i_1_1_sprite_a90e58aea364e265ec25080e06f3e6c3f}{}\label{class_a_p_i_1_1_sprite_a90e58aea364e265ec25080e06f3e6c3f}
+
+\item 
+Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 {\bfseries m\+\_\+\+Scale}\hypertarget{class_a_p_i_1_1_sprite_ad778260919c8cf3a968b962f588ca7a5}{}\label{class_a_p_i_1_1_sprite_ad778260919c8cf3a968b962f588ca7a5}
+
+\item 
+Direct\+X\+::\+X\+M\+I\+N\+T2 \hyperlink{class_a_p_i_1_1_sprite_adb6dc678fde02000203c71a186713543}{m\+\_\+\+Size}
+\end{DoxyCompactItemize}
+\subsection*{静的非公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr int \hyperlink{class_a_p_i_1_1_sprite_a7d0612770885bd905daaa74dee3eaca5}{c\+\_\+\+Vertex\+Count} = 4
+\begin{DoxyCompactList}\small\item\em スプライトの頂点数  スプライトの頂点数の定数化 \end{DoxyCompactList}\item 
+static const float \hyperlink{class_a_p_i_1_1_sprite_ad77d7d33858bc5288514fc4bad99a983}{c\+\_\+\+Normalize\+Size} = 100.\+0f
+\begin{DoxyCompactList}\small\item\em 基準となるサイズ  このピクセルが\+Scaleの1に相当する  100.\+0f \end{DoxyCompactList}\item 
+static const float \hyperlink{class_a_p_i_1_1_sprite_ad804c9e981cc840e5629fd162893744b}{c\+\_\+\+ScaleZ} = 0
+\begin{DoxyCompactList}\small\item\em 板ポリの\+Zスケール  生成する頂点の\+Z方向の大きさ  0 \end{DoxyCompactList}\item 
+static const float \hyperlink{class_a_p_i_1_1_sprite_a9c8bd1ba9b75570d1ad44479a342fedc}{c\+\_\+\+VertexZ} = 0
+\begin{DoxyCompactList}\small\item\em 板ポリの頂点生成位置  Create\+Vertex関数で生成する頂点の\+Z位置  0 \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{詳解}
+スプライトを扱うクラス 
+
+\subsection{関数詳解}
+\index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Create\+Alpha\+Blend\+State@{Create\+Alpha\+Blend\+State}}
+\index{Create\+Alpha\+Blend\+State@{Create\+Alpha\+Blend\+State}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Create\+Alpha\+Blend\+State(\+D3\+D11\+\_\+\+B\+L\+E\+N\+D\+\_\+\+D\+E\+S\+C desc)}{CreateAlphaBlendState(D3D11_BLEND_DESC desc)}}]{\setlength{\rightskip}{0pt plus 5cm}void Create\+Alpha\+Blend\+State (
+\begin{DoxyParamCaption}
+\item[{D3\+D11\+\_\+\+B\+L\+E\+N\+D\+\_\+\+D\+E\+SC}]{desc}
+\end{DoxyParamCaption}
+)}\hypertarget{class_a_p_i_1_1_sprite_a043d0d75b247c2db2f011dc8b8621e58}{}\label{class_a_p_i_1_1_sprite_a043d0d75b247c2db2f011dc8b8621e58}
+メモリ開放
+
+ブレンドステート作成 \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Create\+Tiling\+Vertex@{Create\+Tiling\+Vertex}}
+\index{Create\+Tiling\+Vertex@{Create\+Tiling\+Vertex}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Create\+Tiling\+Vertex(\+Direct\+X\+::\+X\+M\+I\+N\+T2 size, Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T2 ratio)}{CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 ratio)}}]{\setlength{\rightskip}{0pt plus 5cm}H\+R\+E\+S\+U\+LT Create\+Tiling\+Vertex (
+\begin{DoxyParamCaption}
+\item[{Direct\+X\+::\+X\+M\+I\+N\+T2}]{size, }
+\item[{Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T2}]{ratio}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_a_p_i_1_1_sprite_acc51e83897641c917cf8e2883519bd7c}{}\label{class_a_p_i_1_1_sprite_acc51e83897641c917cf8e2883519bd7c}
+頂点宣言
+
+$<$ 頂点座標
+
+$<$ U\+V座標
+
+U\+V定義
+
+各頂点定義
+
+$<$ 左
+
+$<$ 右
+
+$<$ 上
+
+$<$ 下
+
+頂点構造体定義
+
+右上
+
+頂点
+
+U\+V座標
+
+右下
+
+頂点
+
+U\+V座標
+
+左上
+
+頂点
+
+U\+V座標
+
+左下
+
+頂点
+
+U\+V座標
+
+板ポリゴン(四角形ポリゴン)のバッファを定義
+
+$<$ G\+P\+Uから読み込みと書き込みを許可
+
+$<$ バッファのサイズ
+
+$<$ 頂点バッファとしてレンダリングパイプラインにバインド
+
+サブリソースのデータを定義
+
+$<$ 初期化データへのポインタ
+
+頂点バッファの開放
+
+頂点バッファ生成 \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Create\+Vertex@{Create\+Vertex}}
+\index{Create\+Vertex@{Create\+Vertex}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Create\+Vertex(\+Direct\+X\+::\+X\+M\+I\+N\+T2 size)}{CreateVertex(DirectX::XMINT2 size)}}]{\setlength{\rightskip}{0pt plus 5cm}H\+R\+E\+S\+U\+LT Create\+Vertex (
+\begin{DoxyParamCaption}
+\item[{Direct\+X\+::\+X\+M\+I\+N\+T2}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_a_p_i_1_1_sprite_a8629113e859e0772382f67b6de6036bc}{}\label{class_a_p_i_1_1_sprite_a8629113e859e0772382f67b6de6036bc}
+頂点宣言
+
+$<$ 頂点座標
+
+$<$ U\+V座標
+
+各頂点定義
+
+$<$ 左
+
+$<$ 右
+
+$<$ 上
+
+$<$ 下
+
+U\+V定義
+
+頂点構造体定義
+
+右上
+
+頂点
+
+U\+V座標
+
+右下
+
+頂点
+
+U\+V座標
+
+左上
+
+頂点
+
+U\+V座標
+
+左下
+
+頂点
+
+U\+V座標
+
+板ポリゴン(四角形ポリゴン)のバッファを定義
+
+$<$ G\+P\+Uから読み込みと書き込みを許可
+
+$<$ バッファのサイズ
+
+$<$ 頂点バッファとしてレンダリングパイプラインにバインド
+
+サブリソースのデータを定義
+
+$<$ 初期化データへのポインタ
+
+頂点バッファの開放
+
+頂点バッファ生成
+
+頂点バッファセット \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Finalize@{Finalize}}
+\index{Finalize@{Finalize}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Finalize()}{Finalize()}}]{\setlength{\rightskip}{0pt plus 5cm}void Finalize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_a_p_i_1_1_sprite_a8fee61d7a783cade1a3d07fe86284d27}{}\label{class_a_p_i_1_1_sprite_a8fee61d7a783cade1a3d07fe86284d27}
+メンバの初期化
+
+開放 \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Get\+Pos@{Get\+Pos}}
+\index{Get\+Pos@{Get\+Pos}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Get\+Pos() const }{GetPos() const }}]{\setlength{\rightskip}{0pt plus 5cm}Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 Get\+Pos (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_a_p_i_1_1_sprite_a471a0be5d782804468865b18a3eca5f1}{}\label{class_a_p_i_1_1_sprite_a471a0be5d782804468865b18a3eca5f1}
+Transformクラスに書き直す予定 \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Initialize@{Initialize}}
+\index{Initialize@{Initialize}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Initialize()}{Initialize()}}]{\setlength{\rightskip}{0pt plus 5cm}H\+R\+E\+S\+U\+LT Initialize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_a_p_i_1_1_sprite_a81109341187e54cc3585f29a1306ca50}{}\label{class_a_p_i_1_1_sprite_a81109341187e54cc3585f29a1306ca50}
+※ S\+RC\+:ソース(これから描画するピクセルの色) D\+E\+ST\+:ディストネーション(レンダリングターゲットに描画されているピクセルの色)
+
+最終的な描画色は以下の「混合関数」によって決まる \begin{DoxyVerb}SRC × ブレンディング係数 ＋ DEST × ブレンディング係数
+
+SRCALPHA:    SRC のα値
+INVSRCALPHA: 1 - SRC のα値
+DESTALPHA:   DESTのα値
+\end{DoxyVerb}
+
+
+αブレンド
+
+αテスト設定
+
+$<$ ブレンドの有効・無効
+
+ブレンディング係数の設定
+
+ブレンドオプション
+
+アンチエイリアス処理
+
+ブレンドステートの作成
+
+ブレンドステートの設定 \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Render@{Render}}
+\index{Render@{Render}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Render(\+Texture $\ast$p\+Texture)}{Render(Texture *pTexture)}}]{\setlength{\rightskip}{0pt plus 5cm}H\+R\+E\+S\+U\+LT Render (
+\begin{DoxyParamCaption}
+\item[{{\bf Texture} $\ast$}]{p\+Texture}
+\end{DoxyParamCaption}
+)}\hypertarget{class_a_p_i_1_1_sprite_af9c6b795e8d45972269d3fdc8cf9a3c4}{}\label{class_a_p_i_1_1_sprite_af9c6b795e8d45972269d3fdc8cf9a3c4}
+異なるサイズのテクスチャが渡されたら頂点生成
+
+頂点バッファ生成
+
+テクスチャのサイズをキャッシュしておく
+
+トポロジーセット
+
+頂点インプットレイアウトセット
+
+シェーダーの登録
+
+コンスタントバッファの登録
+
+サンプラー取得
+
+S\+R\+V取得
+
+テクスチャ
+
+座標変換
+
+ワールド変換
+
+マッピング用変数宣言
+
+シェーダー側に渡すコンスタントバッファ宣言
+
+バッファへのアクセス許可(書き換え)
+
+$<$ アクセス権を閉じて抜ける
+
+コンスタントバッファにデータを送る
+
+$<$ ワールド行列
+
+メモリコピー
+
+アクセス許可終了
+
+頂点バッファセット
+
+ブレンドステートの設定
+
+描画
+
+$<$ 頂点数(板ポリゴンなので頂点数は4つ) \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Render@{Render}}
+\index{Render@{Render}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Render(\+Texture\+Atlas $\ast$p\+Texture)}{Render(TextureAtlas *pTexture)}}]{\setlength{\rightskip}{0pt plus 5cm}H\+R\+E\+S\+U\+LT Render (
+\begin{DoxyParamCaption}
+\item[{{\bf Texture\+Atlas} $\ast$}]{p\+Texture}
+\end{DoxyParamCaption}
+)}\hypertarget{class_a_p_i_1_1_sprite_abea1a725dece7f8198dd4f0f9e95afb8}{}\label{class_a_p_i_1_1_sprite_abea1a725dece7f8198dd4f0f9e95afb8}
+頂点バッファ生成
+
+テクスチャのサイズをキャッシュしておく
+
+トポロジーセット
+
+頂点インプットレイアウトセット
+
+シェーダーの登録
+
+コンスタントバッファの登録
+
+サンプラー取得
+
+S\+R\+V取得
+
+テクスチャ
+
+座標変換
+
+ワールド変換
+
+シェーダー側に渡すコンスタントバッファ宣言
+
+コンスタントバッファのデータ書き換え
+
+$<$ ワールド行列
+
+Update\+Sub\+Resource
+
+ブレンドステートの設定
+
+描画
+
+$<$ 頂点数(板ポリゴンなので頂点数は4つ) \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!Render\+Tile@{Render\+Tile}}
+\index{Render\+Tile@{Render\+Tile}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{Render\+Tile(\+Texture $\ast$p\+Texture, const Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T2 ratio)}{RenderTile(Texture *pTexture, const DirectX::XMFLOAT2 ratio)}}]{\setlength{\rightskip}{0pt plus 5cm}H\+R\+E\+S\+U\+LT Render\+Tile (
+\begin{DoxyParamCaption}
+\item[{{\bf Texture} $\ast$}]{p\+Texture, }
+\item[{const Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T2}]{ratio}
+\end{DoxyParamCaption}
+)}\hypertarget{class_a_p_i_1_1_sprite_a0d7e8aacecb8e343ea166b614398ce12}{}\label{class_a_p_i_1_1_sprite_a0d7e8aacecb8e343ea166b614398ce12}
+頂点生成
+
+テクスチャのサイズをキャッシュしておく
+
+トポロジーセット
+
+頂点インプットレイアウトセット
+
+シェーダーの登録
+
+コンスタントバッファの登録
+
+サンプラー取得
+
+S\+R\+V取得
+
+テクスチャ
+
+座標変換
+
+ワールド変換
+
+シェーダー側に渡すコンスタントバッファ宣言
+
+コンスタントバッファのデータ書き換え
+
+$<$ ワールド行列
+
+Update\+Sub\+Resource
+
+頂点バッファセット
+
+ブレンドステートの設定
+
+描画
+
+$<$ 頂点数(板ポリゴンなので頂点数は4つ) 
+
+\subsection{メンバ詳解}
+\index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!c\+\_\+\+Normalize\+Size@{c\+\_\+\+Normalize\+Size}}
+\index{c\+\_\+\+Normalize\+Size@{c\+\_\+\+Normalize\+Size}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{c\+\_\+\+Normalize\+Size}{c_NormalizeSize}}]{\setlength{\rightskip}{0pt plus 5cm}c\+\_\+\+Normalize\+Size = 100.\+0f\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{class_a_p_i_1_1_sprite_ad77d7d33858bc5288514fc4bad99a983}{}\label{class_a_p_i_1_1_sprite_ad77d7d33858bc5288514fc4bad99a983}
+
+
+基準となるサイズ  このピクセルが\+Scaleの1に相当する  100.\+0f 
+
+スケールが1の時の基準となるサイズ(100×100が大きさの基準) \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!c\+\_\+\+ScaleZ@{c\+\_\+\+ScaleZ}}
+\index{c\+\_\+\+ScaleZ@{c\+\_\+\+ScaleZ}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{c\+\_\+\+ScaleZ}{c_ScaleZ}}]{\setlength{\rightskip}{0pt plus 5cm}c\+\_\+\+ScaleZ = 0\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{class_a_p_i_1_1_sprite_ad804c9e981cc840e5629fd162893744b}{}\label{class_a_p_i_1_1_sprite_ad804c9e981cc840e5629fd162893744b}
+
+
+板ポリの\+Zスケール  生成する頂点の\+Z方向の大きさ  0 
+
+Z方向のスケールは常にゼロで計算する \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!c\+\_\+\+Vertex\+Count@{c\+\_\+\+Vertex\+Count}}
+\index{c\+\_\+\+Vertex\+Count@{c\+\_\+\+Vertex\+Count}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{c\+\_\+\+Vertex\+Count}{c_VertexCount}}]{\setlength{\rightskip}{0pt plus 5cm}c\+\_\+\+Vertex\+Count = 4\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{class_a_p_i_1_1_sprite_a7d0612770885bd905daaa74dee3eaca5}{}\label{class_a_p_i_1_1_sprite_a7d0612770885bd905daaa74dee3eaca5}
+
+
+スプライトの頂点数  スプライトの頂点数の定数化 
+
+スプライトの頂点数 \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!c\+\_\+\+VertexZ@{c\+\_\+\+VertexZ}}
+\index{c\+\_\+\+VertexZ@{c\+\_\+\+VertexZ}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{c\+\_\+\+VertexZ}{c_VertexZ}}]{\setlength{\rightskip}{0pt plus 5cm}c\+\_\+\+VertexZ = 0\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{class_a_p_i_1_1_sprite_a9c8bd1ba9b75570d1ad44479a342fedc}{}\label{class_a_p_i_1_1_sprite_a9c8bd1ba9b75570d1ad44479a342fedc}
+
+
+板ポリの頂点生成位置  Create\+Vertex関数で生成する頂点の\+Z位置  0 
+
+板ポリの頂点座標のz値 \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!m\+\_\+\+Pos@{m\+\_\+\+Pos}}
+\index{m\+\_\+\+Pos@{m\+\_\+\+Pos}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{m\+\_\+\+Pos}{m_Pos}}]{\setlength{\rightskip}{0pt plus 5cm}Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 m\+\_\+\+Pos\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_a_p_i_1_1_sprite_ac4dfe78085ef0a056c1ec0b18bbf894b}{}\label{class_a_p_i_1_1_sprite_ac4dfe78085ef0a056c1ec0b18bbf894b}
+ローカル座標系 \index{A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}!m\+\_\+\+Size@{m\+\_\+\+Size}}
+\index{m\+\_\+\+Size@{m\+\_\+\+Size}!A\+P\+I\+::\+Sprite@{A\+P\+I\+::\+Sprite}}
+\subsubsection[{\texorpdfstring{m\+\_\+\+Size}{m_Size}}]{\setlength{\rightskip}{0pt plus 5cm}Direct\+X\+::\+X\+M\+I\+N\+T2 m\+\_\+\+Size\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_a_p_i_1_1_sprite_adb6dc678fde02000203c71a186713543}{}\label{class_a_p_i_1_1_sprite_adb6dc678fde02000203c71a186713543}
+スプライトサイズのキャッシュ 
+
+このクラス詳解は次のファイルから抽出されました\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/Sprite.\+h\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/Sprite.\+cpp\end{DoxyCompactItemize}

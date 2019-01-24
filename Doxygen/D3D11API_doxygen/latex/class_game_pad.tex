@@ -1,0 +1,492 @@
+\hypertarget{class_game_pad}{}\section{Game\+Pad クラス}
+\label{class_game_pad}\index{Game\+Pad@{Game\+Pad}}
+
+
+ゲームパッドクラス  X\+B\+O\+Xコントローラーの入力制御クラス  
+
+
+
+
+{\ttfamily \#include $<$Game\+Pad.\+h$>$}
+
+\subsection*{公開型}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_game_pad_a94753052e481fcc532efd78d0dc92250}{Index} \{ {\bfseries One}, 
+{\bfseries Two}, 
+{\bfseries Three}, 
+{\bfseries Four}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_game_pad_a174221124be5895bfa4165daf454b394}{Game\+Pad} ()\hypertarget{class_game_pad_a174221124be5895bfa4165daf454b394}{}\label{class_game_pad_a174221124be5895bfa4165daf454b394}
+
+\begin{DoxyCompactList}\small\item\em コンストラクタ \end{DoxyCompactList}\item 
+\hyperlink{class_game_pad_ab634934b7d9dee3527ac215018410b35}{Game\+Pad} (\hyperlink{class_game_pad_a94753052e481fcc532efd78d0dc92250}{Index} \&\&\hyperlink{class_game_pad_a7875de9269063a44a5480b1c0c530a84}{index})
+\begin{DoxyCompactList}\small\item\em 引数付きコンストラクタ \end{DoxyCompactList}\item 
+\hyperlink{class_game_pad_a429acab108c14390c6e7302371948112}{$\sim$\+Game\+Pad} ()\hypertarget{class_game_pad_a429acab108c14390c6e7302371948112}{}\label{class_game_pad_a429acab108c14390c6e7302371948112}
+
+\begin{DoxyCompactList}\small\item\em デストラクタ \end{DoxyCompactList}\item 
+void \hyperlink{class_game_pad_abceb475ea9190c464949b0b1eb107ad7}{Update} ()
+\begin{DoxyCompactList}\small\item\em 入力バッファの更新 \end{DoxyCompactList}\item 
+bool \hyperlink{class_game_pad_ae00b045e64eba60d8ef94c968081fd47}{Get\+Button} (\hyperlink{namespace_key_code_a03bfec859eac87be20f8952c1eb89de0}{Key\+Code\+::\+Button} button)
+\begin{DoxyCompactList}\small\item\em ボタンを押してる間 \end{DoxyCompactList}\item 
+bool \hyperlink{class_game_pad_a94ffaf6f2cd3c029eeef56c47b5f43d6}{Get\+Button\+Down} (\hyperlink{namespace_key_code_a03bfec859eac87be20f8952c1eb89de0}{Key\+Code\+::\+Button} button)
+\begin{DoxyCompactList}\small\item\em ボタンを押した瞬間 \end{DoxyCompactList}\item 
+bool \hyperlink{class_game_pad_ae723fb4c3c30029bca94434ec97f3def}{Get\+Button\+Up} (\hyperlink{namespace_key_code_a03bfec859eac87be20f8952c1eb89de0}{Key\+Code\+::\+Button} button)
+\begin{DoxyCompactList}\small\item\em ボタンが離された瞬間 \end{DoxyCompactList}\item 
+int \hyperlink{class_game_pad_a557491a956947e431f5b4b8cb94650d1}{Get\+Arrow} (\hyperlink{namespace_key_code_a16ba82423f2a8ac640d047568347eee4}{Key\+Code\+::\+Arrow} arrow)
+\begin{DoxyCompactList}\small\item\em 十字キーを押してる間 \end{DoxyCompactList}\item 
+int \hyperlink{class_game_pad_accfd004a64647f1bdc2f6e844ddb8c64}{Get\+Arrow\+Down} (\hyperlink{namespace_key_code_a16ba82423f2a8ac640d047568347eee4}{Key\+Code\+::\+Arrow} arrow)
+\begin{DoxyCompactList}\small\item\em 十字キーを押した瞬間 \end{DoxyCompactList}\item 
+int \hyperlink{class_game_pad_ae8a3c557c33dc7555f0aaf375ea9bc50}{Get\+Arrow\+Up} (\hyperlink{namespace_key_code_a16ba82423f2a8ac640d047568347eee4}{Key\+Code\+::\+Arrow} arrow)
+\begin{DoxyCompactList}\small\item\em 十字キーが離された瞬間 \end{DoxyCompactList}\item 
+Direct\+X\+::\+X\+M\+F\+L\+O\+A\+T3 \hyperlink{class_game_pad_a2eabf0bb7e2f9ef36716bccc19a51ebb}{Get\+Joy\+Stick} (\hyperlink{namespace_key_code_af3282177b831055ef900d2bf53e100db}{Key\+Code\+::\+Joy\+Stick} joy\+Stick)
+\begin{DoxyCompactList}\small\item\em ジョイスティックの入力取得  x\+:横軸、y\+:縦軸、z\+:押し込み(0か1) \end{DoxyCompactList}\item 
+B\+Y\+TE \hyperlink{class_game_pad_aced63f31a45307163f26d7e8b592655b}{Get\+Trigger} (\hyperlink{namespace_key_code_a68dc8420d4850fe68378bc682c360e30}{Key\+Code\+::\+Trigger} trigger)
+\begin{DoxyCompactList}\small\item\em トリガーの入力取得 \end{DoxyCompactList}\item 
+bool \hyperlink{class_game_pad_af725ed0df42fe67e599928b3580dd66b}{Get\+B\+Trigger} (\hyperlink{namespace_key_code_a68dc8420d4850fe68378bc682c360e30}{Key\+Code\+::\+Trigger} trigger)
+\begin{DoxyCompactList}\small\item\em トリガーの入力をboolで判定 \end{DoxyCompactList}\item 
+void \hyperlink{class_game_pad_a2e65a8d4d2a8e23fa1846f4b6c54fca7}{Set\+Vibration} (int left\+Power, int right\+Power=-\/1)
+\begin{DoxyCompactList}\small\item\em バイブレーションの設定 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{非公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+float \hyperlink{class_game_pad_ac95431060e8fed9f80568390099954e1}{Input\+Normalize} (float input)
+\begin{DoxyCompactList}\small\item\em 入力値の正規化  -\/1〜1の範囲に値を正規化した値を返す \end{DoxyCompactList}\item 
+float \hyperlink{class_game_pad_ad8a278a5e571b6c12bf17fad2930643c}{Input\+Round} (float input)
+\begin{DoxyCompactList}\small\item\em 入力値を丸める  設定した精度で数値を丸める \end{DoxyCompactList}\item 
+int \hyperlink{class_game_pad_ad60a2f019df2277c68212b191f2239ac}{Vibration\+Convert\+Power} (int vibration)
+\begin{DoxyCompactList}\small\item\em 正規化した値をバイブレーション値に変換  0〜100の範囲を受け取り \end{DoxyCompactList}\item 
+int \hyperlink{class_game_pad_ad2794ef36460ca55325fafa49959d6f2}{Convert\+Key\+Button\+Code} (\hyperlink{namespace_key_code_a03bfec859eac87be20f8952c1eb89de0}{Key\+Code\+::\+Button} \&\&button)
+\begin{DoxyCompactList}\small\item\em ボタンのキーコード変換  ボタンの列挙体から\+X\+Inputの判定用16進数へ変換 \end{DoxyCompactList}\item 
+Direct\+X\+::\+X\+M\+I\+N\+T2 \hyperlink{class_game_pad_aa6cdd3306f8c747716a113920e0f37ff}{Convert\+Key\+Arrow\+Code} (\hyperlink{namespace_key_code_a16ba82423f2a8ac640d047568347eee4}{Key\+Code\+::\+Arrow} \&\&arrow)
+\begin{DoxyCompactList}\small\item\em 十字キーのキーコード変換  十字キーの列挙体から\+X\+Inputの判定用16進数へ変換 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{非公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_game_pad_a94753052e481fcc532efd78d0dc92250}{Index} \hyperlink{class_game_pad_a7875de9269063a44a5480b1c0c530a84}{index}
+\item 
+X\+I\+N\+P\+U\+T\+\_\+\+S\+T\+A\+TE {\bfseries now}\hypertarget{class_game_pad_a38f74f9945d5d44b928c493fb6ff9dca}{}\label{class_game_pad_a38f74f9945d5d44b928c493fb6ff9dca}
+
+\item 
+X\+I\+N\+P\+U\+T\+\_\+\+S\+T\+A\+TE \hyperlink{class_game_pad_af4b6c92b30887bee9ccde17759716c51}{old}
+\end{DoxyCompactItemize}
+\subsection*{静的非公開変数類}
+\begin{DoxyCompactItemize}
+\item 
+static const int \hyperlink{class_game_pad_a4ea8677f13a2189c22b54392dc9bfbec}{c\+\_\+\+Joy\+Stick\+Input\+Min} = -\/32768\hypertarget{class_game_pad_a4ea8677f13a2189c22b54392dc9bfbec}{}\label{class_game_pad_a4ea8677f13a2189c22b54392dc9bfbec}
+
+\begin{DoxyCompactList}\small\item\em ジョイスティック入力の最小値 \end{DoxyCompactList}\item 
+static const int \hyperlink{class_game_pad_aa26a42bed63156f9d897ffaef1c02349}{c\+\_\+\+Joy\+Stick\+Input\+Max} = 32767\hypertarget{class_game_pad_aa26a42bed63156f9d897ffaef1c02349}{}\label{class_game_pad_aa26a42bed63156f9d897ffaef1c02349}
+
+\begin{DoxyCompactList}\small\item\em ジョイスティック入力の最大値 \end{DoxyCompactList}\item 
+static const int \hyperlink{class_game_pad_a59b74191541375522620e4f02263413b}{c\+\_\+\+Vibration\+Range} = 65535
+\begin{DoxyCompactList}\small\item\em バイブレーションの値域の範囲 \end{DoxyCompactList}\item 
+static constexpr int \hyperlink{class_game_pad_aeca0e469e78b7097df11a729b9de334d}{c\+\_\+\+Joy\+Stick\+Input\+Precision} = 10\hypertarget{class_game_pad_aeca0e469e78b7097df11a729b9de334d}{}\label{class_game_pad_aeca0e469e78b7097df11a729b9de334d}
+
+\begin{DoxyCompactList}\small\item\em ジョイスティックの入力精度  精度 ex)10\+:少数第一位、100\+:少数第二位 \end{DoxyCompactList}\item 
+static constexpr float \hyperlink{class_game_pad_a438bd757d10dfa768d8145cf04d52ec2}{c\+\_\+\+Joy\+Stick\+Input\+Dead} = 0.\+0f\hypertarget{class_game_pad_a438bd757d10dfa768d8145cf04d52ec2}{}\label{class_game_pad_a438bd757d10dfa768d8145cf04d52ec2}
+
+\begin{DoxyCompactList}\small\item\em ジョイスティックの入力制限  この値以下の値は 0.\+0f として扱われる ※ジョイスティックのみ対応 \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{詳解}
+ゲームパッドクラス  X\+B\+O\+Xコントローラーの入力制御クラス 
+
+\subsection{列挙型メンバ詳解}
+\index{Game\+Pad@{Game\+Pad}!Index@{Index}}
+\index{Index@{Index}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Index}{Index}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Index}}\hypertarget{class_game_pad_a94753052e481fcc532efd78d0dc92250}{}\label{class_game_pad_a94753052e481fcc532efd78d0dc92250}
+コントローラー番号 
+
+\subsection{構築子と解体子}
+\index{Game\+Pad@{Game\+Pad}!Game\+Pad@{Game\+Pad}}
+\index{Game\+Pad@{Game\+Pad}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Game\+Pad(\+Index \&\&index)}{GamePad(Index &&index)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Game\+Pad} (
+\begin{DoxyParamCaption}
+\item[{{\bf Index} \&\&}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [explicit]}}\hypertarget{class_game_pad_ab634934b7d9dee3527ac215018410b35}{}\label{class_game_pad_ab634934b7d9dee3527ac215018410b35}
+
+
+引数付きコンストラクタ 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 設定するコントローラー番号} & \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{関数詳解}
+\index{Game\+Pad@{Game\+Pad}!Convert\+Key\+Arrow\+Code@{Convert\+Key\+Arrow\+Code}}
+\index{Convert\+Key\+Arrow\+Code@{Convert\+Key\+Arrow\+Code}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Convert\+Key\+Arrow\+Code(\+Key\+Code\+::\+Arrow \&\&arrow)}{ConvertKeyArrowCode(KeyCode::Arrow &&arrow)}}]{\setlength{\rightskip}{0pt plus 5cm}Convert\+Key\+Arrow\+Code (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Arrow} \&\&}]{arrow}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_game_pad_aa6cdd3306f8c747716a113920e0f37ff}{}\label{class_game_pad_aa6cdd3306f8c747716a113920e0f37ff}
+
+
+十字キーのキーコード変換  十字キーの列挙体から\+X\+Inputの判定用16進数へ変換 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 変換する十字キー} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+変換後の情報が入った\+X\+M\+I\+N\+T2型 
+\end{DoxyReturn}
+$<$ 十字キーの上
+
+$<$ 十字キーの下
+
+$<$ 十字キーの右
+
+$<$ 十字キーの左 \index{Game\+Pad@{Game\+Pad}!Convert\+Key\+Button\+Code@{Convert\+Key\+Button\+Code}}
+\index{Convert\+Key\+Button\+Code@{Convert\+Key\+Button\+Code}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Convert\+Key\+Button\+Code(\+Key\+Code\+::\+Button \&\&button)}{ConvertKeyButtonCode(KeyCode::Button &&button)}}]{\setlength{\rightskip}{0pt plus 5cm}Convert\+Key\+Button\+Code (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Button} \&\&}]{button}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_game_pad_ad2794ef36460ca55325fafa49959d6f2}{}\label{class_game_pad_ad2794ef36460ca55325fafa49959d6f2}
+
+
+ボタンのキーコード変換  ボタンの列挙体から\+X\+Inputの判定用16進数へ変換 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 変換するボタン} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+変換後のキーコード 
+\end{DoxyReturn}
+$<$ Aボタン マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+A】
+
+$<$ Bボタン マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+B】
+
+$<$ Xボタン マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+X】
+
+$<$ Yボタン マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+Y】
+
+$<$ S\+T\+A\+R\+Tボタン マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+S\+T\+A\+R\+T】
+
+$<$ B\+A\+C\+Kボタン マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+B\+A\+C\+K】
+
+$<$ L\+Bボタン マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+L\+E\+F\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R】
+
+$<$ R\+Bボタン マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R】
+
+$<$ 左スティックの押し込み マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+L\+E\+F\+T\+\_\+\+T\+H\+U\+M\+B】
+
+$<$ 右スティックの押し込み マクロ【 X\+I\+N\+P\+U\+T\+\_\+\+G\+A\+M\+E\+P\+A\+D\+\_\+\+R\+I\+G\+H\+T\+\_\+\+T\+H\+U\+M\+B】 \index{Game\+Pad@{Game\+Pad}!Get\+Arrow@{Get\+Arrow}}
+\index{Get\+Arrow@{Get\+Arrow}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+Arrow(\+Key\+Code\+::\+Arrow arrow)}{GetArrow(KeyCode::Arrow arrow)}}]{\setlength{\rightskip}{0pt plus 5cm}Get\+Arrow (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Arrow}}]{arrow}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_a557491a956947e431f5b4b8cb94650d1}{}\label{class_game_pad_a557491a956947e431f5b4b8cb94650d1}
+
+
+十字キーを押してる間 
+
+十字キーを押した瞬間の取得
+
+十字キーを押している間の取得
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 判定方向} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+1\+: -\/1\+: 0\+:押されていない 
+\end{DoxyReturn}
+正の値
+
+負の値 \index{Game\+Pad@{Game\+Pad}!Get\+Arrow\+Down@{Get\+Arrow\+Down}}
+\index{Get\+Arrow\+Down@{Get\+Arrow\+Down}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+Arrow\+Down(\+Key\+Code\+::\+Arrow arrow)}{GetArrowDown(KeyCode::Arrow arrow)}}]{\setlength{\rightskip}{0pt plus 5cm}int Get\+Arrow\+Down (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Arrow}}]{arrow}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_accfd004a64647f1bdc2f6e844ddb8c64}{}\label{class_game_pad_accfd004a64647f1bdc2f6e844ddb8c64}
+
+
+十字キーを押した瞬間 
+
+正の値
+
+負の値 \index{Game\+Pad@{Game\+Pad}!Get\+Arrow\+Up@{Get\+Arrow\+Up}}
+\index{Get\+Arrow\+Up@{Get\+Arrow\+Up}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+Arrow\+Up(\+Key\+Code\+::\+Arrow arrow)}{GetArrowUp(KeyCode::Arrow arrow)}}]{\setlength{\rightskip}{0pt plus 5cm}Get\+Arrow\+Up (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Arrow}}]{arrow}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_ae8a3c557c33dc7555f0aaf375ea9bc50}{}\label{class_game_pad_ae8a3c557c33dc7555f0aaf375ea9bc50}
+
+
+十字キーが離された瞬間 
+
+十字キーを離した瞬間の取得
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 判定方向} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+1\+: -\/1\+: 0\+:押されていない 
+\end{DoxyReturn}
+正の値
+
+負の値 \index{Game\+Pad@{Game\+Pad}!Get\+B\+Trigger@{Get\+B\+Trigger}}
+\index{Get\+B\+Trigger@{Get\+B\+Trigger}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+B\+Trigger(\+Key\+Code\+::\+Trigger trigger)}{GetBTrigger(KeyCode::Trigger trigger)}}]{\setlength{\rightskip}{0pt plus 5cm}Get\+B\+Trigger (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Trigger}}]{trigger}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_af725ed0df42fe67e599928b3580dd66b}{}\label{class_game_pad_af725ed0df42fe67e599928b3580dd66b}
+
+
+トリガーの入力をboolで判定 
+
+トリガーの入力取得
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 判定するトリガー} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+押されている/いないのどちらかを返す 
+\end{DoxyReturn}
+\index{Game\+Pad@{Game\+Pad}!Get\+Button@{Get\+Button}}
+\index{Get\+Button@{Get\+Button}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+Button(\+Key\+Code\+::\+Button button)}{GetButton(KeyCode::Button button)}}]{\setlength{\rightskip}{0pt plus 5cm}Get\+Button (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Button}}]{button}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_ae00b045e64eba60d8ef94c968081fd47}{}\label{class_game_pad_ae00b045e64eba60d8ef94c968081fd47}
+
+
+ボタンを押してる間 
+
+ボタンを押してる間の取得
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 判定するボタンのキーコード} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+ボタンの押下情報 
+\end{DoxyReturn}
+\index{Game\+Pad@{Game\+Pad}!Get\+Button\+Down@{Get\+Button\+Down}}
+\index{Get\+Button\+Down@{Get\+Button\+Down}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+Button\+Down(\+Key\+Code\+::\+Button button)}{GetButtonDown(KeyCode::Button button)}}]{\setlength{\rightskip}{0pt plus 5cm}Get\+Button\+Down (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Button}}]{button}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_a94ffaf6f2cd3c029eeef56c47b5f43d6}{}\label{class_game_pad_a94ffaf6f2cd3c029eeef56c47b5f43d6}
+
+
+ボタンを押した瞬間 
+
+ボタンを押した瞬間の取得
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 判定するボタンのキーコード} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+ボタンの押下情報 
+\end{DoxyReturn}
+\index{Game\+Pad@{Game\+Pad}!Get\+Button\+Up@{Get\+Button\+Up}}
+\index{Get\+Button\+Up@{Get\+Button\+Up}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+Button\+Up(\+Key\+Code\+::\+Button button)}{GetButtonUp(KeyCode::Button button)}}]{\setlength{\rightskip}{0pt plus 5cm}Get\+Button\+Up (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Button}}]{button}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_ae723fb4c3c30029bca94434ec97f3def}{}\label{class_game_pad_ae723fb4c3c30029bca94434ec97f3def}
+
+
+ボタンが離された瞬間 
+
+ボタンが離された瞬間の取得
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 判定するボタンのキーコード} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+ボタンの押下情報 
+\end{DoxyReturn}
+\index{Game\+Pad@{Game\+Pad}!Get\+Joy\+Stick@{Get\+Joy\+Stick}}
+\index{Get\+Joy\+Stick@{Get\+Joy\+Stick}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+Joy\+Stick(\+Key\+Code\+::\+Joy\+Stick joy\+Stick)}{GetJoyStick(KeyCode::JoyStick joyStick)}}]{\setlength{\rightskip}{0pt plus 5cm}Get\+Joy\+Stick (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Joy\+Stick}}]{joy\+Stick}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_a2eabf0bb7e2f9ef36716bccc19a51ebb}{}\label{class_game_pad_a2eabf0bb7e2f9ef36716bccc19a51ebb}
+
+
+ジョイスティックの入力取得  x\+:横軸、y\+:縦軸、z\+:押し込み(0か1) 
+
+ジョイスティックの入力取得
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em ジョイスティックの種類} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+x\+:横軸、y\+:縦軸、z\+:押し込み(0か1) 
+\end{DoxyReturn}
+左スティックの押し込み
+
+右スティックの押し込み
+
+値の正規化(-\/1〜1)
+
+値を丸める \index{Game\+Pad@{Game\+Pad}!Get\+Trigger@{Get\+Trigger}}
+\index{Get\+Trigger@{Get\+Trigger}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Get\+Trigger(\+Key\+Code\+::\+Trigger trigger)}{GetTrigger(KeyCode::Trigger trigger)}}]{\setlength{\rightskip}{0pt plus 5cm}Get\+Trigger (
+\begin{DoxyParamCaption}
+\item[{{\bf Key\+Code\+::\+Trigger}}]{trigger}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_aced63f31a45307163f26d7e8b592655b}{}\label{class_game_pad_aced63f31a45307163f26d7e8b592655b}
+
+
+トリガーの入力取得 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 判定するトリガー} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+0〜255の範囲の強さを返す 
+\end{DoxyReturn}
+\index{Game\+Pad@{Game\+Pad}!Input\+Normalize@{Input\+Normalize}}
+\index{Input\+Normalize@{Input\+Normalize}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Input\+Normalize(float input)}{InputNormalize(float input)}}]{\setlength{\rightskip}{0pt plus 5cm}Input\+Normalize (
+\begin{DoxyParamCaption}
+\item[{float}]{input}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_game_pad_ac95431060e8fed9f80568390099954e1}{}\label{class_game_pad_ac95431060e8fed9f80568390099954e1}
+
+
+入力値の正規化  -\/1〜1の範囲に値を正規化した値を返す 
+
+入力値の正規化
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 正規化する値} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+-\/1〜1の範囲に値を正規化した値を返す 
+\end{DoxyReturn}
+\index{Game\+Pad@{Game\+Pad}!Input\+Round@{Input\+Round}}
+\index{Input\+Round@{Input\+Round}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Input\+Round(float input)}{InputRound(float input)}}]{\setlength{\rightskip}{0pt plus 5cm}Input\+Round (
+\begin{DoxyParamCaption}
+\item[{float}]{input}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_game_pad_ad8a278a5e571b6c12bf17fad2930643c}{}\label{class_game_pad_ad8a278a5e571b6c12bf17fad2930643c}
+
+
+入力値を丸める  設定した精度で数値を丸める 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 入力値} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+丸めた値 
+\end{DoxyReturn}
+設定した入力値以下なら 入力値を0にする \index{Game\+Pad@{Game\+Pad}!Set\+Vibration@{Set\+Vibration}}
+\index{Set\+Vibration@{Set\+Vibration}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Set\+Vibration(int left\+Power, int right\+Power=-\/1)}{SetVibration(int leftPower, int rightPower=-1)}}]{\setlength{\rightskip}{0pt plus 5cm}Set\+Vibration (
+\begin{DoxyParamCaption}
+\item[{int}]{left\+Power, }
+\item[{int}]{right\+Power = {\ttfamily -\/1}}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_a2e65a8d4d2a8e23fa1846f4b6c54fca7}{}\label{class_game_pad_a2e65a8d4d2a8e23fa1846f4b6c54fca7}
+
+
+バイブレーションの設定 
+
+バイブレーションの設定  デフォルト引数のright\+Power = -\/1を指定することで左右の出力を同じにする
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 左側のモーターの強さ} & \\
+\hline
+\mbox{\tt in}  & {\em 右側のモーターの強さ} & \\
+\hline
+\end{DoxyParams}
+左右で出力が同じなら \index{Game\+Pad@{Game\+Pad}!Update@{Update}}
+\index{Update@{Update}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Update()}{Update()}}]{\setlength{\rightskip}{0pt plus 5cm}Update (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_game_pad_abceb475ea9190c464949b0b1eb107ad7}{}\label{class_game_pad_abceb475ea9190c464949b0b1eb107ad7}
+
+
+入力バッファの更新 
+
+更新処理  入力バッファの更新 \index{Game\+Pad@{Game\+Pad}!Vibration\+Convert\+Power@{Vibration\+Convert\+Power}}
+\index{Vibration\+Convert\+Power@{Vibration\+Convert\+Power}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{Vibration\+Convert\+Power(int vibration)}{VibrationConvertPower(int vibration)}}]{\setlength{\rightskip}{0pt plus 5cm}Vibration\+Convert\+Power (
+\begin{DoxyParamCaption}
+\item[{int}]{vibration}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_game_pad_ad60a2f019df2277c68212b191f2239ac}{}\label{class_game_pad_ad60a2f019df2277c68212b191f2239ac}
+
+
+正規化した値をバイブレーション値に変換  0〜100の範囲を受け取り 
+
+正規化した値をバイブレーション値に変換  0〜100の範囲に正規化した値をバイブレーションで使う値に変換
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\tt in}  & {\em 正規化した値(0〜100)} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+バイブレーションの値に変換した値 
+\end{DoxyReturn}
+範囲外補正 
+
+\subsection{メンバ詳解}
+\index{Game\+Pad@{Game\+Pad}!c\+\_\+\+Vibration\+Range@{c\+\_\+\+Vibration\+Range}}
+\index{c\+\_\+\+Vibration\+Range@{c\+\_\+\+Vibration\+Range}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{c\+\_\+\+Vibration\+Range}{c_VibrationRange}}]{\setlength{\rightskip}{0pt plus 5cm}c\+\_\+\+Vibration\+Range = 65535\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{class_game_pad_a59b74191541375522620e4f02263413b}{}\label{class_game_pad_a59b74191541375522620e4f02263413b}
+
+
+バイブレーションの値域の範囲 
+
+バイブレーションの値域の範囲 0〜65535 \index{Game\+Pad@{Game\+Pad}!index@{index}}
+\index{index@{index}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{index}{index}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Index} index\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_game_pad_a7875de9269063a44a5480b1c0c530a84}{}\label{class_game_pad_a7875de9269063a44a5480b1c0c530a84}
+パラメーター コントローラー番号 \index{Game\+Pad@{Game\+Pad}!old@{old}}
+\index{old@{old}!Game\+Pad@{Game\+Pad}}
+\subsubsection[{\texorpdfstring{old}{old}}]{\setlength{\rightskip}{0pt plus 5cm}X\+I\+N\+P\+U\+T\+\_\+\+S\+T\+A\+TE old\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_game_pad_af4b6c92b30887bee9ccde17759716c51}{}\label{class_game_pad_af4b6c92b30887bee9ccde17759716c51}
+入力バッファ 
+
+このクラス詳解は次のファイルから抽出されました\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/Game\+Pad.\+h\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/Game\+Pad.\+cpp\end{DoxyCompactItemize}

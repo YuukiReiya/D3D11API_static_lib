@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>D3D11API: C:/Users/yuuki/Desktop/Doxygen_lib_source/include/Debug.h ソースファイル</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">D3D11API
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li><a href="namespaces.html"><span>名前空間</span></a></li>
+      <li><a href="annotated.html"><span>クラス</span></a></li>
+      <li class="current"><a href="files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>ファイル一覧</span></a></li>
+      <li><a href="globals.html"><span>ファイルメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d522931ffa1371640980b621734a4381.html">Users</a></li><li class="navelem"><a class="el" href="dir_e84259ce4919f4544c4e78887bbd06dd.html">yuuki</a></li><li class="navelem"><a class="el" href="dir_d8a3f14dc4d04eb68d699b0073cdb492.html">Desktop</a></li><li class="navelem"><a class="el" href="dir_254ffec8380f28e052c35b1272295c0b.html">Doxygen_lib_source</a></li><li class="navelem"><a class="el" href="dir_13b7e77b6c0db853f4a4d45adbd526d0.html">include</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Debug.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="_debug_8h.html">[詳解]</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#pragma once</span></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;Windows.h&gt;</span></div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#if defined DEBUG || defined _DEBUG</span></div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define DEBUG_FPS</span></div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#define DEBUG_CONSOLE</span></div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">//#define DEBUG_SPRITE</span></div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define DEBUG_TEXTURE</span></div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#endif // _DEBUG</span></div><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div><div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="class_debug.html">   51</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_debug.html">Debug</a></div><div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="class_debug.html#a9010a273f655a34e0383917d2108a204">CreateConsoleWindow</a>();</div><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> DestroyConsoleWindow();</div><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_debug.html#ae62056266b5e3ea2c0532a7740ad3368">DisableCloseButton</a>();</div><div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">private</span>:</div><div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="class_debug.html">Debug</a>()     = <span class="keyword">delete</span>;</div><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    ~<a class="code" href="class_debug.html">Debug</a>()    = <span class="keyword">delete</span>;</div><div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="class_debug.html#aac93c9dce14754b224b4f30c58301a41">   79</a></span>&#160;    <span class="keyword">static</span> HWND  <a class="code" href="class_debug.html#aac93c9dce14754b224b4f30c58301a41">m_hWndConsole</a>; </div><div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="class_debug.html#afd3dd5f72cf90cc16b3aebc01e53bcf3">   80</a></span>&#160;    <span class="keyword">static</span> HMENU <a class="code" href="class_debug.html#afd3dd5f72cf90cc16b3aebc01e53bcf3">m_hMenu</a>;       </div><div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;};</div><div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div><div class="ttc" id="class_debug_html_ae62056266b5e3ea2c0532a7740ad3368"><div class="ttname"><a href="class_debug.html#ae62056266b5e3ea2c0532a7740ad3368">Debug::DisableCloseButton</a></div><div class="ttdeci">static void DisableCloseButton()</div><div class="ttdef"><b>Definition:</b> Debug.cpp:86</div></div>
+<div class="ttc" id="class_debug_html_aac93c9dce14754b224b4f30c58301a41"><div class="ttname"><a href="class_debug.html#aac93c9dce14754b224b4f30c58301a41">Debug::m_hWndConsole</a></div><div class="ttdeci">static HWND m_hWndConsole</div><div class="ttdef"><b>Definition:</b> Debug.h:79</div></div>
+<div class="ttc" id="class_debug_html"><div class="ttname"><a href="class_debug.html">Debug</a></div><div class="ttdoc">デバッグ用シンボルの宣言  Releaseビルド時に有効にならないようマクロで囲む </div><div class="ttdef"><b>Definition:</b> Debug.h:51</div></div>
+<div class="ttc" id="class_debug_html_afd3dd5f72cf90cc16b3aebc01e53bcf3"><div class="ttname"><a href="class_debug.html#afd3dd5f72cf90cc16b3aebc01e53bcf3">Debug::m_hMenu</a></div><div class="ttdeci">static HMENU m_hMenu</div><div class="ttdef"><b>Definition:</b> Debug.h:80</div></div>
+<div class="ttc" id="class_debug_html_a9010a273f655a34e0383917d2108a204"><div class="ttname"><a href="class_debug.html#a9010a273f655a34e0383917d2108a204">Debug::CreateConsoleWindow</a></div><div class="ttdeci">static bool CreateConsoleWindow()</div><div class="ttdef"><b>Definition:</b> Debug.cpp:39</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

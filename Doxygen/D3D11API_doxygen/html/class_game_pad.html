@@ -1,0 +1,811 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>D3D11API: GamePad クラス</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">D3D11API
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li><a href="namespaces.html"><span>名前空間</span></a></li>
+      <li class="current"><a href="annotated.html"><span>クラス</span></a></li>
+      <li><a href="files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>クラス一覧</span></a></li>
+      <li><a href="classes.html"><span>クラス索引</span></a></li>
+      <li><a href="hierarchy.html"><span>クラス階層</span></a></li>
+      <li><a href="functions.html"><span>クラスメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">公開型</a> &#124;
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pri-methods">非公開メンバ関数</a> &#124;
+<a href="#pri-attribs">非公開変数類</a> &#124;
+<a href="#pri-static-attribs">静的非公開変数類</a> &#124;
+<a href="class_game_pad-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">GamePad クラス</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>ゲームパッドクラス  XBOXコントローラーの入力制御クラス  
+ <a href="class_game_pad.html#details">[詳解]</a></p>
+
+<p><code>#include &lt;<a class="el" href="_game_pad_8h_source.html">GamePad.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+公開型</h2></td></tr>
+<tr class="memitem:a94753052e481fcc532efd78d0dc92250"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a94753052e481fcc532efd78d0dc92250">Index</a> { <b>One</b>, 
+<b>Two</b>, 
+<b>Three</b>, 
+<b>Four</b>
+ }</td></tr>
+<tr class="separator:a94753052e481fcc532efd78d0dc92250"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:a174221124be5895bfa4165daf454b394"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a174221124be5895bfa4165daf454b394"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a174221124be5895bfa4165daf454b394">GamePad</a> ()</td></tr>
+<tr class="memdesc:a174221124be5895bfa4165daf454b394"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ <br /></td></tr>
+<tr class="separator:a174221124be5895bfa4165daf454b394"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab634934b7d9dee3527ac215018410b35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#ab634934b7d9dee3527ac215018410b35">GamePad</a> (<a class="el" href="class_game_pad.html#a94753052e481fcc532efd78d0dc92250">Index</a> &amp;&amp;<a class="el" href="class_game_pad.html#a7875de9269063a44a5480b1c0c530a84">index</a>)</td></tr>
+<tr class="memdesc:ab634934b7d9dee3527ac215018410b35"><td class="mdescLeft">&#160;</td><td class="mdescRight">引数付きコンストラクタ  <a href="#ab634934b7d9dee3527ac215018410b35">[詳解]</a><br /></td></tr>
+<tr class="separator:ab634934b7d9dee3527ac215018410b35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a429acab108c14390c6e7302371948112"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a429acab108c14390c6e7302371948112"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a429acab108c14390c6e7302371948112">~GamePad</a> ()</td></tr>
+<tr class="memdesc:a429acab108c14390c6e7302371948112"><td class="mdescLeft">&#160;</td><td class="mdescRight">デストラクタ <br /></td></tr>
+<tr class="separator:a429acab108c14390c6e7302371948112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abceb475ea9190c464949b0b1eb107ad7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#abceb475ea9190c464949b0b1eb107ad7">Update</a> ()</td></tr>
+<tr class="memdesc:abceb475ea9190c464949b0b1eb107ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">入力バッファの更新  <a href="#abceb475ea9190c464949b0b1eb107ad7">[詳解]</a><br /></td></tr>
+<tr class="separator:abceb475ea9190c464949b0b1eb107ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae00b045e64eba60d8ef94c968081fd47"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#ae00b045e64eba60d8ef94c968081fd47">GetButton</a> (<a class="el" href="namespace_key_code.html#a03bfec859eac87be20f8952c1eb89de0">KeyCode::Button</a> button)</td></tr>
+<tr class="memdesc:ae00b045e64eba60d8ef94c968081fd47"><td class="mdescLeft">&#160;</td><td class="mdescRight">ボタンを押してる間  <a href="#ae00b045e64eba60d8ef94c968081fd47">[詳解]</a><br /></td></tr>
+<tr class="separator:ae00b045e64eba60d8ef94c968081fd47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94ffaf6f2cd3c029eeef56c47b5f43d6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a94ffaf6f2cd3c029eeef56c47b5f43d6">GetButtonDown</a> (<a class="el" href="namespace_key_code.html#a03bfec859eac87be20f8952c1eb89de0">KeyCode::Button</a> button)</td></tr>
+<tr class="memdesc:a94ffaf6f2cd3c029eeef56c47b5f43d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">ボタンを押した瞬間  <a href="#a94ffaf6f2cd3c029eeef56c47b5f43d6">[詳解]</a><br /></td></tr>
+<tr class="separator:a94ffaf6f2cd3c029eeef56c47b5f43d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae723fb4c3c30029bca94434ec97f3def"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#ae723fb4c3c30029bca94434ec97f3def">GetButtonUp</a> (<a class="el" href="namespace_key_code.html#a03bfec859eac87be20f8952c1eb89de0">KeyCode::Button</a> button)</td></tr>
+<tr class="memdesc:ae723fb4c3c30029bca94434ec97f3def"><td class="mdescLeft">&#160;</td><td class="mdescRight">ボタンが離された瞬間  <a href="#ae723fb4c3c30029bca94434ec97f3def">[詳解]</a><br /></td></tr>
+<tr class="separator:ae723fb4c3c30029bca94434ec97f3def"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a557491a956947e431f5b4b8cb94650d1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a557491a956947e431f5b4b8cb94650d1">GetArrow</a> (<a class="el" href="namespace_key_code.html#a16ba82423f2a8ac640d047568347eee4">KeyCode::Arrow</a> arrow)</td></tr>
+<tr class="memdesc:a557491a956947e431f5b4b8cb94650d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">十字キーを押してる間  <a href="#a557491a956947e431f5b4b8cb94650d1">[詳解]</a><br /></td></tr>
+<tr class="separator:a557491a956947e431f5b4b8cb94650d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accfd004a64647f1bdc2f6e844ddb8c64"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#accfd004a64647f1bdc2f6e844ddb8c64">GetArrowDown</a> (<a class="el" href="namespace_key_code.html#a16ba82423f2a8ac640d047568347eee4">KeyCode::Arrow</a> arrow)</td></tr>
+<tr class="memdesc:accfd004a64647f1bdc2f6e844ddb8c64"><td class="mdescLeft">&#160;</td><td class="mdescRight">十字キーを押した瞬間  <a href="#accfd004a64647f1bdc2f6e844ddb8c64">[詳解]</a><br /></td></tr>
+<tr class="separator:accfd004a64647f1bdc2f6e844ddb8c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8a3c557c33dc7555f0aaf375ea9bc50"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#ae8a3c557c33dc7555f0aaf375ea9bc50">GetArrowUp</a> (<a class="el" href="namespace_key_code.html#a16ba82423f2a8ac640d047568347eee4">KeyCode::Arrow</a> arrow)</td></tr>
+<tr class="memdesc:ae8a3c557c33dc7555f0aaf375ea9bc50"><td class="mdescLeft">&#160;</td><td class="mdescRight">十字キーが離された瞬間  <a href="#ae8a3c557c33dc7555f0aaf375ea9bc50">[詳解]</a><br /></td></tr>
+<tr class="separator:ae8a3c557c33dc7555f0aaf375ea9bc50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2eabf0bb7e2f9ef36716bccc19a51ebb"><td class="memItemLeft" align="right" valign="top">DirectX::XMFLOAT3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a2eabf0bb7e2f9ef36716bccc19a51ebb">GetJoyStick</a> (<a class="el" href="namespace_key_code.html#af3282177b831055ef900d2bf53e100db">KeyCode::JoyStick</a> joyStick)</td></tr>
+<tr class="memdesc:a2eabf0bb7e2f9ef36716bccc19a51ebb"><td class="mdescLeft">&#160;</td><td class="mdescRight">ジョイスティックの入力取得  x:横軸、y:縦軸、z:押し込み(0か1)  <a href="#a2eabf0bb7e2f9ef36716bccc19a51ebb">[詳解]</a><br /></td></tr>
+<tr class="separator:a2eabf0bb7e2f9ef36716bccc19a51ebb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aced63f31a45307163f26d7e8b592655b"><td class="memItemLeft" align="right" valign="top">BYTE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#aced63f31a45307163f26d7e8b592655b">GetTrigger</a> (<a class="el" href="namespace_key_code.html#a68dc8420d4850fe68378bc682c360e30">KeyCode::Trigger</a> trigger)</td></tr>
+<tr class="memdesc:aced63f31a45307163f26d7e8b592655b"><td class="mdescLeft">&#160;</td><td class="mdescRight">トリガーの入力取得  <a href="#aced63f31a45307163f26d7e8b592655b">[詳解]</a><br /></td></tr>
+<tr class="separator:aced63f31a45307163f26d7e8b592655b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af725ed0df42fe67e599928b3580dd66b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#af725ed0df42fe67e599928b3580dd66b">GetBTrigger</a> (<a class="el" href="namespace_key_code.html#a68dc8420d4850fe68378bc682c360e30">KeyCode::Trigger</a> trigger)</td></tr>
+<tr class="memdesc:af725ed0df42fe67e599928b3580dd66b"><td class="mdescLeft">&#160;</td><td class="mdescRight">トリガーの入力をboolで判定  <a href="#af725ed0df42fe67e599928b3580dd66b">[詳解]</a><br /></td></tr>
+<tr class="separator:af725ed0df42fe67e599928b3580dd66b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e65a8d4d2a8e23fa1846f4b6c54fca7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a2e65a8d4d2a8e23fa1846f4b6c54fca7">SetVibration</a> (int leftPower, int rightPower=-1)</td></tr>
+<tr class="memdesc:a2e65a8d4d2a8e23fa1846f4b6c54fca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイブレーションの設定  <a href="#a2e65a8d4d2a8e23fa1846f4b6c54fca7">[詳解]</a><br /></td></tr>
+<tr class="separator:a2e65a8d4d2a8e23fa1846f4b6c54fca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+非公開メンバ関数</h2></td></tr>
+<tr class="memitem:ac95431060e8fed9f80568390099954e1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#ac95431060e8fed9f80568390099954e1">InputNormalize</a> (float input)</td></tr>
+<tr class="memdesc:ac95431060e8fed9f80568390099954e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">入力値の正規化  -1〜1の範囲に値を正規化した値を返す  <a href="#ac95431060e8fed9f80568390099954e1">[詳解]</a><br /></td></tr>
+<tr class="separator:ac95431060e8fed9f80568390099954e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8a278a5e571b6c12bf17fad2930643c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#ad8a278a5e571b6c12bf17fad2930643c">InputRound</a> (float input)</td></tr>
+<tr class="memdesc:ad8a278a5e571b6c12bf17fad2930643c"><td class="mdescLeft">&#160;</td><td class="mdescRight">入力値を丸める  設定した精度で数値を丸める  <a href="#ad8a278a5e571b6c12bf17fad2930643c">[詳解]</a><br /></td></tr>
+<tr class="separator:ad8a278a5e571b6c12bf17fad2930643c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad60a2f019df2277c68212b191f2239ac"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#ad60a2f019df2277c68212b191f2239ac">VibrationConvertPower</a> (int vibration)</td></tr>
+<tr class="memdesc:ad60a2f019df2277c68212b191f2239ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">正規化した値をバイブレーション値に変換  0〜100の範囲を受け取り  <a href="#ad60a2f019df2277c68212b191f2239ac">[詳解]</a><br /></td></tr>
+<tr class="separator:ad60a2f019df2277c68212b191f2239ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2794ef36460ca55325fafa49959d6f2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#ad2794ef36460ca55325fafa49959d6f2">ConvertKeyButtonCode</a> (<a class="el" href="namespace_key_code.html#a03bfec859eac87be20f8952c1eb89de0">KeyCode::Button</a> &amp;&amp;button)</td></tr>
+<tr class="memdesc:ad2794ef36460ca55325fafa49959d6f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">ボタンのキーコード変換  ボタンの列挙体からXInputの判定用16進数へ変換  <a href="#ad2794ef36460ca55325fafa49959d6f2">[詳解]</a><br /></td></tr>
+<tr class="separator:ad2794ef36460ca55325fafa49959d6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6cdd3306f8c747716a113920e0f37ff"><td class="memItemLeft" align="right" valign="top">DirectX::XMINT2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#aa6cdd3306f8c747716a113920e0f37ff">ConvertKeyArrowCode</a> (<a class="el" href="namespace_key_code.html#a16ba82423f2a8ac640d047568347eee4">KeyCode::Arrow</a> &amp;&amp;arrow)</td></tr>
+<tr class="memdesc:aa6cdd3306f8c747716a113920e0f37ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">十字キーのキーコード変換  十字キーの列挙体からXInputの判定用16進数へ変換  <a href="#aa6cdd3306f8c747716a113920e0f37ff">[詳解]</a><br /></td></tr>
+<tr class="separator:aa6cdd3306f8c747716a113920e0f37ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+非公開変数類</h2></td></tr>
+<tr class="memitem:a7875de9269063a44a5480b1c0c530a84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_game_pad.html#a94753052e481fcc532efd78d0dc92250">Index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a7875de9269063a44a5480b1c0c530a84">index</a></td></tr>
+<tr class="separator:a7875de9269063a44a5480b1c0c530a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38f74f9945d5d44b928c493fb6ff9dca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38f74f9945d5d44b928c493fb6ff9dca"></a>
+XINPUT_STATE&#160;</td><td class="memItemRight" valign="bottom"><b>now</b></td></tr>
+<tr class="separator:a38f74f9945d5d44b928c493fb6ff9dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4b6c92b30887bee9ccde17759716c51"><td class="memItemLeft" align="right" valign="top">XINPUT_STATE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#af4b6c92b30887bee9ccde17759716c51">old</a></td></tr>
+<tr class="separator:af4b6c92b30887bee9ccde17759716c51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+静的非公開変数類</h2></td></tr>
+<tr class="memitem:a4ea8677f13a2189c22b54392dc9bfbec"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4ea8677f13a2189c22b54392dc9bfbec"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a4ea8677f13a2189c22b54392dc9bfbec">c_JoyStickInputMin</a> = -32768</td></tr>
+<tr class="memdesc:a4ea8677f13a2189c22b54392dc9bfbec"><td class="mdescLeft">&#160;</td><td class="mdescRight">ジョイスティック入力の最小値 <br /></td></tr>
+<tr class="separator:a4ea8677f13a2189c22b54392dc9bfbec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa26a42bed63156f9d897ffaef1c02349"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa26a42bed63156f9d897ffaef1c02349"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#aa26a42bed63156f9d897ffaef1c02349">c_JoyStickInputMax</a> = 32767</td></tr>
+<tr class="memdesc:aa26a42bed63156f9d897ffaef1c02349"><td class="mdescLeft">&#160;</td><td class="mdescRight">ジョイスティック入力の最大値 <br /></td></tr>
+<tr class="separator:aa26a42bed63156f9d897ffaef1c02349"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59b74191541375522620e4f02263413b"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a59b74191541375522620e4f02263413b">c_VibrationRange</a> = 65535</td></tr>
+<tr class="memdesc:a59b74191541375522620e4f02263413b"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイブレーションの値域の範囲  <a href="#a59b74191541375522620e4f02263413b">[詳解]</a><br /></td></tr>
+<tr class="separator:a59b74191541375522620e4f02263413b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeca0e469e78b7097df11a729b9de334d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeca0e469e78b7097df11a729b9de334d"></a>
+static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#aeca0e469e78b7097df11a729b9de334d">c_JoyStickInputPrecision</a> = 10</td></tr>
+<tr class="memdesc:aeca0e469e78b7097df11a729b9de334d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ジョイスティックの入力精度  精度 ex)10:少数第一位、100:少数第二位 <br /></td></tr>
+<tr class="separator:aeca0e469e78b7097df11a729b9de334d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a438bd757d10dfa768d8145cf04d52ec2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a438bd757d10dfa768d8145cf04d52ec2"></a>
+static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_pad.html#a438bd757d10dfa768d8145cf04d52ec2">c_JoyStickInputDead</a> = 0.0f</td></tr>
+<tr class="memdesc:a438bd757d10dfa768d8145cf04d52ec2"><td class="mdescLeft">&#160;</td><td class="mdescRight">ジョイスティックの入力制限  この値以下の値は 0.0f として扱われる ※ジョイスティックのみ対応 <br /></td></tr>
+<tr class="separator:a438bd757d10dfa768d8145cf04d52ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><p>ゲームパッドクラス  XBOXコントローラーの入力制御クラス </p>
+</div><h2 class="groupheader">列挙型メンバ詳解</h2>
+<a class="anchor" id="a94753052e481fcc532efd78d0dc92250"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="class_game_pad.html#a94753052e481fcc532efd78d0dc92250">Index</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>コントローラー番号 </p>
+
+</div>
+</div>
+<h2 class="groupheader">構築子と解体子</h2>
+<a class="anchor" id="ab634934b7d9dee3527ac215018410b35"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_game_pad.html">GamePad</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_game_pad.html#a94753052e481fcc532efd78d0dc92250">Index</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>引数付きコンストラクタ </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">設定するコントローラー番号</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">関数詳解</h2>
+<a class="anchor" id="aa6cdd3306f8c747716a113920e0f37ff"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ConvertKeyArrowCode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a16ba82423f2a8ac640d047568347eee4">KeyCode::Arrow</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>arrow</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>十字キーのキーコード変換  十字キーの列挙体からXInputの判定用16進数へ変換 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">変換する十字キー</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>変換後の情報が入ったXMINT2型 </dd></dl>
+<p>&lt; 十字キーの上</p>
+<p>&lt; 十字キーの下</p>
+<p>&lt; 十字キーの右</p>
+<p>&lt; 十字キーの左 </p>
+
+</div>
+</div>
+<a class="anchor" id="ad2794ef36460ca55325fafa49959d6f2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ConvertKeyButtonCode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a03bfec859eac87be20f8952c1eb89de0">KeyCode::Button</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>button</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ボタンのキーコード変換  ボタンの列挙体からXInputの判定用16進数へ変換 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">変換するボタン</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>変換後のキーコード </dd></dl>
+<p>&lt; Aボタン マクロ【 XINPUT_GAMEPAD_A】</p>
+<p>&lt; Bボタン マクロ【 XINPUT_GAMEPAD_B】</p>
+<p>&lt; Xボタン マクロ【 XINPUT_GAMEPAD_X】</p>
+<p>&lt; Yボタン マクロ【 XINPUT_GAMEPAD_Y】</p>
+<p>&lt; STARTボタン マクロ【 XINPUT_GAMEPAD_START】</p>
+<p>&lt; BACKボタン マクロ【 XINPUT_GAMEPAD_BACK】</p>
+<p>&lt; LBボタン マクロ【 XINPUT_GAMEPAD_LEFT_SHOULDER】</p>
+<p>&lt; RBボタン マクロ【 XINPUT_GAMEPAD_RIGHT_SHOULDER】</p>
+<p>&lt; 左スティックの押し込み マクロ【 XINPUT_GAMEPAD_LEFT_THUMB】</p>
+<p>&lt; 右スティックの押し込み マクロ【 XINPUT_GAMEPAD_RIGHT_THUMB】 </p>
+
+</div>
+</div>
+<a class="anchor" id="a557491a956947e431f5b4b8cb94650d1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GetArrow </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a16ba82423f2a8ac640d047568347eee4">KeyCode::Arrow</a>&#160;</td>
+          <td class="paramname"><em>arrow</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>十字キーを押してる間 </p>
+<p>十字キーを押した瞬間の取得</p>
+<p>十字キーを押している間の取得</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">判定方向</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>1: -1: 0:押されていない </dd></dl>
+<p>正の値</p>
+<p>負の値 </p>
+
+</div>
+</div>
+<a class="anchor" id="accfd004a64647f1bdc2f6e844ddb8c64"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GetArrowDown </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a16ba82423f2a8ac640d047568347eee4">KeyCode::Arrow</a>&#160;</td>
+          <td class="paramname"><em>arrow</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>十字キーを押した瞬間 </p>
+<p>正の値</p>
+<p>負の値 </p>
+
+</div>
+</div>
+<a class="anchor" id="ae8a3c557c33dc7555f0aaf375ea9bc50"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GetArrowUp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a16ba82423f2a8ac640d047568347eee4">KeyCode::Arrow</a>&#160;</td>
+          <td class="paramname"><em>arrow</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>十字キーが離された瞬間 </p>
+<p>十字キーを離した瞬間の取得</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">判定方向</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>1: -1: 0:押されていない </dd></dl>
+<p>正の値</p>
+<p>負の値 </p>
+
+</div>
+</div>
+<a class="anchor" id="af725ed0df42fe67e599928b3580dd66b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GetBTrigger </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a68dc8420d4850fe68378bc682c360e30">KeyCode::Trigger</a>&#160;</td>
+          <td class="paramname"><em>trigger</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>トリガーの入力をboolで判定 </p>
+<p>トリガーの入力取得</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">判定するトリガー</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>押されている/いないのどちらかを返す </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae00b045e64eba60d8ef94c968081fd47"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GetButton </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a03bfec859eac87be20f8952c1eb89de0">KeyCode::Button</a>&#160;</td>
+          <td class="paramname"><em>button</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ボタンを押してる間 </p>
+<p>ボタンを押してる間の取得</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">判定するボタンのキーコード</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>ボタンの押下情報 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a94ffaf6f2cd3c029eeef56c47b5f43d6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GetButtonDown </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a03bfec859eac87be20f8952c1eb89de0">KeyCode::Button</a>&#160;</td>
+          <td class="paramname"><em>button</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ボタンを押した瞬間 </p>
+<p>ボタンを押した瞬間の取得</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">判定するボタンのキーコード</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>ボタンの押下情報 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae723fb4c3c30029bca94434ec97f3def"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GetButtonUp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a03bfec859eac87be20f8952c1eb89de0">KeyCode::Button</a>&#160;</td>
+          <td class="paramname"><em>button</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ボタンが離された瞬間 </p>
+<p>ボタンが離された瞬間の取得</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">判定するボタンのキーコード</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>ボタンの押下情報 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2eabf0bb7e2f9ef36716bccc19a51ebb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GetJoyStick </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#af3282177b831055ef900d2bf53e100db">KeyCode::JoyStick</a>&#160;</td>
+          <td class="paramname"><em>joyStick</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ジョイスティックの入力取得  x:横軸、y:縦軸、z:押し込み(0か1) </p>
+<p>ジョイスティックの入力取得</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ジョイスティックの種類</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>x:横軸、y:縦軸、z:押し込み(0か1) </dd></dl>
+<p>左スティックの押し込み</p>
+<p>右スティックの押し込み</p>
+<p>値の正規化(-1〜1)</p>
+<p>値を丸める </p>
+
+</div>
+</div>
+<a class="anchor" id="aced63f31a45307163f26d7e8b592655b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GetTrigger </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_key_code.html#a68dc8420d4850fe68378bc682c360e30">KeyCode::Trigger</a>&#160;</td>
+          <td class="paramname"><em>trigger</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>トリガーの入力取得 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">判定するトリガー</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>0〜255の範囲の強さを返す </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac95431060e8fed9f80568390099954e1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">InputNormalize </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>input</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>入力値の正規化  -1〜1の範囲に値を正規化した値を返す </p>
+<p>入力値の正規化</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">正規化する値</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>-1〜1の範囲に値を正規化した値を返す </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ad8a278a5e571b6c12bf17fad2930643c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">InputRound </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>input</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>入力値を丸める  設定した精度で数値を丸める </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">入力値</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>丸めた値 </dd></dl>
+<p>設定した入力値以下なら 入力値を0にする </p>
+
+</div>
+</div>
+<a class="anchor" id="a2e65a8d4d2a8e23fa1846f4b6c54fca7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SetVibration </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>leftPower</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>rightPower</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>バイブレーションの設定 </p>
+<p>バイブレーションの設定  デフォルト引数のrightPower = -1を指定することで左右の出力を同じにする</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">左側のモーターの強さ</td><td></td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">右側のモーターの強さ</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<p>左右で出力が同じなら </p>
+
+</div>
+</div>
+<a class="anchor" id="abceb475ea9190c464949b0b1eb107ad7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>入力バッファの更新 </p>
+<p>更新処理  入力バッファの更新 </p>
+
+</div>
+</div>
+<a class="anchor" id="ad60a2f019df2277c68212b191f2239ac"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">VibrationConvertPower </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>vibration</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>正規化した値をバイブレーション値に変換  0〜100の範囲を受け取り </p>
+<p>正規化した値をバイブレーション値に変換  0〜100の範囲に正規化した値をバイブレーションで使う値に変換</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">正規化した値(0〜100)</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>バイブレーションの値に変換した値 </dd></dl>
+<p>範囲外補正 </p>
+
+</div>
+</div>
+<h2 class="groupheader">メンバ詳解</h2>
+<a class="anchor" id="a59b74191541375522620e4f02263413b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">c_VibrationRange = 65535</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>バイブレーションの値域の範囲 </p>
+<p>バイブレーションの値域の範囲 0〜65535 </p>
+
+</div>
+</div>
+<a class="anchor" id="a7875de9269063a44a5480b1c0c530a84"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_game_pad.html#a94753052e481fcc532efd78d0dc92250">Index</a> index</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>パラメーター コントローラー番号 </p>
+
+</div>
+</div>
+<a class="anchor" id="af4b6c92b30887bee9ccde17759716c51"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">XINPUT_STATE old</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>入力バッファ </p>
+
+</div>
+</div>
+<hr/>このクラス詳解は次のファイルから抽出されました:<ul>
+<li>C:/Users/yuuki/Desktop/Doxygen_lib_source/include/<a class="el" href="_game_pad_8h_source.html">GamePad.h</a></li>
+<li>C:/Users/yuuki/Desktop/Doxygen_lib_source/include/GamePad.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

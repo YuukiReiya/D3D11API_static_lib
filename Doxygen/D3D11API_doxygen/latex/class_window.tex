@@ -1,0 +1,57 @@
+\hypertarget{class_window}{}\section{Window クラス}
+\label{class_window}\index{Window@{Window}}
+\subsection*{公開メンバ関数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_window_a6cbfa660b1af1f7020fc63dce78aabad}{Window} ()=default\hypertarget{class_window_a6cbfa660b1af1f7020fc63dce78aabad}{}\label{class_window_a6cbfa660b1af1f7020fc63dce78aabad}
+
+\begin{DoxyCompactList}\small\item\em コンストラクタ \end{DoxyCompactList}\item 
+\hyperlink{class_window_a254ab61160c1cd5eaa46cc0475bb7a06}{$\sim$\+Window} ()\hypertarget{class_window_a254ab61160c1cd5eaa46cc0475bb7a06}{}\label{class_window_a254ab61160c1cd5eaa46cc0475bb7a06}
+
+\begin{DoxyCompactList}\small\item\em デストラクタ \end{DoxyCompactList}\item 
+L\+R\+E\+S\+U\+LT \hyperlink{class_window_ad4efa5601904d6c96a9411aadd8cfddd}{Msg\+Proc} (H\+W\+ND h\+Wnd, U\+I\+NT msg, W\+P\+A\+R\+AM w\+Param, L\+P\+A\+R\+AM l\+Param)
+\item 
+bool \hyperlink{class_window_a1a720138b95e41699828edd23227b047}{Initialize} (H\+W\+ND $\ast$h\+Wnd, H\+I\+N\+S\+T\+A\+N\+CE h\+Instance, I\+NT iX, I\+NT iY, I\+NT i\+Width, I\+NT i\+Height, L\+P\+C\+T\+S\+TR Window\+Name)
+\end{DoxyCompactItemize}
+
+
+\subsection{関数詳解}
+\index{Window@{Window}!Initialize@{Initialize}}
+\index{Initialize@{Initialize}!Window@{Window}}
+\subsubsection[{\texorpdfstring{Initialize(\+H\+W\+N\+D $\ast$h\+Wnd, H\+I\+N\+S\+T\+A\+N\+C\+E h\+Instance, I\+N\+T i\+X, I\+N\+T i\+Y, I\+N\+T i\+Width, I\+N\+T i\+Height, L\+P\+C\+T\+S\+T\+R Window\+Name)}{Initialize(HWND *hWnd, HINSTANCE hInstance, INT iX, INT iY, INT iWidth, INT iHeight, LPCTSTR WindowName)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Initialize (
+\begin{DoxyParamCaption}
+\item[{H\+W\+ND $\ast$}]{h\+Wnd, }
+\item[{H\+I\+N\+S\+T\+A\+N\+CE}]{h\+Instance, }
+\item[{I\+NT}]{iX, }
+\item[{I\+NT}]{iY, }
+\item[{I\+NT}]{i\+Width, }
+\item[{I\+NT}]{i\+Height, }
+\item[{L\+P\+C\+T\+S\+TR}]{Window\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{class_window_a1a720138b95e41699828edd23227b047}{}\label{class_window_a1a720138b95e41699828edd23227b047}
+ウィンドウの定義
+
+ウィンドウの作成
+
+ウィンドウの表示 \index{Window@{Window}!Msg\+Proc@{Msg\+Proc}}
+\index{Msg\+Proc@{Msg\+Proc}!Window@{Window}}
+\subsubsection[{\texorpdfstring{Msg\+Proc(\+H\+W\+N\+D h\+Wnd, U\+I\+N\+T msg, W\+P\+A\+R\+A\+M w\+Param, L\+P\+A\+R\+A\+M l\+Param)}{MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)}}]{\setlength{\rightskip}{0pt plus 5cm}L\+R\+E\+S\+U\+LT Msg\+Proc (
+\begin{DoxyParamCaption}
+\item[{H\+W\+ND}]{h\+Wnd, }
+\item[{U\+I\+NT}]{msg, }
+\item[{W\+P\+A\+R\+AM}]{w\+Param, }
+\item[{L\+P\+A\+R\+AM}]{l\+Param}
+\end{DoxyParamCaption}
+)}\hypertarget{class_window_ad4efa5601904d6c96a9411aadd8cfddd}{}\label{class_window_ad4efa5601904d6c96a9411aadd8cfddd}
+Escキーを押されたら
+
+ウィンドウが破棄されたとき
+
+$<$ W\+M\+\_\+\+Q\+U\+I\+Tメッセージをメッセージキューに送る
+
+デフォルトのメッセージ処理を行う 
+
+このクラス詳解は次のファイルから抽出されました\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/\hyperlink{_window_8h}{Window.\+h}\item 
+C\+:/\+Users/yuuki/\+Desktop/\+Doxygen\+\_\+lib\+\_\+source/include/\hyperlink{_window_8cpp}{Window.\+cpp}\end{DoxyCompactItemize}
