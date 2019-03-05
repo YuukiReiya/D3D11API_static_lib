@@ -9,8 +9,10 @@
 #include <tchar.h>
 
 /*!
-	@brief	静的配列の要素数取得
-	@return	静的配列の要素数
+	@fn			GetArraySize
+	@brief		静的配列の要素数取得
+	@param[in]	静的配列
+	@return		静的配列の要素数
 */
 template<typename Array,std::size_t Size>
 static inline std::size_t GetArraySize(const Array(&)[Size])
@@ -19,8 +21,10 @@ static inline std::size_t GetArraySize(const Array(&)[Size])
 }
 
 /*!
-	@brief	文字コード変換
-	@return	変換文字列
+	@fn			To_TString
+	@brief		文字コード変換(マルチバイト・ワイド文字)
+	@param[in]	変換したい文字列
+	@return		変換文字列
 */
 static inline std::basic_string<TCHAR> To_TString(std::string str) {
 #ifdef _UNICODE
@@ -35,6 +39,12 @@ static inline std::basic_string<TCHAR> To_TString(std::string str) {
 #endif // _UNICODE
 }
 
+/*
+	@fn		To_WString
+	@brief	文字コード変換(ワイド文字列)
+	@param[in]	変換したい文字列
+	@return	変換文字列
+*/
 static inline std::wstring To_WString(std::string str) 
 {
 	std::wstring ret;
@@ -46,7 +56,9 @@ static inline std::wstring To_WString(std::string str)
 }
 
 /*!
-	@brief	メッセージボックスのエラー表示
+	@fn			ErrorLog
+	@brief		メッセージボックスのエラー表示
+	@param[in]	表示するメッセージ
 */
 static inline void ErrorLog(std::string msg) {
 #ifdef _UNICODE
@@ -63,6 +75,7 @@ static inline void ErrorLog(std::string msg) {
 }
 
 /*!
+	@fn		WindowsErrorLog
 	@brief	WindowsAPIのエラー出力
 */
 static inline void WindowsErrorLog() {
@@ -81,6 +94,7 @@ static inline void WindowsErrorLog() {
 }
 
 /*!
+	@fn		SAFE_DELETE
 	@brief	安全なdelete
 */
 template <typename T>
