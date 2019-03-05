@@ -10,6 +10,12 @@
 #include "Direct3D11.h"
 
 /*!
+	@brief	usingディレクティブ
+	@using	API
+*/
+using namespace API;
+
+/*!
 	@brief	コンストラクタ
 */
 Camera::Camera()
@@ -22,10 +28,8 @@ Camera::Camera()
 		m_EyePt			= DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
 		m_LookAtPt		= DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 		m_UpVec			= DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+		m_WindowSize	= { 0,0 };
 	}
-
-	// 行列の生成
-	Initialize(GetEyePt());
 }
 
 /*!
@@ -42,8 +46,13 @@ Camera::~Camera()
 	@param[in]	注視点
 	@param[in]	上向きベクトル
 */
-void Camera::Initialize(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookPt, DirectX::XMFLOAT3 upVec) 
+void Camera::Initialize(DirectX::XMINT2 windowSize, DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookPt, DirectX::XMFLOAT3 upVec)
 {
+	// ウィンドウサイズ
+	{
+		m_WindowSize = windowSize;
+	}
+
 	// FLOAT3をVECTOR型に変換
 	{
 		m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0.0f);
@@ -127,10 +136,10 @@ void Camera::SetClipDistance(const float nearClip, const float farClip)
 void Camera::SetOrthographic()
 {
 	m_ProjMat = DirectX::XMMatrixOrthographicLH(
-		static_cast<float>(m_WindowSize.x),
-		static_cast<float>(m_WindowSize.y),
-		m_NearClip,
-		m_FarClip
+		static_cast<float>(m_WindowSize.x),	// ウィンドウの横幅
+		static_cast<float>(m_WindowSize.y),	// ウィンドウの縦幅
+		m_NearClip,							// クリップ距離:近
+		m_FarClip							// クリップ距離:遠
 	);
 }
 
