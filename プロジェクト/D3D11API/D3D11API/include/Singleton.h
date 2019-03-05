@@ -13,7 +13,7 @@ class Singleton {
 
 public:
 
-	/*! インスタンスのゲッター */
+	// インスタンスのゲッター
 	static inline T& GetInstance() {
 		static T instance;
 		return instance;
@@ -21,17 +21,17 @@ public:
 
 protected:
 
-	/*! 空コンストラクタ */
-	Singleton() {}			/*< 外部でSingletonクラスのインスタンス作成を禁止する */
+	// 空コンストラクタ
+	Singleton() {}			// 外部でSingletonクラスのインスタンス作成を禁止する
 
-	/*! 仮想デストラクタ */
-	virtual ~Singleton() {}	/*< このクラス自体にメンバは持っていないので特にやることもないし空で定義しておく */
+	// 仮想デストラクタ
+	virtual ~Singleton() {}	// このクラス自体にメンバは持っていないので特にやることもないし空で定義しておく
 
 private:
 
-	/*! 代入オペレーター削除 */
+	// 代入オペレーター削除
 	void operator=(const Singleton&) = delete;
 
-	/*! コピーコンストラクタ削除 */
+	// コピーコンストラクタ削除
 	Singleton(const Singleton&) = delete;
 };

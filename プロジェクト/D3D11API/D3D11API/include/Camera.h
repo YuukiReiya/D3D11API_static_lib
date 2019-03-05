@@ -30,19 +30,6 @@ public:
 	~Camera();
 
 	/*!
-		@fn			Initialize
-		@brief		初期化
-		@param[in]	視点
-		@param[in]	注視点
-		@param[in]	上向きベクトル
-	*/
-	void Initialize(
-		DirectX::XMFLOAT3 eyePt,
-		DirectX::XMFLOAT3 lookPt = { 0.0f,0.0f,0.0f },
-		DirectX::XMFLOAT3 upVec = c_UpVector
-	);
-
-	/*!
 		@var	c_Pi
 		@brief	円周率π ※D3DX_PIと同値
 	*/
@@ -67,13 +54,26 @@ public:
 		@brief	デフォルトクリッピング距離:遠
 		@value	0.1f
 	*/
-	static constexpr float	c_FarClip = 0.1f;
+	static constexpr float	c_FarClip = 100.0f;
 
 	/*!
 		@var	c_UpVector
 		@brief	デフォルトの上向きベクトル
 	*/
 	static constexpr DirectX::XMFLOAT3 c_UpVector = { 0,1,0 };
+	
+	/*!
+		@fn			Initialize
+		@brief		初期化
+		@param[in]	視点
+		@param[in]	注視点
+		@param[in]	上向きベクトル
+	*/
+	void Initialize(
+		DirectX::XMFLOAT3 eyePt,
+		DirectX::XMFLOAT3 lookPt = { 0.0f,0.0f,0.0f },
+		DirectX::XMFLOAT3 upVec = c_UpVector
+	);
 
 	/*!
 		@fn		GetViewMatrix
@@ -109,6 +109,14 @@ public:
 		@param[in]	設定するサイズ(x:横幅 y:縦幅)
 	*/
 	void SetWindowSize(const DirectX::XMINT2 size);
+
+	/*!
+		@fn			SetClipDistance
+		@brief		クリップ距離の設定
+		@param[in]	クリップ距離:近
+		@param[in]	クリップ距離:遠
+	*/
+	void SetClipDistance(const float nearClip, const float farClip);
 
 	/*!
 		@fn			SetFieldOfView
@@ -156,7 +164,7 @@ private:
 	*/
 	friend class Singleton<Camera>;
 
-	/*! 変数 */
+	//	メンバ変数
 	float m_FieldOfView;			// 視野角
 	float m_NearClip;				// デフォルトのクリッピング距離:近
 	float m_FarClip;				// デフォルトのクリッピング距離:遠

@@ -37,7 +37,7 @@ AudioMaster::~AudioMaster()
 */
 HRESULT AudioMaster::Initialize()
 {
-	/*! COMライブラリの初期化 */
+	// COMライブラリの初期化
 	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) {
 		if (FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED))) {
 			ErrorLog("COM not Initialize");
@@ -45,14 +45,14 @@ HRESULT AudioMaster::Initialize()
 		}
 	}
 
-	/*! XAudio2オブジェクト生成 */
+	// XAudio2オブジェクト生成
 	if (FAILED(XAudio2Create(&m_pXAudio2, 0))) {
 		CoUninitialize();
 		ErrorLog("IXAudio2 not instance");
 		return E_FAIL;
 	}
 
-	/*! MasteringVoiceオブジェクト生成 */
+	// MasteringVoiceオブジェクト生成
 	if (FAILED(m_pXAudio2->CreateMasteringVoice(&m_pMasteringVoice))) {
 		CoUninitialize();
 		ErrorLog("IXaudio2MasteringVoice not instance");
