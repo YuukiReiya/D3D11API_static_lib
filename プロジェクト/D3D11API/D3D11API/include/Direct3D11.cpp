@@ -43,6 +43,18 @@ Direct3D11::~Direct3D11()
 }
 
 /*!
+	@fn			SetWindowSize
+	@brief		ウィンドウサイズの設定
+	@param[in]	ウィンドウの横幅
+	@param[in]	ウィンドウの縦幅
+*/
+void D3D11::Direct3D11::SetWindowSize(const int width, const int height)
+{
+	m_WindowWidth	= width;
+	m_WindowHeight	= height;
+}
+
+/*!
 	@fn			イニシャライズ
 	@brief		初期化
 	@detail		デバイスの作成
@@ -55,8 +67,8 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	DXGI_SWAP_CHAIN_DESC sd;
 	SecureZeroMemory(&sd, sizeof(sd));
 	sd.BufferCount							= 1;							/*!< バック・バッファ数 */
-	sd.BufferDesc.Width						= c_WindowWidth;				/*!< バック・バッファの幅 */
-	sd.BufferDesc.Height					= c_WindowHeight;				/*!< バック・バッファの高さ */
+	sd.BufferDesc.Width						= m_WindowWidth;				/*!< バック・バッファの幅 */
+	sd.BufferDesc.Height					= m_WindowHeight;				/*!< バック・バッファの高さ */
 	sd.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;	/*!< フォーマット */
 	sd.BufferDesc.RefreshRate.Numerator		= 60;							/*!< リフレッシュ・レート(分子) */
 	sd.BufferDesc.RefreshRate.Denominator	= 1;							/*!< リフレッシュ・レート(分母) */
@@ -222,8 +234,8 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	/*! 深度 / ステンシル・テクスチャの設定 */
 	D3D11_TEXTURE2D_DESC descDepth;
 	SecureZeroMemory(&descDepth, sizeof(descDepth));
-	descDepth.Width					= c_WindowWidth;					/*!< 幅 */
-	descDepth.Height				= c_WindowHeight;				/*!< 高さ */
+	descDepth.Width					= m_WindowWidth;					/*!< 幅 */
+	descDepth.Height				= m_WindowHeight;				/*!< 高さ */
 	descDepth.MipLevels				= 1;							/*!< ミップマップ・レベル数 */
 	descDepth.ArraySize				= 1;							/*!< 配列サイズ */
 	descDepth.Format				= DXGI_FORMAT_D32_FLOAT;		/*!< フォーマット(深度のみ) */
@@ -278,12 +290,12 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	/*! ビューポートの設定 */
 	D3D11_VIEWPORT vp;
 	SecureZeroMemory(&vp, sizeof(vp));
-	vp.Width	= c_WindowWidth;		/*!< ビューポート領域の幅 */
-	vp.Height	= c_WindowHeight;	/*!< ビューポート領域の高さ */
-	//vp.MinDepth = 0.0f;				/*!< ビューポート領域の深度最小値(ニア・クリッピング距離) */
-	vp.MaxDepth = 1.0f;				/*!< ビューポート領域の深度最大値(ファー・クリッピング距離) */
-	//vp.TopLeftX = 0;				/*!< ビューポート領域の左上x座標 */
-	//vp.TopLeftY = 0;				/*!< ビューポート領域の左上y座標 */
+	vp.Width	= static_cast<float>(m_WindowWidth);		/*!< ビューポート領域の幅 */
+	vp.Height	= static_cast<float>(m_WindowHeight);		/*!< ビューポート領域の高さ */
+	//vp.MinDepth = 0.0f;									/*!< ビューポート領域の深度最小値(ニア・クリッピング距離) */
+	vp.MaxDepth = 1.0f;										/*!< ビューポート領域の深度最大値(ファー・クリッピング距離) */
+	//vp.TopLeftX = 0;										/*!< ビューポート領域の左上x座標 */
+	//vp.TopLeftY = 0;										/*!< ビューポート領域の左上y座標 */
 	m_pDeviceContext->RSSetViewports(
 		1,			/*!< ビューポートの数 */
 		&vp			/*!< 設定するビューポート配列 */

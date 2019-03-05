@@ -40,10 +40,10 @@ static inline std::basic_string<TCHAR> To_TString(std::string str) {
 }
 
 /*
-	@fn		To_WString
-	@brief	文字コード変換(ワイド文字列)
+	@fn			To_WString
+	@brief		文字コード変換(ワイド文字列)
 	@param[in]	変換したい文字列
-	@return	変換文字列
+	@return		変換文字列
 */
 static inline std::wstring To_WString(std::string str) 
 {
@@ -94,8 +94,9 @@ static inline void WindowsErrorLog() {
 }
 
 /*!
-	@fn		SAFE_DELETE
-	@brief	安全なdelete
+	@fn			SAFE_DELETE
+	@brief		安全なdelete
+	@param[in]	インスタンス
 */
 template <typename T>
 static inline void SAFE_DELETE(T* &p)

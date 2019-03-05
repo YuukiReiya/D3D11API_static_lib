@@ -10,15 +10,6 @@
 #include "Direct3D11.h"
 
 /*!
-	@var	定数宣言
-*/
-const double Camera::			c_Pi			= 3.14159265358979323846;					/*!< 円周率π ※D3DX_PIと同値 */
-const float Camera::			c_FieldOfView	= static_cast<float>(Camera::c_Pi) / 4.0f;	/*!< デフォルトの視野角(45度) */
-const float Camera::			c_NearClip		= 0.1f;										/*!< デフォルトのクリッピング距離:近 */
-const float Camera::			c_FarClip		= 100.0f;									/*!< デフォルトのクリッピング距離:遠 */
-const DirectX::XMFLOAT3 Camera::c_UpVector		= { 0.0f,1.0f,0.0f };						/*!< デフォルトの上向きベクトル */
-
-/*!
 	@brief	コンストラクタ
 */
 Camera::Camera()
@@ -73,7 +64,7 @@ void Camera::Initialize(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookPt, Direc
 	{
 		m_ProjMat = DirectX::XMMatrixPerspectiveFovLH(
 			m_FieldOfView,															/*!< 視野角 */
-			static_cast<float>(c_WindowWidth) / static_cast<float>(c_WindowHeight),	/*!< アスペクト比 */
+			static_cast<float>(m_WindowSize.x) / static_cast<float>(m_WindowSize.y),/*!< アスペクト比 */
 			m_NearClip,																/*!< クリッピング距離:近 */
 			m_FarClip																/*!< クリッピング距離:遠 */
 		);
@@ -107,6 +98,16 @@ DirectX::XMFLOAT3 Camera::GetLookAtPt() const
 }
 
 /*!
+	@fn			SetWindowSize
+	@brief		ウィンドウのサイズ
+	@param[in]	設定するサイズ(x:横幅 y:縦幅)
+*/
+void Camera::SetWindowSize(const DirectX::XMINT2 size)
+{
+	m_WindowSize = size;
+}
+
+/*!
 	@fn		SetOrthographic
 	@brief	Orthographic(正射影法)のプロジェクション行列に切り替える
 	@detail	奥行きがない2Dゲーム向けの設定
@@ -114,8 +115,8 @@ DirectX::XMFLOAT3 Camera::GetLookAtPt() const
 void Camera::SetOrthographic()
 {
 	m_ProjMat = DirectX::XMMatrixOrthographicLH(
-		static_cast<float>(c_WindowWidth),
-		static_cast<float>(c_WindowHeight),
+		static_cast<float>(m_WindowSize.x),
+		static_cast<float>(m_WindowSize.y),
 		m_NearClip,
 		m_FarClip
 	);
@@ -130,7 +131,7 @@ void Camera::SetPerspective()
 {
 	m_ProjMat = DirectX::XMMatrixPerspectiveFovLH(
 		m_FieldOfView,															/*!< 視野角 */
-		static_cast<float>(c_WindowWidth) / static_cast<float>(c_WindowHeight),	/*!< アスペクト比 */
+		static_cast<float>(m_WindowSize.x) / static_cast<float>(m_WindowSize.y),	/*!< アスペクト比 */
 		m_NearClip,																/*!< クリッピング距離:近 */
 		m_FarClip																/*!< クリッピング距離:遠 */
 	);

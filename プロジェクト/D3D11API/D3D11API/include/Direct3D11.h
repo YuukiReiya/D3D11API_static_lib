@@ -31,19 +31,6 @@
 */
 //#define MSAA
 
-
-/*!
-	@var	c_WindowWidth
-	@brief	ウィンドウの横幅
-*/
-constexpr INT c_WindowWidth		= 1920;
-
-/*!
-	@var	c_WindowHeight
-	@brief	ウィンドウの縦幅
-*/
-constexpr INT c_WindowHeight	= 1080;
-
 /*! Direct3D11関連の名前空間 */
 namespace D3D11 {
 
@@ -58,6 +45,14 @@ namespace D3D11 {
 			@brief	デストラクタ
 		*/
 		~Direct3D11();
+
+		/*!
+			@fn			SetWindowSize
+			@brief		ウィンドウサイズの設定
+			@param[in]	ウィンドウの横幅
+			@param[in]	ウィンドウの縦幅
+		*/
+		void SetWindowSize(const int width, const int height);
 
 		/*!
 			@fn			イニシャライズ
@@ -90,21 +85,21 @@ namespace D3D11 {
 		void Present();
 
 		/*!
-			@fn		COMレポートの出力
-			@brief	現在のCOMの生存状況を出力ウィンドウに出力する
-			@detail	デバッグ専用
+			@fn			COMレポートの出力
+			@brief		現在のCOMの生存状況を出力ウィンドウに出力する
+			@detail		デバッグ専用
 			@param[in]	出力ウィンドウに出力するメッセージ(このメッセージを出力後にCOMの生存状況を出力)
 		*/
 		void ReportCOMs(std::string firstMessage = "");
 
 		/*!
-			@fn		デバイスのゲッター
+			@fn		GetDevice
 			@brief	生成したデバイスを取得
 		*/
 		ID3D11Device* GetDevice()const { return m_pDevice.Get(); }
 
 		/*!
-			@fn		コンテキストのゲッター
+			@fn		GetDeviceContext
 			@brief	生成したコンテキストを取得
 		*/
 		ID3D11DeviceContext* GetDeviceContext()const { return m_pDeviceContext.Get(); }
@@ -125,7 +120,6 @@ namespace D3D11 {
 		*/
 		static constexpr float m_ClearColor[4]{ 0.0f,0.0f,0.0f,0.0f };		/*!< 描画ターゲットクリアカラー */
 
-
 		/*!
 			@brief	メンバー変数の宣言
 			@detail	ComPtrを使ったスマートポインタで宣言
@@ -139,6 +133,25 @@ namespace D3D11 {
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	m_pDepthStencilState;	/*!< デプスステンシルステート */
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState>	m_pRasterizerState;		/*!< ラスタライザステート */
 		Microsoft::WRL::ComPtr<ID3D11Debug>				m_pDebug;				/*!< デバッグ */
+
+		/*!
+			@var	m_WindowWidth
+			@brief	ウィンドウの横幅
+		*/
+		int m_WindowWidth;
+
+		/*!
+			@var	m_WindowHeight
+			@brief	ウィンドウの縦幅
+		*/
+		int m_WindowHeight;
+
+		/*!
+			@var	m_Vsync
+			@brief	Vsyncを使ったFPS同期
+			@detail true:Vsync false:アプリケーション側でのwait
+		*/
+		bool m_Vsync;
 	};
 };
 
