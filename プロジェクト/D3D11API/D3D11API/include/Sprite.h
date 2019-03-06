@@ -1,9 +1,3 @@
-#ifdef D3D11API_EXPORTS
-#define D3D11API_API __declspec(dllexport)
-#else
-#define D3D11API_API __declspec(dllimport)
-#endif
-
 /*
 	@file	Sprite.h
 	@date	2018/03/04
@@ -22,7 +16,7 @@
 /*! APIの名前空間に含める */
 namespace API{
 	/*!
-		スプライトを扱うクラス
+		@brief スプライトを扱うクラス
 	*/
 	class Sprite
 		{
