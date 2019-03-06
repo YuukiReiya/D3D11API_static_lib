@@ -5,6 +5,8 @@
 	@brief	WindowsAPIのウィンドウ生成
 */
 #pragma once
+#pragma comment(lib,"winmm.lib")
+#include "stdafx.h"
 #include <Windows.h>
 
 class Window
@@ -45,6 +47,8 @@ public:
 		@param[in]	ウィンドウの名前
 		@return		true:成功 false:失敗
 	*/
-	bool Initialize(HWND* hWnd,HINSTANCE hInstance,INT iX,INT iY,INT iWidth,INT iHeight, LPCTSTR WindowName);
-};
+	bool Initialize(HWND* hWnd, HINSTANCE hInstance, INT iX, INT iY, INT iWidth, INT iHeight, LPCTSTR WindowName);
 
+	bool Create(HWND hWnd, HINSTANCE hInstance, int x, int y, int width, int height, const wchar_t* name);
+
+};

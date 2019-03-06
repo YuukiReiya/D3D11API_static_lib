@@ -5,7 +5,7 @@
 	@brief	アプリケーションメインエントリーポイント
 */
 #pragma once
-
+#pragma comment(lib,"D3D11API.lib")
 #include <Windows.h>
 #include <mmsystem.h>
 #include <string_view>

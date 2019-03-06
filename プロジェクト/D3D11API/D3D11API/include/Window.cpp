@@ -110,3 +110,34 @@ bool Window::Initialize(HWND* hWnd, HINSTANCE hInstance, INT iX, INT iY, INT iWi
 
 	return true;
 }
+
+bool Window::Create(HWND hWnd, HINSTANCE hInstance, int x, int y, int width, int height, const wchar_t * name)
+{	
+	g_pWindow = this;
+	/*! ウィンドウの定義 */
+	WNDCLASSEX wc;
+	ZeroMemory(&wc, sizeof(wc));
+	wc.cbSize = sizeof(wc);
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WndProc;
+	wc.hInstance = hInstance;
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)GetStockObject(LTGRAY_BRUSH);
+	wc.lpszClassName = name;
+	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+	RegisterClassEx(&wc);
+	/*! ウィンドウの作成 */
+	hWnd = CreateWindow(name, name, WS_OVERLAPPEDWINDOW,
+		0, 0, width, height, 0, 0, hInstance, 0);
+	if (!hWnd)
+	{
+		return false;
+	}
+
+	/*! ウィンドウの表示 */
+	ShowWindow(hWnd, SW_SHOW);
+	UpdateWindow(hWnd);
+
+	return false;
+}

@@ -13,9 +13,16 @@
 #include "Main.h"
 
 /*!
-	@brief	名前空間
+	@brief	usingディレクティブ
+	@using	D3D11
 */
 using namespace D3D11;
+
+/*!
+	@brief	usingディレクティブ
+	@using	API
+*/
+using namespace API;
 
 /*!
 	@brief	コンストラクタ
@@ -48,10 +55,16 @@ bool Main::Init(HINSTANCE hInstance)
 	auto tmp = To_TString(c_AppName.data());
 	const auto appName = const_cast<LPTSTR>(tmp.c_str());
 
-	if (!m_pWindow->Initialize(&m_hWnd, hInstance,
-		0, 0, c_WindowWidth, c_WindowHeight, appName)) {
-		return false;
-	}
+	const char*c = "ad";
+
+	//if (!m_pWindow->Initialize(&m_hWnd, hInstance,
+	//	0, 0, c_WindowWidth, c_WindowHeight, c)) {
+	//	return false;
+	//}
+
+	//m_pWindow->Initialize(m_hWnd, hInstance,
+	//	0, 0, c_WindowWidth, c_WindowHeight, c);
+	m_pWindow->Create(m_hWnd, hInstance, 0, 0, 960, 480, L"A");
 
 	// デバイス初期化
 
@@ -74,7 +87,7 @@ void Main::Loop()
 	SetUpFPS();
 
 	// カメラの初期化
-	Camera::GetInstance().Initialize({ 0,0,-1 });
+	//Camera::GetInstance().Initialize();
 
 	HRESULT hr = NULL;
 
