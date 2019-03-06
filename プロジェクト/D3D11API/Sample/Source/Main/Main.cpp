@@ -27,7 +27,10 @@ using namespace API;
 /*!
 	@brief	コンストラクタ
 */
-Main::Main() :m_pWindow(nullptr)
+Main::Main()
+	:m_hWnd(nullptr),
+	m_hInstance(nullptr),
+	m_pWindow(nullptr)
 {
 }
 
@@ -45,26 +48,20 @@ Main::~Main()
 	@fn			Init
 	@brief		初期化
 	@param[in]	インスタンスハンドラ
+	@return		true:成功 false:失敗
 */
-
 bool Main::Init(HINSTANCE hInstance)
 {
-	m_pWindow = new Window;
+	m_pWindow = std::make_unique<Window>();
+	m_hInstance = hInstance;
 
-	// UNICODE、マルチバイト両対応用文字列変換
-	auto tmp = To_TString(c_AppName.data());
-	const auto appName = const_cast<LPTSTR>(tmp.c_str());
+	//	ウィンドウ生成
+	if (!m_pWindow->Create(m_hWnd, hInstance, 0, 0,
+		c_WindowWidth, c_WindowHeight, c_AppName.data())) {
+		ErrorLog("Window is not create!");
+		return false;
+	}
 
-	const char*c = "ad";
-
-	//if (!m_pWindow->Initialize(&m_hWnd, hInstance,
-	//	0, 0, c_WindowWidth, c_WindowHeight, c)) {
-	//	return false;
-	//}
-
-	//m_pWindow->Initialize(m_hWnd, hInstance,
-	//	0, 0, c_WindowWidth, c_WindowHeight, c);
-	m_pWindow->Create(m_hWnd, hInstance, 0, 0, 960, 480, L"A");
 
 	// デバイス初期化
 
@@ -72,13 +69,15 @@ bool Main::Init(HINSTANCE hInstance)
 }
 
 /*!
-	@brief	解放
+	@fn		Release
+	@brief	明示的な解放処理
 */
 void Main::Release()
 {
 }
 
 /*!	
+	@fn		Loop
 	@brief	アプリケーション処理の入り口
 */
 void Main::Loop()
@@ -113,7 +112,9 @@ void Main::Loop()
 }
 
 /*
-	@brief	高解像度タイマーが対応しているか確認
+	@fn		HighQualityTimer
+	@brief	高解像度タイマーの対応を確認
+	@return	true:対応 false:未対応
 */
 bool Main::HighQualityTimer()
 {
@@ -128,7 +129,8 @@ bool Main::HighQualityTimer()
 }
 
 /*!
-	@brief	アプリケーション処理
+	@fn		App
+	@brief	アプリケーションの処理
 */
 void Main::App()
 {
@@ -167,7 +169,8 @@ void Main::App()
 }
 
 /*!
-	@brief	更新
+	@fn		Update
+	@brief	更新処理
 */
 void Main::Update()
 {
@@ -175,7 +178,8 @@ void Main::Update()
 }
 
 /*!
-	@brief	描画
+	@fn		Render
+	@brief	描画処理
 */
 void Main::Render()
 {
@@ -189,6 +193,7 @@ void Main::Render()
 }
 
 /*!
+	@fn		SetUpFPS
 	@brief	FPS調整の準備
 */
 void Main::SetUpFPS()
@@ -198,6 +203,7 @@ void Main::SetUpFPS()
 	QueryPerformanceCounter(&m_TimeStart);
 }
 /*!
+	@fn		SleepApp
 	@brief	アプリケーション処理のお休み
 */
 void Main::SleepApp()

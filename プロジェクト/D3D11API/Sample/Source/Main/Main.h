@@ -9,12 +9,20 @@
 #include <Windows.h>
 #include <mmsystem.h>
 #include <string_view>
+#include <memory>
 #include <Window.h>
 
 class Main
 {
 public:
-	Main();
+	/*!
+		@brief	コンストラクタ
+	*/
+	explicit Main();
+
+	/*!
+		@brief	デストラクタ
+	*/
 	~Main();
 
 	/*!
@@ -27,7 +35,7 @@ public:
 
 	/*!
 		@fn		Release
-		@brief	解放処理
+		@brief	明示的な解放処理
 	*/
 	void Release();
 
@@ -116,6 +124,12 @@ private:
 	HWND m_hWnd;
 
 	/*!
+		@var	m_hInstance
+		@brief	インスタンスハンドラ
+	*/
+	HINSTANCE m_hInstance;
+
+	/*!
 		@var	m_FrameTime
 		@brief	経過時間
 	*/
@@ -139,6 +153,10 @@ private:
 	*/
 	LARGE_INTEGER m_TimeFreq;
 
-	Window* m_pWindow;
+	/*!
+		@var	m_pWindow
+		@brief	ウィンドウの変数
+	*/
+	std::unique_ptr<Window> m_pWindow;
 };
 
