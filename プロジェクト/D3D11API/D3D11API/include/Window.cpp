@@ -10,9 +10,11 @@
 #include "MemoryLeaks.h"
 #include "MyGame.h"
 
+
+
 /*!
 	@var	g_pWindow
-	@brief	変数のの参照
+	@brief	変数のの参照(インスタンスの生成は行わない)
 */
 Window*	g_pWindow = nullptr;
 

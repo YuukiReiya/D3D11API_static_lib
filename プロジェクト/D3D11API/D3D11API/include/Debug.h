@@ -74,9 +74,26 @@ public:
 	*/
 	static void DisableCloseButton();
 private:
+	/*!
+		@brief	コンストラクタ削除
+	*/
 	Debug()		= delete;
+
+	/*!
+		@brief	デストラクタ削除
+	*/
 	~Debug()	= delete;
-	static HWND  m_hWndConsole;	/*!< コンソールウィンドウハンドラ */
-	static HMENU m_hMenu;		/*!< メニューハンドラ */
+
+	/*!
+		@var	m_hWndConsole
+		@brief	コンソールウィンドウハンドラ
+	*/
+	static HWND  m_hWndConsole;	// コンソールウィンドウハンドラ
+
+	/*!
+		@var	m_hMenu
+		@brief	メニューハンドラ
+	*/
+	static HMENU m_hMenu;		// メニューハンドラ
 };
 

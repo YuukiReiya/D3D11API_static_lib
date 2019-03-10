@@ -8,6 +8,7 @@
 #include <Direct3D11.h>
 #include <MyGame.h>
 #include <MemoryLeaks.h>
+#include <Debug.h>
 #include <AudioMaster.h>
 #include <Camera.h>
 #include "Main.h"
@@ -58,12 +59,26 @@ bool Main::Init(HINSTANCE hInstance)
 	//	ウィンドウ生成
 	if (!m_pWindow->Create(m_hWnd, hInstance, 0, 0,
 		c_WindowWidth, c_WindowHeight, c_AppName.data())) {
-		ErrorLog("Window is not create!");
+		ErrorLog("Window generation failed!");
 		return false;
 	}
 
 
-	// デバイス初期化
+	//	デバイス初期化
+	HRESULT hr = NULL;
+	hr = Direct3D11::GetInstance().Initialize(m_hWnd);
+	if (FAILED(hr)) {
+		ErrorLog("Device initialization failed!");
+	}
+
+	//	デバッグコンソール表示
+#if defined DEBUG||_DEBUG
+	//	コンソールウィンドウの表示
+	if(!Debug)
+	//	デバッグコンソールウィンドウの閉じるボタン無効か
+
+#endif // DEBUG
+
 
 	return true;
 }

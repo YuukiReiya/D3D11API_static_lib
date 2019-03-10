@@ -11,9 +11,16 @@
 #include "MyGame.h"
 
 /*!
-	静的メンバ変数の初期化と宣言
+	
+	@var	m_hWndConsole
+	@brief	静的メンバ変数の初期化と宣言
 */
 HWND	Debug::m_hWndConsole	= nullptr;
+
+/*!
+	@var	m_hMenu
+	@brief	静的メンバの初期化と宣言
+*/
 HMENU	Debug::m_hMenu			= nullptr;
 
 
@@ -32,33 +39,33 @@ HMENU	Debug::m_hMenu			= nullptr;
 //}
 //
 /*!
-	@fn		コンソールウィンドウの生成
+	@fn		CreateConsoleWindow
 	@brief	コンソールウィンドウの作成とハンドラの初期化
 	@detail	メンバハンドラにハンドル情報を格納
 */
 bool Debug::CreateConsoleWindow()
 {
-	/*! コンソール作成 */
+	// コンソール作成
 	if (!AllocConsole()) {
 		ErrorLog("Debug Console Window is not create!");
 		return false;
 	}
 
-	/*! 標準入出力に割り当てる */
+	// 標準入出力に割り当てる
 	FILE*fp;
 
-	/*! 新たなファイルを開きストリームと結びつける */
+	// 新たなファイルを開きストリームと結びつける
 	freopen_s(&fp, "CONOUT$", "w", stdout);
 	freopen_s(&fp, "CONIN$", "r", stdin);
 
-	/*! ウィンドウハンドラ取得 */
+	// ウィンドウハンドラ取得
 	m_hWndConsole = GetConsoleWindow();
 	if (m_hWndConsole == nullptr) {
 		ErrorLog("console window handle is \"nullptr\"!");
 		return false;
 	}
 
-	/*! メニューハンドラ取得 */
+	// メニューハンドラ取得
 	m_hMenu = GetSystemMenu(m_hWndConsole, false);
 	if (m_hMenu == nullptr) {
 		ErrorLog("console menu handle is \"nullptr\"!");
@@ -68,7 +75,7 @@ bool Debug::CreateConsoleWindow()
 }
 
 /*!
-	@fn		コンソールウィンドウの破棄
+	@fn		DestroyConsoleWindow
 	@brief	生成したコンソールウィンドウの破棄を行う
 	@detail	ハンドラがハンドル情報を取得していたらウィンドウが作られているのでFreeConsoleを呼び出す
 */
@@ -79,12 +86,12 @@ void Debug::DestroyConsoleWindow()
 }
 
 /*!
-	@fn		閉じるボタンの無効化
+	@fn		DisableCloseButton
 	@brief	閉じるボタンを押せなくする
 	@detail	RemoveMenuで閉じるボタンを無効化している
 */
 void Debug::DisableCloseButton()
 {
-	/*! メニューの閉じるボタンを無効化 */
+	// メニューの閉じるボタンを無効化
 	RemoveMenu(m_hMenu, SC_CLOSE, MF_BYCOMMAND);
 }

@@ -27,13 +27,13 @@ namespace API {
 		*/
 		enum TileMode
 		{
-			/*! 繰り返し無し */
-			Clamp = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP,			/*!< デフォルト */
-			Border = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER,			/*!< SAMPLER_DESCまたはHLSLで指定した境界色を設定 */
+			// 繰り返し無し
+			Clamp = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP,			// デフォルト
+			Border = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER,			// SAMPLER_DESCまたはHLSLで指定した境界色を設定
 			MirrorOnce = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR_ONCE,
-			/*! タイリング */
-			Wrap = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP,			/*!< 繰り返し */
-			Mirror = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR,			/*!< 繰り返し反転 */
+			// タイリング 
+			Wrap = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP,				// 繰り返し
+			Mirror = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR,			// 繰り返し反転 
 
 		};
 
@@ -43,10 +43,10 @@ namespace API {
 		*/
 		enum FilteringMode
 		{
-			Point = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_POINT,			/*!< ポイントフィルタリング:最悪品質でコスパ良 */
-			Bilinear = D3D11_FILTER::D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT,	/*!< バイリニアテクスチャフィルタリング */
-			Trilinear = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR,		/*!< トリリニアテクスチャフィルタリング:デフォルト設定 */
-			Anisotropic = D3D11_FILTER::D3D11_FILTER_ANISOTROPIC			/*!< 異方性フィルタリング:最高品質でコスパ悪 */
+			Point = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_POINT,			// ポイントフィルタリング:最悪品質でコスパ良
+			Bilinear = D3D11_FILTER::D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT,	// バイリニアテクスチャフィルタリング
+			Trilinear = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR,		// トリリニアテクスチャフィルタリング:デフォルト設定
+			Anisotropic = D3D11_FILTER::D3D11_FILTER_ANISOTROPIC			// 異方性フィルタリング:最高品質でコスパ悪
 		};
 
 		/*!
@@ -107,13 +107,13 @@ namespace API {
 		*/
 		HRESULT SetTileAndFiltering(const TileMode tileMode, const FilteringMode filterMode);
 	public:
-		Color			m_Color;		/*!< カラー */
+		Color			m_Color;		// カラー */
 	protected:
-		TileMode		m_eTileMode;	/*!< タイリングモード */
-		FilteringMode	m_eFilterMode;	/*!< フィルタリングモード */
-		DirectX::XMINT2 m_Size;			/*!< 画像サイズ */
-		Microsoft::WRL::ComPtr<ID3D11SamplerState>		m_pSamplerState;		/*!< サンプラーステート */
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pShaderResourceView;	/*!< シェーダーリソースビュー(SRV) */
+		TileMode		m_eTileMode;	// タイリングモード
+		FilteringMode	m_eFilterMode;	// フィルタリングモード
+		DirectX::XMINT2 m_Size;			// 画像サイズ
+		Microsoft::WRL::ComPtr<ID3D11SamplerState>		m_pSamplerState;		// サンプラーステート
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pShaderResourceView;	// シェーダーリソースビュー(SRV)
 
 
 		/*!
