@@ -51,7 +51,7 @@ namespace API {
 			@param[in]	ウィンドウの名前
 			@return		true:成功 false:失敗
 		*/
-		bool Create(HWND hWnd, HINSTANCE hInstance, int x, int y, int width, int height, std::string name);
+		bool Create(HWND* hWnd, HINSTANCE hInstance, int x, int y, int width, int height, std::string name);
 
 	};
 }

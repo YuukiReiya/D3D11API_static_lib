@@ -157,6 +157,6 @@ private:
 		@var	m_pWindow
 		@brief	ウィンドウの変数
 	*/
-	std::unique_ptr<Window> m_pWindow;
+	std::unique_ptr<API::Window> m_pWindow;
 };
 

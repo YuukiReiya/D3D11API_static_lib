@@ -57,28 +57,40 @@ bool Main::Init(HINSTANCE hInstance)
 	m_hInstance = hInstance;
 
 	//	ウィンドウ生成
-	if (!m_pWindow->Create(m_hWnd, hInstance, 0, 0,
+	if (!m_pWindow->Create(&m_hWnd, m_hInstance, 0, 0,
 		c_WindowWidth, c_WindowHeight, c_AppName.data())) {
 		ErrorLog("Window generation failed!");
 		return false;
 	}
 
+	Direct3D11::GetInstance().SetWindowSize(c_WindowWidth, c_WindowHeight);
 
 	//	デバイス初期化
 	HRESULT hr = NULL;
 	hr = Direct3D11::GetInstance().Initialize(m_hWnd);
 	if (FAILED(hr)) {
 		ErrorLog("Device initialization failed!");
+		return false;
 	}
 
 	//	デバッグコンソール表示
 #if defined DEBUG||_DEBUG
+
 	//	コンソールウィンドウの表示
-	if(!Debug)
-	//	デバッグコンソールウィンドウの閉じるボタン無効か
-
+	if (Debug::CreateConsoleWindow())
+	{
+		//	デバッグコンソールウィンドウの閉じるボタン無効化
+		Debug::DisableCloseButton();
+		return true;
+	}
+	//	コンソールの表示失敗
+	else 
+	{
+		ErrorLog("Debug console generation failed!");
+		return false;
+	}
+	
 #endif // DEBUG
-
 
 	return true;
 }
@@ -89,6 +101,7 @@ bool Main::Init(HINSTANCE hInstance)
 */
 void Main::Release()
 {
+	m_pWindow.reset();
 }
 
 /*!	

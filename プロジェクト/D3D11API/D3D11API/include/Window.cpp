@@ -10,7 +10,11 @@
 #include "MemoryLeaks.h"
 #include "MyGame.h"
 
-
+/*!
+	@brief	usingディレクティブ
+	@using	API
+*/
+using namespace API;
 
 /*!
 	@var	g_pWindow
@@ -72,50 +76,6 @@ LRESULT Window::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 /*!
-	@fn			イニシャライズ
-	@brief		初期化
-	@detail		win32のウィンドウ作成
-	@param[in]	ウィンドウハンドラの参照
-	@param[in]	インスタンスハンドラ
-	@param[in]	生成位置x
-	@param[in]	生成位置y
-	@param[in]	横幅
-	@param[in]	縦幅
-	@param[in]	ウィンドウの名前
-	@return		true:成功 false:失敗
-*/
-bool Window::Initialize(HWND* hWnd, HINSTANCE hInstance, INT iX, INT iY, INT iWidth, INT iHeight, LPCTSTR WindowName)
-{
-	g_pWindow = this;
-
-	// ウィンドウの定義
-	WNDCLASSEX wc;
-	ZeroMemory(&wc, sizeof(wc));
-	wc.cbSize = sizeof(wc);
-	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = WndProc;
-	wc.hInstance = hInstance;
-	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(LTGRAY_BRUSH);
-	wc.lpszClassName = WindowName;
-	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
-	RegisterClassEx(&wc);
-	// ウィンドウの作成
-	*hWnd = CreateWindow(WindowName, WindowName, WS_OVERLAPPEDWINDOW,
-		0, 0, iWidth, iHeight, 0, 0, hInstance, 0);
-	if (!hWnd)
-	{
-		return false;
-	}
-	/*! ウィンドウの表示 */
-	ShowWindow(*hWnd, SW_SHOW);
-	UpdateWindow(*hWnd);
-
-	return true;
-}
-
-/*!
 	@fn			Create
 	@brief		初期化
 	@detail		win32のウィンドウ作成
@@ -128,7 +88,7 @@ bool Window::Initialize(HWND* hWnd, HINSTANCE hInstance, INT iX, INT iY, INT iWi
 	@param[in]	ウィンドウの名前
 	@return		true:成功 false:失敗
 */
-bool Window::Create(HWND hWnd, HINSTANCE hInstance, int x, int y, int width, int height, std::string name)
+bool Window::Create(HWND* hWnd, HINSTANCE hInstance, int x, int y, int width, int height, std::string name)
 {
 	//	自身をメッセージプロシージャに関連させる
 	g_pWindow = this;
@@ -153,16 +113,16 @@ bool Window::Create(HWND hWnd, HINSTANCE hInstance, int x, int y, int width, int
 	RegisterClassEx(&wc);
 
 	//	ウィンドウの作成
-	hWnd = CreateWindow(windowName, windowName, WS_OVERLAPPEDWINDOW,
+	*hWnd = CreateWindow(windowName, windowName, WS_OVERLAPPEDWINDOW,
 		0, 0, width, height, 0, 0, hInstance, 0);
-	if (!hWnd)
+	if (!*hWnd)
 	{
 		return false;
 	}
 
 	//	ウィンドウの表示
-	ShowWindow(hWnd, SW_SHOW);
-	UpdateWindow(hWnd);
+	ShowWindow(*hWnd, SW_SHOW);
+	UpdateWindow(*hWnd);
 
 	return true;
 }

@@ -32,6 +32,7 @@ Direct3D11::Direct3D11()
 	m_pDepthStencilState	= nullptr;
 	m_pRasterizerState		= nullptr;
 	m_pDebug				= nullptr;
+	m_WindowHeight = m_WindowWidth = 0;
 }
 
 /*!
@@ -63,6 +64,12 @@ void D3D11::Direct3D11::SetWindowSize(const int width, const int height)
 */
 HRESULT Direct3D11::Initialize(HWND hWnd)
 {
+#if defined DEBUG||_DEBUG
+	//	デバッグレイヤーを有効化
+	Microsoft::WRL::ComPtr<ID3D11Debug>debug;
+	
+#endif
+
 	/*! デバイスとスワップ・チェイン作成 */
 	DXGI_SWAP_CHAIN_DESC sd;
 	SecureZeroMemory(&sd, sizeof(sd));

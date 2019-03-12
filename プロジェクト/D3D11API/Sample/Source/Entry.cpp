@@ -6,7 +6,7 @@
 */
 #pragma once
 #include "Main/Main.h"
-#include "MemoryLeaks.h"
+#include <MemoryLeaks.h>
 #include <stdio.h>
 #include <tchar.h>
 #include <locale>
