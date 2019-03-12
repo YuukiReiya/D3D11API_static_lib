@@ -70,13 +70,42 @@ void Set_##base(const __VA_ARGS__& value){base = value;}
 	*/
 	DirectX::XMFLOAT4 GetRGBA()const;
 
+	/*!
+		@var	メンバ変数
+		@brief	x = r , y = g , z = b ,w = a
+	*/
 	float x, y, z, w;
 
+	/*!
+		@brief	別名定義(赤)
+		@detail	xをrと関連付ける
+	*/
 	PropertyAlias(x, r, float);
+
+	/*!
+		@brief	別名定義(緑)
+		@detail	yをgと関連付ける
+	*/
 	PropertyAlias(y, g, float);
+
+	/*!
+		@brief	別名定義(青)
+		@detail	zをbと関連付ける
+	*/
 	PropertyAlias(z, b, float);
+
+	/*!
+		@brief	別名定義(透過)
+		@detail	wをaと関連付ける
+	*/
 	PropertyAlias(w, a, float);
 
+	/*!
+		@brief	代入演算子
+	*/
+	Color &operator=(const Color &color) {
+		return (*this);
+	}
 };
 
 

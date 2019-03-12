@@ -18,6 +18,7 @@
 #include <dxgidebug.h>
 #endif
 #include "Singleton.h"
+#include "Color.h"
 
 /*!
 	@def	Vsync
@@ -53,6 +54,13 @@ namespace D3D11 {
 			@param[in]	ウィンドウの縦幅
 		*/
 		void SetWindowSize(const int width, const int height);
+
+		/*!
+			@fn			SetClearColor
+			@brief		クリア色の設定
+			@param[in]	色
+		*/
+		void SetClearColor(Color clearColor);
 
 		/*!
 			@fn			イニシャライズ
@@ -115,12 +123,6 @@ namespace D3D11 {
 		Direct3D11();
 
 		/*!
-			@var	c_ClearColor
-			@brief	描画ターゲットのクリアカラー
-		*/
-		static constexpr float m_ClearColor[4]{ 0.0f,0.0f,0.0f,0.0f };		/*!< 描画ターゲットクリアカラー */
-
-		/*!
 			@brief	メンバー変数の宣言
 			@detail	ComPtrを使ったスマートポインタで宣言
 		*/
@@ -152,6 +154,12 @@ namespace D3D11 {
 			@detail true:Vsync false:アプリケーション側でのwait
 		*/
 		bool m_Vsync;
+
+		/*!
+			@var	m_ClearColor
+			@brief	描画ターゲットのクリアカラー
+		*/
+		Color m_ClearColor;
 	};
 };
 

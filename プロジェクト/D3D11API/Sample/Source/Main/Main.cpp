@@ -63,7 +63,11 @@ bool Main::Init(HINSTANCE hInstance)
 		return false;
 	}
 
+	//	ウィンドウサイズの指定
 	Direct3D11::GetInstance().SetWindowSize(c_WindowWidth, c_WindowHeight);
+
+	//	レンダーのクリアカラー
+	Direct3D11::GetInstance().SetClearColor(Color(1, 1, 1, 1));
 
 	//	デバイス初期化
 	HRESULT hr = NULL;
