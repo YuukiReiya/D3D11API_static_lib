@@ -55,13 +55,13 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 {
 	HRESULT hr;
 
-	/*! 初期化 */
+	// 初期化
 	hr = Initialize(filePath, divNum);
 	if (FAILED(hr)) {
 		return hr;
 	}
 
-	/*! サイズの設定 */
+	// サイズの設定
 	hr = SetSize(size) ? S_OK : E_FAIL;
 	return hr;
 }
@@ -95,13 +95,13 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 {
 	HRESULT hr;
 
-	/*! 初期化 */
+	// 初期化
 	hr = Initialize(filePath, divNum, filterMode);
 	if (FAILED(hr)) {
 		return hr;
 	}
 
-	/*! サイズの設定 */
+	// サイズの設定
 	hr = SetSize(size) ? S_OK : E_FAIL;
 	return hr;
 }
@@ -120,7 +120,7 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMFLO
 {
 	HRESULT hr;
 
-	/*! 画像のロード */
+	// 画像のロード
 	hr = Load(filePath);
 	if (FAILED(hr)) {
 		std::string error = "\"" + filePath + "\" is not load in texture atlas!";
@@ -128,13 +128,13 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMFLO
 		return E_FAIL;
 	}
 
-	/*! タイリングモード */
+	// タイリングモード
 	m_eFilterMode	= filterMode;
 
-	/*! フィルタリングモード */
+	// フィルタリングモード
 	m_eTileMode		= tileMode;
 
-	/*! タイリングとフィルタリングを設定し、サンプラーステートを作成 */
+	// タイリングとフィルタリングを設定し、サンプラーステートを作成
 	hr = SetTileAndFiltering(m_eTileMode, m_eFilterMode);
 	if (FAILED(hr)) {
 		std::string error = "\"" + filePath + "\" is not load in texture atlas!\n";
@@ -142,7 +142,7 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMFLO
 		return E_FAIL;
 	}
 
-	/*! 分割数の設定 */
+	// 分割数の設定
 	m_DivNum = divNum;
 
 	return S_OK;
@@ -164,7 +164,7 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 {
 	HRESULT hr;
 
-	/*! 画像のロード */
+	// 画像のロード
 	hr = Load(filePath);
 	if (FAILED(hr)) {
 		std::string error = "\"" + filePath + "\" is not load in texture atlas!";
@@ -172,13 +172,13 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 		return E_FAIL;
 	}
 
-	/*! タイリングモード */
+	// タイリングモード
 	m_eFilterMode = filterMode;
 
-	/*! フィルタリングモード */
+	// フィルタリングモード
 	m_eTileMode = tileMode;
 
-	/*! タイリングとフィルタリングを設定し、サンプラーステートを作成 */
+	// タイリングとフィルタリングを設定し、サンプラーステートを作成
 	hr = SetTileAndFiltering(m_eTileMode, m_eFilterMode);
 	if (FAILED(hr)) {
 		std::string error = "\"" + filePath + "\" is not load in texture atlas!\n";
@@ -186,10 +186,10 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 		return E_FAIL;
 	}
 
-	/*! 分割数の設定 */
+	// 分割数の設定
 	m_DivNum = divNum;
 
-	/*! サイズの設定 */
+	// サイズの設定
 	hr = SetSize(size) ? S_OK : E_FAIL;
 
 	return hr;
@@ -202,7 +202,7 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 */
 void API::TextureAtlas::Finalize()
 {
-	/*! 抽象クラスのメンバの破棄 */
+	// 抽象クラスのメンバの破棄
 	ITexture::Finalize();
 }
 
@@ -218,18 +218,18 @@ void API::TextureAtlas::SetDevNum(const DirectX::XMFLOAT2 divNum)
 	{
 		std::string error;
 
-		/*! xの範囲外チェック */
+		// xの範囲外チェック
 		if (divNum.x <= 0) {
 			error = "divNum.x is less than Zero!\n\
 			divNum.x = " + std::to_string(divNum.x) + " <= 0";
-			throw error;/*!< xの文化通数が0以下 */
+			throw error;// xの文化通数が0以下
 		}
 
-		/*! yの範囲外チェック */
+		/ yの範囲外チェック
 		if (divNum.y <= 0) {
 			error = "divNum.y is less than Zero!\n\
 			divNum.y = " + std::to_string(divNum.y) + " <= 0";
-			throw error;/*!< yの文化通数が0以下 */
+			throw error;// yの文化通数が0以下
 		}
 
 	}
@@ -253,7 +253,7 @@ void API::TextureAtlas::SetAtlasIndex(const DirectX::XMFLOAT2 index)
 	std::string error;
 	try
 	{
-		/*! xの範囲外チェック */
+		// xの範囲外チェック
 		if (index.x < 0) {
 			error = "index.x is out-of-range\n\
 			index.x = " + std::to_string(index.x) + "\n" +
@@ -261,7 +261,7 @@ void API::TextureAtlas::SetAtlasIndex(const DirectX::XMFLOAT2 index)
 			throw error;
 		}
 
-		/*! xの範囲外チェック */
+		// xの範囲外チェック
 		if (m_DivNum.x <= index.x) {
 			error = "index.x is out-of-range\n\
 			index.x = " + std::to_string(index.x) + "\n" +
@@ -269,7 +269,7 @@ void API::TextureAtlas::SetAtlasIndex(const DirectX::XMFLOAT2 index)
 			throw error;
 		}
 
-		/*! yの範囲外チェック */
+		// yの範囲外チェック
 		if (index.y < 0) {
 			error = "index.y is out-of-range\n\
 			index.y = " + std::to_string(index.y) + "\n" +
@@ -277,7 +277,7 @@ void API::TextureAtlas::SetAtlasIndex(const DirectX::XMFLOAT2 index)
 			throw error;
 		}
 
-		/*! yの範囲外チェック */
+		// yの範囲外チェック
 		if (m_DivNum.y <= index.y) {
 			error = "index.y is out-of-range\n\
 			index.y = " + std::to_string(index.y) + "\n" +

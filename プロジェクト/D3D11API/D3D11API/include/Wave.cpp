@@ -54,40 +54,40 @@ HRESULT Wave::Initialize()
 */
 bool Wave::Load(std::string filePath)
 {
-	HMMIO hMmio = NULL;				/*!< WindowsマルチメディアAPIハンドル */
-	DWORD waveSize = 0;				/*!< Waveデータサイズ */
-	WAVEFORMATEX*	pFormat;		/*!< Waveフォーマット */
-	MMCKINFO		chunkInfo;		/*!< チャンク情報 */
-	MMCKINFO		riffChunkInfo;	/*!< 最上部チャンク */
-	PCMWAVEFORMAT	pcmFormat;		/*!< PCMフォーマット */
+	HMMIO hMmio = NULL;				// WindowsマルチメディアAPIハンドル
+	DWORD waveSize = 0;				// Waveデータサイズ
+	WAVEFORMATEX*	pFormat;		// Waveフォーマット
+	MMCKINFO		chunkInfo;		// チャンク情報
+	MMCKINFO		riffChunkInfo;	// 最上部チャンク
+	PCMWAVEFORMAT	pcmFormat;		// PCMフォーマット
 
-	/*! Waveファイル内のヘッダー情報読み込み */
+	// Waveファイル内のヘッダー情報読み込み
 	auto s_path = To_TString(filePath);
 	const auto path = const_cast<LPTSTR>(s_path.c_str());
 	hMmio = mmioOpen(path, NULL, MMIO_ALLOCBUF | MMIO_READ);
 
-	/*! Waveファイルの読み込み失敗 */
+	// Waveファイルの読み込み失敗
 	if (hMmio == NULL) {
 		std::string error = "\"" + filePath + "\" is not load in sound!";
 		ErrorLog(error);
 		return false;
 	}
 
-	/*! ファイルポインタをRIFFチャンクの先頭にセット */
+	// ファイルポインタをRIFFチャンクの先頭にセット
 	mmioDescend(hMmio, &riffChunkInfo, NULL, 0);
 
-	/*! ファイルポインタを'f' 'm' 't' ' ' チャンクにセットする */
+	// ファイルポインタを'f' 'm' 't' ' ' チャンクにセットする
 	chunkInfo.ckid = mmioFOURCC('f', 'm', 't', ' ');
 	mmioDescend(hMmio, &chunkInfo, &riffChunkInfo, MMIO_FINDCHUNK);
 
-	/*! フォーマット読み込み */
+	// フォーマット読み込み
 	mmioRead(hMmio, (HPSTR)&pcmFormat, sizeof(pcmFormat));
 	pFormat = (WAVEFORMATEX*)new CHAR[sizeof(WAVEFORMATEX)];
 	memcpy(pFormat, &pcmFormat, sizeof(pcmFormat));
 	pFormat->cbSize = 0;
 	mmioAscend(hMmio, &chunkInfo, 0);
 
-	/*! 音データ読み込み */
+	// 音データ読み込み
 	chunkInfo.ckid = mmioFOURCC('d', 'a', 't', 'a');
 	mmioDescend(hMmio, &chunkInfo, &riffChunkInfo, MMIO_FINDCHUNK);
 	waveSize = chunkInfo.cksize;
@@ -95,16 +95,16 @@ bool Wave::Load(std::string filePath)
 	DWORD offset = chunkInfo.dwDataOffset;
 	mmioRead(hMmio, (char*)m_pWaveBuffer, waveSize);
 
-	/*! オーディオデバイスの参照 */
+	// オーディオデバイスの参照
 	auto& manager = AudioMaster::GetInstance();
 
-	/*! ソースボイスにデータ詰め込み */
+	// ソースボイスにデータ詰め込み
 	XAUDIO2_SEND_DESCRIPTOR sendDescriptor;
 	sendDescriptor.Flags = XAUDIO2_SEND_USEFILTER;
 	sendDescriptor.pOutputVoice = manager.GetMasterVoice();
 	const XAUDIO2_VOICE_SENDS sendList = { 1,&sendDescriptor };
 
-	/*! ソースボイス作成 */
+	// ソースボイス作成
 	HRESULT hr = manager.GetXAudio2()->CreateSourceVoice(&m_pSourceVoice, pFormat, 0, 2.0f, NULL, &sendList);
 
 	SAFE_DELETE(pFormat);
@@ -136,14 +136,14 @@ void Wave::Finalize()
 */
 void Wave::Play(bool isLoop)
 {
-	/*! サブミット */
+	// サブミット
 	XAUDIO2_BUFFER buffer = { 0 };
 	SecureZeroMemory(&buffer, sizeof(buffer));
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 	buffer.AudioBytes = m_dwWaveSize;
 	buffer.pAudioData = m_pWaveBuffer;
-	buffer.PlayBegin = 0;	/*!< 再生されるバッファの最初のサンプル */
-	buffer.PlayLength = 0;	/*!< サウンドのバッファ全て */
+	buffer.PlayBegin = 0;	// 再生されるバッファの最初のサンプル
+	buffer.PlayLength = 0;	// サウンドのバッファ全て
 	if (isLoop) {
 
 		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;

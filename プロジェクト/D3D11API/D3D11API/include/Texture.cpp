@@ -121,7 +121,7 @@ HRESULT API::Texture::Initialize(std::string filePath, const TileMode tileMode, 
 {
 	HRESULT hr;
 
-	/*! 画像のロード */
+	// 画像のロード
 	hr = Load(filePath);
 	if (FAILED(hr)) {
 		std::string error = "\"" + filePath + "\" is not load in texture!";
@@ -129,13 +129,13 @@ HRESULT API::Texture::Initialize(std::string filePath, const TileMode tileMode, 
 		return E_FAIL;
 	}
 
-	/*! タイリングモード */
+	// タイリングモード
 	m_eFilterMode = filterMode;
 
-	/*! フィルタリングモード */
+	// フィルタリングモード
 	m_eTileMode = tileMode;
 
-	/*! タイリングとフィルタリングを設定し、サンプラーステートを作成 */
+	// タイリングとフィルタリングを設定し、サンプラーステートを作成
 	hr = SetTileAndFiltering(m_eTileMode, m_eFilterMode);
 	if (FAILED(hr)) {
 		std::string error = "\"" + filePath + "\" is not load in texture atlas!\n";
@@ -160,13 +160,13 @@ HRESULT API::Texture::Initialize(std::string filePath, const DirectX::XMINT2 siz
 {
 	HRESULT hr;
 
-	/*! 初期化 */
+	// 初期化
 	hr = Initialize(filePath, tileMode, filterMode);
 	if (FAILED(hr)) {
 		return hr;
 	}
 
-	/*! サイズの設定 */
+	// サイズの設定
 	hr = SetSize(size) ? S_OK : E_FAIL;
 	return hr;
 }
@@ -178,6 +178,6 @@ HRESULT API::Texture::Initialize(std::string filePath, const DirectX::XMINT2 siz
 */
 void API::Texture::Finalize()
 {
-	/*! 抽象クラスのメンバの破棄 */
+	// 抽象クラスのメンバの破棄
 	ITexture::Finalize();
 }
