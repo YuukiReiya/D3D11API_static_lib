@@ -46,7 +46,8 @@ GamePad::GamePad(Index && index)
 GamePad::~GamePad()
 {
 	SetVibration(0);
-	//XInputEnable(false);/*!< XInputを無効にする(全てのコントローラーに依存) */
+	// XInputを無効にする(全てのコントローラーに依存)
+	//XInputEnable(false);
 }
 
 /*!
@@ -105,7 +106,7 @@ int GamePad::GetArrowDown(KeyCode::Arrow arrow)
 {
 	auto input = ConvertKeyArrowCode(Arrow(arrow));
 
-	/*! 正の値 */
+	// 正の値
 	if ((now.Gamepad.wButtons&input.x)
 		^
 		(old.Gamepad.wButtons&input.x)
@@ -115,7 +116,7 @@ int GamePad::GetArrowDown(KeyCode::Arrow arrow)
 		return 1;
 	}
 
-	/*! 負の値 */
+	// 負の値
 	if ((now.Gamepad.wButtons&input.y)
 		^
 		(old.Gamepad.wButtons&input.y)
@@ -147,7 +148,7 @@ int GamePad::GetArrowUp(KeyCode::Arrow arrow)
 {
 	auto input = ConvertKeyArrowCode(Arrow(arrow));
 
-	/*! 正の値 */
+	// 正の値
 	if ((now.Gamepad.wButtons&input.x)
 		^
 		(old.Gamepad.wButtons&input.x)
@@ -157,7 +158,7 @@ int GamePad::GetArrowUp(KeyCode::Arrow arrow)
 		return 1;
 	}
 
-	/*! 負の値 */
+	// 負の値
 	if ((now.Gamepad.wButtons&input.y)
 		^
 		(old.Gamepad.wButtons&input.y)
@@ -183,13 +184,13 @@ DirectX::XMFLOAT3 GamePad::GetJoyStick(KeyCode::JoyStick joyStick)
 	case KeyCode::JoyStick::LEFT:
 		input.x = now.Gamepad.sThumbLX;
 		input.y = now.Gamepad.sThumbLY;
-		/*! 左スティックの押し込み */
+		// 左スティックの押し込み
 		input.z = now.Gamepad.wButtons & 0x0040 ? 1.0f : 0.0f;
 		break;
 	case KeyCode::JoyStick::RIGHT:
 		input.x = now.Gamepad.sThumbRX;
 		input.y = now.Gamepad.sThumbRY;
-		/*! 右スティックの押し込み */
+		// 右スティックの押し込み
 		input.z = now.Gamepad.wButtons & 0x0080 ? 1.0f : 0.0f;
 		break;
 	default:
@@ -197,11 +198,11 @@ DirectX::XMFLOAT3 GamePad::GetJoyStick(KeyCode::JoyStick joyStick)
 		break;
 	}
 
-	/*! 値の正規化(-1～1) */
+	// 値の正規化(-1～1)
 	input.x = InputNormalize(input.x);
 	input.y = InputNormalize(input.y);
 
-	/*! 値を丸める */
+	// 値を丸める
 	input.x = InputRound(input.x);
 	input.y = InputRound(input.y);
 
@@ -243,7 +244,7 @@ bool GamePad::GetBTrigger(KeyCode::Trigger trigger)
 */
 void GamePad::SetVibration(int leftPower, int rightPower)
 {
-	/*! 左右で出力が同じなら */
+	// 左右で出力が同じなら
 	if (rightPower == -1) {
 		rightPower = leftPower;
 	}
@@ -273,7 +274,7 @@ float GamePad::InputRound(float input)
 	int tmp = static_cast<int>(input) * c_JoyStickInputPrecision;
 	input = static_cast<float>(tmp) / static_cast<float>(c_JoyStickInputPrecision);
 
-	/*! 設定した入力値以下なら 入力値を0にする */
+	// 設定した入力値以下なら 入力値を0にする
 	if (fabs(input) < c_JoyStickInputDead) {
 		input = 0.0f;
 	}
@@ -287,7 +288,7 @@ float GamePad::InputRound(float input)
 */
 int GamePad::VibrationConvertPower(int vibration)
 {
-	/*! 範囲外補正 */
+	// 範囲外補正
 	{
 		if (vibration < 0) { vibration = 0; }
 		else if (100 < vibration) { vibration = 100; }
@@ -304,16 +305,16 @@ int GamePad::ConvertKeyButtonCode(Button && button)
 {
 	switch (button)
 	{
-	case Button::A:			return 0x1000;	/*!< Aボタン マクロ【 XINPUT_GAMEPAD_A】 */
-	case Button::B:			return 0x2000;	/*!< Bボタン マクロ【 XINPUT_GAMEPAD_B】 */
-	case Button::X:			return 0x4000;	/*!< Xボタン マクロ【 XINPUT_GAMEPAD_X】 */
-	case Button::Y:			return 0x8000;	/*!< Yボタン マクロ【 XINPUT_GAMEPAD_Y】 */
-	case Button::START:		return 0x0010;	/*!< STARTボタン マクロ【 XINPUT_GAMEPAD_START】 */
-	case Button::BACK:		return 0x0020;	/*!< BACKボタン マクロ【 XINPUT_GAMEPAD_BACK】 */
-	case Button::LB:		return 0x0100;	/*!< LBボタン マクロ【 XINPUT_GAMEPAD_LEFT_SHOULDER】 */
-	case Button::RB:		return 0x0200;	/*!< RBボタン マクロ【 XINPUT_GAMEPAD_RIGHT_SHOULDER】 */
-	case Button::L_STICK:	return 0x0040;	/*!< 左スティックの押し込み マクロ【 XINPUT_GAMEPAD_LEFT_THUMB】 */
-	case Button::R_STICK:	return 0x0080;	/*!< 右スティックの押し込み マクロ【 XINPUT_GAMEPAD_RIGHT_THUMB】 */
+	case Button::A:			return 0x1000;	// Aボタン マクロ【 XINPUT_GAMEPAD_A】
+	case Button::B:			return 0x2000;	// Bボタン マクロ【 XINPUT_GAMEPAD_B】
+	case Button::X:			return 0x4000;	// Xボタン マクロ【 XINPUT_GAMEPAD_X】
+	case Button::Y:			return 0x8000;	// Yボタン マクロ【 XINPUT_GAMEPAD_Y】
+	case Button::START:		return 0x0010;	// STARTボタン マクロ【 XINPUT_GAMEPAD_START】
+	case Button::BACK:		return 0x0020;	// BACKボタン マクロ【 XINPUT_GAMEPAD_BACK】
+	case Button::LB:		return 0x0100;	// LBボタン マクロ【 XINPUT_GAMEPAD_LEFT_SHOULDER】
+	case Button::RB:		return 0x0200;	// RBボタン マクロ【 XINPUT_GAMEPAD_RIGHT_SHOULDER】
+	case Button::L_STICK:	return 0x0040;	// 左スティックの押し込み マクロ【 XINPUT_GAMEPAD_LEFT_THUMB】
+	case Button::R_STICK:	return 0x0080;	// 右スティックの押し込み マクロ【 XINPUT_GAMEPAD_RIGHT_THUMB】
 	default:
 		break;
 	}
@@ -331,12 +332,12 @@ DirectX::XMINT2 GamePad::ConvertKeyArrowCode(KeyCode::Arrow && arrow)
 	switch (arrow)
 	{
 	case KeyCode::VERTICAL:
-		code.x = 0x0001;	/*!< 十字キーの上 */
-		code.y = 0x0002;	/*!< 十字キーの下 */
+		code.x = 0x0001;	// 十字キーの上
+		code.y = 0x0002;	// 十字キーの下
 		break;
 	case KeyCode::HORIZONTAL:
-		code.x = 0x0008;	/*!< 十字キーの右 */
-		code.y = 0x0004;	/*!< 十字キーの左 */
+		code.x = 0x0008;	// 十字キーの右
+		code.y = 0x0004;	// 十字キーの左
 		break;
 	default:
 		break;
