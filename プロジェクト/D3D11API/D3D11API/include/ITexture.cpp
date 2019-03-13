@@ -73,14 +73,14 @@ bool API::ITexture::SetSize(const DirectX::XMINT2 size)
 	{
 		std::string error;
 
-		/*! 画像の幅をチェック */
+		// 画像の幅をチェック
 		if (size.x <= 0) {
 			error = "texture size.x is less than Zero!\n\
 			size.x =" + std::to_string(size.x) + " <= 0";
 			throw error;
 		}
 
-		/*! 画像の高さをチェック */
+		// 画像の高さをチェック
 		if (size.y <= 0) {
 			error = "texture size.x is less than Zero!\n\
 			size.x =" + std::to_string(size.x) + " <= 0";
@@ -106,20 +106,20 @@ bool API::ITexture::SetSize(const DirectX::XMINT2 size)
 */
 HRESULT API::ITexture::SetTileAndFiltering(const TileMode tileMode, const FilteringMode filterMode)
 {
-	/*! 引数の保持 */
+	// 引数の保持
 	m_eTileMode = tileMode;
 	m_eFilterMode = filterMode;
 
-	/*! サンプラーステート設定 */
+	// サンプラーステート設定
 	D3D11_SAMPLER_DESC sd;
 	SecureZeroMemory(&sd, sizeof(sd));
-	sd.Filter = static_cast<D3D11_FILTER>(m_eFilterMode);				/*!< フィルタリング */
-	sd.AddressU = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	/*!< アドレッシングモード */
-	sd.AddressV = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	/*!< アドレッシングモード */
-	sd.AddressW = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	/*!< アドレッシングモード */
+	sd.Filter = static_cast<D3D11_FILTER>(m_eFilterMode);				// フィルタリング
+	sd.AddressU = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	// アドレッシングモード
+	sd.AddressV = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	// アドレッシングモード
+	sd.AddressW = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	// アドレッシングモード
 
 	HRESULT hr;
-	/*! サンプラー作成 */
+	// サンプラー作成
 	hr = Direct3D11::GetInstance().GetDevice()->CreateSamplerState(
 		&sd,
 		m_pSamplerState.GetAddressOf()
@@ -151,10 +151,10 @@ HRESULT API::ITexture::Load(std::string filePath)
 	auto cast = To_WString(filePath);
 	auto path = const_cast<LPCWSTR>(cast.c_str());
 
-	//!	ローカル変数
+	//	ローカル変数
 	Microsoft::WRL::ComPtr<ID3D11Resource> pResource = nullptr;
 
-	/*! テクスチャ作成 */
+	// テクスチャ作成
 	hr = CreateWICTextureFromFile(
 		Direct3D11::GetInstance().GetDevice(),
 		path,
@@ -162,7 +162,7 @@ HRESULT API::ITexture::Load(std::string filePath)
 		m_pShaderResourceView.GetAddressOf()
 	);
 
-	/*! ローカル変数のメモリ開放 */
+	// ローカル変数のメモリ開放
 	if (pResource.Get() != nullptr) {
 		pResource.Reset();
 	}
@@ -172,6 +172,6 @@ HRESULT API::ITexture::Load(std::string filePath)
 		return E_FAIL;
 	}
 
-	/*! 読み込みの正常終了 */
+	// 読み込みの正常終了
 	return S_OK;
 }

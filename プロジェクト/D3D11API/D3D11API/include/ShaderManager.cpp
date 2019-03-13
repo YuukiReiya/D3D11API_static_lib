@@ -103,30 +103,30 @@ ShaderManager::~ShaderManager()
 HRESULT ShaderManager::Initialize(std::string directoryPath)
 {
 	HRESULT hr;
-	ID3DBlob* pCompiledShader = NULL;/*!< コンパイル用ブロブ */
+	ID3DBlob* pCompiledShader = NULL;// コンパイル用ブロブ
 
-	/*! リソースデイレクトリーの設定 */
+	// リソースデイレクトリーの設定
 	m_DirectoryPath = directoryPath;
 
 
-	/*! 単純テクスチャのシェーダー設定作成 */
+	// 単純テクスチャのシェーダー設定作成
 	m_pAddDataRef = new ShaderData;
 	{
-		/*! バーテックスシェーダーの作成 */
+		// バーテックスシェーダーの作成
 		hr = MakeShader("DefaultSprite.hlsl", "VS", "vs_5_0", (void**)&m_pAddDataRef->m_pVertexShader, &pCompiledShader);
 		if (FAILED(hr)) {
 			ErrorLog("\"SimpleTextureShader\" vertex shader is not create!");
 			return E_FAIL;
 		}
 
-		/*! 頂点インプットレイアウト定義 */
+		// 頂点インプットレイアウト定義
 		D3D11_INPUT_ELEMENT_DESC layout[] = {
 			{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 			{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
-		uint32_t numElements = sizeof(layout) / sizeof(*layout);/*!< ポインタ */
+		uint32_t numElements = sizeof(layout) / sizeof(*layout);// ポインタ
 
-		/*! 頂点インプットレイアウトを作成 */
+		// 頂点インプットレイアウトを作成
 		hr = Direct3D11::GetInstance().GetDevice()->CreateInputLayout(
 			layout,
 			numElements,
@@ -139,14 +139,14 @@ HRESULT ShaderManager::Initialize(std::string directoryPath)
 			return E_FAIL;
 		}
 
-		/*! ピクセルシェーダーの作成 */
+		// ピクセルシェーダーの作成
 		hr = ShaderManager::MakeShader("DefaultSprite.hlsl", "PS", "ps_5_0", (void**)&m_pAddDataRef->m_pPixelShader, &pCompiledShader);
 		if (FAILED(hr)) {
 			ErrorLog("\"SimpleTextureShader\" pixel shader is not create!");
 			return E_FAIL;
 		}
 
-		/*! コンスタントバッファ定義 */
+		// コンスタントバッファ定義
 		D3D11_BUFFER_DESC cb;
 		SecureZeroMemory(&cb, sizeof(cb));
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -154,7 +154,7 @@ HRESULT ShaderManager::Initialize(std::string directoryPath)
 		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		cb.Usage = D3D11_USAGE_DYNAMIC;
 
-		/*! コンスタントバッファ作成 */
+		// コンスタントバッファ作成
 		hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(&cb, NULL, &m_pAddDataRef->m_pConstantBuffer);
 		if (FAILED(hr)) {
 			std::string error = "\"SimpleTextureShader\" ConstantBuffer is not create!";
@@ -166,7 +166,7 @@ HRESULT ShaderManager::Initialize(std::string directoryPath)
 	AddNewShaderData(c_szSimpleTextureShader, m_pAddDataRef);
 	
 
-	/*! アトラステクスチャのシェーダー設定作成 */
+	// アトラステクスチャのシェーダー設定作成
 	m_pAddDataRef = new ShaderData;
 	{
 		/*!
@@ -176,16 +176,16 @@ HRESULT ShaderManager::Initialize(std::string directoryPath)
 		*	この三つは単純なテクスチャのShaderと同じものを使う
 		*/
 
-		/*! インプットレイアウト */
+		// インプットレイアウト
 		m_pAddDataRef->m_pVertexLayout = m_pShaderDataUMap[c_szSimpleTextureShader]->m_pVertexLayout;
 
-		/*! 頂点シェーダー */
+		// 頂点シェーダー
 		m_pAddDataRef->m_pVertexShader = m_pShaderDataUMap[c_szSimpleTextureShader]->m_pVertexShader;
 
-		/*! ピクセルシェーダー */
+		// ピクセルシェーダー
 		m_pAddDataRef->m_pPixelShader = m_pShaderDataUMap[c_szSimpleTextureShader]->m_pPixelShader;
 
-		/*! コンスタントバッファ定義 */
+		// コンスタントバッファ定義
 		D3D11_BUFFER_DESC cb;
 		SecureZeroMemory(&cb, sizeof(cb));
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -193,7 +193,7 @@ HRESULT ShaderManager::Initialize(std::string directoryPath)
 		cb.CPUAccessFlags = 0;						//updateSubResource
 		cb.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;//updateSubResource
 
-		/*! コンスタントバッファ作成 */
+		// コンスタントバッファ作成
 		hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(&cb, NULL, &m_pAddDataRef->m_pConstantBuffer);
 		if (FAILED(hr)) {
 			std::string error = "\"TextureAtlasShader\" ConstantBuffer is not create!";
@@ -203,11 +203,11 @@ HRESULT ShaderManager::Initialize(std::string directoryPath)
 	}
 	AddNewShaderData(c_szTextureAtlasShader, m_pAddDataRef);
 
-	/*! ブロブの解放 */
+	// ブロブの解放
 	pCompiledShader->Release();
 	pCompiledShader = NULL;
 
-	/*! メッシュ用のデフォルト設定 */
+	// メッシュ用のデフォルト設定
 	{
 	}
 
@@ -238,13 +238,13 @@ void ShaderManager::Finalize()
 */
 HRESULT ShaderManager::AddNewShaderData(std::string szKeyName, ShaderData * pNewShaderData)
 {
-	/*! 登録可能か判定 */
+	// 登録可能か判定
 	bool isFound = m_pShaderDataUMap.find(szKeyName) == m_pShaderDataUMap.end();
 
-	/*! 登録しようとしたキー名は既に登録済みのため追加しない */
+	// 登録しようとしたキー名は既に登録済みのため追加しない
 	if (!isFound) { return E_FAIL; }
 
-	/*! キー名でリスト(map)に追加 */
+	// キー名でリスト(map)に追加
 	m_pShaderDataUMap[szKeyName] = pNewShaderData;
 
 	return S_OK;
@@ -262,10 +262,10 @@ HRESULT ShaderManager::AddNewShaderData(std::string szKeyName, ShaderData * pNew
 */
 HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName, std::string szProfileName, void ** ppShader, ID3DBlob ** ppBlob)
 {
-	/*! UNICODE、マルチバイト両対応用文字列変換 */
+	// UNICODE、マルチバイト両対応用文字列変換
 	std::string sFilePath = m_DirectoryPath + szFileName;
 
-	/*! D3D11CompileFromFileの引数はマルチバイト */
+	// D3D11CompileFromFileの引数はマルチバイト
 	auto tmp = To_WString(sFilePath);
 	auto path = const_cast<LPCWSTR>(tmp.c_str());
 
@@ -281,7 +281,7 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 	LPCSTR funcName		= szFuncName.c_str();
 	LPCSTR profileName	= szProfileName.c_str();
 
-	/*! ブロブのコンパイル */
+	// ブロブのコンパイル
 	ID3DBlob* pErrors = NULL;
 	hr = D3DCompileFromFile(
 		path,
@@ -307,10 +307,10 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 
 	char szProfile[c_ShaderModelStringArraySize] = { 0 };
 
-	/*! 終端文字を含まないバッファのメモリを変数にコピー */
-	strncpy_s(szProfile, profileName, (c_ShaderModelStringArraySize - 1));/*!< 終端文字のバッファーを一つ確保しておく */
+	// 終端文字を含まないバッファのメモリを変数にコピー
+	strncpy_s(szProfile, profileName, (c_ShaderModelStringArraySize - 1));// 終端文字のバッファーを一つ確保しておく
 
-	/*! 頂点シェーダー(Vertex Shader) */
+	// 頂点シェーダー(Vertex Shader)
 	if (strcmp(szProfile, c_VertexProfile.c_str()) == 0) {
 		hr = Direct3D11::GetInstance().GetDevice()->CreateVertexShader((*ppBlob)->GetBufferPointer(), (*ppBlob)->GetBufferSize(), NULL, (ID3D11VertexShader**)ppShader);
 		if (FAILED(hr)) {
@@ -320,7 +320,7 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 		}
 		else return S_OK;
 	}
-	/*! ピクセルシェーダー(Pixel Shader) */
+	// ピクセルシェーダー(Pixel Shader)
 	if (strcmp(szProfile, c_PixelProfile.c_str()) == 0) {
 		hr = Direct3D11::GetInstance().GetDevice()->CreatePixelShader((*ppBlob)->GetBufferPointer(), (*ppBlob)->GetBufferSize(), NULL, (ID3D11PixelShader**)ppShader);
 		if (FAILED(hr)) {
@@ -330,7 +330,7 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 		}
 		else return S_OK;
 	}
-	/*! ジオメトリシェーダー(Geometry Shader) */
+	// ジオメトリシェーダー(Geometry Shader)
 	if (strcmp(szProfile, c_GeometryProfile.c_str()) == 0) {
 		hr = Direct3D11::GetInstance().GetDevice()->CreateGeometryShader((*ppBlob)->GetBufferPointer(), (*ppBlob)->GetBufferSize(), NULL, (ID3D11GeometryShader**)ppShader);
 		if (FAILED(hr)) {
@@ -340,7 +340,7 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 		}
 		else return S_OK;
 	}
-	/*! ハルシェーダー(Hull Shader) */
+	// ハルシェーダー(Hull Shader)
 	if (strcmp(szProfile, c_HullProfile.c_str()) == 0) {
 		hr = Direct3D11::GetInstance().GetDevice()->CreateHullShader((*ppBlob)->GetBufferPointer(), (*ppBlob)->GetBufferSize(), NULL, (ID3D11HullShader**)ppShader);
 		if (FAILED(hr)) {
@@ -350,7 +350,7 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 		}
 		else return true;
 	}
-	/*! ドメインシェーダー(Domain Shader) */
+	// ドメインシェーダー(Domain Shader)
 	if (strcmp(szProfile, c_DomainProfile.c_str()) == 0) {
 		hr = Direct3D11::GetInstance().GetDevice()->CreateDomainShader((*ppBlob)->GetBufferPointer(), (*ppBlob)->GetBufferSize(), NULL, (ID3D11DomainShader**)ppShader);
 		if (FAILED(hr)) {
@@ -360,7 +360,7 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 		}
 		else return S_OK;
 	}
-	/*! コンピュートシェーダー(Compute Shader) */
+	// コンピュートシェーダー(Compute Shader)
 	if (strcmp(szProfile, c_ComputeProfile.c_str()) == 0) {
 		hr = Direct3D11::GetInstance().GetDevice()->CreateComputeShader((*ppBlob)->GetBufferPointer(), (*ppBlob)->GetBufferSize(), NULL, (ID3D11ComputeShader**)ppShader);
 		if (FAILED(hr)) {
