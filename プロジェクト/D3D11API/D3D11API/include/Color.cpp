@@ -6,6 +6,13 @@
 */
 #include "stdafx.h"
 #include "Color.h"
+#include <algorithm>
+
+/*!
+	@brief	usingディレクティブ
+	@using	std
+*/
+using namespace std;
 
 /*!
 	@brief	空コンストラクタ
@@ -18,7 +25,11 @@ Color::Color()
 	@brief	引数付きコンストラクタ
 	@param[in]	一時変数
 */
-Color::Color(Color && color) :x(color.x), y(color.y), z(color.z), w(color.w)
+Color::Color(Color && color) :
+	x(clamp(color.x, c_MinValue, c_MaxValue)),
+	y(clamp(color.y, c_MinValue, c_MaxValue)),
+	z(clamp(color.z, c_MinValue, c_MaxValue)),
+	w(clamp(color.w, c_MinValue, c_MaxValue))
 {
 }
 
@@ -29,24 +40,25 @@ Color::Color(Color && color) :x(color.x), y(color.y), z(color.z), w(color.w)
 	@param[in]	B( 0.0f ～ 1.0f )
 	@param[in]	A( 0.0f ～ 1.0f )
 */
-Color::Color(float r, float g, float b, float a)
+Color::Color(float r, float g, float b, float a):
+	x(clamp(r, c_MinValue, c_MaxValue)),
+	y(clamp(g, c_MinValue, c_MaxValue)),
+	z(clamp(b, c_MinValue, c_MaxValue)),
+	w(clamp(a, c_MinValue, c_MaxValue))
 {
-	this->r = r;
-	this->g = g;
-	this->b = b;
-	this->a = a;
 }
 
 /*!
 	@brief		引数付きコンストラクタ
 	@param[in]	FLOAT4型からカラー型へ変換
 */
-Color::Color(DirectX::XMFLOAT4 color)
+Color::Color(DirectX::XMFLOAT4 color):
+	x(clamp(color.x, c_MinValue, c_MaxValue)),
+	y(clamp(color.y, c_MinValue, c_MaxValue)),
+	z(clamp(color.z, c_MinValue, c_MaxValue)),
+	w(clamp(color.w, c_MinValue, c_MaxValue))
+
 {
-	this->x = color.x;
-	this->y = color.y;
-	this->z = color.z;
-	this->w = color.w;
 }
 
 /*!

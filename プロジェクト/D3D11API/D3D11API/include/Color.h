@@ -9,6 +9,7 @@
 
 /*!
 	@brief	カラークラス
+	@detail	メンバは( 0.0f ～ 1.0f )までの範囲に収める
 */
 class Color
 {
@@ -71,6 +72,18 @@ void Set_##base(const __VA_ARGS__& value){base = value;}
 	DirectX::XMFLOAT4 GetRGBA()const;
 
 	/*!
+		@var	c_MinValue
+		@brief	取りうる値の最小値
+	*/
+	static constexpr float c_MinValue = 0.0f;
+
+	/*!
+		@var	c_MinValue
+		@brief	取りうる値の最大値
+	*/
+	static constexpr float c_MaxValue = 1.0f;
+
+	/*!
 		@var	メンバ変数
 		@brief	x = r , y = g , z = b ,w = a
 	*/
@@ -111,5 +124,3 @@ void Set_##base(const __VA_ARGS__& value){base = value;}
 		return (*this);
 	}
 };
-
-
