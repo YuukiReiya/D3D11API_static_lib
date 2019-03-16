@@ -43,10 +43,10 @@ Color::Color(float r, float g, float b, float a)
 */
 Color::Color(DirectX::XMFLOAT4 color)
 {
-	r = color.x;
-	g = color.y;
-	b = color.z;
-	a = color.w;
+	this->x = color.x;
+	this->y = color.y;
+	this->z = color.z;
+	this->w = color.w;
 }
 
 /*!

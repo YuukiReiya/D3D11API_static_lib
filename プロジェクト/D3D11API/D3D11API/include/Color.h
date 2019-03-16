@@ -104,6 +104,10 @@ void Set_##base(const __VA_ARGS__& value){base = value;}
 		@brief	‘ã“ü‰‰ŽZŽq
 	*/
 	Color &operator=(const Color &color) {
+		this->x = color.x;
+		this->y = color.y;
+		this->z = color.z;
+		this->w = color.w;
 		return (*this);
 	}
 };

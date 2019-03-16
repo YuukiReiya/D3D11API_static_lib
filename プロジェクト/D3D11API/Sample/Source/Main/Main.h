@@ -117,6 +117,8 @@ private:
 	*/
 	static constexpr int c_WindowHeight = 1080;
 
+	//static constexpr Color c_RenderClearColor = Color(0, 0, 0, 0);
+
 	/*!
 		@var	m_hWnd
 		@brief	ウィンドウズハンドラ
