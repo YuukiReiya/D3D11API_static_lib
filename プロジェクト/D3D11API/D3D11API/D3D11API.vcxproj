@@ -159,6 +159,7 @@
     <ClInclude Include="include\Debug.h" />
     <ClInclude Include="include\Direct3D11.h" />
     <ClInclude Include="include\GamePad.h" />
+    <ClInclude Include="include\IRender.h" />
     <ClInclude Include="include\ITexture.h" />
     <ClInclude Include="include\MemoryLeaks.h" />
     <ClInclude Include="include\MyGame.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="include\Debug.cpp" />
     <ClCompile Include="include\Direct3D11.cpp" />
     <ClCompile Include="include\GamePad.cpp" />
+    <ClCompile Include="include\IRender.cpp" />
     <ClCompile Include="include\ITexture.cpp" />
     <ClCompile Include="include\ShaderManager.cpp" />
     <ClCompile Include="include\Sprite.cpp" />

@@ -67,7 +67,7 @@ bool Main::Init(HINSTANCE hInstance)
 	Direct3D11::GetInstance().SetWindowSize(c_WindowWidth, c_WindowHeight);
 
 	//	レンダーのクリアカラー
-	Direct3D11::GetInstance().SetClearColor(Color(1, 1, 1, 1));
+	Direct3D11::GetInstance().SetClearColor(Color(0.5f, 0.5f, 0.5f, 1));
 
 	//	デバイス初期化
 	HRESULT hr = NULL;

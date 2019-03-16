@@ -8,10 +8,9 @@
 #include "Color.h"
 
 /*!
-	@brief	コンストラクタ
-	@detail	デフォルト値を白にする
+	@brief	空コンストラクタ
 */
-Color::Color() :x(1.0f), y(1.0f), z(1.0f), w(1.0f)
+Color::Color()
 {
 }
 

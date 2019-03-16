@@ -14,7 +14,7 @@ class Color
 {
 public:
 	/*!
-		@brief	コンストラクタ
+		@brief	空コンストラクタ
 	*/
 	Color();
 
