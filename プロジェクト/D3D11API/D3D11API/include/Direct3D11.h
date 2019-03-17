@@ -107,10 +107,30 @@ namespace D3D11 {
 		ID3D11Device* GetDevice()const { return m_pDevice.Get(); }
 
 		/*!
-			@fn		GetDeviceContext
-			@brief	生成したコンテキストを取得
+			@fn		GetImmediateContext
+			@brief	生成したイミディエイトコンテキストを取得
 		*/
-		ID3D11DeviceContext* GetDeviceContext()const { return m_pDeviceContext.Get(); }
+		ID3D11DeviceContext* GetImmediateContext()const { return m_pImmediateContext.Get(); }
+
+		/*!
+			@brief	読み取り専用のプロパティ
+			@detail	VisualStudio以外では使えないらしい
+		*/
+		#pragma region Property
+		/*!
+			@property	Device
+			@brief		デバイスのプロパティ(読み取り専用)
+			@detail		VisualStudioのみ対応
+		*/
+		__declspec(property(get = GetDevice))ID3D11Device* Device;
+
+		/*!
+			@property	ImmediateContext
+			@brief		イミディエイトコンテキストのプロパティ(読み取り専用)
+			@detail		VisualStudioのみ対応
+		*/
+		__declspec(property(get = GetImmediateContext))ID3D11DeviceContext* ImmediateContext;
+		#pragma endregion
 	private:
 		/*!
 			@brief	シングルトンデザインパターンのテンプレート継承
@@ -127,7 +147,7 @@ namespace D3D11 {
 			@detail	ComPtrを使ったスマートポインタで宣言
 		*/
 		Microsoft::WRL::ComPtr<ID3D11Device>			m_pDevice;				/*!< デバイス */
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_pDeviceContext;		/*!< コンテキスト */
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_pImmediateContext;	/*!< イミディエイトコンテキスト */
 		Microsoft::WRL::ComPtr<IDXGISwapChain>			m_pSwapChain;			/*!< スワップチェイン */
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	m_pRenderTargetView;	/*!< レンダーターゲットビュー */
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	m_pDepthStencilView;	/*!< デプスステンシルビュー */

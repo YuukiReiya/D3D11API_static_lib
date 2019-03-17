@@ -119,7 +119,7 @@ HRESULT Sprite::Initialize()
 	}
 
 	// ブレンドステートの設定
-	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
+	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
 		m_pBlendState.Get(),
 		NULL,
 		m_StencilMask
@@ -210,36 +210,36 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	}
 
 	// トポロジーセット
-	Direct3D11::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
 	);
 
 	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szSimpleTextureShader);
 
 	// 頂点インプットレイアウトセット
-	Direct3D11::GetInstance().GetDeviceContext()->IASetInputLayout(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
 		shaderData->m_pVertexLayout.Get()
 	);
 
 	// シェーダーの登録
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetShader(
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
 		shaderData->m_pVertexShader.Get(),
 		NULL,
 		NULL
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShader(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
 		shaderData->m_pPixelShader.Get(),
 		NULL,
 		NULL
 	);
 
 	// コンスタントバッファの登録
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetConstantBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
 		0,
 		1,
 		shaderData->m_pConstantBuffer.GetAddressOf()
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetConstantBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
 		0,
 		1,
 		shaderData->m_pConstantBuffer.GetAddressOf()
@@ -252,12 +252,12 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	auto ppSRV = pTexture->GetShaderResourceView();
 
 	// テクスチャ
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetSamplers(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
 		0,
 		1,
 		ppSampler
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShaderResources(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
 		0,
 		1,
 		ppSRV
@@ -282,7 +282,7 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	SecureZeroMemory(&cb, sizeof(cb));
 
 	// バッファへのアクセス許可(書き換え)
-	hr = Direct3D11::GetInstance().GetDeviceContext()->Map(
+	hr = Direct3D11::GetInstance().GetImmediateContext()->Map(
 		shaderData->m_pConstantBuffer.Get(),
 		NULL,
 		D3D11_MAP_WRITE_DISCARD,
@@ -292,7 +292,7 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	if (FAILED(hr)) {
 		std::string error = "Texture mapping is failed!";
 		ErrorLog(error);
-		Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);/*!< アクセス権を閉じて抜ける */
+		Direct3D11::GetInstance().GetImmediateContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);/*!< アクセス権を閉じて抜ける */
 		return E_FAIL;
 	}
 
@@ -309,7 +309,7 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 	
 	// アクセス許可終了
-	Direct3D11::GetInstance().GetDeviceContext()->Unmap(
+	Direct3D11::GetInstance().GetImmediateContext()->Unmap(
 		shaderData->m_pConstantBuffer.Get(), 
 		NULL
 	);
@@ -317,7 +317,7 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	// 頂点バッファセット
 	uint32_t stride = sizeof(SpriteVertex);
 	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetDeviceContext()->IASetVertexBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
 		0,
 		1,
 		m_pVertexBuffer.GetAddressOf(),
@@ -326,14 +326,14 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	);
 
 	// ブレンドステートの設定
-	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
+	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
 		m_pBlendState.Get(),
 		NULL,
 		m_StencilMask
 	);
 
 	// 描画
-	Direct3D11::GetInstance().GetDeviceContext()->Draw(
+	Direct3D11::GetInstance().GetImmediateContext()->Draw(
 		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
 		NULL
 	);
@@ -367,36 +367,36 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	m_Size = size;
 
 	// トポロジーセット
-	Direct3D11::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
 	);
 
 	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szTextureAtlasShader);
 
 	// 頂点インプットレイアウトセット
-	Direct3D11::GetInstance().GetDeviceContext()->IASetInputLayout(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
 		shaderData->m_pVertexLayout.Get()
 	);
 
 	// シェーダーの登録
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetShader(
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
 		shaderData->m_pVertexShader.Get(),
 		NULL,
 		NULL
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShader(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
 		shaderData->m_pPixelShader.Get(),
 		NULL,
 		NULL
 	);
 
 	// コンスタントバッファの登録
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetConstantBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
 		0,
 		1,
 		shaderData->m_pConstantBuffer.GetAddressOf()
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetConstantBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
 		0,
 		1,
 		shaderData->m_pConstantBuffer.GetAddressOf()
@@ -409,12 +409,12 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	auto ppSRV = pTexture->GetShaderResourceView();
 
 	// テクスチャ
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetSamplers(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
 		0,
 		1,
 		ppSampler
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShaderResources(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
 		0,
 		1,
 		ppSRV
@@ -445,7 +445,7 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	cb.m_Color		= color.GetRGBA();
 
 	// UpdateSubResource
-	Direct3D11::GetInstance().GetDeviceContext()->UpdateSubresource(
+	Direct3D11::GetInstance().GetImmediateContext()->UpdateSubresource(
 		shaderData->m_pConstantBuffer.Get(),
 		NULL,
 		nullptr,
@@ -457,14 +457,14 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 
 
 	// ブレンドステートの設定
-	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
+	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
 		m_pBlendState.Get(),
 		NULL,
 		m_StencilMask
 	);
 
 	// 描画
-	Direct3D11::GetInstance().GetDeviceContext()->Draw(
+	Direct3D11::GetInstance().GetImmediateContext()->Draw(
 		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
 		NULL
 	);
@@ -500,36 +500,36 @@ HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 rati
 	m_Size = size;
 
 	// トポロジーセット
-	Direct3D11::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
 	);
 
 	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szTextureAtlasShader);
 
 	// 頂点インプットレイアウトセット
-	Direct3D11::GetInstance().GetDeviceContext()->IASetInputLayout(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
 		shaderData->m_pVertexLayout.Get()
 	);
 
 	// シェーダーの登録
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetShader(
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
 		shaderData->m_pVertexShader.Get(),
 		NULL,
 		NULL
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShader(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
 		shaderData->m_pPixelShader.Get(),
 		NULL,
 		NULL
 	);
 
 	// コンスタントバッファの登録
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetConstantBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
 		0,
 		1,
 		shaderData->m_pConstantBuffer.GetAddressOf()
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetConstantBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
 		0,
 		1,
 		shaderData->m_pConstantBuffer.GetAddressOf()
@@ -542,12 +542,12 @@ HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 rati
 	auto ppSRV = pTexture->GetShaderResourceView();
 
 	// テクスチャ
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetSamplers(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
 		0,
 		1,
 		ppSampler
 	);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShaderResources(
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
 		0,
 		1,
 		ppSRV
@@ -578,7 +578,7 @@ HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 rati
 	cb.m_Color = color.GetRGBA();
 
 	// UpdateSubResource
-	Direct3D11::GetInstance().GetDeviceContext()->UpdateSubresource(
+	Direct3D11::GetInstance().GetImmediateContext()->UpdateSubresource(
 		shaderData->m_pConstantBuffer.Get(),
 		NULL,
 		nullptr,
@@ -590,7 +590,7 @@ HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 rati
 	// 頂点バッファセット
 	uint32_t stride = sizeof(SpriteVertex);
 	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetDeviceContext()->IASetVertexBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
 		0,
 		1,
 		m_pVertexBuffer.GetAddressOf(),
@@ -599,14 +599,14 @@ HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 rati
 	);
 
 	// ブレンドステートの設定
-	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
+	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
 		m_pBlendState.Get(),
 		NULL,
 		m_StencilMask
 	);
 
 	// 描画
-	Direct3D11::GetInstance().GetDeviceContext()->Draw(
+	Direct3D11::GetInstance().GetImmediateContext()->Draw(
 		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
 		NULL
 	);
@@ -729,7 +729,7 @@ HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 	// 頂点バッファセット
 	uint32_t stride = sizeof(SpriteVertex);
 	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetDeviceContext()->IASetVertexBuffers(
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
 		0,
 		1,
 		m_pVertexBuffer.GetAddressOf(),

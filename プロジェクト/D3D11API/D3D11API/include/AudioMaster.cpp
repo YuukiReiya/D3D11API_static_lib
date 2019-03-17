@@ -18,7 +18,9 @@ using namespace D3D11::Sound;
 /*!
 	@brief	コンストラクタ
 */
-AudioMaster::AudioMaster()
+AudioMaster::AudioMaster() :
+	m_pXAudio2(nullptr),
+	m_pMasteringVoice(nullptr)
 {
 }
 

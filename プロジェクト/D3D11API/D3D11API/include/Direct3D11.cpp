@@ -24,7 +24,7 @@ Direct3D11::Direct3D11()
 {
 	SecureZeroMemory(this, sizeof(this));
 	m_pDevice				= nullptr;
-	m_pDeviceContext		= nullptr;
+	m_pImmediateContext		= nullptr;
 	m_pSwapChain			= nullptr;
 	m_pRenderTargetView		= nullptr;
 	m_pDepthStencilView		= nullptr;
@@ -151,7 +151,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 		m_pSwapChain.GetAddressOf(),					// IDXGISwapChain インターフェースの変数
 		m_pDevice.GetAddressOf(),						// ID3D11Device インターフェースの変数
 		pFeatureLevelsSupported,						// 機能レベルを取得する変数
-		m_pDeviceContext.GetAddressOf()					// ID3D11DeviceContext インターフェースの変数
+		m_pImmediateContext.GetAddressOf()					// ID3D11DeviceContext インターフェースの変数
 	);
 	if (FAILED(hr)) { 
 		ErrorLog("SwapChain is not create!");
@@ -236,7 +236,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	}
 
 	// 深度 /ステンシル・ステート適応
-	m_pDeviceContext->OMSetDepthStencilState(
+	m_pImmediateContext->OMSetDepthStencilState(
 		m_pDepthStencilState.Get(),		// 深度 /ステンシル・ステート
 		1								// ステンシル・テストで参照値
 	);
@@ -292,7 +292,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	}// 深度 / ステンシル・ビュー作成に失敗
 
 	// 描画ターゲット・ビューを出力マネージャーのターゲットとして設定
-	m_pDeviceContext->OMSetRenderTargets(
+	m_pImmediateContext->OMSetRenderTargets(
 		1,									// 描画ターゲット数
 		m_pRenderTargetView.GetAddressOf(),	// 描画ターゲットビュー
 		m_pDepthStencilView.Get()			// 深度 / ステンシルビュー
@@ -307,7 +307,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	vp.MaxDepth = 1.0f;										// ビューポート領域の深度最大値(ファー・クリッピング距離)
 	//vp.TopLeftX = 0;										// ビューポート領域の左上x座標
 	//vp.TopLeftY = 0;										// ビューポート領域の左上y座標
-	m_pDeviceContext->RSSetViewports(
+	m_pImmediateContext->RSSetViewports(
 		1,			// ビューポートの数
 		&vp			// 設定するビューポート配列
 	);
@@ -342,7 +342,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	}
 	
 	// ラスタライズを設定
-	m_pDeviceContext->RSSetState(m_pRasterizerState.Get());
+	m_pImmediateContext->RSSetState(m_pRasterizerState.Get());
 
 	// 初期化終了
 	return S_OK;
@@ -362,7 +362,7 @@ void Direct3D11::Release()
 	m_pDepthStencilView.Reset();
 	m_pDepthStencilState.Reset();
 	m_pDevice.Reset();
-	m_pDeviceContext.Reset();
+	m_pImmediateContext.Reset();
 }
 
 /*!
@@ -381,13 +381,13 @@ void Direct3D11::Clear()
 	};
 
 	// レンダーターゲットビューのクリア
-	m_pDeviceContext->ClearRenderTargetView(
+	m_pImmediateContext->ClearRenderTargetView(
 		m_pRenderTargetView.Get(),	// クリアするレンダーターゲットビュー
 		clearColor					// クリアカラー
 	);
 
 	// デプス・ステンシルビューのクリア
-	m_pDeviceContext->ClearDepthStencilView(
+	m_pImmediateContext->ClearDepthStencilView(
 		m_pDepthStencilView.Get(),					// クリアするデプス・ステンシルビュー
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,	// クリアするデータの型
 		1.0f,										// 深度バッファのクリア値
