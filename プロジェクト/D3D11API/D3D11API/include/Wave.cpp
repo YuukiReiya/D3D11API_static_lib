@@ -107,7 +107,7 @@ bool Wave::Load(std::string filePath)
 	// ソースボイス作成
 	HRESULT hr = manager.GetXAudio2()->CreateSourceVoice(&m_pSourceVoice, pFormat, 0, 2.0f, NULL, &sendList);
 
-	SAFE_DELETE(pFormat);
+	SafeDelete(pFormat);
 
 	if (FAILED(hr)) {
 		ErrorLog("SourceVoice is not create!");
@@ -125,7 +125,7 @@ bool Wave::Load(std::string filePath)
 */
 void Wave::Finalize()
 {
-	SAFE_DELETE(m_pWaveBuffer);
+	SafeDelete(m_pWaveBuffer);
 }
 
 /*!

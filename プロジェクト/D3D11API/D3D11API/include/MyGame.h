@@ -99,7 +99,7 @@ static inline void WindowsErrorLog() {
 	@param[in]	インスタンス
 */
 template <typename T>
-static inline void SAFE_DELETE(T* &p)
+static inline void SafeDelete(T* &p)
 {
 	/*! 不完全な型のポインタをdeleteしようとしたときにコンパイルエラーにする */
 
