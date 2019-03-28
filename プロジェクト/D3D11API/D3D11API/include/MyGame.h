@@ -94,7 +94,7 @@ static inline void WindowsErrorLog() {
 }
 
 /*!
-	@fn			SAFE_DELETE
+	@fn			SafeDelete
 	@brief		安全なdelete
 	@param[in]	インスタンス
 */
