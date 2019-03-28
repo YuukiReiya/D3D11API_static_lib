@@ -18,6 +18,9 @@ namespace D3D11 {
 	/*! サウンド関連の名前空間に含める */
 	namespace Sound {
 
+		/*!
+			@brief	オーディオのデバイスクラス
+		*/
 		class AudioMaster
 			:public Singleton<AudioMaster>
 		{
