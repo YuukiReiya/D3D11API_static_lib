@@ -4,10 +4,28 @@
     <Filter Include="Main">
       <UniqueIdentifier>{380f14e9-4bdf-450f-87b5-569f5049d504}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{287694b4-f5c1-408d-b933-4622a688ff84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Interface">
+      <UniqueIdentifier>{0eb92a32-fcd4-4875-bf6b-b8ffa6b64a44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Root">
+      <UniqueIdentifier>{8be82fd4-cf52-4274-8968-8afa3256ee5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Scene">
+      <UniqueIdentifier>{510d0017-825d-4ac3-8fb7-12b3d98cf640}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Main\Main.h">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Root\SceneRoot.h">
+      <Filter>Scene\Root</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Interface\IScene.h">
+      <Filter>Scene\Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -15,5 +33,6 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\Entry.cpp" />
+    <ClCompile Include="Source\Scene\Root\SceneRoot.cpp" />
   </ItemGroup>
 </Project>
