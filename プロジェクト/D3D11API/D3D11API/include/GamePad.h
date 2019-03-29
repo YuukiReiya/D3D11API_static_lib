@@ -1,12 +1,13 @@
 /*
 	@file	GamePad.h
 	@brief	ゲームパッド入力
-	@date	2018/04/24
+	@date	2019/03/29
 	@detail	XInputを用いた入力
 			XInput参考:		http://www.geocities.jp/gameprogrammingunit/xinput/index.html
 			列挙体の注意:	http://d.hatena.ne.jp/mclh46/20100627/1277603928
 	@author	番場 宥輝
-*/#pragma once
+*/
+#pragma once
 #include <windows.h>
 #include <Xinput.h>
 #include <DirectXMath.h>
@@ -104,15 +105,15 @@ public:
 		@fn			GetArrow
 		@brief		十字キーを押している間の取得
 		@param[in]	判定方向
-		@return		1: -1: 0:押されていない
+		@return		1:正 -1:負 0:押されていない
 	*/
 	int GetArrow(KeyCode::Arrow arrow);
 
 	/*!
-		@fn			GetArrow
+		@fn			GetArrowDwon
 		@brief		十字キーを押した瞬間の取得
 		@param[in]	判定方向
-		@return		1: -1: 0:押されていない
+		@return		1:正 -1:負 0:押されていない
 	*/
 	int GetArrowDown(KeyCode::Arrow arrow);
 
@@ -120,7 +121,7 @@ public:
 		@fn			GetArrowUp
 		@brief		十字キーを離した瞬間の取得
 		@param[in]	判定方向
-		@return		1: -1: 0:押されていない
+		@return		1:正 -1:負 0:押されていない
 	*/
 	int GetArrowUp(KeyCode::Arrow arrow);
 
@@ -141,14 +142,6 @@ public:
 	BYTE GetTrigger(KeyCode::Trigger trigger);
 
 	/*!
-		@fn			GetBTrigger
-		@brief		トリガーの入力取得
-		@param[in]	判定するトリガー
-		@return		押されている/いないのどちらかを返す
-	*/
-	bool GetBTrigger(KeyCode::Trigger trigger);
-
-	/*!
 		@fn			SetVibration
 		@brief		バイブレーションの設定
 		@detail		デフォルト引数のrightPower = -1を指定することで左右の出力を同じにする
@@ -156,6 +149,22 @@ public:
 		@param[in]	右側のモーターの強さ
 	*/
 	void SetVibration(int leftPower, int rightPower = -1);
+
+	/*!
+		@fn			SetJoyStickDead
+		@brief		ジョイスティックの入力制限値の設定
+		@detail		この値以下の値は 0.0f として扱われる ※ジョイスティックのみ対応
+		@param[in]	設定値
+	*/
+	void SetJoyStickDead(float dead);
+
+	/*!
+		@fn			SetJoyStickPrecision
+		@brief		ジョイスティックの入力精度値の設定
+		@detail		精度 ex)10:少数第一位、100:少数第二位
+		@param[in]	設定値
+	*/
+	void SetJoyStickPrecision(unsigned int precision);
 private:
 
 	/*!
@@ -206,36 +215,63 @@ private:
 		@var	c_JoyStickInputMin
 		@brief	ジョイスティック入力の最小値
 	*/
-	static const int c_JoyStickInputMin;
+	static constexpr int c_JoyStickInputMin = -32768;
 
 	/*!
 		@var	c_JoyStickInputMax
 		@brief	ジョイスティック入力の最大値
 	*/
-	static const int c_JoyStickInputMax;
-
+	static constexpr int c_JoyStickInputMax = 32767;
+	
 	/*!
 		@var	c_VibrationRange
-		@brief	バイブレーションの値域の範囲
+		@brief	バイブレーションの値域の範囲 0～65535
 	*/
-	static const int c_VibrationRange;
+	static constexpr unsigned int c_VibrationRange = 65535;
 
 	/*!
 		@var	c_JoyStickInputPrecision
-		@brief	ジョイスティックの入力精度
+		@brief	ジョイスティックの入力精度のデフォルト値
 		@detail	精度 ex)10:少数第一位、100:少数第二位
 	*/
 	static constexpr int c_JoyStickInputPrecision = 10;
 
 	/*!
 		@var	c_JoyStickInputDead
-		@brief	ジョイスティックの入力制限
+		@brief	ジョイスティックの入力制限のデフォルト値
 		@detail	この値以下の値は 0.0f として扱われる ※ジョイスティックのみ対応
 	*/
 	static constexpr float c_JoyStickInputDead = 0.0f;
 
-	/*! パラメーター */
-	Index index;			/*!< コントローラー番号 */
-	XINPUT_STATE now,old;	/*!< 入力バッファ */
+	/*!
+		@var	index
+		@brief	コントローラー番号
+	*/
+	Index index;
 
+	/*!
+		@var	now
+		@brief	現在の入力バッファ
+	*/
+	XINPUT_STATE now;
+
+	/*!
+		@var	old
+		@brief	１フレーム前の入力バッファ
+	*/
+	XINPUT_STATE old;
+
+	/*!
+		@var	m_JoyStickInputDead
+		@brief	ジョイスティックの入力制限
+		@detail	この値以下の値は 0.0f として扱われる ※ジョイスティックのみ対応
+	*/
+	float m_JoyStickInputDead;
+
+	/*!
+		@var	m_JoyStickInputPrecision
+		@brief	ジョイスティックの入力精度
+		@detail	精度 ex)10:少数第一位、100:少数第二位
+	*/
+	unsigned int m_JoyStickInputPrecision;
 };

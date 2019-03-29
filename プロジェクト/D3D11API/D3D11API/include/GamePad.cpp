@@ -1,8 +1,10 @@
 /*
-	@file	Keyboard.h
-	@brief	Windowsキーボード入力
-	@date	2018/04/24
-	@detail	キーコード確認用リンク:http://www.azaelia.net/factory/vk.html
+	@file	GamePad.cpp
+	@brief	ゲームパッド入力
+	@date	2019/03/29
+	@detail	XInputを用いた入力
+			XInput参考:		http://www.geocities.jp/gameprogrammingunit/xinput/index.html
+			列挙体の注意:	http://d.hatena.ne.jp/mclh46/20100627/1277603928
 	@author	番場 宥輝
 */
 #include "stdafx.h"
@@ -10,14 +12,8 @@
 #include <math.h>
 
 /*!
-	@def	定数宣言
-*/
-const int GamePad::c_JoyStickInputMin		= -32768;
-const int GamePad::c_JoyStickInputMax		=  32767;
-const int GamePad::c_VibrationRange			= 65535;	/*!< バイブレーションの値域の範囲 0～65535 */
-
-/*!
-	@brief	名前空間
+	@brief	usingディレクティブ
+	@using	KeyCode
 */
 using namespace KeyCode;
 
@@ -25,6 +21,8 @@ using namespace KeyCode;
 	@brief	コンストラクタ
 */
 GamePad::GamePad()
+	:m_JoyStickInputDead(c_JoyStickInputDead)
+	,m_JoyStickInputPrecision(c_JoyStickInputPrecision)
 {
 	SecureZeroMemory(this, sizeof(this));
 	index = Index::One;
@@ -35,6 +33,8 @@ GamePad::GamePad()
 	@param[in]	設定するコントローラー番号
 */
 GamePad::GamePad(Index && index)
+	:m_JoyStickInputDead(c_JoyStickInputDead)
+	,m_JoyStickInputPrecision(c_JoyStickInputPrecision)
 {
 	SecureZeroMemory(this, sizeof(this));
 	this->index = index;
@@ -46,22 +46,27 @@ GamePad::GamePad(Index && index)
 GamePad::~GamePad()
 {
 	SetVibration(0);
-	// XInputを無効にする(全てのコントローラーに依存)
+	// XInputを無効にするj(全てのコントローラーに依存)
 	//XInputEnable(false);
 }
 
 /*!
-	@brief	入力バッファの更新
+	@fn		Update
+	@brief	更新処理
+	@detail	入力バッファの更新
 */
 void GamePad::Update()
 {
 	old = now;
 
-	if (XInputGetState(index, &now) == ERROR_SUCCESS) {}
+	if (XInputGetState(index, &now) == ERROR_SUCCESS) {}//	TODO:何らかしらのエラー処理
 }
 
 /*!
-	@brief	ボタンを押してる間
+	@fn			GetButton
+	@brief		ボタンを押してる間の取得
+	@param[in]	判定するボタンのキーコード
+	@return		ボタンの押下情報
 */
 bool GamePad::GetButton(Button button)
 {
@@ -69,17 +74,20 @@ bool GamePad::GetButton(Button button)
 }
 
 /*!
-	@brief	十字キーを押してる間
+	@fn			GetArrow
+	@brief		十字キーを押している間の取得
+	@param[in]	判定方向
+	@return		1:正 -1:負 0:押されていない
 */
 int GamePad::GetArrow(KeyCode::Arrow arrow)
 {
 	auto input = ConvertKeyArrowCode(Arrow(arrow));
 
-	/*! 正の値 */
+	// 正の値
 	if ((now.Gamepad.wButtons&input.x)==1) {
 		return 1;
 	}
-	/*! 負の値 */
+	// 負の値
 	if ((now.Gamepad.wButtons&input.y)==1) {
 		return -1;
 	}
@@ -88,7 +96,10 @@ int GamePad::GetArrow(KeyCode::Arrow arrow)
 }
 
 /*!
-	@brief	ボタンを押した瞬間
+	@fn			GetButtonDown
+	@brief		ボタンを押した瞬間の取得
+	@param[in]	判定するボタンのキーコード
+	@return		ボタンの押下情報
 */
 bool GamePad::GetButtonDown(KeyCode::Button button)
 {
@@ -100,7 +111,10 @@ bool GamePad::GetButtonDown(KeyCode::Button button)
 }
 
 /*!
-	@brief	十字キーを押した瞬間
+	@fn			GetArrowDwon
+	@brief		十字キーを押した瞬間の取得
+	@param[in]	判定方向
+	@return		1:正 -1:負 0:押されていない
 */
 int GamePad::GetArrowDown(KeyCode::Arrow arrow)
 {
@@ -130,7 +144,10 @@ int GamePad::GetArrowDown(KeyCode::Arrow arrow)
 }
 
 /*!
-	@brief	ボタンが離された瞬間
+	@fn			GetButtonUp
+	@brief		ボタンが離された瞬間の取得
+	@param[in]	判定するボタンのキーコード
+	@return		ボタンの押下情報
 */
 bool GamePad::GetButtonUp(KeyCode::Button button)
 {
@@ -142,7 +159,10 @@ bool GamePad::GetButtonUp(KeyCode::Button button)
 }
 
 /*!
-	@brief	十字キーが離された瞬間
+	@fn			GetArrowUp
+	@brief		十字キーを離した瞬間の取得
+	@param[in]	判定方向
+	@return		1:正 -1:負 0:押されていない
 */
 int GamePad::GetArrowUp(KeyCode::Arrow arrow)
 {
@@ -172,8 +192,10 @@ int GamePad::GetArrowUp(KeyCode::Arrow arrow)
 }
 
 /*!
-	@brief	ジョイスティックの入力取得
-	@detail	x:横軸、y:縦軸、z:押し込み(0か1)
+	@fn			GetJoyStick
+	@brief		ジョイスティックの入力取得
+	@param[in]	ジョイスティックの種類
+	@return		x:横軸、y:縦軸、z:押し込み(0か1)
 */
 DirectX::XMFLOAT3 GamePad::GetJoyStick(KeyCode::JoyStick joyStick)
 {
@@ -210,7 +232,10 @@ DirectX::XMFLOAT3 GamePad::GetJoyStick(KeyCode::JoyStick joyStick)
 }
 
 /*!
-	@brief	トリガーの入力取得
+	@fn			GetTrigger
+	@brief		トリガーの入力取得
+	@param[in]	判定するトリガー
+	@return		0～255の範囲の強さを返す
 */
 BYTE GamePad::GetTrigger(KeyCode::Trigger trigger)
 {
@@ -232,15 +257,11 @@ BYTE GamePad::GetTrigger(KeyCode::Trigger trigger)
 }
 
 /*!
-	@brief	トリガーの入力をboolで判定
-*/
-bool GamePad::GetBTrigger(KeyCode::Trigger trigger)
-{
-	return GetTrigger(trigger) > 0;
-}
-
-/*!
-	@brief	バイブレーションの設定
+	@fn			SetVibration
+	@brief		バイブレーションの設定
+	@detail		デフォルト引数のrightPower = -1を指定することで左右の出力を同じにする
+	@param[in]	左側のモーターの強さ
+	@param[in]	右側のモーターの強さ
 */
 void GamePad::SetVibration(int leftPower, int rightPower)
 {
@@ -256,8 +277,32 @@ void GamePad::SetVibration(int leftPower, int rightPower)
 }
 
 /*!
-	@brief	入力値の正規化
-	@detail	-1～1の範囲に値を正規化した値を返す
+	@fn			SetJoyStickDead
+	@brief		ジョイスティックの入力制限値の設定
+	@detail		この値以下の値は 0.0f として扱われる ※ジョイスティックのみ対応
+	@param[in]	設定値
+*/
+void GamePad::SetJoyStickDead(float dead)
+{
+	m_JoyStickInputDead = dead;
+}
+
+/*!
+	@fn			SetJoyStickPrecision
+	@brief		ジョイスティックの入力精度値の設定
+	@detail		精度 ex)10:少数第一位、100:少数第二位
+	@param[in]	設定値
+*/
+void GamePad::SetJoyStickPrecision(unsigned int precision)
+{
+	m_JoyStickInputPrecision = precision;
+}
+
+/*!
+	@fn			InputNormalize
+	@brief		入力値の正規化
+	@param[in]	正規化する値
+	@return		-1～1の範囲に値を正規化した値を返す
 */
 float GamePad::InputNormalize(float input)
 {
@@ -266,16 +311,19 @@ float GamePad::InputNormalize(float input)
 }
 
 /*!
-	@brief	入力値を丸める
-	@detail	設定した精度で数値を丸める
+	@fn			InputRound
+	@brief		入力値を丸める
+	@detail		設定した精度で数値を丸める
+	@param[in]	入力値
+	@return		丸めた値
 */
 float GamePad::InputRound(float input)
 {
-	int tmp = static_cast<int>(input) * c_JoyStickInputPrecision;
-	input = static_cast<float>(tmp) / static_cast<float>(c_JoyStickInputPrecision);
+	int tmp = static_cast<int>(input) * m_JoyStickInputPrecision;
+	input = static_cast<float>(tmp) / static_cast<float>(m_JoyStickInputPrecision);
 
 	// 設定した入力値以下なら 入力値を0にする
-	if (fabs(input) < c_JoyStickInputDead) {
+	if (fabs(input) < m_JoyStickInputDead) {
 		input = 0.0f;
 	}
 
@@ -283,8 +331,11 @@ float GamePad::InputRound(float input)
 }
 
 /*!
-	@brief	正規化した値をバイブレーション値に変換
-	@detail	0～100の範囲を受け取り
+	@fn			VibrationConvertPower
+	@brief		正規化した値をバイブレーション値に変換
+	@detail		0～100の範囲に正規化した値をバイブレーションで使う値に変換
+	@param[in]	正規化した値(0～100)
+	@return		バイブレーションの値に変換した値
 */
 int GamePad::VibrationConvertPower(int vibration)
 {
@@ -298,8 +349,11 @@ int GamePad::VibrationConvertPower(int vibration)
 }
 
 /*!
-	@brief	ボタンのキーコード変換
-	@detail	ボタンの列挙体からXInputの判定用16進数へ変換
+	@fn			ConvertKeyButtonCode
+	@brief		ボタンのキーコード変換
+	@detail		ボタンの列挙体からXInputの判定用16進数へ変換
+	@param[in]	変換するボタン
+	@return		変換後のキーコード
 */
 int GamePad::ConvertKeyButtonCode(Button && button)
 {
@@ -322,8 +376,11 @@ int GamePad::ConvertKeyButtonCode(Button && button)
 }
 
 /*!
-	@brief	十字キーのキーコード変換
-	@detail	十字キーの列挙体からXInputの判定用16進数へ変換
+	@fn			ConvertKeyArrowCode
+	@brief		十字キーのキーコード変換
+	@detail		十字キーの列挙体からXInputの判定用16進数へ変換
+	@param[in]	変換する十字キー
+	@return		変換後の情報が入ったXMINT2型
 */
 DirectX::XMINT2 GamePad::ConvertKeyArrowCode(KeyCode::Arrow && arrow)
 {
