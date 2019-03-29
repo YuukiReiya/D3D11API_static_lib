@@ -27,6 +27,12 @@
     <ClInclude Include="Source\Scene\Interface\IScene.h">
       <Filter>Scene\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Scene\Scene\SampleScene.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Scene\TransitionTestScene.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main\Main.cpp">
@@ -34,5 +40,9 @@
     </ClCompile>
     <ClCompile Include="Source\Entry.cpp" />
     <ClCompile Include="Source\Scene\Root\SceneRoot.cpp" />
+    <ClCompile Include="Source\Scene\Scene\SampleScene.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Scene\TransitionTestScene.cpp" />
   </ItemGroup>
 </Project>
