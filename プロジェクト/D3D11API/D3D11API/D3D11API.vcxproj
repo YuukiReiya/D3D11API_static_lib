@@ -161,6 +161,7 @@
     <ClInclude Include="include\GamePad.h" />
     <ClInclude Include="include\IRender.h" />
     <ClInclude Include="include\ITexture.h" />
+    <ClInclude Include="include\Keyboard.h" />
     <ClInclude Include="include\MemoryLeaks.h" />
     <ClInclude Include="include\MyGame.h" />
     <ClInclude Include="include\ShaderManager.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="include\GamePad.cpp" />
     <ClCompile Include="include\IRender.cpp" />
     <ClCompile Include="include\ITexture.cpp" />
+    <ClCompile Include="include\Keyboard.cpp" />
     <ClCompile Include="include\ShaderManager.cpp" />
     <ClCompile Include="include\Sprite.cpp" />
     <ClCompile Include="include\stdafx.cpp">
