@@ -7,29 +7,19 @@
 #pragma once
 #include "../Interface/IScene.h"
 #include <memory>
+#include <Singleton.h>
 
 /*!
 	@brief	ルートシーン
 */
 class SceneRoot
-	:public IScene
+	:public Singleton<SceneRoot>, public IScene
 {
-	/*!
-		@brief	コンストラクタ
-	*/
-	explicit SceneRoot();
-
-	/*!
-		@brief		引数付きコンストラクタ
-		@param[in]	初期シーンのポインタ
-	*/
-	explicit SceneRoot(IScene* pInitializeScene);
-
+public:
 	/*!
 		@brief	デストラクタ
 	*/
 	~SceneRoot();
-
 
 	/*!
 		@fn		Initialize
@@ -55,28 +45,43 @@ class SceneRoot
 	*/
 	void IScene::Render();
 
+	/*!
+		@fn			SetupNextScene
+		@brief		遷移先シーンの設定
+		@param[in]	遷移先シーンのポインタ
+	*/
 	void SetupNextScene(IScene* scene);
 
+	/*!
+		@fn			SetupNextScene
+		@brief		遷移先シーンの設定
+		@param[in]	遷移先シーンのユニークポインタ
+	*/
+	void SetupNextScene(std::unique_ptr<IScene> scene);
+
 private:
+	/*!
+		@brief	シングルトンデザインパターンのテンプレート継承
+	*/
+	friend class Singleton<SceneRoot>;
 
 	/*!
-		@fn		OnCallSetupCurrentScene
-		@brief	現在設定されているシーンの遷移	
+		@brief	コンストラクタ
 	*/
-	void OnCallSetupCurrentScene();
+	explicit SceneRoot();
 
 	/*!
-		@fn		OnCallShutdownCurrentScene
-		@brief	現在設定されているシーンの破棄処理
+		@fn		OnCallSetupNextScene
+		@brief	遷移先シーンの設定後に呼ばれる処理
 	*/
-	void OnCallShutdownCurrentScene();
+	void OnCallSetupNextScene();
 
 	/*!
 		@var	m_pCurrentScene
 		@brief	現在設定しているシーン
 	*/
 	std::unique_ptr<IScene> m_pCurrentScene;
-	
+
 	/*!
 		@var	m_pNextScene
 		@brief	遷移先のシーン
