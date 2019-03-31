@@ -41,8 +41,7 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, INT)
 	//	高解像度タイマーへの対応を調べ、未対応ならプログラムを終了させる
 	if (!g_pMain->HighQualityTimer())
 	{
-		g_pMain.reset();
-		g_pMain = nullptr;
+		g_pMain.reset(nullptr);
 		return 0;
 	}
 
@@ -52,7 +51,7 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, INT)
 	}
 
 	//	明示的開放
-	g_pMain.reset();
+	g_pMain.reset(nullptr);
 
 	return 0;
 }

@@ -11,7 +11,9 @@
 #include <Debug.h>
 #include <AudioMaster.h>
 #include <Camera.h>
+#include <Keyboard.h>
 #include "Main.h"
+#include "../Scene/Root/SceneRoot.h"
 
 /*!
 	@brief	usingディレクティブ
@@ -105,7 +107,8 @@ bool Main::Init(HINSTANCE hInstance)
 */
 void Main::Release()
 {
-	m_pWindow.reset();
+	SceneRoot::GetInstance().Finalize();
+	m_pWindow.reset(nullptr);
 }
 
 /*!	
@@ -117,12 +120,13 @@ void Main::Loop()
 	// FPSの初期化
 	SetUpFPS();
 
+	//	シーンの初期化
+	SceneRoot::GetInstance().Initialize();
+
 	// カメラの初期化
 	//Camera::GetInstance().Initialize();
 
 	HRESULT hr = NULL;
-
-	if (FAILED(hr)) { ErrorLog(""); }
 
 	// メッセージループ
 	MSG msg{ 0 };
@@ -206,7 +210,11 @@ void Main::App()
 */
 void Main::Update()
 {
+	//	キーボードの入力バッファの更新
+	Keyboard::UpdateBuffer();
 
+	//	シーンの更新
+	SceneRoot::GetInstance().Update();
 }
 
 /*!
@@ -219,6 +227,7 @@ void Main::Render()
 	Direct3D11::GetInstance().Clear();
 
 	// シーンの描画
+	SceneRoot::GetInstance().Render();
 
 	// 画面更新 
 	Direct3D11::GetInstance().Present();

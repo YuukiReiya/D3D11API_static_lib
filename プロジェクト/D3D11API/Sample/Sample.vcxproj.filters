@@ -39,10 +39,14 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\Entry.cpp" />
-    <ClCompile Include="Source\Scene\Root\SceneRoot.cpp" />
     <ClCompile Include="Source\Scene\Scene\SampleScene.cpp">
       <Filter>Scene\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Scene\TransitionTestScene.cpp" />
+    <ClCompile Include="Source\Scene\Root\SceneRoot.cpp">
+      <Filter>Scene\Root</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Scene\TransitionTestScene.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
