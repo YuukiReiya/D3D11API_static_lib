@@ -1,6 +1,6 @@
 /*
 	@file	Color.h
-	@date	2018/11/26
+	@date	2019/04/05
 	@author	番場 宥輝
 	@brief	カラークラス
 */
@@ -9,7 +9,6 @@
 
 /*!
 	@brief	カラークラス
-	@detail	メンバは( 0.0f ～ 1.0f )までの範囲に収める
 */
 class Color
 {
@@ -45,18 +44,7 @@ public:
 		@detail	空デストラクタ
 	*/
 	~Color();
-
-	/*!
-		@def	変数の別名定義マクロ
-		@detail	参考:https://qiita.com/tyanmahou/items/7fbc5c0638ef9fd4c467
-	*/
-	#pragma region def
-#define PropertyAlias(base,name,...)\
-__declspec(property(get = Get_##base, put = Set_##base)) __VA_ARGS__ name;\
-__VA_ARGS__ & Get_##base(){return base;}\
-void Set_##base(const __VA_ARGS__& value){base = value;}
-	#pragma endregion
-
+	
 	/*!
 		@fn		カラーのゲッター
 		@brief	カラーをXMFLOAT3型で取得
@@ -84,8 +72,20 @@ void Set_##base(const __VA_ARGS__& value){base = value;}
 	static constexpr float c_MaxValue = 1.0f;
 
 	/*!
+		@def	変数の別名定義マクロ
+		@detail	参考:https://qiita.com/tyanmahou/items/7fbc5c0638ef9fd4c467
+	*/
+	#pragma region def
+#define PropertyAlias(base,name,...)\
+__declspec(property(get = Get##base, put = Set##base)) __VA_ARGS__ name;\
+__VA_ARGS__ & Get##base(){return base;}\
+void Set##base(const __VA_ARGS__& value){base = value;}
+	#pragma endregion
+
+	/*!
 		@var	メンバ変数
 		@brief	x = r , y = g , z = b ,w = a
+		@detail	値域( 0.0f ～ 1.0f )
 	*/
 	float x, y, z, w;
 

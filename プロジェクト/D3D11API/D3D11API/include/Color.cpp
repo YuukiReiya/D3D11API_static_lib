@@ -19,6 +19,7 @@ using namespace std;
 */
 Color::Color()
 {
+	x = y = z = w = c_MaxValue;
 }
 
 /*!
