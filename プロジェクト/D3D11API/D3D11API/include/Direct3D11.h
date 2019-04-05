@@ -201,7 +201,7 @@ namespace D3D11 {
 			@var	m_pDebug
 			@brief	デバッグ
 		*/
-		Microsoft::WRL::ComPtr<ID3D11Debug>				m_pDebug;				/*!< デバッグ */
+		Microsoft::WRL::ComPtr<ID3D11Debug>				m_pDebug;
 
 		/*!
 			@var	m_WindowWidth
