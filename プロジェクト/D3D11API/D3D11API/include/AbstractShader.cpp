@@ -1,3 +1,10 @@
+/*
+	@file	AbstractShader.cpp
+	@date	2019/04/05
+	@author	番場 宥輝
+	@brief	シェーダーの抽象クラス
+	@note	描画クラス設計見直しに際し、更新していく
+*/
 #include "stdafx.h"
 #pragma comment(lib,"d3dCompiler.lib")
 #include <d3dcompiler.h>
