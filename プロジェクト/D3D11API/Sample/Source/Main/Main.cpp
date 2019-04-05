@@ -12,6 +12,7 @@
 #include <AudioMaster.h>
 #include <Camera.h>
 #include <Keyboard.h>
+#include <ShaderManager.h>
 #include "Main.h"
 #include "../Scene/Root/SceneRoot.h"
 
@@ -123,8 +124,11 @@ void Main::Loop()
 	//	シーンの初期化
 	SceneRoot::GetInstance().Initialize();
 
+	//	シェーダーマネージャーの初期化
+	D3D11::Graphic::ShaderManager::GetInstance().Initialize("");
+
 	// カメラの初期化
-	//Camera::GetInstance().Initialize();
+	Camera::GetInstance().Initialize({ c_WindowWidth,c_WindowHeight }, { 0,0,-10 });
 
 	HRESULT hr = NULL;
 
@@ -196,7 +200,7 @@ void Main::App()
 		// 描画処理
 		Render();
 	}
-	//	アプリケーション側でsleep
+	//	アプリケーション側で
 	else {
 
 		// 更新処理
