@@ -188,20 +188,24 @@ void Main::App()
 		}
 	}
 #endif
-	// FPSの調整方法で分岐
-#ifdef Vsync
-	// 更新処理
-	Update();
-	// 描画処理
-	Render();
-#else
-	// 更新処理
-	Update();
-	// 描画処理
-	Render();
-	// FPS調整
-	SleepApp();
-#endif // Vsync
+	//	FPSの調整方法で分岐(Vsync)
+	if (Direct3D11::GetInstance().isVsync) {
+
+		// 更新処理
+		Update();
+		// 描画処理
+		Render();
+	}
+	//	アプリケーション側でsleep
+	else {
+
+		// 更新処理
+		Update();
+		// 描画処理
+		Render();
+		// FPS調整
+		SleepApp();
+	}
 }
 
 /*!

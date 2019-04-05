@@ -372,6 +372,7 @@ void Direct3D11::Release()
 */
 void Direct3D11::Clear()
 {
+	//	クリアカラーのキャスト
 	float clearColor[] = 
 	{
 		m_ClearColor.x ,
@@ -403,12 +404,8 @@ void Direct3D11::Clear()
 void Direct3D11::Present()
 {
 	m_pSwapChain->Present(
-#ifdef Vsync
-		1,	// 画面更新タイミング(垂直回帰の同期設定)
-#else
-		0,
-#endif
-		0	// 画面更新(DXGI_PRESENT_TESTだと更新は行わない)
+		isVsync ? 1 : 0,	// 画面更新タイミング(垂直回帰の同期設定) true:Vsync false:アプリケーション側のsleep
+		0					// 画面更新(DXGI_PRESENT_TESTだと更新は行わない)
 	);
 }
 
