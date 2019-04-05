@@ -21,12 +21,6 @@
 #include "Color.h"
 
 /*!
-	@def	Vsync
-	@brief	Vsyncを使ったFPS同期(コメントアウトするとアプリケーション側でのwait)
-*/
-//#define Vsync
-
-/*!
 	@def	MSAA
 	@brief	マルチサンプル・アンチエイリアス(コメントアウトするとMSAA無し)
 */
@@ -113,6 +107,13 @@ namespace D3D11 {
 		ID3D11DeviceContext* GetImmediateContext()const { return m_pImmediateContext.Get(); }
 
 		/*!
+			@var	isVsync
+			@brief	Vsyncを使ったFPS同期
+			@detail true:Vsync false:アプリケーション側でのwait
+		*/
+		bool isVsync;
+
+		/*!
 			@brief	読み取り専用のプロパティ
 			@detail	VisualStudio以外では使えないらしい
 		*/
@@ -146,15 +147,61 @@ namespace D3D11 {
 			@brief	メンバー変数の宣言
 			@detail	ComPtrを使ったスマートポインタで宣言
 		*/
-		Microsoft::WRL::ComPtr<ID3D11Device>			m_pDevice;				/*!< デバイス */
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_pImmediateContext;	/*!< イミディエイトコンテキスト */
-		Microsoft::WRL::ComPtr<IDXGISwapChain>			m_pSwapChain;			/*!< スワップチェイン */
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	m_pRenderTargetView;	/*!< レンダーターゲットビュー */
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	m_pDepthStencilView;	/*!< デプスステンシルビュー */
-		Microsoft::WRL::ComPtr<ID3D11Texture2D>			m_pDepthStencil;		/*!< デプスステンシル */
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	m_pDepthStencilState;	/*!< デプスステンシルステート */
-		Microsoft::WRL::ComPtr<ID3D11RasterizerState>	m_pRasterizerState;		/*!< ラスタライザステート */
-		Microsoft::WRL::ComPtr<ID3D11Debug>				m_pDebug;				/*!< デバッグ */
+
+		/*!
+			@var	m_pDevice
+			@brief	デバイス
+		*/
+		Microsoft::WRL::ComPtr<ID3D11Device>			m_pDevice;
+
+		/*!
+			@var	m_pImmediateContext
+			@brief	デバイスコンテキスト
+			@detail	イミディエイトコンテキストを使ったシングルスレッドで構築
+		*/
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_pImmediateContext;
+
+		/*!
+			@var	m_pSwapChain
+			@brief	スワップチェイン
+		*/
+		Microsoft::WRL::ComPtr<IDXGISwapChain>			m_pSwapChain;
+
+		/*!
+			@var	m_pRenderTargetView
+			@brief	レンダーターゲットビュー
+		*/
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	m_pRenderTargetView;
+
+		/*!
+			@var	m_pDepthStencilView
+			@brief	デプスステンシルビュー
+		*/
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	m_pDepthStencilView;
+
+		/*!
+			@var	m_pDepthStencil
+			@brief	デプスステンシル
+		*/
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>			m_pDepthStencil;
+
+		/*!
+			@var	m_pDepthStencilState
+			@brief	デプスステンシルステート
+		*/
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	m_pDepthStencilState;
+
+		/*!
+			@var	m_pRasterizerState
+			@brief	ラスタライザステート
+		*/
+		Microsoft::WRL::ComPtr<ID3D11RasterizerState>	m_pRasterizerState;
+
+		/*!
+			@var	m_pDebug
+			@brief	デバッグ
+		*/
+		Microsoft::WRL::ComPtr<ID3D11Debug>				m_pDebug;
 
 		/*!
 			@var	m_WindowWidth
@@ -167,13 +214,6 @@ namespace D3D11 {
 			@brief	ウィンドウの縦幅
 		*/
 		int m_WindowHeight;
-
-		/*!
-			@var	m_Vsync
-			@brief	Vsyncを使ったFPS同期
-			@detail true:Vsync false:アプリケーション側でのwait
-		*/
-		bool m_Vsync;
 
 		/*!
 			@var	m_ClearColor
