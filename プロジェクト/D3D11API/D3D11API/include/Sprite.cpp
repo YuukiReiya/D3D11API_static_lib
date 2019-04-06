@@ -41,6 +41,7 @@ Sprite::Sprite()
 	m_Rot = {0,0,0};
 	m_Size = { -1,-1 };
 	m_StencilMask = 0xffffffff;
+	Initialize();
 }
 
 /*!
