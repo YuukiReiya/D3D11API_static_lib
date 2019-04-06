@@ -3,6 +3,7 @@
 	@date	2019/03/28
 	@author	番場 宥輝
 	@brief	サンプルシーン
+	@detail	ライブラリのテストを行うサンプル用のシーン
 */
 #pragma once
 #include "../Interface/IScene.h"
