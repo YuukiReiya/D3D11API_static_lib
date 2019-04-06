@@ -56,16 +56,18 @@ void SampleScene::Initialize()
 	g_pSprite = make_shared<Sprite>();
 	g_pTexture = make_shared<Texture>();
 
-	for (auto itr : g_pS1) {
+	for (auto& itr : g_pS1) {
 		itr = make_shared<Sprite>();
 	}
 
-	for (auto itr : g_pT1) {
+	for (auto& itr : g_pT1) {
 		itr = make_shared<Texture>();
 	}
 
 
 	g_pTexture->Initialize("Resources/Smoke.png");
+	g_pT1[0]->Initialize("Resources/image.jpg");
+	g_pT1[0]->SetSize({ 308,163 });
 	g_pTexture->SetSize({ 256,256 });
 }
 
@@ -98,4 +100,5 @@ void SampleScene::Update()
 void SampleScene::Render()
 {
 	g_pSprite->Render(g_pTexture.get());
+	g_pS1[0]->Render(g_pT1[0].get());
 }
