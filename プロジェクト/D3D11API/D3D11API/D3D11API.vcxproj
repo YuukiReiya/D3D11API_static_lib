@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\AbstractShader.h" />
     <ClInclude Include="include\AudioMaster.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Color.h" />
@@ -172,11 +173,13 @@
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\TextureAtlas.h" />
+    <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Wave.h" />
     <ClInclude Include="include\WICTextureLoader.h" />
     <ClInclude Include="include\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\AbstractShader.cpp" />
     <ClCompile Include="include\AudioMaster.cpp" />
     <ClCompile Include="include\Camera.cpp" />
     <ClCompile Include="include\Color.cpp" />
