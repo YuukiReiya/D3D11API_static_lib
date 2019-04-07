@@ -295,6 +295,9 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	m_pImmediateContext->OMSetRenderTargets(
 		1,									// 描画ターゲット数
 		m_pRenderTargetView.GetAddressOf(),	// 描画ターゲットビュー
+
+		//	NOTE: 無効化しておかないと、カメラからみて奥のほうにある半透明オブジェクトが描画されないことがある。
+		//	TODO: 場合によってはNULLを入れる↓
 		m_pDepthStencilView.Get()			// 深度 / ステンシルビュー
 	);
 
