@@ -21,6 +21,43 @@ namespace API{
 	class Sprite
 		{
 		public:
+			/*!
+				@enum	BlendPreset
+				@brief	ブレンドモードのプリセット指定用の列挙体
+				@detail	参考:http://maverickproj.web.fc2.com/d3d11_01.html
+			*/
+			enum BlendPreset
+			{
+				/*!
+					@var	Default
+					@brief	デフォルト(ブレンド無し)
+				*/
+				Default,
+
+				/*!
+					@var	Linear
+					@brief	線形合成
+				*/
+				Linear,
+
+				/*!
+					@var	Add
+					@brief	加算合成
+				*/
+				Add,
+
+				/*!
+					@var	Subtraction
+					@brief	減算合成
+				*/
+				Subtraction,
+
+				/*!
+					@var	Multiple
+					@brief	乗算合成
+				*/
+				Multiple
+			};
 
 			/*!
 				@brief	コンストラクタ
@@ -100,6 +137,13 @@ namespace API{
 			*/
 			void CreateAlphaBlendState(D3D11_BLEND_DESC desc);
 
+			/*!
+				@fn			SetupBlendState
+				@brief		指定したプリセットのブレンドステートをメンバに設定する
+				@param[in]	指定するプリセットの列挙体
+			*/
+			void SetupBlendState(BlendPreset preset);
+
 		private:
 			/*!
 				@var	c_VertexCount
@@ -151,10 +195,11 @@ namespace API{
 			*/
 			HRESULT CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 ratio);
 
+
 			uint32_t									m_StencilMask;
 			Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
 			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendState;
-			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendStateMultiple;
+			//Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendStateMultiple;
 
 			/****************************************/
 			/*		　スプライトのパラメータ		*/
@@ -164,7 +209,6 @@ namespace API{
 			DirectX::XMFLOAT3 m_Pos;
 			DirectX::XMFLOAT3 m_Rot;
 			DirectX::XMFLOAT3 m_Scale;
-		private:
 			/*! スプライトサイズのキャッシュ */
 			DirectX::XMINT2 m_Size;
 	};

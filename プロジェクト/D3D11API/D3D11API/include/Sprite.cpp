@@ -41,7 +41,9 @@ Sprite::Sprite()
 	m_Rot = {0,0,0};
 	m_Size = { -1,-1 };
 	m_StencilMask = 0xffffffff;
-	Initialize();
+	//Initialize();
+
+	SetupBlendState(BlendPreset::Linear);
 }
 
 /*!
@@ -98,7 +100,6 @@ HRESULT Sprite::Initialize()
 	bd.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
 	bd.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
 	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
-
 
 	//
 	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
@@ -180,6 +181,185 @@ void Sprite::CreateAlphaBlendState(D3D11_BLEND_DESC desc)
 		std::string error = "BlendState is not create!";
 		ErrorLog(error);
 	}
+}
+
+/*!
+	@fn			SetupBlendState
+	@brief		指定したプリセットのブレンドステートをメンバに設定する
+	@param[in]	指定するプリセットの列挙体
+*/
+void API::Sprite::SetupBlendState(BlendPreset preset)
+{
+	HRESULT hr;
+
+	/*!
+	※
+	SRC:ソース(これから描画するピクセルの色)
+	DEST:ディストネーション(レンダリングターゲットに描画されているピクセルの色)
+
+	最終的な描画色は以下の「混合関数」によって決まる
+
+		SRC × ブレンディング係数 ＋ DEST × ブレンディング係数
+
+		SRCALPHA:	 SRC のα値
+		INVSRCALPHA: 1 - SRC のα値
+		DESTALPHA:	 DESTのα値
+
+
+		Cr = Cd * (1 - As) + Cs * As
+
+		   = Cs * As + Cd * (1 - As)
+	*/
+
+	//	メモリを解放し、再設定する
+	if (m_pBlendState != nullptr) {
+		m_pBlendState.Reset();
+	}
+
+	// αブレンド
+	// αテスト設定
+	D3D11_BLEND_DESC bd;
+	SecureZeroMemory(&bd, sizeof(bd));
+
+	// ブレンドの有効・無効
+	bd.RenderTarget[0].BlendEnable = preset != BlendPreset::Default;
+
+	//	ブレンディング係数
+	D3D11_BLEND src, dest, srcAlpha, destAlpha;
+
+	//	ブレンディングオプション
+	D3D11_BLEND_OP blendOp, blendOpAlpha;
+
+	// ブレンディング係数の設定
+	//bd.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+	//bd.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+	//bd.RenderTarget[0].BlendOp		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	//bd.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
+	//bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_ZERO;
+	//bd.RenderTarget[0].BlendOpAlpha	= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	//bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+
+
+	//	プリセットで分岐
+	switch (preset)
+	{
+		//	デフォルト
+		case API::Sprite::BlendPreset::Default:
+		{
+			//	係数
+			src			= D3D11_BLEND::D3D11_BLEND_ONE;
+			srcAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
+			dest		= D3D11_BLEND::D3D11_BLEND_ZERO;
+			destAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
+
+			//	オプション
+			blendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+			blendOpAlpha	= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+		}
+		break;
+
+		//	線形
+		case API::Sprite::BlendPreset::Linear:
+		{
+			//	係数
+			src			= D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+			srcAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
+			dest		= D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+			destAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
+
+			//	オプション
+			blendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+			blendOpAlpha	= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+		}
+			break;
+
+		//	加算
+		case API::Sprite::BlendPreset::Add:
+		{
+			//	係数
+			src			= D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+			srcAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
+			dest		= D3D11_BLEND::D3D11_BLEND_ONE;
+			destAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
+
+			//	オプション
+			blendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+			blendOpAlpha	= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+		}
+			break;
+
+		//	減算
+		case API::Sprite::BlendPreset::Subtraction:
+		{
+			//	係数
+			src			= D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+			srcAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
+			dest		= D3D11_BLEND::D3D11_BLEND_ONE;
+			destAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
+
+			//	オプション
+			blendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_REV_SUBTRACT;
+			blendOpAlpha	= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+		}
+			break;
+
+		//	乗算
+		case API::Sprite::BlendPreset::Multiple:
+		{
+			//	係数
+			src			= D3D11_BLEND::D3D11_BLEND_ZERO;
+			srcAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
+			dest		= D3D11_BLEND::D3D11_BLEND_SRC_COLOR;
+			destAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
+
+			//	オプション
+			blendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+			blendOpAlpha	= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+		}
+			break;
+
+		//	例外処理
+		default:
+			std::string error = "Invalid value for argument of SetupBlendState function!";
+			ErrorLog(error);
+			return;
+	}
+	
+	//	係数
+	bd.RenderTarget[0].SrcBlend			= src;
+	bd.RenderTarget[0].DestBlend		= dest;
+	bd.RenderTarget[0].SrcBlendAlpha	= srcAlpha;
+	bd.RenderTarget[0].DestBlendAlpha	= destAlpha;
+
+	// ブレンドオプション
+	bd.RenderTarget[0].BlendOp		= blendOp;
+	bd.RenderTarget[0].BlendOpAlpha = blendOpAlpha;
+
+	//	RGBA 全てをブレンドする
+	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	// アンチエイリアス処理
+	//bd.AlphaToCoverageEnable = true;	// 切り取った部分に対するアンチエイリアス処理の有無
+	bd.IndependentBlendEnable = false;
+
+	// ブレンドステートの作成
+	hr = Direct3D11::GetInstance().GetDevice()->CreateBlendState(
+		&bd,
+		m_pBlendState.GetAddressOf()
+	);
+	if (FAILED(hr)) {
+		std::string error = "BlendState is not create!";
+		ErrorLog(error);
+		return;
+	}
+
+	// ブレンドステートの設定
+	//Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
+	//	m_pBlendState.Get(),
+	//	NULL,
+	//	m_StencilMask
+	//);
+
 }
 
 /*!
