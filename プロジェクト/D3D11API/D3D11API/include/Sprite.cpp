@@ -43,7 +43,7 @@ Sprite::Sprite()
 	m_StencilMask = 0xffffffff;
 	//Initialize();
 
-	SetupBlendState(BlendPreset::Linear);
+	SetupBlendState(BlendPreset::Default);
 }
 
 /*!
@@ -160,6 +160,14 @@ void Sprite::Release()
 }
 
 /*!
+	@fn		Render
+	@brief	描画
+*/
+void API::Sprite::Render()
+{
+}
+
+/*!
 	@fn			ブレンドステートの作成
 	@brief		作成したブレンドステートは描画時にバインドされる
 	@detail		メンバのブレンドステートをを変更
@@ -190,8 +198,6 @@ void Sprite::CreateAlphaBlendState(D3D11_BLEND_DESC desc)
 */
 void API::Sprite::SetupBlendState(BlendPreset preset)
 {
-	HRESULT hr;
-
 	/*!
 	※
 	SRC:ソース(これから描画するピクセルの色)
@@ -229,16 +235,6 @@ void API::Sprite::SetupBlendState(BlendPreset preset)
 
 	//	ブレンディングオプション
 	D3D11_BLEND_OP blendOp, blendOpAlpha;
-
-	// ブレンディング係数の設定
-	//bd.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
-	//bd.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-	//bd.RenderTarget[0].BlendOp		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	//bd.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
-	//bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_ZERO;
-	//bd.RenderTarget[0].BlendOpAlpha	= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	//bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
-
 
 	//	プリセットで分岐
 	switch (preset)
@@ -339,8 +335,9 @@ void API::Sprite::SetupBlendState(BlendPreset preset)
 	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	// アンチエイリアス処理
-	//bd.AlphaToCoverageEnable = true;	// 切り取った部分に対するアンチエイリアス処理の有無
 	bd.IndependentBlendEnable = false;
+
+	HRESULT hr;
 
 	// ブレンドステートの作成
 	hr = Direct3D11::GetInstance().GetDevice()->CreateBlendState(
@@ -352,14 +349,6 @@ void API::Sprite::SetupBlendState(BlendPreset preset)
 		ErrorLog(error);
 		return;
 	}
-
-	// ブレンドステートの設定
-	//Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
-	//	m_pBlendState.Get(),
-	//	NULL,
-	//	m_StencilMask
-	//);
-
 }
 
 /*!
@@ -1054,6 +1043,29 @@ HRESULT API::Sprite::CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 
 		return E_FAIL;
 	}
 	return S_OK;
+}
+
+/*!
+	@fn		SetupTopology
+	@brief	トポロジーの設定
+	@NOTE	スプライトは板ポリゴン実装なので、効率がいいTRIANGLESTRIPを指定
+*/
+void API::Sprite::SetupTopology()
+{
+	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
+		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+	);
+}
+
+void API::Sprite::SetupInputLayout()
+{	
+	//auto ptr = m_pShader.lock();
+
+
+	//Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
+	//	&*ptr->GetInputLayout()
+	//);
+
 }
 
 

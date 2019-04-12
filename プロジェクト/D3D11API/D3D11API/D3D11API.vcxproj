@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\AbstractRender.h" />
     <ClInclude Include="include\AbstractShader.h" />
     <ClInclude Include="include\AudioMaster.h" />
     <ClInclude Include="include\Camera.h" />

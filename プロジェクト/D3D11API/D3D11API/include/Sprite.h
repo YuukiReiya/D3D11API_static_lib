@@ -12,6 +12,8 @@
 #include <DirectXMath.h>
 #include "Texture.h"
 #include "TextureAtlas.h"
+#include "AbstractRender.h"
+#include "AbstractShader.h"
 
 /*! APIの名前空間に含める */
 namespace API{
@@ -19,7 +21,8 @@ namespace API{
 		@brief スプライトを扱うクラス
 	*/
 	class Sprite
-		{
+		: public AbstractRender
+	{
 		public:
 			/*!
 				@enum	BlendPreset
@@ -89,6 +92,12 @@ namespace API{
 				@detail	メンバの明示的な解放
 			*/
 			void Release();
+
+			/*!
+				@fn		Render
+				@brief	描画
+			*/
+			void Render()override;
 
 			/*!
 				@fn			テクスチャの描画
@@ -195,12 +204,25 @@ namespace API{
 			*/
 			HRESULT CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 ratio);
 
+			/*!
+				@fn		SetupTopology
+				@brief	トポロジーの設定
+				@NOTE	スプライトは板ポリゴン実装なので、効率がいいTRIANGLESTRIPを指定
+			*/
+			void SetupTopology();
+
+			/*!
+				@fn		SetupInputLayout
+				@brief	頂点レイアウトの設定
+			*/
+			void SetupInputLayout();
 
 			uint32_t									m_StencilMask;
 			Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
 			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendState;
 			//Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendStateMultiple;
 
+			//std::weak_ptr<D3D11::Graphic::AbstractShader>m_pShader;
 			/****************************************/
 			/*		　スプライトのパラメータ		*/
 			/****************************************/
