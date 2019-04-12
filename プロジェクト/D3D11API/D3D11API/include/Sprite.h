@@ -147,11 +147,11 @@ namespace API{
 			void CreateAlphaBlendState(D3D11_BLEND_DESC desc);
 
 			/*!
-				@fn			SetupBlendState
+				@fn			SetupBlendPreset
 				@brief		指定したプリセットのブレンドステートをメンバに設定する
 				@param[in]	指定するプリセットの列挙体
 			*/
-			void SetupBlendState(BlendPreset preset);
+			void SetupBlendPreset(BlendPreset preset);
 
 		private:
 			/*!
@@ -217,12 +217,49 @@ namespace API{
 			*/
 			void SetupInputLayout();
 
+			/*!
+				@fn		SetupShader
+				@brief	シェーダーの設定
+			*/
+			void SetupShader();
+
+			/*!
+				@fn		SetupSampler
+				@brief	サンプラーステートの設定
+			*/
+			void SetupSampler();
+
+			/*!
+				@fn		SetupSRV
+				@brief	ShaderResourceViewの設定
+			*/
+			void SetupSRV();
+
+			/*!
+				@fn		SetupConstantBuffer
+				@brief	コンスタントバッファの設定
+			*/
+			void SetupConstantBuffer();
+
+			/*!
+				@fn		SetupVertexBuffer
+				@brief	頂点バッファ設定
+			*/
+			void SetupVertexBuffer();
+
+			/*!
+				@fn		SetupBlendState
+				@brief	ブレンドステートを設定
+			*/
+			void SetupBlendState();
+
 			uint32_t									m_StencilMask;
 			Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
 			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendState;
 			//Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendStateMultiple;
 
-			//std::weak_ptr<D3D11::Graphic::AbstractShader>m_pShader;
+			std::weak_ptr<D3D11::Graphic::AbstractShader>m_pShader;
+			std::weak_ptr<Texture>m_pTexture;
 			/****************************************/
 			/*		　スプライトのパラメータ		*/
 			/****************************************/
@@ -251,7 +288,7 @@ namespace D3D11 {
 			@brief	スプライトの頂点構造体
 		*/
 		struct SpriteVertex
-			:public VARTEX_BASE
+			:public BaseVertex
 		{
 			SpriteVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT2 uv) {
 				m_Pos = pos, m_UV = uv;
@@ -263,12 +300,12 @@ namespace D3D11 {
 		/*!
 			@brief	スプライトのコンスタントバッファ構造体
 		*/
-		struct SpriteShaderBuffer
-			:CONSTANT_BUFFER_BASE
+		struct alignas(16) SpriteShaderBuffer
+			:BaseConstantBuffer
 		{
-			ALIGN16<DirectX::XMFLOAT2>	m_DivNum;
-			ALIGN16<DirectX::XMFLOAT2>	m_Index;
-			ALIGN16<DirectX::XMFLOAT4>	m_Color;	/*< カラー */
+			DirectX::XMFLOAT2 m_DivNum;
+			DirectX::XMFLOAT2 m_Index;
+			DirectX::XMFLOAT4 m_Color;	/*< カラー */
 		};
 #pragma pack(pop)
 	}

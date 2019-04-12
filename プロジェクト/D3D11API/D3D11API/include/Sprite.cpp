@@ -43,7 +43,7 @@ Sprite::Sprite()
 	m_StencilMask = 0xffffffff;
 	//Initialize();
 
-	SetupBlendState(BlendPreset::Default);
+	SetupBlendPreset(BlendPreset::Default);
 }
 
 /*!
@@ -165,6 +165,19 @@ void Sprite::Release()
 */
 void API::Sprite::Render()
 {
+	//	トポロジーのセット
+	SetupTopology();
+
+	//	頂点レイアウトのセット
+	SetupInputLayout();
+
+	//	シェーダーのセット
+	SetupShader();
+
+	//	コンスタントバッファのセット
+	SetupConstantBuffer();
+
+	//	
 }
 
 /*!
@@ -192,11 +205,11 @@ void Sprite::CreateAlphaBlendState(D3D11_BLEND_DESC desc)
 }
 
 /*!
-	@fn			SetupBlendState
+	@fn			SetupBlendPreset
 	@brief		指定したプリセットのブレンドステートをメンバに設定する
 	@param[in]	指定するプリセットの列挙体
 */
-void API::Sprite::SetupBlendState(BlendPreset preset)
+void API::Sprite::SetupBlendPreset(BlendPreset preset)
 {
 	/*!
 	※
@@ -316,7 +329,7 @@ void API::Sprite::SetupBlendState(BlendPreset preset)
 
 		//	例外処理
 		default:
-			std::string error = "Invalid value for argument of SetupBlendState function!";
+			std::string error = "Invalid value for argument of SetupBlendPreset function!";
 			ErrorLog(error);
 			return;
 	}
@@ -1057,15 +1070,172 @@ void API::Sprite::SetupTopology()
 	);
 }
 
+/*!
+	@fn		SetupInputLayout
+	@brief	頂点レイアウトの設定
+*/
 void API::Sprite::SetupInputLayout()
 {	
-	//auto ptr = m_pShader.lock();
+	auto ptr = m_pShader.lock();
 
 
-	//Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
-	//	&*ptr->GetInputLayout()
-	//);
+	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
+		&*ptr->GetInputLayout()
+	);
 
+}
+
+/*!
+	@fn		SetupShader
+	@brief	シェーダーの設定
+*/
+void API::Sprite::SetupShader()
+{
+	auto ptr = m_pShader.lock();
+
+	//	頂点シェーダー
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
+		&*ptr->GetVertexShader(),
+		NULL,
+		NULL
+	);
+
+	//	ピクセルシェーダー
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
+		&*ptr->GetPixelShader(),
+		NULL,
+		NULL
+	);
+
+}
+
+/*!
+	@fn		SetupSampler
+	@brief	サンプラーステートの設定
+*/
+void API::Sprite::SetupSampler()
+{
+	auto ptr = m_pTexture.lock();
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
+		0,
+		1,
+		ptr->GetSamplerState()
+	);
+}
+
+/*!
+	@fn		SetupSRV
+	@brief	ShaderResourceViewの設定
+*/
+void API::Sprite::SetupSRV()
+{
+	auto ptr = m_pTexture.lock();
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
+		0,
+		1,
+		ptr->GetShaderResourceView()
+	);
+
+}
+
+/*!
+	@fn		SetupConstantBuffer
+	@brief	コンスタントバッファの設定
+*/
+void API::Sprite::SetupConstantBuffer()
+{
+	auto pTex = m_pTexture.lock();
+	auto pShader = m_pShader.lock();
+
+
+	auto& device = Direct3D11::GetInstance();
+
+	//	ワールド行列
+	DirectX::XMMATRIX world = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z)
+		*
+		DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z)
+		*
+		DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+
+	//	ビュー行列
+	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
+
+	//	プロジェクション行列
+	DirectX::XMMATRIX proj = Camera::GetInstance().GetViewMatrix();
+
+	//	マッピング用変数の宣言
+	D3D11_MAPPED_SUBRESOURCE pMapData;
+
+	//	バッファへのアクセス(書き換え)許可
+	HRESULT hr;
+	hr = device.GetImmediateContext()->Map(
+		&*pShader->GetConstantBuffer(),
+		NULL,
+		D3D11_MAP_WRITE_DISCARD,
+		NULL,
+		&pMapData
+	);
+	if (FAILED(hr)) {
+		std::string error = "Texture mapping is failed!";
+		ErrorLog(error);
+		//	アクセス権を閉じて抜ける
+		device.GetImmediateContext()->Unmap(&*pShader->GetConstantBuffer(), NULL);
+		return;
+	}
+
+	SpriteShaderBuffer cb;
+	SecureZeroMemory(&cb, sizeof(cb));
+
+	//	バッファに代入
+	cb.m_WorldMatrix		= world;
+	cb.m_ViewMatrix			= Camera::GetInstance().GetViewMatrix();
+	cb.m_ProjectionMatrix	= Camera::GetInstance().GetProjMatrix();
+	cb.m_DivNum = DirectX::XMFLOAT2(
+		static_cast<float>(pTex->GetDivNum().x),
+		static_cast<float>(pTex->GetDivNum().y));
+	cb.m_Index = DirectX::XMFLOAT2(
+		static_cast<float>(pTex->GetActiveDiv().x),
+		static_cast<float>(pTex->GetActiveDiv().y));
+	cb.m_Color				= pTex->m_Color.GetRGBA();
+
+	//	メモリコピー
+	memcpy_s(pMapData.pData, pMapData.RowPitch, (void*)(&cb), sizeof(cb));
+
+	//	アクセス許可終了
+	device.GetImmediateContext()->Unmap(
+		&*pShader->GetConstantBuffer(),
+		NULL
+	);
+}
+
+/*!
+	@fn		SetupVertexBuffer
+	@brief	頂点バッファ設定
+*/
+void API::Sprite::SetupVertexBuffer()
+{
+	uint32_t stride = sizeof(SpriteVertex);
+	uint32_t offset = 0;
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+		0,
+		1,
+		m_pVertexBuffer.GetAddressOf(),
+		&stride,
+		&offset
+	);
+}
+
+/*!
+	@fn		SetupBlendState
+	@brief	ブレンドステートを設定
+*/
+void API::Sprite::SetupBlendState()
+{
+	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
+		m_pBlendState.Get(),
+		NULL,
+		m_StencilMask
+	);
 }
 
 
