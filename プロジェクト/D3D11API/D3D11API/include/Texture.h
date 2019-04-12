@@ -119,5 +119,18 @@ namespace API {
 			@detail	ƒƒ“ƒo‚Ì–¾¦“I‚ÈŠJ•ú
 		*/
 		void Finalize()override;
+
+
+		//------------------------------------------------------
+		//’Ç‰Á
+		/*!
+			@fn		GetDivNum
+			@brief	‰æ‘œ‚Ì•ªŠ„”‚ğæ“¾
+		*/
+		DirectX::XMINT2 GetDivNum()const { return m_DivNum; };
+		DirectX::XMINT2 GetActiveDiv()const { return m_ActiveDiv; };
+	private:
+		DirectX::XMINT2 m_DivNum;
+		DirectX::XMINT2 m_ActiveDiv;
 	};
 };
