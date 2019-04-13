@@ -29,14 +29,12 @@ using namespace API;
 	@brief	スプライト
 */
 shared_ptr<Sprite>g_pSprite;
-shared_ptr<Sprite>g_pS1[1];
 
 /*!
 	@var	g_pTexture
 	@brief	テクスチャ
 */
 shared_ptr<Texture>g_pTexture;
-shared_ptr<Texture>g_pT1[1];
 
 /*!
 	@brief	コンストラクタ
@@ -45,6 +43,9 @@ SampleScene::SampleScene()
 {
 }
 
+shared_ptr<Sprite> sprite;
+shared_ptr<D3D11::Graphic::AbstractShader>shader;
+shared_ptr<Texture> tex;
 /*!
 	@fn		Initialize
 	@brief	初期化処理
@@ -56,23 +57,7 @@ void SampleScene::Initialize()
 	g_pSprite = make_shared<Sprite>();
 	g_pTexture = make_shared<Texture>();
 
-	for (auto& itr : g_pS1) {
-		itr = make_shared<Sprite>();
-	}
-
-	for (auto& itr : g_pT1) {
-		itr = make_shared<Texture>();
-	}
-
-
 	g_pTexture->Initialize("Resources/red.png");
-	g_pT1[0]->Initialize("Resources/blue.png");
-	g_pT1[0]->SetSize({ 800,600 });
-	g_pTexture->SetSize({ 800,600 });
-	g_pTexture->m_Color.a = 0.3f;
-	g_pT1[0]->m_Color.a = 0.3f;
-	g_pSprite->SetPos({ -2,0 });
-	g_pS1[0]->SetPos({ 2,0 });
 }
 
 /*!
@@ -91,9 +76,25 @@ void SampleScene::Finalize()
 */
 void SampleScene::Update()
 {
-	if (Keyboard::GetButtonDown('a')) {
+	if (Keyboard::GetButtonDown('Y')) {
 		cout << "set next scene" << endl;
 		SceneRoot::GetInstance().SetupNextScene(new TransitionTestScene());
+	}
+
+	auto pos = g_pSprite->GetPos();
+
+
+	if (Keyboard::GetButtonDown('a')) {
+		pos.z--;
+	}
+	if (Keyboard::GetButtonDown('d')) {
+		pos.z++;
+	}
+	if (Keyboard::GetButtonDown('w')) {
+		pos.y--;
+	}
+	if (Keyboard::GetButtonDown('s')) {
+		pos.y++;
 	}
 }
 
@@ -103,6 +104,5 @@ void SampleScene::Update()
 */
 void SampleScene::Render()
 {
-	g_pS1[0]->Render(g_pT1[0].get());
 	g_pSprite->Render(g_pTexture.get());
 }
