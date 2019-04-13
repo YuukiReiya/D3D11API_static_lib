@@ -299,6 +299,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 		//	NOTE: 無効化しておかないと、カメラからみて奥のほうにある半透明オブジェクトが描画されないことがある。
 		//	TODO: 場合によってはNULLを入れる↓
 		m_pDepthStencilView.Get()			// 深度 / ステンシルビュー
+		//NULL
 	);
 
 	// ビューポートの設定
