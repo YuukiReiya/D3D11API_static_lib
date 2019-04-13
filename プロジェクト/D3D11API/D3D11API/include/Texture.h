@@ -23,6 +23,8 @@ namespace API {
 		*/
 		explicit Texture();
 
+		Texture(const Texture& ref) { *this = ref; }
+
 		/*!
 			@brief	デストラクタ
 		*/

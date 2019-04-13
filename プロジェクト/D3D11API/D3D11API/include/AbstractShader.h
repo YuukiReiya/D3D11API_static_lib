@@ -22,8 +22,8 @@ namespace D3D11 {
 		class AbstractShader abstract {
 		public:
 			AbstractShader(){}
-			HRESULT Setup();
-			HRESULT DynamicSetup();//“®“I
+			virtual HRESULT Setup();
+			virtual HRESULT DynamicSetup();//“®“I
 
 			inline std::shared_ptr<ID3D11InputLayout>GetInputLayout()	const { return m_pVertexLayout; }
 			inline std::shared_ptr<ID3D11VertexShader>GetVertexShader()	const { return m_pVertexShader; }
