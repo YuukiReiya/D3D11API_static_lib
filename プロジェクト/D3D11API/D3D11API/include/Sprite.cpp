@@ -165,6 +165,9 @@ void Sprite::Release()
 */
 void API::Sprite::Render()
 {
+	//	頂点をセット
+	SetupVertex();
+
 	//	トポロジーのセット
 	SetupTopology();
 
@@ -172,12 +175,25 @@ void API::Sprite::Render()
 	SetupInputLayout();
 
 	//	シェーダーのセット
-	SetupShader();
+	SetupBindShader();
+
+	//	サンプラーステートのセット
+	SetupSampler();
+
+	//	ShaderResourceViewのセット
+	SetupSRV();
 
 	//	コンスタントバッファのセット
 	SetupConstantBuffer();
 
-	//	
+	//	ブレンドステートのセット
+	SetupBlendState();
+
+	//	描画
+	Direct3D11::GetInstance().GetImmediateContext()->Draw(
+		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
+		NULL
+	);
 }
 
 /*!
@@ -365,6 +381,23 @@ void API::Sprite::SetupBlendPreset(BlendPreset preset)
 }
 
 /*!
+	@fn			SetupTexture
+	@brief		テクスチャの設定
+	@detail		弱参照でバインドする
+	@param[in]	テクスチャのポインタ
+*/
+void API::Sprite::SetupTexture(Texture&  texture)
+{
+	std::shared_ptr p = std::make_shared<Texture>(texture);
+	m_pTexture = p;
+}
+
+void API::Sprite::SetupShader(std::shared_ptr<AbstractShader> shader)
+{
+	m_pShader = shader;
+}
+
+/*!
 	@fn			テクスチャの描画
 	@brief		シンプルテクスチャの描画
 	@detail		map,unmapを使ってテクスチャマッピングをする描画
@@ -482,8 +515,35 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	auto camera = &Camera::GetInstance();
 	const Color& color = pTexture->m_Color;
 	// コンスタントバッファにデータを送る
-	DirectX::XMMATRIX m = mWorld*camera->GetViewMatrix()*camera->GetProjMatrix();
-	cb.m_WVP = m;						// ワールド行列
+	//DirectX::XMMATRIX m = mWorld*camera->GetViewMatrix()*camera->GetProjMatrix();
+
+
+#ifdef mat
+	//	ワールド行列
+	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity()
+		*
+		DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z)
+		*
+		DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z)
+		*
+		DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+
+	//	ビュー行列
+	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
+
+	//	プロジェクション行列
+	DirectX::XMMATRIX proj = Camera::GetInstance().GetProjMatrix();
+
+	//	バッファに代入
+	cb.m_WorldMatrix = world;
+	cb.m_ViewMatrix = view;
+	cb.m_ProjectionMatrix = proj;
+#else
+	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
+	cb.m_WVP = m;
+#endif // mat
+
+
 	cb.m_DivNum = { 1,1 };
 	cb.m_Index = { 0,0 };
 	cb.m_Color = color.GetRGBA();
@@ -531,130 +591,130 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	@param[in]	描画するテクスチャ
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::Sprite::Render(TextureAtlas * pTexture)
-{
-	
-	HRESULT hr;
-
-	auto size = pTexture->GetSize();
-
-	// 頂点バッファ生成
-	hr = CreateVertex(size);
-	if (FAILED(hr)) {
-		std::string error = "Create vertex is failed!";
-		ErrorLog(error);
-		return E_FAIL;
-	}
-
-	// テクスチャのサイズをキャッシュしておく
-	m_Size = size;
-
-	// トポロジーセット
-	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
-	);
-
-	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szTextureAtlasShader);
-
-	// 頂点インプットレイアウトセット
-	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
-		shaderData->m_pVertexLayout.Get()
-	);
-
-	// シェーダーの登録
-	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
-		shaderData->m_pVertexShader.Get(),
-		NULL,
-		NULL
-	);
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
-		shaderData->m_pPixelShader.Get(),
-		NULL,
-		NULL
-	);
-
-	// コンスタントバッファの登録
-	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
-		0,
-		1,
-		shaderData->m_pConstantBuffer.GetAddressOf()
-	);
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
-		0,
-		1,
-		shaderData->m_pConstantBuffer.GetAddressOf()
-	);
-
-	// サンプラー取得
-	auto ppSampler = pTexture->GetSamplerState();
-
-	// SRV取得
-	auto ppSRV = pTexture->GetShaderResourceView();
-
-	// テクスチャ
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
-		0,
-		1,
-		ppSampler
-	);
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
-		0,
-		1,
-		ppSRV
-	);
-
-	// 座標変換
-	DirectX::XMMATRIX mWorld, mTran, mRot, mScale;
-	mWorld	= DirectX::XMMatrixIdentity();
-	mTran	= DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
-	mRot	= DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z);
-	mScale	= DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
-
-	// ワールド変換
-	mWorld = mScale * mRot * mTran;
-
-	// シェーダー側に渡すコンスタントバッファ宣言
-	SpriteShaderBuffer cb;
-	SecureZeroMemory(&cb, sizeof(cb));
-
-	// コンスタントバッファのデータ書き換え
-	auto camera = &Camera::GetInstance();
-	const Color& color = pTexture->m_Color;
-	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
-	
-	cb.m_WVP		= m;				// ワールド行列
-	cb.m_DivNum		= pTexture->GetDivNum();
-	cb.m_Index		= pTexture->GetAtlasIndex();
-	cb.m_Color		= color.GetRGBA();
-
-	// UpdateSubResource
-	Direct3D11::GetInstance().GetImmediateContext()->UpdateSubresource(
-		shaderData->m_pConstantBuffer.Get(),
-		NULL,
-		nullptr,
-		&cb,
-		NULL,
-		NULL
-	);
-
-
-
-	// ブレンドステートの設定
-	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
-		m_pBlendState.Get(),
-		NULL,
-		m_StencilMask
-	);
-
-	// 描画
-	Direct3D11::GetInstance().GetImmediateContext()->Draw(
-		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
-		NULL
-	);
-
-
-	return S_OK;
-}
+//HRESULT API::Sprite::Render(TextureAtlas * pTexture)
+//{
+//	
+//	HRESULT hr;
+//
+//	auto size = pTexture->GetSize();
+//
+//	// 頂点バッファ生成
+//	hr = CreateVertex(size);
+//	if (FAILED(hr)) {
+//		std::string error = "Create vertex is failed!";
+//		ErrorLog(error);
+//		return E_FAIL;
+//	}
+//
+//	// テクスチャのサイズをキャッシュしておく
+//	m_Size = size;
+//
+//	// トポロジーセット
+//	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
+//		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+//	);
+//
+//	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szTextureAtlasShader);
+//
+//	// 頂点インプットレイアウトセット
+//	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
+//		shaderData->m_pVertexLayout.Get()
+//	);
+//
+//	// シェーダーの登録
+//	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
+//		shaderData->m_pVertexShader.Get(),
+//		NULL,
+//		NULL
+//	);
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
+//		shaderData->m_pPixelShader.Get(),
+//		NULL,
+//		NULL
+//	);
+//
+//	// コンスタントバッファの登録
+//	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
+//		0,
+//		1,
+//		shaderData->m_pConstantBuffer.GetAddressOf()
+//	);
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
+//		0,
+//		1,
+//		shaderData->m_pConstantBuffer.GetAddressOf()
+//	);
+//
+//	// サンプラー取得
+//	auto ppSampler = pTexture->GetSamplerState();
+//
+//	// SRV取得
+//	auto ppSRV = pTexture->GetShaderResourceView();
+//
+//	// テクスチャ
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
+//		0,
+//		1,
+//		ppSampler
+//	);
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
+//		0,
+//		1,
+//		ppSRV
+//	);
+//
+//	// 座標変換
+//	DirectX::XMMATRIX mWorld, mTran, mRot, mScale;
+//	mWorld	= DirectX::XMMatrixIdentity();
+//	mTran	= DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+//	mRot	= DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z);
+//	mScale	= DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
+//
+//	// ワールド変換
+//	mWorld = mScale * mRot * mTran;
+//
+//	// シェーダー側に渡すコンスタントバッファ宣言
+//	SpriteShaderBuffer cb;
+//	SecureZeroMemory(&cb, sizeof(cb));
+//
+//	// コンスタントバッファのデータ書き換え
+//	auto camera = &Camera::GetInstance();
+//	const Color& color = pTexture->m_Color;
+//	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
+//	
+//	cb.m_WVP		= m;				// ワールド行列
+//	cb.m_DivNum		= pTexture->GetDivNum();
+//	cb.m_Index		= pTexture->GetAtlasIndex();
+//	cb.m_Color		= color.GetRGBA();
+//
+//	// UpdateSubResource
+//	Direct3D11::GetInstance().GetImmediateContext()->UpdateSubresource(
+//		shaderData->m_pConstantBuffer.Get(),
+//		NULL,
+//		nullptr,
+//		&cb,
+//		NULL,
+//		NULL
+//	);
+//
+//
+//
+//	// ブレンドステートの設定
+//	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
+//		m_pBlendState.Get(),
+//		NULL,
+//		m_StencilMask
+//	);
+//
+//	// 描画
+//	Direct3D11::GetInstance().GetImmediateContext()->Draw(
+//		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
+//		NULL
+//	);
+//
+//
+//	return S_OK;
+//}
 
 /*!
 	@fn			タイリング描画
@@ -665,137 +725,137 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	@param[in]	タイル表示する割合
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 ratio)
-{
-	HRESULT hr;
-
-	const auto size = pTexture->GetSize();
-
-	// 頂点生成
-	hr = CreateTilingVertex(size, ratio);
-	if (FAILED(hr)) {
-		std::string error = "Create tile vertex is failed!";
-		ErrorLog(error);
-		return E_FAIL;
-	}
-
-	// テクスチャのサイズをキャッシュしておく
-	m_Size = size;
-
-	// トポロジーセット
-	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
-	);
-
-	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szTextureAtlasShader);
-
-	// 頂点インプットレイアウトセット
-	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
-		shaderData->m_pVertexLayout.Get()
-	);
-
-	// シェーダーの登録
-	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
-		shaderData->m_pVertexShader.Get(),
-		NULL,
-		NULL
-	);
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
-		shaderData->m_pPixelShader.Get(),
-		NULL,
-		NULL
-	);
-
-	// コンスタントバッファの登録
-	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
-		0,
-		1,
-		shaderData->m_pConstantBuffer.GetAddressOf()
-	);
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
-		0,
-		1,
-		shaderData->m_pConstantBuffer.GetAddressOf()
-	);
-
-	// サンプラー取得
-	auto ppSampler = pTexture->GetSamplerState();
-
-	// SRV取得
-	auto ppSRV = pTexture->GetShaderResourceView();
-
-	// テクスチャ
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
-		0,
-		1,
-		ppSampler
-	);
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
-		0,
-		1,
-		ppSRV
-	);
-
-	// 座標変換
-	DirectX::XMMATRIX mWorld, mTran, mRot, mScale;
-	mWorld = DirectX::XMMatrixIdentity();
-	mTran = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
-	mRot = DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z);
-	mScale = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
-
-	// ワールド変換
-	mWorld = mScale * mRot * mTran;
-
-	// シェーダー側に渡すコンスタントバッファ宣言
-	SpriteShaderBuffer cb;
-	SecureZeroMemory(&cb, sizeof(cb));
-
-	// コンスタントバッファのデータ書き換え
-	auto camera = &Camera::GetInstance();
-	const Color& color = pTexture->m_Color;
-	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
-
-	cb.m_WVP = m;					// ワールド行列
-	cb.m_DivNum = { 1,1 };
-	cb.m_Index = { 0,0 };
-	cb.m_Color = color.GetRGBA();
-
-	// UpdateSubResource
-	Direct3D11::GetInstance().GetImmediateContext()->UpdateSubresource(
-		shaderData->m_pConstantBuffer.Get(),
-		NULL,
-		nullptr,
-		&cb,
-		NULL,
-		NULL
-	);
-
-	// 頂点バッファセット
-	uint32_t stride = sizeof(SpriteVertex);
-	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
-		0,
-		1,
-		m_pVertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-	);
-
-	// ブレンドステートの設定
-	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
-		m_pBlendState.Get(),
-		NULL,
-		m_StencilMask
-	);
-
-	// 描画
-	Direct3D11::GetInstance().GetImmediateContext()->Draw(
-		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
-		NULL
-	);
-
-	return S_OK;
-}
+//HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 ratio)
+//{
+//	HRESULT hr;
+//
+//	const auto size = pTexture->GetSize();
+//
+//	// 頂点生成
+//	hr = CreateTilingVertex(size, ratio);
+//	if (FAILED(hr)) {
+//		std::string error = "Create tile vertex is failed!";
+//		ErrorLog(error);
+//		return E_FAIL;
+//	}
+//
+//	// テクスチャのサイズをキャッシュしておく
+//	m_Size = size;
+//
+//	// トポロジーセット
+//	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
+//		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+//	);
+//
+//	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szTextureAtlasShader);
+//
+//	// 頂点インプットレイアウトセット
+//	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
+//		shaderData->m_pVertexLayout.Get()
+//	);
+//
+//	// シェーダーの登録
+//	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
+//		shaderData->m_pVertexShader.Get(),
+//		NULL,
+//		NULL
+//	);
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
+//		shaderData->m_pPixelShader.Get(),
+//		NULL,
+//		NULL
+//	);
+//
+//	// コンスタントバッファの登録
+//	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
+//		0,
+//		1,
+//		shaderData->m_pConstantBuffer.GetAddressOf()
+//	);
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
+//		0,
+//		1,
+//		shaderData->m_pConstantBuffer.GetAddressOf()
+//	);
+//
+//	// サンプラー取得
+//	auto ppSampler = pTexture->GetSamplerState();
+//
+//	// SRV取得
+//	auto ppSRV = pTexture->GetShaderResourceView();
+//
+//	// テクスチャ
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
+//		0,
+//		1,
+//		ppSampler
+//	);
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
+//		0,
+//		1,
+//		ppSRV
+//	);
+//
+//	// 座標変換
+//	DirectX::XMMATRIX mWorld, mTran, mRot, mScale;
+//	mWorld = DirectX::XMMatrixIdentity();
+//	mTran = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+//	mRot = DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z);
+//	mScale = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
+//
+//	// ワールド変換
+//	mWorld = mScale * mRot * mTran;
+//
+//	// シェーダー側に渡すコンスタントバッファ宣言
+//	SpriteShaderBuffer cb;
+//	SecureZeroMemory(&cb, sizeof(cb));
+//
+//	// コンスタントバッファのデータ書き換え
+//	auto camera = &Camera::GetInstance();
+//	const Color& color = pTexture->m_Color;
+//	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
+//
+//	cb.m_WVP = m;					// ワールド行列
+//	cb.m_DivNum = { 1,1 };
+//	cb.m_Index = { 0,0 };
+//	cb.m_Color = color.GetRGBA();
+//
+//	// UpdateSubResource
+//	Direct3D11::GetInstance().GetImmediateContext()->UpdateSubresource(
+//		shaderData->m_pConstantBuffer.Get(),
+//		NULL,
+//		nullptr,
+//		&cb,
+//		NULL,
+//		NULL
+//	);
+//
+//	// 頂点バッファセット
+//	uint32_t stride = sizeof(SpriteVertex);
+//	uint32_t offset = 0;
+//	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+//		0,
+//		1,
+//		m_pVertexBuffer.GetAddressOf(),
+//		&stride,
+//		&offset
+//	);
+//
+//	// ブレンドステートの設定
+//	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
+//		m_pBlendState.Get(),
+//		NULL,
+//		m_StencilMask
+//	);
+//
+//	// 描画
+//	Direct3D11::GetInstance().GetImmediateContext()->Draw(
+//		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
+//		NULL
+//	);
+//
+//	return S_OK;
+//}
 
 /*!
 	@fn			頂点生成
@@ -1059,6 +1119,128 @@ HRESULT API::Sprite::CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 
 }
 
 /*!
+	@fn			SetupVertex
+	@brief		頂点の設定
+*/
+void API::Sprite::SetupVertex()
+{
+	// 頂点宣言
+	DirectX::XMFLOAT2 leftTop, rightBottom;			// 頂点座標
+	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;		// UV座標
+
+	// 各頂点定義
+	leftTop.x = -0.5f*m_Size.x / c_NormalizeSize;// 左
+	rightBottom.x = 0.5f*m_Size.x / c_NormalizeSize;// 右
+	leftTop.y = 0.5f*m_Size.y / c_NormalizeSize;// 上
+	rightBottom.y = -0.5f*m_Size.y / c_NormalizeSize;// 下
+
+	// UV定義
+	uvLeftTop.x = uvLeftTop.y = 0;
+	uvRightBottom.x = uvRightBottom.y = 1;
+
+	// 頂点構造体定義
+	SpriteVertex vertices[] = {
+		// 右上
+		{
+			// 頂点
+			DirectX::XMFLOAT3(
+				rightBottom.x,
+				leftTop.y,
+				c_VertexZ
+			),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvRightBottom.x,
+			uvLeftTop.y
+		),
+},
+// 右下
+{
+	// 頂点
+	DirectX::XMFLOAT3(
+		rightBottom.x,
+		rightBottom.y,
+		c_VertexZ
+	),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvRightBottom.x,
+			uvRightBottom.y
+		),
+},
+// 左上
+{
+	// 頂点
+	DirectX::XMFLOAT3(
+		leftTop.x,
+		leftTop.y,
+		c_VertexZ
+	),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvLeftTop.x,
+			uvLeftTop.y
+		),
+},
+// 左下
+{
+	// 頂点
+	DirectX::XMFLOAT3(
+		leftTop.x,
+		rightBottom.y,
+		c_VertexZ
+	),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvLeftTop.x,
+			uvRightBottom.y
+		),
+}
+	};
+
+	// 板ポリゴン(四角形ポリゴン)のバッファを定義
+	D3D11_BUFFER_DESC bd;
+	SecureZeroMemory(&bd, sizeof(bd));
+	bd.Usage = D3D11_USAGE_DEFAULT;				// GPUから読み込みと書き込みを許可
+	bd.ByteWidth = sizeof(vertices);			// バッファのサイズ
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	// 頂点バッファとしてレンダリングパイプラインにバインド
+
+	// サブリソースのデータを定義
+	D3D11_SUBRESOURCE_DATA subResourceData;
+	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
+	subResourceData.pSysMem = vertices;			// 初期化データへのポインタ
+
+	// 頂点バッファの開放
+	m_pVertexBuffer.Reset();
+
+	HRESULT hr;
+
+	// 頂点バッファ生成
+	hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&subResourceData,
+		m_pVertexBuffer.GetAddressOf()
+	);
+	if (FAILED(hr)) {
+		std::string error = "SpriteBuffer is not Create!";
+		ErrorLog(error);
+		return;
+	}
+
+	// 頂点バッファセット
+	uint32_t stride = sizeof(SpriteVertex);
+	uint32_t offset = 0;
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+		0,
+		1,
+		m_pVertexBuffer.GetAddressOf(),
+		&stride,
+		&offset
+	);
+
+}
+
+/*!
 	@fn		SetupTopology
 	@brief	トポロジーの設定
 	@NOTE	スプライトは板ポリゴン実装なので、効率がいいTRIANGLESTRIPを指定
@@ -1086,10 +1268,10 @@ void API::Sprite::SetupInputLayout()
 }
 
 /*!
-	@fn		SetupShader
+	@fn		SetupBindShader
 	@brief	シェーダーの設定
 */
-void API::Sprite::SetupShader()
+void API::Sprite::SetupBindShader()
 {
 	auto ptr = m_pShader.lock();
 
@@ -1187,9 +1369,9 @@ void API::Sprite::SetupConstantBuffer()
 	SecureZeroMemory(&cb, sizeof(cb));
 
 	//	バッファに代入
-	cb.m_WorldMatrix		= world;
-	cb.m_ViewMatrix			= Camera::GetInstance().GetViewMatrix();
-	cb.m_ProjectionMatrix	= Camera::GetInstance().GetProjMatrix();
+	//cb.m_WorldMatrix		= world;
+	//cb.m_ViewMatrix			= Camera::GetInstance().GetViewMatrix();
+	//cb.m_ProjectionMatrix	= Camera::GetInstance().GetProjMatrix();
 	cb.m_DivNum = DirectX::XMFLOAT2(
 		static_cast<float>(pTex->GetDivNum().x),
 		static_cast<float>(pTex->GetDivNum().y));

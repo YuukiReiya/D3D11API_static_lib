@@ -153,6 +153,22 @@ namespace API{
 			*/
 			void SetupBlendPreset(BlendPreset preset);
 
+			/*!
+				@fn			SetupTexture
+				@brief		テクスチャの設定
+				@detail		弱参照でバインドする
+				@param[in]	登録するテクスチャのポインタ
+			*/
+			void SetupTexture(Texture&texture);
+
+			/*!
+				@fn			SetupShader
+				@brief		シェーダーの設定
+				@detail		弱参照でバインドする
+				@param[in]	登録するシェーダーのポインタ
+			*/
+			void SetupShader(std::shared_ptr<D3D11::Graphic::AbstractShader> shader);
+
 		private:
 			/*!
 				@var	c_VertexCount
@@ -205,6 +221,12 @@ namespace API{
 			HRESULT CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 ratio);
 
 			/*!
+				@fn			SetupVertex
+				@brief		頂点の設定
+			*/
+			void SetupVertex();
+
+			/*!
 				@fn		SetupTopology
 				@brief	トポロジーの設定
 				@NOTE	スプライトは板ポリゴン実装なので、効率がいいTRIANGLESTRIPを指定
@@ -218,10 +240,10 @@ namespace API{
 			void SetupInputLayout();
 
 			/*!
-				@fn		SetupShader
+				@fn		SetupBindShader
 				@brief	シェーダーの設定
 			*/
-			void SetupShader();
+			void SetupBindShader();
 
 			/*!
 				@fn		SetupSampler
