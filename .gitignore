@@ -9,4 +9,8 @@
 *.bat
 プロジェクト/D3D11API/cso/
 ..gitignore.un~
-プロジェクト/D3D11API/Sample/Resources/
+プロジェクト/D3D11API/Sample/Resources/image.jpg
+プロジェクト/D3D11API/Sample/DefaultSprite_.hlsl
+プロジェクト/D3D11API/Sample/Resources/blue - コピー.png
+プロジェクト/D3D11API/Sample/Resources/red - コピー.png
+プロジェクト/D3D11API/Sample/Resources/Smoke.png
