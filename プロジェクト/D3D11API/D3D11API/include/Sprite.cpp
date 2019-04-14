@@ -13,6 +13,7 @@
 #include "ShaderManager.h"
 #include "MemoryLeaks.h"
 #include "MyGame.h"
+#include "Debug.h"
 
 /*!
 	@brief	名前空間
@@ -165,8 +166,20 @@ void Sprite::Release()
 */
 void API::Sprite::Render()
 {
-	//	頂点をセット
-	SetupVertex();
+#if defined DEBUG_SPRITE
+
+	//	シェーダーの参照切れ
+	if (m_pShader.expired()) {
+		ErrorLog("The \"m_pShader\" value referenced in this class is invalid!");
+		return;
+	}
+
+	//	テクスチャの参照切れ
+	if (m_pTexture.expired()) {
+		ErrorLog("The \"m_pTexture\" value referenced in this class is invalid!");
+		return;
+	}
+#endif
 
 	//	トポロジーのセット
 	SetupTopology();
@@ -383,18 +396,31 @@ void API::Sprite::SetupBlendPreset(BlendPreset preset)
 /*!
 	@fn			SetupTexture
 	@brief		テクスチャの設定
-	@detail		弱参照でバインドする
-	@param[in]	テクスチャのポインタ
+	@detail		弱参照でバインドし、この時点で頂点生成を行う
+	@param[in]	登録するテクスチャのポインタ
 */
-void API::Sprite::SetupTexture(Texture&  texture)
+void API::Sprite::SetupTexture(Texture*  texture)
 {
-	std::shared_ptr p = std::make_shared<Texture>(texture);
-	m_pTexture = p;
+	m_pTexture = texture->GetSharedPtr();
+	m_Size = texture->GetSize();
+
+	//	頂点生成
+	SetupVertex();
 }
 
-void API::Sprite::SetupShader(std::shared_ptr<AbstractShader> shader)
+/*!
+	@fn			SetupShader
+	@brief		シェーダーの設定
+	@detail		弱参照でバインドする
+	@param[in]	登録するシェーダーのポインタ
+*/
+void API::Sprite::SetupShader(D3D11::Graphic::AbstractShader * shader)
 {
-	m_pShader = shader;
+	//m_pVertexShader		= shader->GetVertexShader();
+	//m_pVertexLayout		= shader->GetInputLayout();
+	//m_pPixelShader		= shader->GetPixelShader();
+	//m_pConstantBuffer	= shader->GetConstantBuffer();
+	m_pShader = shader->GetSharedPtr();
 }
 
 /*!
@@ -999,19 +1025,19 @@ HRESULT API::Sprite::CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 
 
 
 #ifdef DEBUG_SPRITE
-	// タイリング無し
-	if (ratio.x == 1 && ratio.y == 1) {
-		std::string error = "タイリングする必要がありません。";
-		ErrorLog(error);
-		return E_FAIL;
-	}
+	//// タイリング無し
+	//if (ratio.x == 1 && ratio.y == 1) {
+	//	std::string error = "タイリングする必要がありません。";
+	//	ErrorLog(error);
+	//	return E_FAIL;
+	//}
 
-	// 不正な値
-	if (ratio.x <= 0 || ratio.y <= 0) {
-		std::string error = "ratio is invalid value!";
-		ErrorLog(error);
-		return E_FAIL;
-	}
+	//// 不正な値
+	//if (ratio.x <= 0 || ratio.y <= 0) {
+	//	std::string error = "ratio is invalid value!";
+	//	ErrorLog(error);
+	//	return E_FAIL;
+	//}
 
 #endif // DEBUG_SPRITE
 
@@ -1125,14 +1151,14 @@ HRESULT API::Sprite::CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 
 void API::Sprite::SetupVertex()
 {
 	// 頂点宣言
-	DirectX::XMFLOAT2 leftTop, rightBottom;			// 頂点座標
-	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;		// UV座標
+	DirectX::XMFLOAT2 leftTop, rightBottom;				// 頂点座標
+	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;			// UV座標
 
 	// 各頂点定義
-	leftTop.x = -0.5f*m_Size.x / c_NormalizeSize;// 左
-	rightBottom.x = 0.5f*m_Size.x / c_NormalizeSize;// 右
-	leftTop.y = 0.5f*m_Size.y / c_NormalizeSize;// 上
-	rightBottom.y = -0.5f*m_Size.y / c_NormalizeSize;// 下
+	leftTop.x		= -0.5f*m_Size.x / c_NormalizeSize;	// 左
+	rightBottom.x	=  0.5f*m_Size.x / c_NormalizeSize;	// 右
+	leftTop.y		=  0.5f*m_Size.y / c_NormalizeSize;	// 上
+	rightBottom.y	= -0.5f*m_Size.y / c_NormalizeSize;	// 下
 
 	// UV定義
 	uvLeftTop.x = uvLeftTop.y = 0;
@@ -1258,11 +1284,9 @@ void API::Sprite::SetupTopology()
 */
 void API::Sprite::SetupInputLayout()
 {	
-	auto ptr = m_pShader.lock();
-
-
+	auto shader = *m_pShader.lock();
 	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
-		&*ptr->GetInputLayout()
+		*shader->GetInputLayout()
 	);
 
 }
@@ -1273,18 +1297,18 @@ void API::Sprite::SetupInputLayout()
 */
 void API::Sprite::SetupBindShader()
 {
-	auto ptr = m_pShader.lock();
+	auto shader = *m_pShader.lock();
 
 	//	頂点シェーダー
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
-		&*ptr->GetVertexShader(),
+		*shader->GetVertexShader(),
 		NULL,
 		NULL
 	);
 
 	//	ピクセルシェーダー
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
-		&*ptr->GetPixelShader(),
+		*shader->GetPixelShader(),
 		NULL,
 		NULL
 	);
@@ -1297,11 +1321,13 @@ void API::Sprite::SetupBindShader()
 */
 void API::Sprite::SetupSampler()
 {
-	auto ptr = m_pTexture.lock();
+	auto ptex = *m_pTexture.lock();
+	auto psampler = ptex->GetSamplerState();
+
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
 		0,
 		1,
-		ptr->GetSamplerState()
+		psampler
 	);
 }
 
@@ -1311,11 +1337,13 @@ void API::Sprite::SetupSampler()
 */
 void API::Sprite::SetupSRV()
 {
-	auto ptr = m_pTexture.lock();
+	auto ptex = *m_pTexture.lock();
+	auto psrv = ptex->GetShaderResourceView();
+
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
 		0,
 		1,
-		ptr->GetShaderResourceView()
+		psrv
 	);
 
 }
@@ -1326,10 +1354,7 @@ void API::Sprite::SetupSRV()
 */
 void API::Sprite::SetupConstantBuffer()
 {
-	auto pTex = m_pTexture.lock();
-	auto pShader = m_pShader.lock();
-
-
+	auto shader = *m_pShader.lock();
 	auto& device = Direct3D11::GetInstance();
 
 	//	ワールド行列
@@ -1345,13 +1370,27 @@ void API::Sprite::SetupConstantBuffer()
 	//	プロジェクション行列
 	DirectX::XMMATRIX proj = Camera::GetInstance().GetViewMatrix();
 
+	//	頂点シェーダー用のCバッファ登録
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
+		0,
+		1,
+		shader->GetConstantBuffer()
+	);
+
+	//	ピクセルシェーダー用のCバッファ登録
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
+		0,
+		1,
+		shader->GetConstantBuffer()
+	);
+
 	//	マッピング用変数の宣言
 	D3D11_MAPPED_SUBRESOURCE pMapData;
 
 	//	バッファへのアクセス(書き換え)許可
 	HRESULT hr;
 	hr = device.GetImmediateContext()->Map(
-		&*pShader->GetConstantBuffer(),
+		*shader->GetConstantBuffer(),
 		NULL,
 		D3D11_MAP_WRITE_DISCARD,
 		NULL,
@@ -1361,31 +1400,33 @@ void API::Sprite::SetupConstantBuffer()
 		std::string error = "Texture mapping is failed!";
 		ErrorLog(error);
 		//	アクセス権を閉じて抜ける
-		device.GetImmediateContext()->Unmap(&*pShader->GetConstantBuffer(), NULL);
+		device.GetImmediateContext()->Unmap(*shader->GetConstantBuffer(), NULL);
 		return;
 	}
 
 	SpriteShaderBuffer cb;
 	SecureZeroMemory(&cb, sizeof(cb));
 
+	auto ptex = *m_pTexture.lock();
+
 	//	バッファに代入
-	//cb.m_WorldMatrix		= world;
-	//cb.m_ViewMatrix			= Camera::GetInstance().GetViewMatrix();
-	//cb.m_ProjectionMatrix	= Camera::GetInstance().GetProjMatrix();
+	cb.m_WorldMatrix		= world;
+	cb.m_ViewMatrix			= Camera::GetInstance().GetViewMatrix();
+	cb.m_ProjectionMatrix	= Camera::GetInstance().GetProjMatrix();
 	cb.m_DivNum = DirectX::XMFLOAT2(
-		static_cast<float>(pTex->GetDivNum().x),
-		static_cast<float>(pTex->GetDivNum().y));
+		static_cast<float>(ptex->GetDivNum().x),
+		static_cast<float>(ptex->GetDivNum().y));
 	cb.m_Index = DirectX::XMFLOAT2(
-		static_cast<float>(pTex->GetActiveDiv().x),
-		static_cast<float>(pTex->GetActiveDiv().y));
-	cb.m_Color				= pTex->m_Color.GetRGBA();
+		static_cast<float>(ptex->GetActiveDiv().x),
+		static_cast<float>(ptex->GetActiveDiv().y));
+	cb.m_Color				= ptex->m_Color.GetRGBA();
 
 	//	メモリコピー
 	memcpy_s(pMapData.pData, pMapData.RowPitch, (void*)(&cb), sizeof(cb));
 
 	//	アクセス許可終了
 	device.GetImmediateContext()->Unmap(
-		&*pShader->GetConstantBuffer(),
+		*shader->GetConstantBuffer(),
 		NULL
 	);
 }
@@ -1427,39 +1468,39 @@ void API::Sprite::SetupBlendState()
 void Sprite::SetPos(DirectX::XMFLOAT3 pos)
 {
 #ifdef DEBUG_SPRITE
-	// クリップ距離のオフセット(float型の丸め誤差対策)
-	const float offset = 0.1f;
+	//// クリップ距離のオフセット(float型の丸め誤差対策)
+	//const float offset = 0.1f;
 
-	// クリップ距離(z)が描画範囲外なら警告
-	float nearClip = Camera::GetInstance().GetEyePt().z + Camera::c_NearClip - offset;
-	float farClip = Camera::GetInstance().GetEyePt().z + Camera::c_FarClip - offset;
+	//// クリップ距離(z)が描画範囲外なら警告
+	//float nearClip = Camera::GetInstance().GetEyePt().z + Camera::c_NearClip - offset;
+	//float farClip = Camera::GetInstance().GetEyePt().z + Camera::c_FarClip - offset;
 
-	try
-	{
-		std::string error = "スプライトはカメラのクリップの描画範囲外のため描画されません。\n";
-		if (pos.z < nearClip) {
+	//try
+	//{
+	//	std::string error = "スプライトはカメラのクリップの描画範囲外のため描画されません。\n";
+	//	if (pos.z < nearClip) {
 
-			error += "\nNearClip > Pos.z\n";
-			error += std::to_string(nearClip + offset) + " > " + std::to_string(pos.z);
-			error += "\n\nスプライトはカメラより手前にあります";
-			throw error;
-		}
-		if (pos.z >= farClip) {
+	//		error += "\nNearClip > Pos.z\n";
+	//		error += std::to_string(nearClip + offset) + " > " + std::to_string(pos.z);
+	//		error += "\n\nスプライトはカメラより手前にあります";
+	//		throw error;
+	//	}
+	//	if (pos.z >= farClip) {
 
-			error += "\nFarClip <= Pos.z\n";
-			error += std::to_string(farClip - offset) + " <= " + std::to_string(pos.z);
-			error += "\n\nスプライトはカメラの描画範囲より奥にあります";
-			throw error;
-		}
-	}
-	catch (std::string error)
-	{
-		ErrorLog(error);
-		int ret = 0;
-		if (ret == IDOK) {
-			exit(NULL);
-		}
-	}
+	//		error += "\nFarClip <= Pos.z\n";
+	//		error += std::to_string(farClip - offset) + " <= " + std::to_string(pos.z);
+	//		error += "\n\nスプライトはカメラの描画範囲より奥にあります";
+	//		throw error;
+	//	}
+	//}
+	//catch (std::string error)
+	//{
+	//	ErrorLog(error);
+	//	int ret = 0;
+	//	if (ret == IDOK) {
+	//		exit(NULL);
+	//	}
+	//}
 
 	
 #endif // DEBUG_SPRITE

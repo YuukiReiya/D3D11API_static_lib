@@ -156,10 +156,10 @@ namespace API{
 			/*!
 				@fn			SetupTexture
 				@brief		テクスチャの設定
-				@detail		弱参照でバインドする
+				@detail		弱参照でバインドし、この時点で頂点生成を行う
 				@param[in]	登録するテクスチャのポインタ
 			*/
-			void SetupTexture(Texture&texture);
+			void SetupTexture(Texture* texture);
 
 			/*!
 				@fn			SetupShader
@@ -167,7 +167,7 @@ namespace API{
 				@detail		弱参照でバインドする
 				@param[in]	登録するシェーダーのポインタ
 			*/
-			void SetupShader(std::shared_ptr<D3D11::Graphic::AbstractShader> shader);
+			void SetupShader(D3D11::Graphic::AbstractShader* shader);
 
 		private:
 			/*!
@@ -275,13 +275,36 @@ namespace API{
 			*/
 			void SetupBlendState();
 
+			/*!
+				@var	m_StencilMask
+				@brief	深度マスク
+			*/
 			uint32_t									m_StencilMask;
-			Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
-			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendState;
-			//Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendStateMultiple;
 
-			std::weak_ptr<D3D11::Graphic::AbstractShader>m_pShader;
-			std::weak_ptr<Texture>m_pTexture;
+			/*!
+				@var	m_pVertexBuffer
+				@brief	頂点バッファ
+			*/
+			Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
+
+			/*!
+				@var	m_pBlendState
+				@brief	ブレンドステート
+			*/
+			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendState;
+
+			/*!
+				@var	m_pTexture
+				@brief	テクスチャオブジェクトの弱参照
+			*/
+			std::weak_ptr<Texture*>							m_pTexture;
+
+			/*!
+				@var	m_pShader
+				@brief	シェーダーオブジェクトの弱参照
+			*/
+			std::weak_ptr<D3D11::Graphic::AbstractShader*>	m_pShader;
+
 			/****************************************/
 			/*		　スプライトのパラメータ		*/
 			/****************************************/
@@ -315,7 +338,11 @@ namespace D3D11 {
 			SpriteVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT2 uv) {
 				m_Pos = pos, m_UV = uv;
 			}
-			DirectX::XMFLOAT2 m_UV;/*< UV座標 */
+			/*!
+				@var	m_UV
+				@brief	UV座標
+			*/
+			DirectX::XMFLOAT2 m_UV;
 		};
 
 #pragma pack(push,16)
@@ -325,9 +352,23 @@ namespace D3D11 {
 		struct alignas(16) SpriteShaderBuffer
 			:BaseConstantBuffer
 		{
+			/*!
+				@var	m_DivNum
+				@brief	テクスチャの分割数
+			*/
 			DirectX::XMFLOAT2 m_DivNum;
+
+			/*!
+				@var	m_Index
+				@brief	分割したテクスチャの表示位置
+			*/
 			DirectX::XMFLOAT2 m_Index;
-			DirectX::XMFLOAT4 m_Color;	/*< カラー */
+
+			/*!
+				@var	m_Color
+				@brief	カラー
+			*/
+			DirectX::XMFLOAT4 m_Color;	
 		};
 #pragma pack(pop)
 	}
