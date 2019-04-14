@@ -122,9 +122,6 @@ void Main::Loop()
 	// FPSの初期化
 	SetUpFPS();
 
-	//	シーンの初期化
-	SceneRoot::GetInstance().Initialize();
-
 	//------------------------------------------------------------------------------------
 	//	@NOTE	コンスタントバッファのメンバ変更に伴う、
 	//			シェーダーの切り替えを行う
@@ -149,8 +146,12 @@ void Main::Loop()
 
 	//	シェーダーマネージャーの初期化
 	D3D11::Graphic::ShaderManager::GetInstance().Initialize(changePath);
+
 	// カメラの初期化
 	Camera::GetInstance().Initialize({ c_WindowWidth,c_WindowHeight }, { 0,0,-10 });
+
+	//	シーンの初期化
+	SceneRoot::GetInstance().Initialize();
 
 	HRESULT hr = NULL;
 
