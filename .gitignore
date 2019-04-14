@@ -6,7 +6,6 @@
 プロジェクト/D3D11API/Sample/obj/
 プロジェクト/D3D11API/.vscode/
 プロジェクト/D3D11API/lib/
-*.bat
 プロジェクト/D3D11API/cso/
 ..gitignore.un~
 プロジェクト/D3D11API/Sample/Resources/image.jpg
