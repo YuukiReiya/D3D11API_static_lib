@@ -16,9 +16,11 @@ using namespace DirectX;
 	@brief	コンストラクタ
 	@detail	生成時にITextureのコンストラクタを呼び出しデフォルト値を入れる
 */
-API::Texture::Texture() :ITexture()
+API::Texture::Texture() :ITexture(),
+m_DivNum({ 1,1 }),
+m_ActiveDiv({ 0,0 })
 {
-
+	m_pShared = std::make_shared<Texture*>(this);
 }
 
 /*!

@@ -50,8 +50,8 @@ API::ITexture::~ITexture()
 */
 void API::ITexture::Finalize()
 {
-	//m_pShaderResourceView.Reset();
-	//m_pSamplerState.Reset();
+	m_pShaderResourceView.Reset();
+	m_pSamplerState.Reset();
 }
 
 /*!

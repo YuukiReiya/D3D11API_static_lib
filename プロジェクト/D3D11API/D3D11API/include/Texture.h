@@ -131,8 +131,10 @@ namespace API {
 		*/
 		DirectX::XMINT2 GetDivNum()const { return m_DivNum; };
 		DirectX::XMINT2 GetActiveDiv()const { return m_ActiveDiv; };
+		std::shared_ptr<Texture*>GetSharedPtr() { return m_pShared; }
 	private:
 		DirectX::XMINT2 m_DivNum;
 		DirectX::XMINT2 m_ActiveDiv;
+		std::shared_ptr<Texture*>m_pShared;
 	};
 };
