@@ -13,16 +13,24 @@
 #include "AbstractShader.h"
 #include "Direct3D11.h"
 
-HRESULT D3D11::Graphic::AbstractShader::Setup()
+/*!
+	@brief	コンストラクタ
+	@detail	インスタンス生成時にインスタンスのアドレスをシェアード・ポインタに保持させる
+*/
+D3D11::Graphic::AbstractShader::AbstractShader()
 {
-	HRESULT hr;
-	Microsoft::WRL::ComPtr<ID3DBlob>pCompileBlob = nullptr;
-
-
-	return E_NOTIMPL;
+	m_pShared = std::make_shared<AbstractShader*>(this);
 }
 
-
+/*!
+	@fn			PreCompile
+	@brief		プリコンパイル済みファイルを用いたシェーダーファイルのコンパイル
+	@param[in]	シェーダーファイルのパス
+	@param[in]	エントリーポイント名
+	@param[in]	シェーダーのプロファイル名 ex)vs_5_0
+	@param[in]	コンパイル用のブロブ
+	@return		S_OK:成功 E_FAIL:失敗
+*/
 HRESULT D3D11::Graphic::AbstractShader::PreCompile(std::string path, std::string funcName, std::string profileName, ID3DBlob ** ppBlob)
 {
 	HRESULT hr;
@@ -68,6 +76,15 @@ HRESULT D3D11::Graphic::AbstractShader::PreCompile(std::string path, std::string
 	return S_OK;
 }
 
+/*!
+	@fn		DynamicCompile
+	@brief	シェーダーファイルの動的コンパイル
+	@param[in]	シェーダーファイルのパス
+	@param[in]	エントリーポイント名
+	@param[in]	シェーダーのプロファイル名 ex)vs_5_0
+	@param[in]	コンパイル用のブロブ
+	@return		S_OK:成功 E_FAIL:失敗
+*/
 HRESULT D3D11::Graphic::AbstractShader::DynamicCompile(std::string path, std::string funcName, std::string profileName, ID3DBlob ** ppBlob)
 {
 	HRESULT hr;
@@ -75,7 +92,8 @@ HRESULT D3D11::Graphic::AbstractShader::DynamicCompile(std::string path, std::st
 	Microsoft::WRL::ComPtr<ID3DBlob>pError = nullptr;
 
 	//	読み込みパスはマルチバイト文字
-	auto wPath = const_cast<LPCWSTR>(To_WString(path).c_str());
+	auto cast = To_WString(path);
+	auto wPath = const_cast<LPCWSTR>(cast.c_str());
 
 	//	コンパイルオプション
 	DWORD compileOption = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -113,7 +131,15 @@ HRESULT D3D11::Graphic::AbstractShader::DynamicCompile(std::string path, std::st
 	return S_OK;
 }
 
-HRESULT D3D11::Graphic::AbstractShader::CreateVertexShader(ID3DBlob* pBlob, ID3D11VertexShader * pVertexShader)
+/*!
+	@fn			CreateVertexShader
+	@brief		頂点シェーダーの作成
+	@detail		事前にブロブをコンパイルしておくこと！
+	@param[in]	コンパイル済みブロブ
+	@param[in]	頂点シェーダー
+	@return		S_OK:成功 E_FAIL:失敗
+*/
+HRESULT D3D11::Graphic::AbstractShader::CreateVertexShader(ID3DBlob* pBlob, ID3D11VertexShader** pVertexShader)
 {
 	HRESULT hr;
 	//TODO:ブロブのコンパイル判定を行う
@@ -123,7 +149,7 @@ HRESULT D3D11::Graphic::AbstractShader::CreateVertexShader(ID3DBlob* pBlob, ID3D
 		pBlob->GetBufferPointer(),
 		pBlob->GetBufferSize(),
 		NULL,
-		&pVertexShader
+		pVertexShader
 	);
 	if (FAILED(hr)) {
 		std::string error = "Vertex Shader generation failed!";
@@ -134,7 +160,15 @@ HRESULT D3D11::Graphic::AbstractShader::CreateVertexShader(ID3DBlob* pBlob, ID3D
 	return S_OK;
 }
 
-HRESULT D3D11::Graphic::AbstractShader::CreatePixelShader(ID3DBlob * pBlob, ID3D11PixelShader * pPixelShader)
+/*!
+	@fn			CreatePixelShader
+	@brief		ピクセルシェーダーの作成
+	@detail		事前にブロブをコンパイルしておくこと！
+	@param[in]	コンパイル済みブロブ
+	@param[in]	ピクセルシェーダー
+	@return		S_OK:成功 E_FAIL:失敗
+*/
+HRESULT D3D11::Graphic::AbstractShader::CreatePixelShader(ID3DBlob * pBlob, ID3D11PixelShader** pPixelShader)
 {
 	HRESULT hr;
 	//TODO:ブロブのコンパイル判定を行う
@@ -144,7 +178,7 @@ HRESULT D3D11::Graphic::AbstractShader::CreatePixelShader(ID3DBlob * pBlob, ID3D
 		pBlob->GetBufferPointer(),
 		pBlob->GetBufferSize(),
 		NULL,
-		&pPixelShader
+		pPixelShader
 	);
 	if (FAILED(hr)) {
 		std::string error = "Pixel Shader generation failed!";

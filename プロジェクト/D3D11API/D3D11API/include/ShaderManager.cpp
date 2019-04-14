@@ -113,7 +113,7 @@ HRESULT ShaderManager::Initialize(std::string directoryPath)
 	m_pAddDataRef = new ShaderData;
 	{
 		// バーテックスシェーダーの作成
-		hr = MakeShader("DefaultSprite.hlsl", "VS", "vs_5_0", (void**)&m_pAddDataRef->m_pVertexShader, &pCompiledShader);
+		hr = MakeShader("SpriteShader.hlsl", "VS", "vs_5_0", (void**)&m_pAddDataRef->m_pVertexShader, &pCompiledShader);
 		if (FAILED(hr)) {
 			ErrorLog("\"SimpleTextureShader\" vertex shader is not create!");
 			return E_FAIL;
@@ -140,7 +140,7 @@ HRESULT ShaderManager::Initialize(std::string directoryPath)
 		}
 
 		// ピクセルシェーダーの作成
-		hr = ShaderManager::MakeShader("DefaultSprite.hlsl", "PS", "ps_5_0", (void**)&m_pAddDataRef->m_pPixelShader, &pCompiledShader);
+		hr = ShaderManager::MakeShader("SpriteShader.hlsl", "PS", "ps_5_0", (void**)&m_pAddDataRef->m_pPixelShader, &pCompiledShader);
 		if (FAILED(hr)) {
 			ErrorLog("\"SimpleTextureShader\" pixel shader is not create!");
 			return E_FAIL;
