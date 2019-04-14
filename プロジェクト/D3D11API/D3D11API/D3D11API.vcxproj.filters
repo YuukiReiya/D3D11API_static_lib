@@ -75,9 +75,6 @@
     <ClInclude Include="include\targetver.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="include\IRender.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="include\Keyboard.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -138,9 +135,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="include\stdafx.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="include\IRender.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="include\Keyboard.cpp">
