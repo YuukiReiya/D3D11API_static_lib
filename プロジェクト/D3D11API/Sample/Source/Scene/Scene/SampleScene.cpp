@@ -74,6 +74,8 @@ void SampleScene::Initialize()
 	}
 
 	g_pShader	= make_shared<D3D11::Graphic::SpriteShader>();
+
+	//	プリコンパイル済みシェーダーは使用せず動的コンパイルを行う
 	if (FAILED(g_pShader->DynamicSetup())) {
 		ErrorLog("失敗");
 	}
