@@ -161,6 +161,44 @@ HRESULT D3D11::Graphic::AbstractShader::CreateVertexShader(ID3DBlob* pBlob, ID3D
 }
 
 /*!
+	@fn			CreateVertexShader
+	@brief		頂点シェーダーの作成
+	@detail		プリコンパイル済みシェーダーファイルを使用する
+	@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+	@param[in]	頂点シェーダー
+	@return		S_OK:成功 E_FAIL:失敗
+*/
+HRESULT D3D11::Graphic::AbstractShader::CreateVertexShader(CustomShaderBin* bin, ID3D11VertexShader** pVertexShader)
+{
+	return Direct3D11::GetInstance().GetDevice()->CreateVertexShader(
+		bin->GetPtr(),
+		bin->GetSize(),
+		NULL,
+		pVertexShader
+	);
+}
+
+/*!
+	@fn			CreateInputLayout
+	@brief		頂点レイアウト作成
+	@detail		プリコンパイル済みシェーダーファイルを使用する
+	@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+	@param[in]	頂点レイアウトの定義
+	@param[in]	頂点レイアウト
+	@return		S_OK:成功 E_FAIL:失敗
+*/
+HRESULT D3D11::Graphic::AbstractShader::CreateInputLayout(CustomShaderBin * bin, D3D11_INPUT_ELEMENT_DESC desc[], ID3D11InputLayout ** pInputLayout)
+{
+	uint32_t numElements = sizeof(desc) / sizeof(*desc);
+	return Direct3D11::GetInstance().GetDevice()->CreateInputLayout(
+		desc,
+		numElements,
+		bin->GetPtr(),
+		bin->GetSize(),
+		pInputLayout
+	);
+}
+/*!
 	@fn			CreatePixelShader
 	@brief		ピクセルシェーダーの作成
 	@detail		事前にブロブをコンパイルしておくこと！
@@ -187,5 +225,23 @@ HRESULT D3D11::Graphic::AbstractShader::CreatePixelShader(ID3DBlob * pBlob, ID3D
 	}
 
 	return S_OK;
+}
+
+/*!
+	@fn			CreatePixelShader
+	@brief		ピクセルシェーダーの作成
+	@detail		プリコンパイル済みシェーダーファイルを使用する
+	@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+	@param[in]	ピクセルシェーダー
+	@return		S_OK:成功 E_FAIL:失敗
+*/
+HRESULT D3D11::Graphic::AbstractShader::CreatePixelShader(CustomShaderBin * bin, ID3D11PixelShader ** pPixelShader)
+{
+	return Direct3D11::GetInstance().GetDevice()->CreatePixelShader(
+		bin->GetPtr(),
+		bin->GetSize(),
+		NULL,
+		pPixelShader
+	);
 }
 

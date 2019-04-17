@@ -27,12 +27,20 @@ namespace D3D11
 
 			/*!
 				@fn		Setup
-				@brief	プロコンパイル済みシェーダーファイルを利用してセットアップを行う
+				@brief	プリコンパイル済みシェーダーファイルを利用してセットアップを行う
 				@detail	オーバーライド
-
-				@TODO	未実装
+				@TODO	読み込めない.csoファイルが存在し、動作が安定しない。
 			*/
-			HRESULT Setup()override final { return S_OK; };
+			HRESULT Setup()override final;
+
+			/*!
+				@fn			Setup
+				@brief		ファイルの階層を行い、プリコンパイル済みシェーダーファイルを利用したセットアップを行う
+				@detail		オーバーロード
+				@param[in]	ファイルの階層パス
+				@NOTE		シェーダーファイルの配置位置が人によって変わってしまうため、ディレクトリだけでも設定出来るようにする
+			*/
+			HRESULT Setup(std::string& directory);
 
 			/*!
 				@fn		DynamicSetup
@@ -65,11 +73,21 @@ namespace D3D11
 			HRESULT CreateConstantBuffer();
 
 			/*!
-				@fn		CreateInputLayout
-				@brief	頂点レイアウトの作成
-				@return	S_OK:成功 E_FAIL:失敗
+				@fn			CreateInputLayout
+				@brief		頂点レイアウトの作成
+				@param[in]	コンパイル済みブロブ
+				@return		S_OK:成功 E_FAIL:失敗
 			*/
 			HRESULT CreateInputLayout(ID3DBlob*pBlob);
+
+			/*!
+				@fn			CreateInputLayout	
+				@brief		頂点レイアウトの作成
+				@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+				@return		S_OK:成功 E_FAIL:失敗
+			*/
+			HRESULT CreateInputLayout(CustomShaderBin*bin);
+
 
 			/*!
 				@var	m_Directory

@@ -40,6 +40,62 @@ D3D11::Graphic::SpriteShader::~SpriteShader()
 }
 
 /*!
+	@fn		Setup
+	@brief	プロコンパイル済みシェーダーファイルを利用してセットアップを行う
+	@detail	オーバーライド
+*/
+HRESULT D3D11::Graphic::SpriteShader::Setup()
+{
+	//	パス
+	auto path = m_Directory + c_CSO.data();
+
+	//	csoバイナリ
+	CustomShaderBin bin(path);
+
+	//	ハンドラ
+	HRESULT hr;
+
+	//	頂点シェーダー
+	hr = CreateVertexShader(&bin, &m_pVertexShader);
+	if (FAILED(hr)) {
+		ErrorLog("\"SpriteShader\" is failed create vertex shader");
+		return E_FAIL;
+	}
+
+	//	頂点レイアウト
+	hr = CreateInputLayout(&bin);
+	if (FAILED(hr)) {
+		ErrorLog("\"SpriteShader\" input layout is not create!");
+		return E_FAIL;
+	}
+
+
+	//	ピクセルシェーダー
+	hr = CreatePixelShader(&bin, m_pPixelShader.GetAddressOf());
+	if (FAILED(hr)) {
+		ErrorLog("\"SpriteShader\" is failed create pixel shader");
+	}
+
+	//	コンスタントバッファ作成
+	hr = CreateConstantBuffer();
+	if (FAILED(hr)) {
+		std::string error = "\"SpriteShader\" ConstantBuffer is not create!";
+		ErrorLog(error);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT D3D11::Graphic::SpriteShader::Setup(std::string & directory)
+{
+	//	ディレクトリ設定
+	SetupDirectory(directory);
+
+	//	プリコンパイル済みファイルを利用したセットアップ
+	return Setup();
+}
+
+/*!
 	@fn		DynamicSetup
 	@brief	動的コンパイルを利用したセットアップを行う
 	@detail	オーバーライド
@@ -152,9 +208,10 @@ HRESULT D3D11::Graphic::SpriteShader::CreateConstantBuffer()
 }
 
 /*!
-	@fn		CreateInputLayout
-	@brief	頂点レイアウトの作成
-	@return	S_OK:成功 E_FAIL:失敗
+	@fn			CreateInputLayout
+	@brief		頂点レイアウトの作成
+	@param[in]	コンパイル済みブロブ
+	@return		S_OK:成功 E_FAIL:失敗
 */
 HRESULT D3D11::Graphic::SpriteShader::CreateInputLayout(ID3DBlob*pBlob)
 {
@@ -172,4 +229,20 @@ HRESULT D3D11::Graphic::SpriteShader::CreateInputLayout(ID3DBlob*pBlob)
 		pBlob->GetBufferSize(),
 		m_pVertexLayout.GetAddressOf()
 	);
+}
+
+/*!
+	@fn			CreateInputLayout
+	@brief		頂点レイアウトの作成
+	@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+	@return		S_OK:成功 E_FAIL:失敗
+*/
+HRESULT D3D11::Graphic::SpriteShader::CreateInputLayout(CustomShaderBin * bin)
+{
+	// 頂点インプットレイアウト定義
+	D3D11_INPUT_ELEMENT_DESC layout[] = {
+		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
+	return AbstractShader::CreateInputLayout(bin, layout, m_pVertexLayout.GetAddressOf());
 }

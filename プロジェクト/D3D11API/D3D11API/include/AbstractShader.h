@@ -10,6 +10,7 @@
 #include <memory>
 #include <wrl/client.h>
 #include <string>
+#include "CustomShaderBin.h"
 
 /*! Direct3D11関連 */
 namespace D3D11 {
@@ -30,7 +31,7 @@ namespace D3D11 {
 
 			/*!
 				@fn		Setup
-				@brief	プロコンパイル済みシェーダーファイルを利用してセットアップを行う
+				@brief	プリコンパイル済みシェーダーファイルを利用してセットアップを行う
 				@detail	純粋仮想関数
 			*/
 			virtual HRESULT Setup()abstract;
@@ -144,6 +145,27 @@ namespace D3D11 {
 			static HRESULT CreateVertexShader(ID3DBlob*pBlob, ID3D11VertexShader**pVertexShader);
 
 			/*!
+				@fn			CreateVertexShader
+				@brief		頂点シェーダーの作成
+				@detail		プリコンパイル済みシェーダーファイルを使用する
+				@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+				@param[in]	頂点シェーダー
+				@return		S_OK:成功 E_FAIL:失敗
+			*/
+			static HRESULT CreateVertexShader(CustomShaderBin* bin, ID3D11VertexShader**pVertexShader);
+
+			/*!
+				@fn			CreateInputLayout
+				@brief		頂点レイアウト作成
+				@detail		プリコンパイル済みシェーダーファイルを使用する
+				@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+				@param[in]	頂点レイアウトの定義
+				@param[in]	頂点レイアウト
+				@return		S_OK:成功 E_FAIL:失敗
+			*/
+			static HRESULT CreateInputLayout(CustomShaderBin* bin, D3D11_INPUT_ELEMENT_DESC desc[], ID3D11InputLayout**pInputLayout);
+
+			/*!
 				@fn			CreatePixelShader
 				@brief		ピクセルシェーダーの作成
 				@detail		事前にブロブをコンパイルしておくこと！
@@ -152,6 +174,16 @@ namespace D3D11 {
 				@return		S_OK:成功 E_FAIL:失敗
 			*/
 			static HRESULT CreatePixelShader(ID3DBlob*pBlob, ID3D11PixelShader**pPixelShader);
+
+			/*!
+				@fn			CreatePixelShader
+				@brief		ピクセルシェーダーの作成
+				@detail		プリコンパイル済みシェーダーファイルを使用する
+				@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+				@param[in]	ピクセルシェーダー
+				@return		S_OK:成功 E_FAIL:失敗
+			*/
+			static HRESULT CreatePixelShader(CustomShaderBin* bin, ID3D11PixelShader**pPixelShader);
 		};
 	}
 }
