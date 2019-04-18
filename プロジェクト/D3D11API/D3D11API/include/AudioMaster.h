@@ -1,6 +1,6 @@
 /*
 	@file	AudioMaster.h
-	@date	2018/11/19
+	@date	2019/04/18
 	@author	番場 宥輝
 	@brief	オーディオデバイスクラス
 	@detail	XAudioを使ったAudioデバイスを管理
@@ -31,28 +31,28 @@ namespace D3D11 {
 			~AudioMaster();
 
 			/*!
-				@fn		イニシャライズ
+				@fn		Initialize
 				@brief	初期化
 				@return	S_OK:成功 E_FAIL:失敗
 			*/
 			HRESULT Initialize();
 
 			/*!
-				@fn		ファイナライズ
+				@fn		Finalize
 				@brief	破棄処理
 				@detail	メンバの明示的な解放とメンバの初期化
 			*/
 			void Finalize();
 
 			/*!
-				@fn		オーディオデバイスのゲッター
+				@fn		GetXAudio2
 				@brief	オーディオデバイスの取得
 				@return	オーディオデバイス
 			*/
 			IXAudio2* GetXAudio2() { return m_pXAudio2; }
 
 			/*!
-				@fn		マスタリングボイスのゲッター
+				@fn		GetMasterVoice
 				@brief	マスタリングボイスの取得
 				@return	マスタリングボイス
 			*/
@@ -68,8 +68,17 @@ namespace D3D11 {
 			*/
 			friend class Singleton<AudioMaster>;
 
-			IXAudio2*					m_pXAudio2;			/*!< オーディオ */
-			IXAudio2MasteringVoice*		m_pMasteringVoice;	/*!< マスタリングボイス */
+			/*!
+				@var	m_pXAudio2
+				@brief	オーディオデバイス
+			*/
+			IXAudio2*					m_pXAudio2;
+
+			/*!
+				@var	m_pMasteringVoice
+				@brief	マスタリングボイス
+			*/
+			IXAudio2MasteringVoice*		m_pMasteringVoice;
 		};
 
 	}

@@ -1,8 +1,10 @@
 /*
 	@file	AudioMaster.cpp
-	@date	2018/03/02
+	@date	2019/04/18
 	@author	番場 宥輝
-	@brief	サウンド管理クラス
+	@brief	オーディオデバイスクラス
+	@detail	XAudioを使ったAudioデバイスを管理
+			シングルトン
 */
 #include "stdafx.h"
 #include "AudioMaster.h"
@@ -10,8 +12,8 @@
 #include "MemoryLeaks.h"
 
 /*!
-	@brief	名前空間
-	@detail	usingディレクティブ
+	@brief	usingディレクティブ
+	@using	D3D11::Sound
 */
 using namespace D3D11::Sound;
 
@@ -33,7 +35,7 @@ AudioMaster::~AudioMaster()
 }
 
 /*!
-	@fn		イニシャライズ
+	@fn		Initialize
 	@brief	初期化
 	@return	S_OK:成功 E_FAIL:失敗
 */
@@ -64,7 +66,7 @@ HRESULT AudioMaster::Initialize()
 }
 
 /*!
-	@fn		ファイナライズ
+	@fn		Finalize
 	@brief	破棄処理
 	@detail	メンバの明示的な解放とメンバの初期化
 */
