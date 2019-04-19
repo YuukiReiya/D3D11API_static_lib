@@ -14,6 +14,7 @@
 #include "TextureAtlas.h"
 #include "AbstractRender.h"
 #include "AbstractShader.h"
+#include "Transform.h"
 
 /*! APIの名前空間に含める */
 namespace API{
@@ -73,25 +74,18 @@ namespace API{
 			~Sprite();
 
 			/*!
-				@fn		イニシャライズ
+				@fn		Initialize
 				@brief	初期化
 				@detail	ブレンドステートの作成を行う
 			*/
 			HRESULT Initialize();
 
 			/*!
-				@fn		ファイナライズ
+				@fn		Finalize
 				@brief	破棄処理
 				@detail	メンバの明示的な解放とメンバの初期化
 			*/
 			void Finalize();
-
-			/*!
-				@fn		リリース
-				@brief	解放処理
-				@detail	メンバの明示的な解放
-			*/
-			void Release();
 
 			/*!
 				@fn		Render
@@ -100,51 +94,12 @@ namespace API{
 			void Render()override;
 
 			/*!
-				@fn			テクスチャの描画
-				@brief		シンプルテクスチャの描画
-				@detail		map,unmapを使ってテクスチャマッピングをする描画
-				@param[in]	描画するテクスチャ
-				@return		成功:S_OK 失敗:E_FAIL
+				@fn			SetStencilMask
+				@brief		深度マスクの設定
+				@detail		インライン関数
+				@param[in]	設定するマスク値
 			*/
-			HRESULT Render(Texture* pTexture);
-
-			/*!
-				@fn			テクスチャの描画
-				@brief		アトラステクスチャの描画
-				@detail		SubResourceを使ってUpdateSubResourceをする描画
-				@param[in]	描画するテクスチャ
-				@return		成功:S_OK 失敗:E_FAIL
-			*/
-			HRESULT Render(TextureAtlas* pTexture);
-
-			/*!
-				@fn			タイリング描画
-				@brief		テクスチャをタイリングして描画
-				@detail		頂点情報のUVを範囲外にすることで実現
-							※比率の維持を優先しているため、別途大きさを変更する必要がある
-				@param[in]	描画するテクスチャ
-				@param[in]	タイル表示する割合
-				@return		成功:S_OK 失敗:E_FAIL
-			*/
-			HRESULT RenderTile(Texture* pTexture, const DirectX::XMFLOAT2 ratio);
-
-			//----------------------------------------------------------------------------------------
-			/*! Transformクラスに書き直す予定 */
-			DirectX::XMFLOAT3 GetPos()const { return m_Pos; }
-			void SetPos(DirectX::XMFLOAT3 pos);
-			void SetPos(DirectX::XMFLOAT2 pos);
-			void SetRot(DirectX::XMFLOAT3 rot) { m_Rot.x = rot.x, m_Rot.y = rot.y, m_Rot.z = rot.z; }
-			void SetScale(DirectX::XMFLOAT2 scale);
-			void SetStencilMask(uint32_t mask) { m_StencilMask = mask; }
-			//----------------------------------------------------------------------------------------
-
-			/*!
-				@fn			ブレンドステートの作成
-				@brief		作成したブレンドステートは描画時にバインドされる
-				@detail		メンバのブレンドステートをを変更
-				@param[in]	自己定義のブレンドステート
-			*/
-			void CreateAlphaBlendState(D3D11_BLEND_DESC desc);
+			inline void SetStencilMask(uint32_t mask) { m_StencilMask = mask; }
 
 			/*!
 				@fn			SetupBlendPreset
@@ -169,6 +124,8 @@ namespace API{
 			*/
 			void SetupShader(D3D11::Graphic::AbstractShader* shader);
 
+			std::shared_ptr<Transform> transform;
+
 		private:
 			/*!
 				@var	c_VertexCount
@@ -178,12 +135,12 @@ namespace API{
 			static constexpr int c_VertexCount = 4;/*!< スプライトの頂点数 */
 
 			/*!
-				@var	c_NormalizeSize
+				@var	c_DefaultSize
 				@brief	基準となるサイズ
 				@detail	このピクセルがScaleの1に相当する
 				@value	100.0f
 			*/
-			static const float c_NormalizeSize;
+			static constexpr float c_DefaultSize = 100.0f;
 
 			/*!
 				@var	c_ScaleZ
@@ -191,7 +148,7 @@ namespace API{
 				@detail	生成する頂点のZ方向の大きさ
 				@value	0
 			*/
-			static const float c_ScaleZ;
+			static constexpr float c_ScaleZ = 0;
 
 			/*!
 				@var	c_VertexZ
@@ -199,7 +156,7 @@ namespace API{
 				@detail	CreateVertex関数で生成する頂点のZ位置
 				@value	0
 			*/
-			static const float c_VertexZ;
+			static constexpr float c_VertexZ = 0;
 
 			/*!
 				@fn			頂点生成
@@ -209,16 +166,6 @@ namespace API{
 				@return		成功:S_OK 失敗:E_FAIL
 			*/
 			HRESULT CreateVertex(DirectX::XMINT2 size);
-
-			/*!
-				@fn			タイリングテクスチャの頂点生成
-				@brief		タイリング用の頂点生成
-				@detail		タイリング用のUVを拡張した頂点を生成する
-				@param[in]	画像サイズ
-				@param[in]	タイリングする割合
-				@return		成功:S_OK 失敗:E_FAIL
-			*/
-			HRESULT CreateTilingVertex(DirectX::XMINT2 size, DirectX::XMFLOAT2 ratio);
 
 			/*!
 				@fn			SetupVertex
@@ -310,10 +257,15 @@ namespace API{
 			/****************************************/
 
 			/*! ローカル座標系 */
-			DirectX::XMFLOAT3 m_Pos;
-			DirectX::XMFLOAT3 m_Rot;
-			DirectX::XMFLOAT3 m_Scale;
+			//DirectX::XMFLOAT3 m_Pos;
+			//DirectX::XMFLOAT3 m_Rot;
+			//DirectX::XMFLOAT3 m_Scale;
 			/*! スプライトサイズのキャッシュ */
+
+			/*!
+				@var	m_Size
+				@brief	スプライトで生成する画像のキャッシュ
+			*/
 			DirectX::XMINT2 m_Size;
 	};
 
