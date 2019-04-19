@@ -89,7 +89,6 @@ void SampleScene::Initialize()
 
 	g_pSprites[0]->SetupShader(g_pShader.get());
 	g_pSprites[0]->SetupTexture(g_pTextures[0].get());
-	g_pSprites[0]->SetPos({ -0.1f,0 });
 }
 
 /*!
@@ -113,21 +112,30 @@ void SampleScene::Update()
 		SceneRoot::GetInstance().SetupNextScene(new TransitionTestScene());
 	}
 
-	auto pos = g_pSprite->GetPos();
+	auto pos = g_pSprite->transform->GetPosition();
 
 
 	if (Keyboard::GetButtonDown('a')) {
-		pos.z--;
+		pos.x--;
 	}
 	if (Keyboard::GetButtonDown('d')) {
-		pos.z++;
+		pos.x++;
 	}
 	if (Keyboard::GetButtonDown('w')) {
-		pos.y--;
-	}
-	if (Keyboard::GetButtonDown('s')) {
 		pos.y++;
 	}
+	if (Keyboard::GetButtonDown('s')) {
+		pos.y--;
+	}
+	if (Keyboard::GetButtonDown('q')) {
+		pos.z--;
+	}
+	if (Keyboard::GetButtonDown('e')) {
+		pos.z++;
+	}
+
+
+	g_pSprite->transform->SetPosition(pos);
 }
 
 /*!

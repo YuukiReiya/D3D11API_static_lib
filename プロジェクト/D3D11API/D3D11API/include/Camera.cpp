@@ -158,3 +158,13 @@ void Camera::SetPerspective()
 	);
 }
 
+/*!
+	@fn			SetEyePt
+	@brief		視点位置のセッター
+	@param[in]	設定する視点位置
+*/
+void API::Camera::SetEyePt(DirectX::XMFLOAT3 eyePt)
+{
+	m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0);
+}
+

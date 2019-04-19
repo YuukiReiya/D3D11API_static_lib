@@ -200,6 +200,7 @@
     </ClCompile>
     <ClCompile Include="include\Texture.cpp" />
     <ClCompile Include="include\TextureAtlas.cpp" />
+    <ClCompile Include="include\Transform.cpp" />
     <ClCompile Include="include\Wave.cpp" />
     <ClCompile Include="include\WICTextureLoader.cpp" />
     <ClCompile Include="include\Window.cpp" />

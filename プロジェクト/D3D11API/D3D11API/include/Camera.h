@@ -160,6 +160,13 @@ namespace API {
 		*/
 		void SetPerspective();
 
+		/*!
+			@fn			SetEyePt
+			@brief		視点位置のセッター
+			@param[in]	設定する視点位置
+		*/
+		void SetEyePt(DirectX::XMFLOAT3 eyePt);
+
 	private:
 		/*!
 			@brief	コンストラクタ
