@@ -30,15 +30,11 @@ PS_INPUT VS( float4 Pos : POSITION ,float2 UV : TEXCOORD)
 	/*! 座標計算 */
 	{
 		matrix wvp = mul(g_World, (mul(g_View, g_Proj)));	/*!< 変換 */
+		//matrix wvp = mul(g_Proj, (mul(g_View, g_World)));	/*!< 変換 */
+		//matrix wvp = g_World * g_View*g_Proj;
 		matrix m = transpose(wvp);						/*!< 転置行列 */
 
 		Out.Pos = mul(Pos, m);
-
-		//================================================
-		//float4 pos = mul(Pos, g_World);
-		//pos = mul(pos, g_View);
-		//Out.Pos = mul(pos, g_Proj);
-
 	}
 
 	/*! UV計算 */
@@ -74,5 +70,5 @@ float4 PS( PS_INPUT Input ) : SV_Target
 		if (color.a <= 0.0f)discard;
 	}
 
-	return (g_Color * g_Texture.Sample(g_Sampler, Input.UV));
+	return (g_Color * g_Texture.Sample(g_Sampler, Input.UV)) * 1.0;
 }
