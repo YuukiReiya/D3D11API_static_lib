@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{CFEDBEF8-6A3D-46E6-9378-184B469676DC}</ProjectGuid>
+    <ProjectGuid>{94B6835D-ED7D-4564-A739-FED7E34E914A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>D3D11API</RootNamespace>
+    <RootNamespace>FBXHelper</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -72,19 +72,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)/lib/$(Configuration)/D3D11API\</OutDir>
-    <IntDir>$(SolutionDir)/lib/$(Configuration)/D3D11API\</IntDir>
+    <IncludePath>$(ProjectDir)/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/lib/fbxsdk/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)/lib/$(Configuration)/FBXHelper\</OutDir>
+    <IntDir>$(SolutionDir)/lib/$(Configuration)/FBXHelper\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/lib/fbxsdk/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)/lib/$(Configuration)/D3D11API\</OutDir>
-    <IntDir>$(SolutionDir)/lib/$(Configuration)/D3D11API\</IntDir>
+    <IncludePath>$(ProjectDir)/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/lib/fbxsdk/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)/lib/$(Configuration)/FBXHelper\</OutDir>
+    <IntDir>$(SolutionDir)/lib/$(Configuration)/FBXHelper\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/lib/fbxsdk/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -94,7 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeaderFile>Common.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeaderFile>Common.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,57 +161,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\AbstractRender.h" />
-    <ClInclude Include="include\AbstractShader.h" />
-    <ClInclude Include="include\AudioMaster.h" />
-    <ClInclude Include="include\Camera.h" />
-    <ClInclude Include="include\Color.h" />
-    <ClInclude Include="include\CustomShaderBin.h" />
-    <ClInclude Include="include\Debug.h" />
-    <ClInclude Include="include\Direct3D11.h" />
-    <ClInclude Include="include\GamePad.h" />
-    <ClInclude Include="include\ITexture.h" />
-    <ClInclude Include="include\Keyboard.h" />
-    <ClInclude Include="include\MemoryLeaks.h" />
-    <ClInclude Include="include\MyGame.h" />
-    <ClInclude Include="include\ShaderManager.h" />
-    <ClInclude Include="include\Singleton.h" />
-    <ClInclude Include="include\Sprite.h" />
-    <ClInclude Include="include\SpriteShader.h" />
-    <ClInclude Include="include\stdafx.h" />
-    <ClInclude Include="include\StructShaderBase.h" />
-    <ClInclude Include="include\targetver.h" />
-    <ClInclude Include="include\Texture.h" />
-    <ClInclude Include="include\TextureAtlas.h" />
-    <ClInclude Include="include\Transform.h" />
-    <ClInclude Include="include\Wave.h" />
-    <ClInclude Include="include\WICTextureLoader.h" />
-    <ClInclude Include="include\Window.h" />
+    <ClInclude Include="source\Common.h" />
+    <ClInclude Include="source\FBXLoader.h" />
+    <ClInclude Include="source\FBXUtility.h" />
+    <ClInclude Include="source\targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\AbstractShader.cpp" />
-    <ClCompile Include="include\AudioMaster.cpp" />
-    <ClCompile Include="include\Camera.cpp" />
-    <ClCompile Include="include\Color.cpp" />
-    <ClCompile Include="include\CustomShaderBin.cpp" />
-    <ClCompile Include="include\Debug.cpp" />
-    <ClCompile Include="include\Direct3D11.cpp" />
-    <ClCompile Include="include\GamePad.cpp" />
-    <ClCompile Include="include\ITexture.cpp" />
-    <ClCompile Include="include\Keyboard.cpp" />
-    <ClCompile Include="include\ShaderManager.cpp" />
-    <ClCompile Include="include\Sprite.cpp" />
-    <ClCompile Include="include\SpriteShader.cpp" />
-    <ClCompile Include="include\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    <ClCompile Include="source\Common.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="include\Texture.cpp" />
-    <ClCompile Include="include\TextureAtlas.cpp" />
-    <ClCompile Include="include\Transform.cpp" />
-    <ClCompile Include="include\Wave.cpp" />
-    <ClCompile Include="include\WICTextureLoader.cpp" />
-    <ClCompile Include="include\Window.cpp" />
+    <ClCompile Include="source\FBXUtility.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
