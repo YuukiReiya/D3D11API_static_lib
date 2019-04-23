@@ -6,9 +6,6 @@
 	@detail	ƒVƒ“ƒOƒ‹ƒgƒ“
 */
 #pragma once
-//#include <fbxsdk/core/fbxmanager.h>
-#include <fbxsdk.h>
-#include <memory>
 
 class FBXUtility
 {

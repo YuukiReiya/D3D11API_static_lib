@@ -11,5 +11,5 @@ FbxManager* FBXUtility::m_p = nullptr;
 void FBXUtility::Setup()
 {
 	cout << "test";
-	//m_p = FbxManager::Create();
+	m_p = FbxManager::Create();
 }
