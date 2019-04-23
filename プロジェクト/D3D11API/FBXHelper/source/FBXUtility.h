@@ -6,29 +6,25 @@
 	@detail	ƒVƒ“ƒOƒ‹ƒgƒ“
 */
 #pragma once
+//#include <fbxsdk/core/fbxmanager.h>
+//#include <fbxsdk>
 
-class FBXUtility
-{
-public:
-	~FBXUtility() {};
-	FBXUtility() {};
+namespace FBX {
+	class FBXUtility
+	{
+	public:
 
-	static void Setup();
-private:
-	//~FBXUtility() = delete;
-	//FBXUtility() = delete;
-	
-	//static std::shared_ptr<fbxsdk::FbxManager*>	m_pManager;
-	//static std::shared_ptr<FbxScene*>	m_pScene;
+		static void Setup();
+		static bool Load(std::string path);
+		static bool Triangulate();
+	private:
+		~FBXUtility() = delete;
+		FBXUtility() = delete;
 
-	static fbxsdk::FbxManager*m_p;
+		static std::shared_ptr<fbxsdk::FbxManager*>		m_pManager;
+		static std::shared_ptr<fbxsdk::FbxIOSettings*>	m_pIOsetting;
+		static std::shared_ptr<fbxsdk::FbxScene*>		m_pScene;
+		static std::shared_ptr<fbxsdk::FbxImporter*>	m_pImporter;
+	};
 
-	//static std::shared_ptr<fbxim>
-};
-
-class test
-{
-public :
-	void a() {};
-	static void b();
-};
+}
