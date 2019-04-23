@@ -87,13 +87,13 @@
     <OutDir>$(SolutionDir)/bin/$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)/obj/$(Configuration)\</IntDir>
     <IncludePath>../D3D11API/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/lib/$(Configuration)\;$(LibraryPath);$(VC_LibraryPath_x86)</LibraryPath>
+    <LibraryPath>$(SolutionDir)/lib/$(Configuration)\FbxHelper;$(SolutionDir)/lib/$(Configuration)\D3D11API;$(LibraryPath);$(VC_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)/bin/$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)/obj/$(Configuration)\</IntDir>
     <IncludePath>../D3D11API/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/lib/$(Configuration)\;$(LibraryPath);$(VC_LibraryPath_x86)</LibraryPath>
+    <LibraryPath>$(SolutionDir)/lib/$(Configuration)\FbxHelper;$(SolutionDir)/lib/$(Configuration)\D3D11API;$(LibraryPath);$(VC_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
