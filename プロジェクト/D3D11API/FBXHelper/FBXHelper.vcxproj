@@ -161,10 +161,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="source\AbstractMesh.h" />
+    <ClInclude Include="source\AbstractVertex.h" />
     <ClInclude Include="source\Common.h" />
-    <ClInclude Include="source\FBXLoader.h" />
     <ClInclude Include="source\FBXUtility.h" />
+    <ClInclude Include="source\Mesh.h" />
     <ClInclude Include="source\targetver.h" />
+    <ClInclude Include="source\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Common.cpp">
@@ -172,6 +175,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="source\FBXUtility.cpp" />
+    <ClCompile Include="source\Mesh.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
