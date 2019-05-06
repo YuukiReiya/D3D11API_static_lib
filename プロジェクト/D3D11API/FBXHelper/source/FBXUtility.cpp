@@ -159,7 +159,7 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 	SetupIndexBuffer(fbxMesh, mesh);
 
 	//	法線
-	SetupNormal(fbxMesh, mesh);
+	//SetupNormal(fbxMesh, mesh);
 
 	return true;
 }
@@ -171,6 +171,7 @@ void FBX::FBXUtility::SetupVertex(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractM
 	int i = 0;
 	while (i < fbxMesh->GetControlPointsCount())
 	{
+		//TODO:vector<Vertex>型のインスタンスを宣言し、push_backすることでresizeを使わなくて良くなる
 		mesh->vertex[i].x = v[i][0];
 		mesh->vertex[i].y = v[i][1];
 		mesh->vertex[i].z = v[i][2];
@@ -181,9 +182,9 @@ void FBX::FBXUtility::SetupVertex(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractM
 
 void FBX::FBXUtility::SetupIndexBuffer(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractMesh * mesh)
 {
-	size_t index = 0;
+	int index = 0;
 	auto vertices= fbxMesh->GetPolygonVertices();
-	while (index < static_cast<size_t>(fbxMesh->GetPolygonVertexCount()))
+	while (index < fbxMesh->GetPolygonVertexCount())
 	{
 		mesh->indexBuffer.push_back(vertices[index++]);
 	}
@@ -200,7 +201,7 @@ void FBX::FBXUtility::SetupNormal(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractM
 
 	if (!isGet) { return; }
 
-	size_t index = 0;
+	int index = 0;
 	while (index < normal->GetDirectArray().GetCount())
 	{
 		mesh->vertex[index].normal.x = normal->GetDirectArray().GetAt(index)[0];
