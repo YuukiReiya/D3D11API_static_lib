@@ -153,7 +153,7 @@ namespace API{
 			/*!
 				@var	c_VertexZ
 				@brief	板ポリの頂点生成位置
-				@detail	CreateVertex関数で生成する頂点のZ位置
+				@detail	SetupVertex関数で生成する頂点のZ位置
 				@value	0
 			*/
 			static constexpr float c_VertexZ = 0;
