@@ -14,7 +14,7 @@ namespace Abstract{
 		/*!
 			@brief	コンストラクタ
 		*/
-		AbstractVertex() :x(0), y(0), z(0), normal(Normal()), uv(UV()) {}
+		AbstractVertex() :x(0), y(0), z(0), w(0), normal(Normal()), uv(UV()) {}
 
 		/*!
 			@brief	デストラクタ
