@@ -13,6 +13,8 @@
 #include <SpriteShader.h>
 #include <Sprite.h>
 #include <MyGame.h>
+#include <MeshShader.h>
+#include <Mesh.h>
 
 /*!
 	@brief	usingディレクティブ
@@ -41,10 +43,17 @@ shared_ptr<Texture>g_pTexture;
 shared_ptr<Texture>g_pTextures[3];
 
 /*!
+	@var	g_pMesh
+	@brief	メッシュ
+*/
+shared_ptr<Mesh>g_pMesh;
+
+/*!
 	@var	g_pShader
 	@brief	シェーダー
 */
 shared_ptr<D3D11::Graphic::AbstractShader>g_pShader;
+shared_ptr<D3D11::Graphic::AbstractShader>g_pMeshShader;
 
 /*!
 	@brief	コンストラクタ
@@ -75,10 +84,25 @@ void SampleScene::Initialize()
 
 	g_pShader	= make_shared<D3D11::Graphic::SpriteShader>();
 
+	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
+
+	//	メッシュ
+	{
+		g_pMesh = make_shared<Mesh>();
+		g_pMesh->Initialize("test.yfm");
+		g_pMesh->SetupShader(g_pMeshShader.get());
+	}
+
+
 	//	プリコンパイル済みシェーダーは使用せず動的コンパイルを行う
 	if (FAILED(g_pShader->DynamicSetup())) {
 		ErrorLog("失敗");
 	}
+
+	if (FAILED(g_pMeshShader->DynamicSetup())) {
+		ErrorLog("メッシュシェーダー失敗");
+	}
+
 	g_pTexture->Initialize("Resources/red.png");
 	g_pTextures[0]->Initialize("Resources/blue.png");
 
@@ -144,7 +168,13 @@ void SampleScene::Update()
 */
 void SampleScene::Render()
 {
-//	g_pSprite->Render(g_pTexture.get());
-	g_pSprite->Render();
-	g_pSprites[0]->Render();
+	//g_pSprite->Render(g_pTexture.get());
+	//g_pSprite->Render();
+	//g_pSprites[0]->Render();
+
+	//	メッシュ
+	{
+		g_pMesh->Render();
+
+	}
 }
