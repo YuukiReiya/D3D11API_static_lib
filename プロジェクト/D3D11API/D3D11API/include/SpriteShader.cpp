@@ -86,6 +86,13 @@ HRESULT D3D11::Graphic::SpriteShader::Setup()
 	return S_OK;
 }
 
+/*!
+	@fn			Setup
+	@brief		ファイルの階層を行い、プリコンパイル済みシェーダーファイルを利用したセットアップを行う
+	@detail		オーバーロード
+	@param[in]	ファイルの階層パス
+	@NOTE		シェーダーファイルの配置位置が人によって変わってしまうため、ディレクトリだけでも設定出来るようにする
+*/
 HRESULT D3D11::Graphic::SpriteShader::Setup(std::string & directory)
 {
 	//	ディレクトリ設定
