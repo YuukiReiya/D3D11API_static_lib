@@ -1,12 +1,11 @@
 #include <iostream>
-//#include <Common.h>
 #include <FBXUtility.h>
-//#include <AbstractMesh.h>
 #include <Mesh.h>
-
+#include <IOMesh.h>
 
 using namespace FBX;
 using namespace Utility;
+
 int main()
 {
 	//	ƒƒ‚ƒŠƒŠ[ƒN‰ÓŠ“Á’è
@@ -36,9 +35,10 @@ int main()
 	else {
 		printf("¸”s2");
 	}
-	FBXUtility::Destroy();
-	FBXUtility::Destroy();
 
+	IOMesh::Output("../", "test", mesh);
+
+	FBXUtility::Destroy();
 	delete mesh;
 	system("pause");
 	return 0;
