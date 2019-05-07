@@ -153,7 +153,7 @@ namespace API{
 			/*!
 				@var	c_VertexZ
 				@brief	板ポリの頂点生成位置
-				@detail	SetupVertex関数で生成する頂点のZ位置
+				@detail	CreateVertexBuffer関数で生成する頂点のZ位置
 				@value	0
 			*/
 			static constexpr float c_VertexZ = 0;
@@ -168,7 +168,7 @@ namespace API{
 			HRESULT CreateVertex(DirectX::XMINT2 size);
 
 			/*!
-				@fn			SetupVertex
+				@fn			CreateVertexBuffer
 				@brief		頂点の設定
 			*/
 			void SetupVertex();

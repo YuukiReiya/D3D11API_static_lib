@@ -513,7 +513,7 @@ HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 }
 
 /*!
-	@fn			SetupVertex
+	@fn			CreateVertexBuffer
 	@brief		í∏ì_ÇÃê›íË
 */
 void API::Sprite::SetupVertex()
