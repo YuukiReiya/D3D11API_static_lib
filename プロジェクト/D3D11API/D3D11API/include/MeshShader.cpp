@@ -65,6 +65,13 @@ HRESULT D3D11::Graphic::MeshShader::DynamicSetup()
 		return E_FAIL;
 	}
 
+	//	頂点レイアウト作成
+	hr = CreateInputLayout(pBlob.Get());
+	if (FAILED(hr)) {
+		ErrorLog("\"MeshShader\" input layout is not create!");
+		return E_FAIL;
+	}
+
 	//	ブロブの開放
 	pBlob->Release();
 	pBlob.Reset();
@@ -110,4 +117,21 @@ HRESULT D3D11::Graphic::MeshShader::CreateConstantBuffer()
 	cb.Usage = D3D11_USAGE_DYNAMIC;
 
 	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(&cb, NULL, m_pConstantBuffer.GetAddressOf());
+}
+
+HRESULT D3D11::Graphic::MeshShader::CreateInputLayout(ID3DBlob * pBlob)
+{
+	// 頂点インプットレイアウト定義
+	D3D11_INPUT_ELEMENT_DESC layout[] = {
+		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
+	//	頂点レイアウトの要素数
+	uint32_t numElements = sizeof(layout) / sizeof(*layout);
+	return Direct3D11::GetInstance().GetDevice()->CreateInputLayout(
+		layout,
+		numElements,
+		pBlob->GetBufferPointer(),
+		pBlob->GetBufferSize(),
+		m_pVertexLayout.GetAddressOf()
+	);
 }

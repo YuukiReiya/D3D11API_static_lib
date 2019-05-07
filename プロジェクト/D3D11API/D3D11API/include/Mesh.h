@@ -101,21 +101,30 @@ namespace API{
 		void SetupBindShader();
 
 		/*!
-			@fn			SetupVertex
+			@fn			CreateVertexBuffer
 			@brief		メッシュの頂点を生成
 			@detail		静的関数
+			@param[in]	設定するメッシュのポインタ
 			@param[in]	構成する頂点情報
-			@param[in]	構成する頂点インデックス
-			@param[in]	メッシュのポインタ
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
-		static HRESULT SetupVertex(Mesh*mesh, std::vector<D3D11::Graphic::MeshVertex>vertex, std::vector<uint32_t>index);
+		static HRESULT CreateVertexBuffer(Mesh*mesh, std::vector<D3D11::Graphic::MeshVertex>vertex);
 
 		/*!
 			@fn		SetupVertexBuffer
 			@brief	頂点バッファ設定
 		*/
 		void SetupVertexBuffer();
+
+		/*!
+			@fn			CreateIndexBuffer
+			@brief		インデックスバッファ作成
+			@detail		静的関数
+			@param[in]	設定するメッシュのポインタ
+			@param[in]	頂点のインデックス
+			@return		成功:S_OK 失敗:E_FAIL
+		*/
+		static HRESULT CreateIndexBuffer(Mesh*mesh, std::vector<uint32_t>index);
 
 		/*!
 			@fn		SetupVertexBuffer

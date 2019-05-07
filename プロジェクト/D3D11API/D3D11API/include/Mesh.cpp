@@ -48,11 +48,17 @@ HRESULT Mesh::Initialize(std::string path)
 	auto data = Helper::MeshReadHelper::Read(path);
 
 	//	頂点生成
-	if (FAILED(SetupVertex(this, data.vertices, data.indices))) {
+	if (FAILED(CreateVertexBuffer(this, data.vertices))) {
 		return E_FAIL;
 	}
 	//	頂点バッファ設定
 	SetupVertexBuffer();
+
+	//	インデックスバッファ作成
+	if (FAILED(CreateIndexBuffer(this, data.indices))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -71,17 +77,19 @@ void Mesh::Render()
 	//	コンスタントバッファのセット
 	SetupConstantBuffer();
 
+	SetupIndexBuffer();
+
 	//	描画
-	//Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(
-	//	m_VertexIndex.size(),
-	//	m_VertexIndex[0],
-	//	0
-	//);
-	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexedInstanced(
+	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(
 		m_VertexIndex.size(),
-		1,
-		0, 0, 0
+		0,
+		0
 	);
+	//Direct3D11::GetInstance().GetImmediateContext()->DrawIndexedInstanced(
+	//	m_VertexIndex.size(),
+	//	1,
+	//	0, 0, 0
+	//);
 }
 
 /*!
@@ -203,7 +211,7 @@ void API::Mesh::SetupBindShader()
 }
 
 /*!
-	@fn			SetupVertex
+	@fn			CreateVertexBuffer
 	@brief		メッシュの頂点を生成
 	@detail		静的関数
 	@param[in]	構成する頂点情報
@@ -211,7 +219,7 @@ void API::Mesh::SetupBindShader()
 	@param[in]	メッシュのポインタ
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::Mesh::SetupVertex(Mesh * mesh, std::vector<MeshVertex> vertex, std::vector<uint32_t> index)
+HRESULT API::Mesh::CreateVertexBuffer(Mesh * mesh, std::vector<MeshVertex> vertex)
 {
 	//	頂点定義
 	std::vector<MeshVertex>v;
@@ -224,16 +232,13 @@ HRESULT API::Mesh::SetupVertex(Mesh * mesh, std::vector<MeshVertex> vertex, std:
 		v.push_back(tmp);
 	}
 
-	//	頂点インデックス
-	mesh->m_VertexIndex = index;
-
 	//	バッファ定義
 	D3D11_BUFFER_DESC bd;
 	SecureZeroMemory(&bd, sizeof(bd));
-	bd.Usage = D3D11_USAGE_DEFAULT;						// GPUから読み込みと書き込みを許可
-	//bd.ByteWidth = sizeof(MeshVertex)*vertex.size();	// バッファのサイズ
-	bd.ByteWidth = sizeof(v);							// バッファのサイズ
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;			// 頂点バッファとしてレンダリングパイプラインにバインド
+	bd.Usage = D3D11_USAGE_DEFAULT;								// GPUから読み込みと書き込みを許可
+	bd.ByteWidth = sizeof(MeshVertex)*vertex.size();			// バッファのサイズ
+	//bd.ByteWidth = sizeof(v);									// バッファのサイズ
+	bd.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_VERTEX_BUFFER;	// 頂点バッファとしてレンダリングパイプラインにバインド
 
 	// サブリソースのデータを定義
 	D3D11_SUBRESOURCE_DATA subResourceData;
@@ -250,7 +255,7 @@ HRESULT API::Mesh::SetupVertex(Mesh * mesh, std::vector<MeshVertex> vertex, std:
 		mesh->m_pVertexBuffer.GetAddressOf()
 	);
 	if (FAILED(hr)) {
-		std::string error = "MeshBuffer is not Create!";
+		std::string error = "Mesh vertex buffer is not Create!";
 		ErrorLog(error);
 		return E_FAIL;
 	}
@@ -274,6 +279,47 @@ void API::Mesh::SetupVertexBuffer()
 		&offset
 	);
 
+}
+
+/*!
+	@fn			CreateIndexBuffer
+	@brief		インデックスバッファ作成
+	@detail		静的関数
+	@param[in]	設定するメッシュのポインタ
+	@param[in]	頂点のインデックス
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::Mesh::CreateIndexBuffer(Mesh * mesh, std::vector<uint32_t> index)
+{
+	mesh->m_pIndexBuffer.Reset();
+	mesh->m_VertexIndex = index;
+
+	//	バッファ定義
+	D3D11_BUFFER_DESC bd;
+	SecureZeroMemory(&bd, sizeof(bd));
+	bd.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(uint32_t)*index.size();
+	bd.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_INDEX_BUFFER;
+	
+	// サブリソースのデータを定義
+	D3D11_SUBRESOURCE_DATA subResourceData;
+	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
+	subResourceData.pSysMem = mesh->m_VertexIndex.data();		// 初期化データへのポインタ
+
+	HRESULT hr;
+	hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&subResourceData,
+		mesh->m_pIndexBuffer.GetAddressOf()
+	);
+	if (FAILED(hr)) {
+		std::string error = "Mesh index buffer is not Create!";
+		ErrorLog(error);
+		return E_FAIL;
+	}
+
+
+	return S_OK;
 }
 
 /*!

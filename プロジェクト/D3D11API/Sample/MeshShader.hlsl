@@ -20,7 +20,7 @@ struct PS_INPUT
 //
 //
 //バーテックスシェーダー
-PS_INPUT VS( float4 Pos : POSITION ,float2 UV : TEXCOORD) 
+PS_INPUT VS( float4 Pos : POSITION) 
 {
 	/*! 宣言 */
 	PS_INPUT Out;
@@ -43,7 +43,7 @@ float4 PS( PS_INPUT Input ) : SV_Target
 	//float4 color = g_Texture.Sample(g_Sampler, Input.UV);
 
 	float2 tmp = {1,1};
-	float4 color = g_Texture.Sample(g_Sampler, tmp);
+float4 color = {1,0,0,1};//g_Texture.Sample(g_Sampler, tmp);
 
 	/*! カラー計算 */
 	{

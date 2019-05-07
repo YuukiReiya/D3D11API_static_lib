@@ -47,6 +47,14 @@ namespace D3D11 {
 			HRESULT CreateConstantBuffer();
 			
 			/*!
+				@fn			CreateInputLayout
+				@brief		頂点レイアウトの作成
+				@param[in]	コンパイル済みブロブ
+				@return		S_OK:成功 E_FAIL:失敗
+			*/
+			HRESULT CreateInputLayout(ID3DBlob*pBlob);
+
+			/*!
 				@var	m_Directory
 				@brief	シェーダーファイルの階層文字列
 			*/
