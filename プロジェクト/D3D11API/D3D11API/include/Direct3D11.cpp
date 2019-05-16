@@ -307,10 +307,10 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	SecureZeroMemory(&vp, sizeof(vp));
 	vp.Width	= static_cast<float>(m_WindowWidth);		// ビューポート領域の幅
 	vp.Height	= static_cast<float>(m_WindowHeight);		// ビューポート領域の高さ
-	//vp.MinDepth = 0.0f;									// ビューポート領域の深度最小値(ニア・クリッピング距離)
+	vp.MinDepth = 0.0f;									// ビューポート領域の深度最小値(ニア・クリッピング距離)
 	vp.MaxDepth = 1.0f;										// ビューポート領域の深度最大値(ファー・クリッピング距離)
-	//vp.TopLeftX = 0;										// ビューポート領域の左上x座標
-	//vp.TopLeftY = 0;										// ビューポート領域の左上y座標
+	vp.TopLeftX = 0;										// ビューポート領域の左上x座標
+	vp.TopLeftY = 0;										// ビューポート領域の左上y座標
 	m_pImmediateContext->RSSetViewports(
 		1,			// ビューポートの数
 		&vp			// 設定するビューポート配列
