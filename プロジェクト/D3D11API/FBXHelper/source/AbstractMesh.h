@@ -24,6 +24,12 @@ namespace Abstract{
 		std::vector<Utility::Vertex>vertex;
 		//std::shared_ptr<std::vector<AbstractVertex>>vertex;
 		std::vector<int>indexBuffer;
+
+		struct UV
+		{
+			float u, v;
+		};
+		std::vector<UV>uv;
 		virtual void Setup()abstract;
 	protected:
 	private:
