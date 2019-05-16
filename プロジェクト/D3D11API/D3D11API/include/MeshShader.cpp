@@ -4,6 +4,8 @@
 #include "Mesh.h"
 #include "MyGame.h"
 #include <wrl/client.h>
+#include "MeshCompVS.h"
+#include "MeshCompPS.h"
 
 /*!
 	@brief	usingディレクティブ
@@ -36,7 +38,80 @@ MeshShader::~MeshShader()
 
 HRESULT D3D11::Graphic::MeshShader::Setup()
 {
-	return E_FAIL;
+	HRESULT hr;
+	auto& dev = Direct3D11::GetInstance();
+	//	頂点レイアウト
+	{
+		D3D11_INPUT_ELEMENT_DESC desc[]
+		{
+			{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,	0,							 0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,		0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		};
+		hr = dev.GetDevice()->CreateInputLayout(
+			desc,
+			GetArraySize(desc),
+			g_vs_main,
+			sizeof(g_vs_main),
+			m_pVertexLayout.GetAddressOf()
+		);
+		if (FAILED(hr)) {
+			ErrorLog("\"MeshShader\" input layout is not create!");
+			return E_FAIL;
+		}
+	}
+
+	//	頂点シェーダー
+	{
+		hr = dev.GetDevice()->CreateVertexShader(
+			&g_vs_main,
+			sizeof(g_vs_main),
+			NULL,
+			m_pVertexShader.GetAddressOf()
+		);
+		if (FAILED(hr)) {
+			ErrorLog("\"MeshShader\" is failed create vertex shader");
+			return E_FAIL;
+		}
+
+	}
+
+	//	ピクセルシェーダー
+	{
+		hr = dev.GetDevice()->CreatePixelShader(
+			&g_ps_main,
+			sizeof(g_ps_main),
+			NULL,
+			m_pPixelShader.GetAddressOf()
+		);
+		if (FAILED(hr)) {
+			ErrorLog("\"MeshShader\" is failed create pixel shader");
+			return E_FAIL;
+		}
+
+
+	}
+
+	//	コンスタントバッファ
+	{
+		D3D11_BUFFER_DESC cb;
+		cb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+		cb.ByteWidth = sizeof(MeshShaderBuffer);
+		cb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+		cb.MiscFlags = 0;
+		cb.StructureByteStride = 0;
+		cb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+		hr = dev.GetDevice()->CreateBuffer(
+			&cb,
+			NULL,
+			m_pConstantBuffer.GetAddressOf()
+		);
+		if (FAILED(hr)) {
+			std::string error = "\"MeshShader\" ConstantBuffer is not create!";
+			ErrorLog(error);
+			return E_FAIL;
+		}
+	}
+	return S_OK;
 }
 
 HRESULT D3D11::Graphic::MeshShader::DynamicSetup()
@@ -49,7 +124,6 @@ HRESULT D3D11::Graphic::MeshShader::DynamicSetup()
 
 	//	ハンドラ
 	HRESULT hr;
-
 
 	//	ファイルを頂点シェーダー用にコンパイル
 	hr = DynamicCompile(path, c_VSEntryName.data(), c_VSProfile.data(), pBlob.GetAddressOf());
@@ -86,6 +160,7 @@ HRESULT D3D11::Graphic::MeshShader::DynamicSetup()
 	hr = CreatePixelShader(pBlob.Get(), m_pPixelShader.GetAddressOf());
 	if (FAILED(hr)) {
 		ErrorLog("\"MeshShader\" is failed create pixel shader");
+		return E_FAIL;
 	}
 
 	//	ブロブの開放
@@ -124,6 +199,7 @@ HRESULT D3D11::Graphic::MeshShader::CreateInputLayout(ID3DBlob * pBlob)
 	// 頂点インプットレイアウト定義
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
 		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "COLOR",	 0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 	};
 	//	頂点レイアウトの要素数
 	uint32_t numElements = sizeof(layout) / sizeof(*layout);

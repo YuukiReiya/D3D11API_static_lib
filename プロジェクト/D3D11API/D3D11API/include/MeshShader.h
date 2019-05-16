@@ -37,7 +37,6 @@ namespace D3D11 {
 				@detail	オーバーライド
 			*/
 			HRESULT DynamicSetup()override final;
-
 		private:
 			/*!
 				@fn		CreateConstantBuffer
@@ -65,12 +64,6 @@ namespace D3D11 {
 				@brief	HLSLのファイル名
 			*/
 			static constexpr std::string_view c_HLSL = "MeshShader.hlsl";
-
-			/*!
-				@var	c_CSO
-				@brief	CSOのファイル名
-			*/
-			static constexpr std::string_view c_CSO = "SpriteShader.cso";
 
 			/*!
 				@var	c_VSEntryName
