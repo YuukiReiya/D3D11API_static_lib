@@ -49,7 +49,9 @@ void SceneRoot::Initialize()
 */
 void SceneRoot::Finalize()
 {
-	m_pCurrentScene->Finalize();
+	if (m_pCurrentScene != nullptr) {
+		m_pCurrentScene->Finalize();
+	}
 }
 
 /*!

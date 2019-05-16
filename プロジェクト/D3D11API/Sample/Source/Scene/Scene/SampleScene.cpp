@@ -15,6 +15,9 @@
 #include <MyGame.h>
 #include <MeshShader.h>
 #include <Mesh.h>
+#include <Hoge.h>
+
+//Hoge*gh;
 
 /*!
 	@brief	usingディレクティブ
@@ -70,6 +73,7 @@ void SampleScene::Initialize()
 {
 	cout << "sample init" << endl;
 	
+#pragma region Sprite
 	g_pSprite	= make_shared<Sprite>();
 	for (auto& it : g_pSprites)
 	{
@@ -84,35 +88,38 @@ void SampleScene::Initialize()
 
 	g_pShader	= make_shared<D3D11::Graphic::SpriteShader>();
 
-	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
-
-	//	メッシュ
-	{
-		g_pMesh = make_shared<Mesh>();
-		g_pMesh->Initialize("test.yfm");
-		g_pMesh->SetupShader(g_pMeshShader.get());
-	}
-
-
 	//	プリコンパイル済みシェーダーは使用せず動的コンパイルを行う
 	if (FAILED(g_pShader->DynamicSetup())) {
 		ErrorLog("失敗");
 	}
 
-	if (FAILED(g_pMeshShader->DynamicSetup())) {
-		ErrorLog("メッシュシェーダー失敗");
-	}
-
 	g_pTexture->Initialize("Resources/red.png");
 	g_pTextures[0]->Initialize("Resources/blue.png");
-
-
 
 	g_pSprite->SetupShader(g_pShader.get());
 	g_pSprite->SetupTexture(g_pTexture.get());
 
 	g_pSprites[0]->SetupShader(g_pShader.get());
 	g_pSprites[0]->SetupTexture(g_pTextures[0].get());
+#pragma endregion
+
+#pragma region Mesh
+	g_pMesh = make_shared<Mesh>();
+	if (FAILED(g_pMesh->Initialize("test.yfm"))) {
+		exit(0);
+	}
+#pragma endregion
+	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
+	if (FAILED(g_pMeshShader->Setup())) {
+		exit(0);
+	}
+
+	g_pMesh->SetupShader(g_pMeshShader.get());
+
+
+
+	//gh = new Hoge();
+	//gh->Init();
 }
 
 /*!
@@ -175,6 +182,10 @@ void SampleScene::Render()
 	//	メッシュ
 	{
 		g_pMesh->Render();
+	}
 
+	//	頂点バッファ＆インデックスバッファ
+	{
+		//gh->Draw();
 	}
 }
