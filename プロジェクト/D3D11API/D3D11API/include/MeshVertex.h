@@ -15,10 +15,9 @@ namespace D3D11 {
 			@struct	MeshVertex
 			@brief	メッシュクラスで扱う頂点の構造体
 		*/
-		struct MeshVertex
+		struct alignas(16) MeshVertex
 			:public BaseVertex
 		{
-			//int m_Index;
 		};
 
 	}
