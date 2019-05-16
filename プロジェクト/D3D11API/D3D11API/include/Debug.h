@@ -27,7 +27,7 @@
 	@brief	デバッグコンソールの生成
 	@detail	Win32APIの関数を使用している
 */
-#define DEBUG_CONSOLE
+//#define DEBUG_CONSOLE
 
 /*!
 	@def	DEBUG_SPRITE
