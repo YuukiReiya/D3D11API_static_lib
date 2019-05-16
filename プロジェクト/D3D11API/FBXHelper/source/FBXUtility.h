@@ -46,6 +46,8 @@ namespace FBX {
 
 		static void SetupNormal(fbxsdk::FbxMesh*fbxMesh, Abstract::AbstractMesh*mesh);
 
+		static void SetupUV(fbxsdk::FbxMesh*fbxMesh, Abstract::AbstractMesh*mesh);
+
 		static void Destroy();
 
 		/*!

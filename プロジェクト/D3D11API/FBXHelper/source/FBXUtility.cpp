@@ -8,6 +8,8 @@
 #include <crtdbg.h>
 #define	new	new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
+#include <fstream>
+#include <algorithm>
 
 /*!
 	@brief	usingディレクティブ
@@ -119,11 +121,14 @@ bool FBX::FBXUtility::Load(std::string path)
 	return true;
 }
 
+vector<string>g_vUVSetName;
+vector<string>g_vTexPath;
 bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
-{	
+{
 	//	fbx読み込み
 	try
 	{
+
 		if (!(*m_pImporter.get())->Initialize(
 			path.c_str(),
 			-1,
@@ -144,9 +149,33 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 		return false;
 	}
 
+	//	シーンにインポート
+	try
+	{
+		if (!(*m_pImporter.get())->Import(
+			*m_pScene.get()
+		)) {
+			throw path;
+		}
+	}
+	catch (string&str)
+	{
+#pragma region 例外処理
+#if defined DEBUG||_DEBUG
+		std::cout << "Could not output \"" << str << "\" to the scene" << endl;
+		std::system("pause");
+		std::exit(EXIT_FAILURE);
+#endif
+#pragma endregion
+		return false;
+	}
+
+	ifstream is(path);
+	if (is.fail()) {
+		cout << endl << "そもそもメッシュがねーよ" << endl;
+	}
 
 	auto fbxMesh = (*m_pScene.get())->GetSrcObject<fbxsdk::FbxMesh>(0);
-
 	if (!fbxMesh) {
 		cout << endl << "メッシュ情報がねーよ" << endl;
 		return false;
@@ -161,6 +190,167 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 	//	法線
 	//SetupNormal(fbxMesh, mesh);
 
+	//	UV
+	//SetupUV(fbxMesh, mesh);
+
+	//参考:http://shikemokuthinking.blogspot.com/2013/08/fbx.html
+	
+	//	UVセット
+	//{
+	//	auto uvSetCount = fbxMesh->GetElementUVCount();
+	//	for (int i = 0; i < uvSetCount; ++i)
+	//	{
+	//		//	buffer
+	//		auto buf = fbxMesh->GetElementUV(i);
+
+	//		//	mapping
+	//		auto mapMode = buf->GetMappingMode();
+
+	//		//	ref
+	//		auto refMode = buf->GetReferenceMode();
+
+	//		//	uv num
+	//		auto uvCount = buf->GetDirectArray().GetCount();
+
+	//		//	mapping switch
+	//		switch (mapMode)
+	//		{
+	//		case fbxsdk::FbxLayerElement::eNone:break;
+	//		case fbxsdk::FbxLayerElement::eByControlPoint:break;
+	//		case fbxsdk::FbxLayerElement::eByPolygonVertex:
+	//		{
+	//			switch (refMode)
+	//			{
+	//			case fbxsdk::FbxLayerElement::eDirect:break;
+	//			case fbxsdk::FbxLayerElement::eIndex:break;
+	//			case fbxsdk::FbxLayerElement::eIndexToDirect:
+	//			{
+	//				auto uvIndex = &buf->GetIndexArray();
+	//				auto uvIndexCount = uvIndex->GetCount();
+
+	//				//	uv
+	//				Abstract::AbstractMesh::UV temp;
+	//				for (int j = 0; j < uvIndexCount; ++j)
+	//				{
+	//					temp.u = (float)buf->GetDirectArray().GetAt(uvIndex->GetAt(j))[0];
+
+	//					//NOTE:BlenerのUVの原点位置は(0,0)が左下
+	//					//※DirectXのUV原点位置は左上(0,0)。↓ではそのコンバートを行っている
+	//					temp.v = 1.0f - (float)buf->GetDirectArray().GetAt(uvIndex->GetAt(j))[1];
+	//					mesh->uv.push_back(temp);
+	//				}
+
+	//				//	uv set name
+	//				auto name = buf->GetName();
+	//				cout << "name:" << name << endl;
+	//				g_vUVSetName.push_back(name);
+	//			}
+	//				break;
+	//			default:
+	//				break;
+	//			}
+	//		}
+
+	//			break;
+	//		case fbxsdk::FbxLayerElement::eByPolygon:break;
+	//		case fbxsdk::FbxLayerElement::eByEdge:break;
+	//		case fbxsdk::FbxLayerElement::eAllSame:break;
+	//		default:
+	//			break;
+	//		}
+	//	}
+	//}
+
+#pragma region Material
+	//	マテリアル
+	//{
+	//	auto node = fbxMesh->GetNode();
+	//	auto matCount = node->GetMaterialCount();
+
+	//	for (int i = 0; i < matCount; ++i)
+	//	{
+	//		//	マテリアル
+	//		auto mat = node->GetMaterial(i);
+
+	//		//	プロパティ
+	//		auto pro = mat->FindProperty(FbxSurfaceMaterial::sDiffuse);
+
+	//		//	テクスチャ数
+	//		auto layerdTexCount = pro.GetSrcObjectCount();
+
+	//		if (0 < layerdTexCount) {
+	//			for (int j = 0; j < layerdTexCount; ++j)
+	//			{
+	//				//	レイヤードテクスチャ取得
+	//				auto layeredTex = pro.GetSrcObject<FbxLayeredTexture>(j);
+
+	//				//	レイヤードテクスチャNULL判定
+	//				if (!layeredTex) { continue; }
+
+	//				//	レイヤー数
+	//				auto texCount = layeredTex->GetSrcObjectCount<FbxFileTexture>();
+
+	//				for (int k = 0; k < texCount; ++k)
+	//				{
+	//					auto tex = pro.GetSrcObject<FbxFileTexture>(k);
+
+	//					if (!tex)
+	//					{
+	//						cout << "テクスチャ取得失敗" << endl;
+	//						continue;
+	//					}
+
+	//					//	tex name
+	//					//auto name = tex->GetName();
+	//					auto name = tex->GetRelativeFileName();
+	//					g_vTexPath.push_back(name);
+	//					//	uv set name
+	//					auto uvsetName = tex->UVSet.Get().Buffer();
+	//					g_vUVSetName.push_back(uvsetName);
+	//					//	
+	//				}
+	//			}
+	//		}
+	//		else {
+	//			//	テクスチャ取得
+	//			auto fTexCount = pro.GetSrcObjectCount<FbxFileTexture>();
+
+	//			if (0 < fTexCount) 
+	//			{
+	//				for (int j = 0; j < fTexCount; ++j)
+	//				{
+	//					auto tex = pro.GetSrcObject<FbxFileTexture>();
+
+	//					if (!tex)
+	//					{
+	//						cout << "テクスチャ取得失敗" << endl;
+	//						continue;
+	//					}
+
+	//					//	tex name 
+	//					//auto texName = tex->GetName();
+	//					auto texName = tex->GetRelativeFileName();
+	//					g_vTexPath.push_back(texName);
+	//					//	uv set name
+	//					auto uvsetName = tex->UVSet.Get().Buffer();
+	//					g_vUVSetName.push_back(uvsetName);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+#pragma endregion
+
+	//cout << "texpath" << endl;
+	//for (auto it : g_vTexPath)
+	//{
+	//	cout << it << endl;
+	//}
+	//cout <<endl<< "uvsetname" << endl;
+	//for (auto it : g_vUVSetName)
+	//{
+	//	cout << it << endl;
+	//}
 	return true;
 }
 
@@ -209,6 +399,61 @@ void FBX::FBXUtility::SetupNormal(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractM
 		mesh->vertex[index].normal.z = normal->GetDirectArray().GetAt(index)[2];
 		index++;
 	}
+}
+
+void FBX::FBXUtility::SetupUV(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractMesh * mesh)
+{
+	auto layer = fbxMesh->GetLayer(0);
+	auto uvs = layer->GetUVs();
+	auto a = uvs->GetMappingMode();
+	if (uvs->GetMappingMode() != FbxLayerElement::eByPolygonVertex) {
+		cout << "uv取得失敗" << endl;
+		return;
+	}
+	auto refMode = uvs->GetReferenceMode();
+
+	FbxArray<FbxVector2>uvArray;
+	uvs->GetDirectArray().CopyTo(uvArray);
+
+	switch (refMode)
+	{
+	case fbxsdk::FbxLayerElement::eDirect:
+		for (int i = 0; i < uvArray.Size(); ++i)
+		{
+			float u = (float)uvArray.GetAt(i)[0];
+			float v = (float)uvArray.GetAt(i)[1];
+			mesh->uv.push_back({ u,v });
+		}
+		break;
+	case fbxsdk::FbxLayerElement::eIndex:
+		cout << "設定なし" << endl;
+		break;
+	case fbxsdk::FbxLayerElement::eIndexToDirect:
+		//NOTE:参考は "y:1.0f-uvArray.Get(index)[1]"を代入している
+		for (int i = 0; i < uvArray.Size(); ++i)
+		{
+			auto index = uvs->GetIndexArray().GetAt(i);
+			float u = (float)uvArray.GetAt(index)[0];
+			float v = (float)uvArray.GetAt(index)[1];
+			mesh->uv.push_back({ u, v });
+		}
+		break;
+	default:
+		break;
+	}
+	vector<FbxVector2>vf;
+	for (auto it : mesh->uv)
+	{
+		vf.push_back({ (double)it.u,(double)it.v });
+	}
+	//ソート前
+	vf.erase(unique(vf.begin(), vf.end()), vf.end());
+	auto tmp = vf;
+	int bNum = tmp.size();
+	//ソート後
+	sort(vf.begin(),vf.end());
+	//	重複削除
+	int aNum = vf.size();
 }
 
 void FBX::FBXUtility::Destroy()
