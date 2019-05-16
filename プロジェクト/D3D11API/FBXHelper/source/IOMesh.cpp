@@ -20,9 +20,17 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ab
 	ofs << endl;
 
 	//	頂点インデックス
-	ofs << "//i" << endl;
+	//ofs << "//i" << endl;
 	for (auto it : mesh->indexBuffer)
 	{
 		ofs << it << c_Space;
+	}
+	ofs << endl;
+
+	//	uv
+	ofs << "//uv" << endl;
+	for (auto it : mesh->uv)
+	{
+		ofs << "{" << it.u << c_Space << it.v << "}";// << endl;
 	}
 }
