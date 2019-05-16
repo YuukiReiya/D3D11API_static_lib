@@ -15,6 +15,7 @@
 #include "MeshVertex.h"
 #include "Transform.h"
 #include "Color.h"
+#include <wrl/client.h>
 
 namespace D3D11 {
 	namespace Graphic {
@@ -117,6 +118,11 @@ namespace API{
 		void SetupVertexBuffer();
 
 		/*!
+			@fn		SetupInputLayout
+			@brief	頂点レイアウトの設定
+		*/
+		void SetupInputLayout();
+		/*!
 			@fn			CreateIndexBuffer
 			@brief		インデックスバッファ作成
 			@detail		静的関数
@@ -131,6 +137,8 @@ namespace API{
 			@brief	インデックスバッファ設定
 		*/
 		void SetupIndexBuffer();
+
+		std::vector<D3D11::Graphic::MeshVertex>m_Vertex;
 
 		/*!
 			@var	m_VertexIndex
@@ -157,5 +165,8 @@ namespace API{
 			@brief	シェーダーオブジェクトの弱参照
 		*/
 		std::weak_ptr<D3D11::Graphic::AbstractShader*>m_pShader;
+		
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
+		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSampler;
 	};
 }
