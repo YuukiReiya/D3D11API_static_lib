@@ -17,7 +17,7 @@
 #include <Mesh.h>
 #include <Hoge.h>
 
-//Hoge*gh;
+Hoge*gh;
 
 /*!
 	@brief	usingディレクティブ
@@ -118,8 +118,8 @@ void SampleScene::Initialize()
 
 
 
-	//gh = new Hoge();
-	//gh->Init();
+	gh = new Hoge();
+	gh->Init();
 }
 
 /*!
@@ -129,7 +129,7 @@ void SampleScene::Initialize()
 void SampleScene::Finalize()
 {
 	cout << "sample destroy:" << endl;
-	
+	delete gh;
 }
 
 /*!
@@ -181,11 +181,11 @@ void SampleScene::Render()
 
 	//	メッシュ
 	{
-		g_pMesh->Render();
+	//	g_pMesh->Render();
 	}
 
 	//	頂点バッファ＆インデックスバッファ
 	{
-		//gh->Draw();
+		gh->Draw();
 	}
 }
