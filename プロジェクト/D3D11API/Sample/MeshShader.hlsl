@@ -1,8 +1,4 @@
 //グローバル
-
-Texture2D g_Texture : register(t0);
-SamplerState g_Sampler : register(s0);
-
 cbuffer global
 {
 	matrix g_World;			/*!< ワールド行列 */
@@ -14,25 +10,27 @@ cbuffer global
 struct PS_INPUT
 {
 	float4 Pos : SV_POSITION;
-	//float2 UV : TEXCOORD;
+	float4 Col : COLOR0;
 };
 
 //
 //
 //バーテックスシェーダー
-PS_INPUT VS( float4 Pos : POSITION) 
+PS_INPUT VS( float4 Pos : POSITION,float Col : COLOR0) 
 {
 	/*! 宣言 */
 	PS_INPUT Out;
 
 	/*! 座標計算 */
 	{
-		matrix wvp = mul(g_World, (mul(g_View, g_Proj)));	/*!< 変換 */
-		matrix m = transpose(wvp);						/*!< 転置行列 */
-
-		Out.Pos = mul(Pos, m);
+		Pos = mul(Pos, g_World);
+		Pos = mul(Pos, g_View);
+		Out.Pos = mul(Pos, g_Proj);
 	}
 
+	float4 tmp = { 0, 0, 0, 0 };
+	Out.Pos = tmp;
+	Out.Col = Col;
 	return Out;
 }
 //
@@ -40,21 +38,6 @@ PS_INPUT VS( float4 Pos : POSITION)
 //ピクセルシェーダー
 float4 PS( PS_INPUT Input ) : SV_Target
 {
-	//float4 color = g_Texture.Sample(g_Sampler, Input.UV);
-
-	float2 tmp = {1,1};
-float4 color = {1,0,0,1};//g_Texture.Sample(g_Sampler, tmp);
-
-	/*! カラー計算 */
-	{
-		color *= g_Color;
-	}
-
-	/*! α値計算 */
-	{
-		/*! α値0以下のピクセルは描画しない→アルファテスト */
-		if (color.a <= 0.0f)discard;
-	}
-
-	return (g_Color * g_Texture.Sample(g_Sampler, tmp));
+	float4 cr= { 1,0,0,1};
+	return Input.Col;
 }
