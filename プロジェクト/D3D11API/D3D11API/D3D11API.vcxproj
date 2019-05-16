@@ -162,10 +162,13 @@
     <ClInclude Include="include\Debug.h" />
     <ClInclude Include="include\Direct3D11.h" />
     <ClInclude Include="include\GamePad.h" />
+    <ClInclude Include="include\Hoge.h" />
     <ClInclude Include="include\ITexture.h" />
     <ClInclude Include="include\Keyboard.h" />
     <ClInclude Include="include\MemoryLeaks.h" />
     <ClInclude Include="include\Mesh.h" />
+    <ClInclude Include="include\MeshCompPS.h" />
+    <ClInclude Include="include\MeshCompVS.h" />
     <ClInclude Include="include\MeshReadHelper.h" />
     <ClInclude Include="include\MeshShader.h" />
     <ClInclude Include="include\MeshVertex.h" />
@@ -193,6 +196,7 @@
     <ClCompile Include="include\Debug.cpp" />
     <ClCompile Include="include\Direct3D11.cpp" />
     <ClCompile Include="include\GamePad.cpp" />
+    <ClCompile Include="include\Hoge.cpp" />
     <ClCompile Include="include\ITexture.cpp" />
     <ClCompile Include="include\Keyboard.cpp" />
     <ClCompile Include="include\Mesh.cpp" />
