@@ -14,9 +14,9 @@ int main()
 #endif // DEBUG||_DEBUG
 
 	FBX::FBXUtility::Setup();
-	FBXUtility::Setup();
-	auto ret = FBXUtility::Load("ao_twinte_chan.fbx");
-	ret = FBXUtility::Load("test.fbx");
+	Mesh*mesh = new Mesh;
+	mesh->Setup();
+	auto ret = FBXUtility::Load("Cube.fbx", mesh);
 
 	if (ret) {
 		printf("ê¨å˜");
@@ -25,19 +25,8 @@ int main()
 		printf("é∏îs");
 	}
 
-	Mesh*mesh = new Mesh;
-	mesh->Setup();
-	ret=FBXUtility::Load("ao_twinte_chan.fbx", mesh);
-
-	if (ret) {
-		printf("ê¨å˜2");
-	}
-	else {
-		printf("é∏îs2");
-	}
-
-	IOMesh::Output("../", "test", mesh);
-
+	//IOMesh::Output("../", "uvTest", mesh);
+	IOMesh::Output("", "d", mesh);
 	FBXUtility::Destroy();
 	delete mesh;
 	system("pause");
