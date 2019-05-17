@@ -105,16 +105,18 @@ void SampleScene::Initialize()
 
 #pragma region Mesh
 	g_pMesh = make_shared<Mesh>();
-	if (FAILED(g_pMesh->Initialize("test.yfm"))) {
-		exit(0);
-	}
-#pragma endregion
-	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
-	if (FAILED(g_pMeshShader->Setup())) {
-		exit(0);
-	}
+	//if (FAILED(g_pMesh->Initialize("test.yfm"))) {
+	//	exit(0);
+	//}
 
-	g_pMesh->SetupShader(g_pMeshShader.get());
+#pragma endregion
+	HRESULT hr = g_pMesh->Initialize();
+	//g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
+	//if (FAILED(g_pMeshShader->Setup())) {
+	//	exit(0);
+	//}
+
+	//g_pMesh->SetupShader(g_pMeshShader.get());
 
 
 
@@ -181,11 +183,11 @@ void SampleScene::Render()
 
 	//	メッシュ
 	{
-		//g_pMesh->Render();
+		g_pMesh->Render();
 	}
 
 	//	頂点バッファ＆インデックスバッファ
 	{
-		gh->Draw();
+		//gh->Draw();
 	}
 }
