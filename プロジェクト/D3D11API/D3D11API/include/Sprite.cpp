@@ -646,7 +646,7 @@ void API::Sprite::SetupTopology()
 }
 
 /*!
-	@fn		SetupInputLayout
+	@fn		CreateInputLayout
 	@brief	頂点レイアウトの設定
 */
 void API::Sprite::SetupInputLayout()
@@ -801,7 +801,7 @@ void API::Sprite::SetupConstantBuffer()
 }
 
 /*!
-	@fn		SetupVertexBuffer
+	@fn		CreateVertexBuffer
 	@brief	頂点バッファ設定
 */
 void API::Sprite::SetupVertexBuffer()

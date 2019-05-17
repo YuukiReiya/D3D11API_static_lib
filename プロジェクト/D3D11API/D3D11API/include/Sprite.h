@@ -181,7 +181,7 @@ namespace API{
 			void SetupTopology();
 
 			/*!
-				@fn		SetupInputLayout
+				@fn		CreateInputLayout
 				@brief	頂点レイアウトの設定
 			*/
 			void SetupInputLayout();
@@ -211,7 +211,7 @@ namespace API{
 			void SetupConstantBuffer();
 
 			/*!
-				@fn		SetupVertexBuffer
+				@fn		CreateVertexBuffer
 				@brief	頂点バッファ設定
 			*/
 			void SetupVertexBuffer();

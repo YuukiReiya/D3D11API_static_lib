@@ -1,43 +1,51 @@
 /*
 	@file	Mesh.h
-	@date	2019/04/29
+	@date	2019/05/17
 	@author	番場 宥輝
-	@brief	メッシュ用のクラス
+	@brief	メッシュ
 */
 #pragma once
 #include <d3d11.h>
 #include <string>
-#include <memory>
-#include <vector>
-#include "AbstractRender.h"
-#include "AbstractShader.h"
-#include "StructShaderBase.h"
-#include "MeshVertex.h"
-#include "Transform.h"
-#include "Color.h"
 #include <wrl/client.h>
+#include <DirectXMath.h>
+#include "AbstractRender.h"
+#include "StructShaderBase.h"
 
 namespace D3D11 {
 	namespace Graphic {
+		struct MeshShaderBuffer{};
+
 		/*!
-			@struct	MeshShaderBuffer
-			@brief	メッシュのコンスタントバッファ
+			@NOTE	BaseConstantBufferを未継承の場合
+					正常に描画される！
+					構造体のサイズはどちらも"208"なのになんで？？？
 		*/
-		struct alignas(16) MeshShaderBuffer
-			:public BaseConstantBuffer
+		struct alignas(16) MeshConstantBuffer
+		//	: public BaseConstantBuffer 
 		{
-			/*!
-				@var	m_Color
-				@brief	色
-			*/
-			DirectX::XMFLOAT4 m_Color;
+			
+			DirectX::XMMATRIX world;
+			DirectX::XMMATRIX view;
+			DirectX::XMMATRIX proj;
+			DirectX::XMFLOAT4 color;
+		};
+		struct MeshV {
+			//DirectX::XMFLOAT3 pos;
+			//DirectX::XMFLOAT4 color;
+			float pos[3];
+			float col[4];
+
+
 		};
 	}
 }
 
+/*! APIの名前空間に含める */
 namespace API{
+
 	class Mesh
-		:public AbstractRender
+		: public AbstractRender
 	{
 	public:
 		/*!
@@ -46,127 +54,56 @@ namespace API{
 		explicit Mesh();
 
 		/*!
-			@brief	デストラクタ
+			@brief	デストラクタ	
 		*/
 		~Mesh();
 
 		/*!
+			@fn		Initialize
+			@brief	初期化
+			@return	S_OK:成功 E_FAIL:失敗
+		*/
+		HRESULT Initialize();
+
+		/*!
 			@fn			Initialize
 			@brief		初期化
-			@param[in]	読み込むファイルのパス
+			@param[in]	外部ファイルのパス
+			@return	S_OK:成功 E_FAIL:失敗
 		*/
 		HRESULT Initialize(std::string path);
 
+		/*!	
+			@fn		Finalize
+			@brief	破棄処理
+			@detail	メンバの明示的な開放
+		*/
+		void Finalize();
+
 		/*!
 			@fn		Render
-			@brief	描画
+			@brief	描画処理
+			@detail	純粋仮想関数をオーバーライド
 		*/
-		void Render()override final;
+		void Render()override;
 
-		/*!
-			@fn			SetupShader
-			@brief		シェーダーの設定
-			@detail		弱参照でバインドする
-			@param[in]	登録するシェーダーのポインタ
-		*/
-		void SetupShader(D3D11::Graphic::AbstractShader* shader);
-
-		/*!
-			@var	transform
-			@brief	トランスフォーム
-		*/
-		std::shared_ptr<Transform> transform;
-
-		/*!
-			@var	color
-			@brief	色
-		*/
-		Color color;
 	private:
-		/*!
-			@fn		SetupTopology
-			@brief	トポロジーの設定
-		*/
-		void SetupTopology();
+		static HRESULT CreateInputLayout(Mesh*mesh);
+		static HRESULT CreateVertexBuffer(Mesh*mesh);
+		static HRESULT CreateIndexBuffer(Mesh*mesh);
+		static HRESULT CreateConstantBuffer(Mesh*mesh);
+		HRESULT CreateVertexShader();
+		HRESULT CreatePixelShader();
 
-		/*!
-			@fn		SetupConstantBuffer
-			@brief	コンスタントバッファの設定
-		*/
-		void SetupConstantBuffer();
-
-		/*!
-			@fn		SetupBindShader
-			@brief	シェーダーの設定
-		*/
-		void SetupBindShader();
-
-		/*!
-			@fn			CreateVertexBuffer
-			@brief		メッシュの頂点を生成
-			@detail		静的関数
-			@param[in]	設定するメッシュのポインタ
-			@param[in]	構成する頂点情報
-			@return		成功:S_OK 失敗:E_FAIL
-		*/
-		static HRESULT CreateVertexBuffer(Mesh*mesh, std::vector<D3D11::Graphic::MeshVertex>vertex);
-
-		/*!
-			@fn		SetupVertexBuffer
-			@brief	頂点バッファ設定
-		*/
-		void SetupVertexBuffer();
-
-		/*!
-			@fn		SetupInputLayout
-			@brief	頂点レイアウトの設定
-		*/
-		void SetupInputLayout();
-		/*!
-			@fn			CreateIndexBuffer
-			@brief		インデックスバッファ作成
-			@detail		静的関数
-			@param[in]	設定するメッシュのポインタ
-			@param[in]	頂点のインデックス
-			@return		成功:S_OK 失敗:E_FAIL
-		*/
-		static HRESULT CreateIndexBuffer(Mesh*mesh, std::vector<uint32_t>index);
-
-		/*!
-			@fn		SetupVertexBuffer
-			@brief	インデックスバッファ設定
-		*/
-		void SetupIndexBuffer();
-
-		std::vector<D3D11::Graphic::MeshVertex>m_Vertex;
-
-		/*!
-			@var	m_VertexIndex
-			@brief	頂点インデックス
-			@NOTE	頂点インデックスの数≠頂点数
-					∴ MeshVertexに"uint"型で含むことが出来ない
-		*/
-		std::vector<uint32_t>m_VertexIndex;
-
-		/*!
-			@var	m_pVertexBuffer
-			@brief	頂点バッファ
-		*/
-		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
-
-		/*!
-			@var	m_pIndexBuffer
-			@brief	インデックスバッファ
-		*/
-		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pIndexBuffer;
-
-		/*!
-			@var	m_pShader
-			@brief	シェーダーオブジェクトの弱参照
-		*/
-		std::weak_ptr<D3D11::Graphic::AbstractShader*>m_pShader;
-		
+		uint32_t indexCount;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pVertexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pConstantBuffer;
+		Microsoft::WRL::ComPtr<ID3D11InputLayout>m_pInputLayout;
+		Microsoft::WRL::ComPtr<ID3D11VertexShader>m_pVertexShader;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader>m_pPixelShader;
+		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
-		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSampler;
 	};
+
 }

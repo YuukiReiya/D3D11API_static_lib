@@ -28,7 +28,8 @@ void Hoge::Init()
 
 		HRESULT hr = D3D11::Direct3D11::GetInstance().Device->CreateInputLayout(
 			vd,
-			ARRAYSIZE(vd),
+			//ARRAYSIZE(vd),
+			GetArraySize(vd),
 			g_vs_main,
 			sizeof(g_vs_main),
 			&il
