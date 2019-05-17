@@ -44,34 +44,41 @@ namespace D3D11 {
 			virtual HRESULT DynamicSetup()abstract;
 
 			/*!
-				@fn		GetInputLayout
+				@fn		GetInputLayoutPtr
 				@brief	頂点レイアウトの取得
 				@detail	インライン関数
 			*/
-			inline ID3D11InputLayout**GetInputLayout() { return m_pVertexLayout.GetAddressOf(); }
+			inline ID3D11InputLayout**GetInputLayoutPtr() { return m_pVertexLayout.GetAddressOf(); }
 
 			/*!
-				@fn		GetVertexShader
+			
+			*/
+			inline ID3D11InputLayout*GetInputLayout() { return m_pVertexLayout.Get(); }
+
+			/*!
+				@fn		GetVertexShaderPtr
 				@brief	頂点シェーダーの取得
 				@detail	インライン関数
 			*/
-			inline ID3D11VertexShader**GetVertexShader(){ return m_pVertexShader.GetAddressOf(); }
+			inline ID3D11VertexShader**GetVertexShaderPtr(){ return m_pVertexShader.GetAddressOf(); }
+
+			inline ID3D11VertexShader*GetVertexShader() { return m_pVertexShader.Get(); }
 
 			/*!
-				@fn		GetPixelShader
+				@fn		GetPixelShaderPtr
 				@brief	ピクセルシェーダーの取得
 				@detail	インライン関数
 
 			*/
-			inline ID3D11PixelShader**GetPixelShader() { return m_pPixelShader.GetAddressOf(); }
-
+			inline ID3D11PixelShader**GetPixelShaderPtr() { return m_pPixelShader.GetAddressOf(); }
+			inline ID3D11PixelShader*GetPixelShader() { return m_pPixelShader.Get(); }
 			/*!
-				@fn		GetConstantBuffer
+				@fn		GetConstantBufferPtr
 				@brief	コンスタントバッファの取得
 				@detail	インライン関数
 			*/
-			inline ID3D11Buffer**GetConstantBuffer() { return m_pConstantBuffer.GetAddressOf(); }
-
+			inline ID3D11Buffer**GetConstantBufferPtr() { return m_pConstantBuffer.GetAddressOf(); }
+			inline ID3D11Buffer*GetConstantBuffer() { return m_pConstantBuffer.Get(); }
 			/*!
 				@fn		GetSharedPtr
 				@brief	AbstractShader型シェアード・ポインタの取得

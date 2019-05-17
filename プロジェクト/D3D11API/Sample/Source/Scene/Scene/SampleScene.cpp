@@ -181,7 +181,7 @@ void SampleScene::Render()
 
 	//	メッシュ
 	{
-	//	g_pMesh->Render();
+		//g_pMesh->Render();
 	}
 
 	//	頂点バッファ＆インデックスバッファ

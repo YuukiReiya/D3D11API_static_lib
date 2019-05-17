@@ -45,7 +45,7 @@ Mesh::~Mesh()
 */
 HRESULT Mesh::Initialize(std::string path)
 {
-	auto data = Helper::MeshReadHelper::Read(path);
+	//auto data = Helper::MeshReadHelper::Read(path);
 
 	//	頂点生成
 	//if (FAILED(CreateVertexBuffer(this, data.vertices))) {
@@ -63,7 +63,32 @@ HRESULT Mesh::Initialize(std::string path)
 	//	v buffer
 	{
 		m_Vertex.clear();
-		m_Vertex = data.vertices;
+		//	頂点
+		{
+			MeshVertex v;
+			v.m_Pos.x = 0.5f;
+			v.m_Pos.y = 0.5f;
+			v.m_Pos.z = 0.0f;
+			//右上
+			m_Vertex.push_back(v);
+			v.m_Pos.x = 0.5f;
+			v.m_Pos.y = -0.5f;
+			v.m_Pos.z = 0.0f;
+			//右下
+			m_Vertex.push_back(v);
+			v.m_Pos.x = -0.5f;
+			v.m_Pos.y = -0.5f;
+			v.m_Pos.z = 0.0f;
+			//左下
+			m_Vertex.push_back(v);
+			v.m_Pos.x = -0.5f;
+			v.m_Pos.y = 0.5f;
+			v.m_Pos.z = 0.0f;
+			//左上
+			m_Vertex.push_back(v);
+		}
+
+		//m_Vertex = data.vertices;
 		D3D11_BUFFER_DESC desc;
 		desc.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
 		desc.ByteWidth = sizeof(MeshVertex)*m_Vertex.size();
@@ -87,7 +112,19 @@ HRESULT Mesh::Initialize(std::string path)
 
 	//	i buffer
 	{
-		m_VertexIndex = data.indices;
+
+		//m_VertexIndex = data.indices;
+		//	インデックス
+		{
+			m_VertexIndex.push_back(0);
+			m_VertexIndex.push_back(1);
+			m_VertexIndex.push_back(2);
+			m_VertexIndex.push_back(3);
+			m_VertexIndex.push_back(0);
+			m_VertexIndex.push_back(4);
+			//m_VertexIndex.push_back(1);
+		}
+
 		D3D11_BUFFER_DESC desc;
 		desc.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_INDEX_BUFFER;
 		desc.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
@@ -104,7 +141,7 @@ HRESULT Mesh::Initialize(std::string path)
 			&m_pIndexBuffer
 		);
 		if (FAILED(hr)) {
-			std::string error = "Mesh index buffer is not Create!";
+			std::string error = "Mesh m_VertexIndex buffer is not Create!";
 			ErrorLog(error);
 			return E_FAIL;
 		}
@@ -195,16 +232,25 @@ void Mesh::Render()
 	}
 	//	シェーダーセット
 	{
-		dev.GetImmediateContext()->VSSetShader(*shader->GetVertexShader(), NULL, NULL);
-		dev.GetImmediateContext()->PSSetShader(*shader->GetPixelShader(), NULL, NULL);
+		//dev.GetImmediateContext()->VSSetShader(*shader->GetVertexShaderPtr(), NULL, NULL);
+		//dev.GetImmediateContext()->PSSetShader(*shader->GetPixelShaderPtr(), NULL, NULL);
+		dev.GetImmediateContext()->VSSetShader(shader->GetVertexShader(), NULL, NULL);
+		dev.GetImmediateContext()->PSSetShader(shader->GetPixelShader(), NULL, NULL);
 	}
 
 	//	コンスタントバッファ送信
 	{
 		D3D11_MAPPED_SUBRESOURCE pData;
 		MeshShaderBuffer cb;
+		//hr = dev.GetImmediateContext()->Map(
+		//	*shader->GetConstantBufferPtr(),
+		//	NULL,
+		//	D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
+		//	NULL,
+		//	&pData
+		//);
 		hr = dev.GetImmediateContext()->Map(
-			*shader->GetConstantBuffer(),
+			shader->GetConstantBuffer(),
 			NULL,
 			D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
 			NULL,
@@ -214,7 +260,8 @@ void Mesh::Render()
 			std::string error = "Texture mapping is failed!";
 			ErrorLog(error);
 			//	アクセス権を閉じて抜ける
-			dev.GetImmediateContext()->Unmap(*shader->GetConstantBuffer(), NULL);
+			//dev.GetImmediateContext()->Unmap(*shader->GetConstantBufferPtr(), NULL);
+			dev.GetImmediateContext()->Unmap(shader->GetConstantBuffer(), NULL);
 			return;
 		}
 		cb.m_WorldMatrix = w;
@@ -228,11 +275,14 @@ void Mesh::Render()
 			(void*)(&cb),
 			sizeof(cb)
 		);
+		//dev.GetImmediateContext()->Unmap(
+		//	*shader->GetConstantBufferPtr(),
+		//	0
+		//);
 		dev.GetImmediateContext()->Unmap(
-			*shader->GetConstantBuffer(),
+			shader->GetConstantBuffer(),
 			0
 		);
-
 	}
 
 	//	コンスタントバッファのバインド
@@ -240,12 +290,12 @@ void Mesh::Render()
 		dev.GetImmediateContext()->VSSetConstantBuffers(
 			0,
 			1,
-			shader->GetConstantBuffer()
+			shader->GetConstantBufferPtr()
 		);
 		dev.GetImmediateContext()->PSSetConstantBuffers(
 			0,
 			1,
-			shader->GetConstantBuffer()
+			shader->GetConstantBufferPtr()
 		);
 	}
 
@@ -264,15 +314,20 @@ void Mesh::Render()
 
 	//	頂点レイアウト
 	{
+		//dev.GetImmediateContext()->IASetInputLayout(
+		//	*shader->GetInputLayoutPtr()
+		//);
 		dev.GetImmediateContext()->IASetInputLayout(
-			*shader->GetInputLayout()
+			shader->GetInputLayout()
 		);
 	}
 
 	//	トポロジー
 	{
 		//	ソリッド(見かけは大丈夫っぽい)
-		dev.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP);
+		//dev.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP);
+		//	綺麗にポリゴン表示出来ているっぽい
+		Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	}
 
 	//	サンプラー
@@ -339,14 +394,14 @@ void API::Mesh::SetupConstantBuffer()
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
 		0,
 		1,
-		shader->GetConstantBuffer()
+		shader->GetConstantBufferPtr()
 	);
 
 	//	ピクセルシェーダー用のCバッファ登録
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
 		0,
 		1,
-		shader->GetConstantBuffer()
+		shader->GetConstantBufferPtr()
 	);
 
 	//	マッピング用変数の宣言
@@ -355,7 +410,7 @@ void API::Mesh::SetupConstantBuffer()
 	//	バッファへのアクセス(書き換え)許可
 	HRESULT hr;
 	hr = device.GetImmediateContext()->Map(
-		*shader->GetConstantBuffer(),
+		*shader->GetConstantBufferPtr(),
 		NULL,
 		D3D11_MAP_WRITE_DISCARD,
 		NULL,
@@ -365,7 +420,7 @@ void API::Mesh::SetupConstantBuffer()
 		std::string error = "Texture mapping is failed!";
 		ErrorLog(error);
 		//	アクセス権を閉じて抜ける
-		device.GetImmediateContext()->Unmap(*shader->GetConstantBuffer(), NULL);
+		device.GetImmediateContext()->Unmap(*shader->GetConstantBufferPtr(), NULL);
 		return;
 	}
 
@@ -383,7 +438,7 @@ void API::Mesh::SetupConstantBuffer()
 
 	//	アクセス許可終了
 	device.GetImmediateContext()->Unmap(
-		*shader->GetConstantBuffer(),
+		*shader->GetConstantBufferPtr(),
 		NULL
 	);
 }
@@ -398,14 +453,14 @@ void API::Mesh::SetupBindShader()
 
 	//	頂点シェーダー
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
-		*shader->GetVertexShader(),
+		*shader->GetVertexShaderPtr(),
 		NULL,
 		NULL
 	);
 
 	//	ピクセルシェーダー
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
-		*shader->GetPixelShader(),
+		*shader->GetPixelShaderPtr(),
 		NULL,
 		NULL
 	);
@@ -500,7 +555,7 @@ void API::Mesh::SetupInputLayout()
 {
 	auto shader = *m_pShader.lock();
 	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
-		*shader->GetInputLayout()
+		*shader->GetInputLayoutPtr()
 	);
 }
 

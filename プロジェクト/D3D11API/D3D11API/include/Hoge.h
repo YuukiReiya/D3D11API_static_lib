@@ -23,10 +23,12 @@ public:
 	~Hoge() {};
 
 	void Init();
+	void Update();
 	void Draw();
 private:
-	std::vector<Vertex>mV;
-	std::vector<UINT>mI;
+	/*std::vector<Vertex>mV;
+	std::vector<UINT>mI;*/
+	UINT indexCount;
 	ID3D11Buffer* vb;
 	ID3D11Buffer* ib;
 	ID3D11InputLayout* il;

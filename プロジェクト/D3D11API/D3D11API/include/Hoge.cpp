@@ -6,9 +6,12 @@
 #include "AbstractShader.h"
 #include "MeshCompVS.h"
 #include "MeshCompPS.h"
+#include "WICTextureLoader.h"
+#include "Keyboard.h"
 
 using namespace D3D11;
 using namespace DirectX;
+using namespace std;
 
 void Hoge::Init()
 {
@@ -37,6 +40,7 @@ void Hoge::Init()
 		}
 	}
 
+	vector<Vertex>mV;
 	//	頂点
 	{
 		//右上
@@ -92,6 +96,7 @@ void Hoge::Init()
 		}
 	}
 
+	vector<UINT>mI;
 	//	インデックスバッファ
 	{
 		mI.push_back(0);
@@ -120,7 +125,7 @@ void Hoge::Init()
 			ib, DXGI_FORMAT_R32_UINT,0
 		);
 	}
-
+	indexCount = mI.size();
 
 	//	頂点シェーダー
 	{
@@ -150,6 +155,53 @@ void Hoge::Init()
 		}
 	}
 
+	//	SRV
+	{
+		//	テクスチャ読み込み
+		std::wstring path;
+		path = L"hoge.png";
+
+		Microsoft::WRL::ComPtr<ID3D11Resource> pResource = nullptr;
+		HRESULT hr;
+		hr = CreateWICTextureFromFile(
+			Direct3D11::GetInstance().GetDevice(),
+			path.c_str(),
+			pResource.GetAddressOf(),
+			&srv
+		);
+
+		// ローカル変数のメモリ開放
+		if (pResource.Get() != nullptr) {
+			pResource.Reset();
+		}
+		if (FAILED(hr)) {
+			ErrorLog("srv"); 
+		};
+	}
+
+	//	サンプラー
+	{
+		D3D11_SAMPLER_DESC sd;
+		SecureZeroMemory(&sd, sizeof(sd));
+		sd.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sd.AddressU = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
+		sd.AddressV = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
+		sd.AddressW = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
+
+		HRESULT hr;
+		hr = Direct3D11::GetInstance().GetDevice()->CreateSamplerState(
+			&sd,
+			&samp
+		);
+		if (FAILED(hr)) {
+			ErrorLog("sampler");
+		}
+	}
+
+}
+
+void Hoge::Update()
+{
 }
 
 XMFLOAT3 gEyePt{ 0,0,-10 }, gLookPt{ 0,0,0 };
@@ -251,6 +303,7 @@ void Hoge::Draw()
 	//}
 
 	//Direct3D11::GetInstance().GetImmediateContext()->Draw(3, 0);
-	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(mI.size(), 0, 0);
+	//Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(mI.size(), 0, 0);
+	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(indexCount, 0, 0);
 }
 

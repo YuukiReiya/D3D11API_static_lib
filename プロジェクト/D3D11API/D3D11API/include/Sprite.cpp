@@ -379,10 +379,10 @@ void API::Sprite::SetupTexture(Texture*  texture)
 */
 void API::Sprite::SetupShader(D3D11::Graphic::AbstractShader * shader)
 {
-	//m_pVertexShader		= shader->GetVertexShader();
-	//m_pVertexLayout		= shader->GetInputLayout();
-	//m_pPixelShader		= shader->GetPixelShader();
-	//m_pConstantBuffer	= shader->GetConstantBuffer();
+	//m_pVertexShader		= shader->GetVertexShaderPtr();
+	//m_pVertexLayout		= shader->GetInputLayoutPtr();
+	//m_pPixelShader		= shader->GetPixelShaderPtr();
+	//m_pConstantBuffer	= shader->GetConstantBufferPtr();
 	m_pShader = shader->GetSharedPtr();
 }
 
@@ -653,7 +653,7 @@ void API::Sprite::SetupInputLayout()
 {	
 	auto shader = *m_pShader.lock();
 	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
-		*shader->GetInputLayout()
+		*shader->GetInputLayoutPtr()
 	);
 
 }
@@ -668,14 +668,14 @@ void API::Sprite::SetupBindShader()
 
 	//	頂点シェーダー
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
-		*shader->GetVertexShader(),
+		*shader->GetVertexShaderPtr(),
 		NULL,
 		NULL
 	);
 
 	//	ピクセルシェーダー
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
-		*shader->GetPixelShader(),
+		*shader->GetPixelShaderPtr(),
 		NULL,
 		NULL
 	);
@@ -743,14 +743,14 @@ void API::Sprite::SetupConstantBuffer()
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
 		0,
 		1,
-		shader->GetConstantBuffer()
+		shader->GetConstantBufferPtr()
 	);
 
 	//	ピクセルシェーダー用のCバッファ登録
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
 		0,
 		1,
-		shader->GetConstantBuffer()
+		shader->GetConstantBufferPtr()
 	);
 
 	//	マッピング用変数の宣言
@@ -759,7 +759,7 @@ void API::Sprite::SetupConstantBuffer()
 	//	バッファへのアクセス(書き換え)許可
 	HRESULT hr;
 	hr = device.GetImmediateContext()->Map(
-		*shader->GetConstantBuffer(),
+		*shader->GetConstantBufferPtr(),
 		NULL,
 		D3D11_MAP_WRITE_DISCARD,
 		NULL,
@@ -769,7 +769,7 @@ void API::Sprite::SetupConstantBuffer()
 		std::string error = "Texture mapping is failed!";
 		ErrorLog(error);
 		//	アクセス権を閉じて抜ける
-		device.GetImmediateContext()->Unmap(*shader->GetConstantBuffer(), NULL);
+		device.GetImmediateContext()->Unmap(*shader->GetConstantBufferPtr(), NULL);
 		return;
 	}
 
@@ -795,7 +795,7 @@ void API::Sprite::SetupConstantBuffer()
 
 	//	アクセス許可終了
 	device.GetImmediateContext()->Unmap(
-		*shader->GetConstantBuffer(),
+		*shader->GetConstantBufferPtr(),
 		NULL
 	);
 }
