@@ -30,7 +30,7 @@ Sprite::Sprite()
 {
 	m_pVertexBuffer		= nullptr;
 	m_pBlendState		= nullptr;
-	//m_Pos = { 0,0,0 };
+	//position = { 0,0,0 };
 	//m_Scale = { 1,1 ,0 };
 	//m_Rot = {0,0,0};
 	m_Size = { -1,-1 };
@@ -133,7 +133,7 @@ HRESULT Sprite::Initialize()
 void Sprite::Finalize()
 {
 	// ƒƒ“ƒo‚Ì‰Šú‰»
-	//m_Pos = { 0,0,0 };
+	//position = { 0,0,0 };
 	//m_Scale = { 1,1 ,0 };
 	//m_Rot = { 0,0,0 };
 	m_Size = { -1,-1 };
@@ -729,7 +729,7 @@ void API::Sprite::SetupConstantBuffer()
 	//	*
 	//	DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z)
 	//	*
-	//	DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+	//	DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 
 	DirectX::XMMATRIX world = transform->GetMatrix();
 

@@ -53,18 +53,18 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 			auto d = b.find(" ");
 			auto e = b.substr(0, d);
 			
-			tmp.m_Pos.x = stof(e);
+			tmp.position.x = stof(e);
 			b = b.substr(d + 1);
 
 			//	y
 			auto f = b.find(" ");
 			auto g = b.substr(0, f + 1);
 
-			tmp.m_Pos.y = stof(g);
+			tmp.position.y = stof(g);
 			b = b.substr(f + 1);
 
 			//	z
-			tmp.m_Pos.z = stof(b);
+			tmp.position.z = stof(b);
 			ret.vertices.push_back(tmp);
 		}
 

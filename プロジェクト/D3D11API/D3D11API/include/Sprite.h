@@ -257,7 +257,7 @@ namespace API{
 			/****************************************/
 
 			/*! ローカル座標系 */
-			//DirectX::XMFLOAT3 m_Pos;
+			//DirectX::XMFLOAT3 position;
 			//DirectX::XMFLOAT3 m_Rot;
 			//DirectX::XMFLOAT3 m_Scale;
 			/*! スプライトサイズのキャッシュ */
@@ -288,7 +288,7 @@ namespace D3D11 {
 			:public BaseVertex
 		{
 			SpriteVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT2 uv) {
-				m_Pos = pos, m_UV = uv;
+				pos = pos, m_UV = uv;
 			}
 			/*!
 				@var	m_UV
