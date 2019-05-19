@@ -10,6 +10,7 @@
 #include "MeshConstantBuffer.h"
 #include "MeshReadHelper.h"
 #include <vector>
+#include "Camera.h"
 
 using namespace DirectX;
 using namespace D3D11;
@@ -258,7 +259,8 @@ void Mesh::Render()
 		look = { 0,0,0 };
 		//look = { gLookPt.x,gLookPt.y,gLookPt.z };
 		upvec = { 0,1,0 };
-		v = XMMatrixLookAtLH(eye, look, upvec);
+		//v = XMMatrixLookAtLH(eye, look, upvec);
+		v = Camera::GetInstance().GetViewMatrix();
 		v = XMMatrixTranspose(v);
 	}
 
@@ -266,6 +268,7 @@ void Mesh::Render()
 	{
 		float pi = 3.14159265358979323846f;
 		p = XMMatrixPerspectiveFovLH(pi / 4, 1920 / 1080, 0.1f, 100.0f);
+		p = Camera::GetInstance().GetProjMatrix();
 		p = XMMatrixTranspose(p);
 	}
 
