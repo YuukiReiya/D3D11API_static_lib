@@ -16,6 +16,7 @@
 #include <MeshShader.h>
 #include <Mesh.h>
 #include <Hoge.h>
+#include <Camera.h>
 
 Hoge*gh;
 
@@ -169,6 +170,24 @@ void SampleScene::Update()
 		pos.z += val;
 	}
 
+	auto& camera = Camera::GetInstance();
+	auto eye = camera.GetEyePt();
+	auto look = camera.GetLookAtPt();
+	
+	if (Keyboard::GetButton(Keyboard::c_Left)) {
+		eye.x -= val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Right)) {
+		eye.x += val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Up)) {
+		eye.y += val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Down)) {
+		eye.y -= val;
+	}
+
+	camera.SetViewMatrix(eye, look);
 	g_pMesh->transform.SetPosition(pos);
 }
 
