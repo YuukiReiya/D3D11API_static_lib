@@ -1,19 +1,21 @@
 #include "stdafx.h"
 #include "Mesh.h"
-//#include "MeshVertex.h"
+#include "MeshVertex.h"
 #include "Direct3D11.h"
 #include "MyGame.h"
 #include "MemoryLeaks.h"
 #include "MeshCompVS.h"
 #include "MeshCompPS.h"
 #include "WICTextureLoader.h"
-//#include "MeshConstantBuffer.h"
+#include "MeshConstantBuffer.h"
 #include "MeshReadHelper.h"
 #include <vector>
 
 using namespace DirectX;
 using namespace D3D11;
 using namespace API;
+using namespace D3D11::Graphic;
+using namespace std;
 
 Mesh::Mesh() {
 
@@ -74,7 +76,6 @@ HRESULT Mesh::Initialize()
 
 		HRESULT hr = D3D11::Direct3D11::GetInstance().Device->CreateInputLayout(
 			vd,
-			//ARRAYSIZE(vd),
 			GetArraySize(vd),
 			g_vs_main,
 			sizeof(g_vs_main),
@@ -123,7 +124,7 @@ HRESULT Mesh::Initialize()
 		HRESULT hr;
 		D3D11_BUFFER_DESC cb;
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cb.ByteWidth = sizeof(CBuffer);
+		cb.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
 		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		cb.MiscFlags = 0;
 		cb.StructureByteStride = 0;
@@ -139,60 +140,44 @@ HRESULT Mesh::Initialize()
 		}
 	}
 
-	std::vector<MV>mV;
+	vector<MeshVertex>vertex;
 	//	頂点バッファ
 	{
-		//	頂点
-		{
-			//右上
-			//mV.push_back({ { 0.5f, 0.5f,0},{1,0,0,1} });
-			////右下
-			//mV.push_back({ { 0.5f, -0.5f,0},{1,0,0,1} });
-			////左下
-			//mV.push_back({ {-0.5f, -0.5f,0},{1,0,0,1} });
-			////左上
-			//mV.push_back({ {-0.5f, 0.5f,0},{1,0,0,1} });
-
-			//mV.push_back({ {-0.0f, 1.0f,0},{1,0,0,1} });
-			for (auto it : rd.vertices)
-				mV.push_back({ it.position });
+		vertex.clear();
+		for (auto it : rd.vertices) {
+			vertex.push_back({ it.position });
 		}
 
 		D3D11_BUFFER_DESC bd;
-		bd.ByteWidth = sizeof(MV) * mV.size();// * 要素数
 		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(MeshVertex) * vertex.size();// * 要素数
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 		bd.MiscFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA sd;
-		sd.pSysMem = mV.data();
+		sd.pSysMem = vertex.data();
 
 		if (FAILED(dev.Device->CreateBuffer(&bd, &sd, m_pVertexBuffer.GetAddressOf()))) {
 			ErrorLog("vバッファ作成失敗");
 		}
 	}
 
-	std::vector<UINT>mI;
+	std::vector<uint32_t>index;
 	//	インデックスバッファ
 	{
-		/*mI.push_back(0);
-		mI.push_back(1);
-		mI.push_back(2);
-		mI.push_back(3);
-		mI.push_back(0);*/
-		mI = rd.indices;
+		index = rd.indices;
 
 		D3D11_BUFFER_DESC bd;
 		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(uint32_t)*mI.size();
+		bd.ByteWidth = sizeof(uint32_t)*index.size();
 		bd.CPUAccessFlags = 0;
 		bd.MiscFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA sd;
 		SecureZeroMemory(&sd, sizeof(sd));
-		sd.pSysMem = mI.data();
+		sd.pSysMem = index.data();
 
 		if (FAILED(dev.Device->CreateBuffer(
 			&bd, &sd, m_pIndexBuffer.GetAddressOf()
@@ -203,9 +188,7 @@ HRESULT Mesh::Initialize()
 			m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0
 		);
 	}
-	indexCount = mI.size();
-
-
+	indexCount = index.size();
 
 	//	SRV
 	{
@@ -251,6 +234,7 @@ HRESULT Mesh::Initialize()
 	}
 
 
+
 	return S_OK;
 }
 
@@ -293,7 +277,7 @@ void Mesh::Render()
 	//	コンスタントバッファ送信
 	{
 		D3D11_MAPPED_SUBRESOURCE pData;
-		CBuffer cb;
+		MeshConstantBuffer cb;
 		hr = Direct3D11::GetInstance().GetImmediateContext()->Map(
 			m_pConstantBuffer.Get(),
 			0,
@@ -308,9 +292,9 @@ void Mesh::Render()
 		//pcb.m_WorldMatrix = w;
 		//pcb.m_ViewMatrix = v;
 		//pcb.m_ProjectionMatrix = p;
-		cb.world = w;
-		cb.view = v;
-		cb.proj = p;
+		cb.m.world = w;
+		cb.m.view = v;
+		cb.m.proj = p;
 		//pcb.m.world = w;
 		//pcb.m.view = v;
 		//pcb.m.proj = p;
@@ -328,7 +312,7 @@ void Mesh::Render()
 
 	//	頂点バッファセット
 	{
-		UINT stride = sizeof(MV);
+		UINT stride = sizeof(MeshVertex);
 		UINT offset = 0;
 		Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
 			0,
@@ -349,9 +333,9 @@ void Mesh::Render()
 		//	頂点壊れる？(ポリゴン変)
 		//Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		//	ソリッド(見かけは大丈夫っぽい)
-		Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP);
+		//Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP);
 		//	綺麗にポリゴン表示出来ているっぽい
-		//Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	}
 
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
@@ -389,115 +373,25 @@ HRESULT API::Mesh::CreateInputLayout(Mesh * mesh)
 
 HRESULT API::Mesh::CreateVertexBuffer(Mesh * mesh)
 {
-	std::vector<MV>vertex;
-	//	頂点
-	{
-		////右上
-		//vertex.push_back({ {0.5f, 0.5f, 0.0f }});
-		////右下			
-		//vertex.push_back({ {0.5f, -0.5f, 0.0f }});
-		////左下			 					  
-		//vertex.push_back({ {-0.5f, -0.5f, 0.0f} });
-		////左上			 					
-		//vertex.push_back({ {-0.5f, 0.5f, 0.0f }});
-
-		vertex.clear();
-		auto data = Helper::MeshReadHelper::Read("test.yfm");
-
-		std::vector<MV> v;
-		for (auto it : data.vertices)
-		{
-			v.push_back({it.position});
-		}
-		vertex = v;
-		//vertex = data.vertices;
-	}
-	D3D11_BUFFER_DESC bd;
-	bd.ByteWidth = sizeof(MV) * vertex.size();// * 要素数
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = 0;
-	bd.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA sd;
-	sd.pSysMem = vertex.data();
-	sd.SysMemPitch = 0;
-	sd.SysMemSlicePitch = 0;
-
-	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-		&bd,
-		&sd,
-		mesh->m_pVertexBuffer.GetAddressOf()
-	);
+	return E_FAIL;
 }
 
 HRESULT API::Mesh::CreateIndexBuffer(Mesh * mesh)
 {
-	std::vector<uint32_t>index;
-	//index.push_back(0);
-	//index.push_back(1);
-	//index.push_back(2);
-	//index.push_back(3);
-	//index.push_back(0);
-	index.clear();
-	auto data = Helper::MeshReadHelper::Read("test.yfm");
-	index = data.indices;
-
-
-	D3D11_BUFFER_DESC bd;
-	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(uint32_t)*index.size();
-	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA sd;
-	SecureZeroMemory(&sd, sizeof(sd));
-	sd.pSysMem = index.data();
-
-	mesh->indexCount = index.size();
-
-	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-		&bd,
-		&sd,
-		mesh->m_pIndexBuffer.GetAddressOf()
-	);
+	return E_FAIL;
 }
 
 HRESULT API::Mesh::CreateConstantBuffer(Mesh * mesh)
 {
-	D3D11_BUFFER_DESC cdesc;
-	cdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cdesc.ByteWidth = sizeof(CBuffer);
-	cdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cdesc.MiscFlags = 0;
-	cdesc.StructureByteStride = 0;
-	cdesc.Usage = D3D11_USAGE_DYNAMIC;
-
-	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-		&cdesc,
-		0,
-		mesh->m_pConstantBuffer.GetAddressOf()
-	);
+	return E_FAIL;
 }
 
 HRESULT API::Mesh::CreateVertexShader()
 {
-	return D3D11::Direct3D11::GetInstance().Device->CreateVertexShader(
-		&g_vs_main,
-		sizeof(g_vs_main),
-		NULL,
-		m_pVertexShader.GetAddressOf()
-	);
+	return E_FAIL;
 }
 
 HRESULT API::Mesh::CreatePixelShader()
 {
-	return D3D11::Direct3D11::GetInstance().Device->CreatePixelShader(
-		&g_ps_main,
-		sizeof(g_ps_main),
-		NULL,
-		m_pPixelShader.GetAddressOf()
-	);
+	return E_FAIL;
 }

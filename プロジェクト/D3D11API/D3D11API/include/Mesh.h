@@ -15,19 +15,6 @@
 /*! API‚Ì–¼‘O‹óŠÔ‚ÉŠÜ‚ß‚é */
 namespace API{
 
-	struct MV
-	{
-		DirectX::XMFLOAT3 pos;
-	};
-
-	struct CBuffer
-	{
-		DirectX::XMMATRIX world;
-		DirectX::XMMATRIX view;
-		DirectX::XMMATRIX proj;
-		DirectX::XMFLOAT4 color;
-	};
-
 	class Mesh
 		: public AbstractRender
 	{

@@ -121,8 +121,6 @@ void SampleScene::Initialize()
 	//g_pMesh->SetupShader(g_pMeshShader.get());
 
 
-	gpMesh = new API::Mesh();
-	gpMesh->Initialize();
 
 	gh = new Hoge();
 	gh->Init();
@@ -149,7 +147,7 @@ void SampleScene::Update()
 		SceneRoot::GetInstance().SetupNextScene(new TransitionTestScene());
 	}
 
-	auto pos = g_pSprite->transform->GetPosition();
+	auto pos = g_pMesh->transform.GetPosition();
 
 
 	if (Keyboard::GetButtonDown('a')) {
@@ -171,8 +169,7 @@ void SampleScene::Update()
 		pos.z++;
 	}
 
-
-	g_pSprite->transform->SetPosition(pos);
+	g_pMesh->transform.SetPosition(pos);
 }
 
 /*!
@@ -187,12 +184,12 @@ void SampleScene::Render()
 
 	//	メッシュ
 	{
-		//g_pMesh->Render();
+		g_pMesh->Render();
 		//gpMesh->Render();
 	}
 
 	//	頂点バッファ＆インデックスバッファ
 	{
-		gh->Draw();
+		//gh->Draw();
 	}
 }
