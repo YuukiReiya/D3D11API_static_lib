@@ -89,7 +89,7 @@ void Hoge::Init()
 		hr =Direct3D11::GetInstance().GetDevice()->CreateBuffer(
 			&cb,
 			0,
-			&pcb
+			pcb.GetAddressOf()
 		);
 		if (FAILED(hr)) {
 			ErrorLog("CBUFFER");
@@ -128,7 +128,7 @@ void Hoge::Init()
 		D3D11_SUBRESOURCE_DATA sd;
 		sd.pSysMem = m_Vertex.data();
 
-		if (FAILED(dev.Device->CreateBuffer(&bd, &sd, &vb))) {
+		if (FAILED(dev.Device->CreateBuffer(&bd, &sd, vb.GetAddressOf()))) {
 			ErrorLog("vバッファ作成失敗");
 		}
 	}
@@ -155,7 +155,7 @@ void Hoge::Init()
 			ErrorLog("iバッファ作成失敗");
 		}
 		dev.ImmediateContext->IASetIndexBuffer(
-			ib, DXGI_FORMAT_R32_UINT, 0
+			ib.Get(), DXGI_FORMAT_R32_UINT, 0
 		);
 	}
 	indexCount = m_Index.size();
@@ -240,8 +240,8 @@ void Hoge::Draw()
 
 	//	シェーダーセット
 	{
-		Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(vs, 0, 0);
-		Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(ps, 0, 0);
+		Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(vs.Get(), 0, 0);
+		Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(ps.Get(), 0, 0);
 	}
 
 	//	コンスタントバッファ送信
@@ -249,7 +249,7 @@ void Hoge::Draw()
 		D3D11_MAPPED_SUBRESOURCE pData;
 		//CBuffer cb_desc;
 		D3D11::Graphic::MeshConstantBuffer cb_desc;
-		hr = Direct3D11::GetInstance().GetImmediateContext()->Map(pcb, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData);
+		hr = Direct3D11::GetInstance().GetImmediateContext()->Map(pcb.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &pData);
 		if (FAILED(hr)) {
 			ErrorLog("map");
 			exit(0);
@@ -263,13 +263,13 @@ void Hoge::Draw()
 		cb_desc.color = { 1,1,1,1 };
 
 		memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb_desc), sizeof(cb_desc));
-		Direct3D11::GetInstance().GetImmediateContext()->Unmap(pcb, 0);
+		Direct3D11::GetInstance().GetImmediateContext()->Unmap(pcb.Get(), 0);
 	}
 
 	//	CBufferを使うシェーダーのバインド
 	{
-		Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(0, 1, &pcb);
-		Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(0, 1, &pcb);
+		Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(0, 1, pcb.GetAddressOf());
+		Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(0, 1, pcb.GetAddressOf());
 	}
 
 	//	頂点バッファセット
@@ -277,12 +277,12 @@ void Hoge::Draw()
 		//UINT stride = sizeof(Vertex);
 		UINT stride = sizeof(D3D11::Graphic::MeshVertex);
 		UINT offset = 0;
-		Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+		Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(0, 1, vb.GetAddressOf(), &stride, &offset);
 	}
 
 	//	頂点レイアウトセット
 	{
-		Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(il);
+		Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(il.Get());
 	}
 
 	//	トポロジー
@@ -300,14 +300,14 @@ void Hoge::Draw()
 	//	サンプラー
 	//if (pSamp != nullptr) {
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
-		0, 1, &samp
+		0, 1, samp.GetAddressOf()
 	);
 	//}
 
 	//	SRV
 	//if (pSRV != nullptr) {
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
-		0, 1, &srv
+		0, 1, srv.GetAddressOf()
 	);
 	//}
 
