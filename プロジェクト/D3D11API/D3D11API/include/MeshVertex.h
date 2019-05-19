@@ -18,6 +18,16 @@ namespace D3D11 {
 		struct alignas(16) MeshVertex
 			:public BaseVertex
 		{
+			/*!
+				@brief	デフォルトコンストラクタ
+			*/
+			MeshVertex() = default;
+
+			/*!
+				@brief		引数付きコンストラクタ
+				@param[in]	座標
+			*/
+			MeshVertex(DirectX::XMFLOAT3 position) :BaseVertex(position) {}
 		};
 
 	}
