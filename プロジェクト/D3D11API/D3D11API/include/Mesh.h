@@ -10,39 +10,23 @@
 #include <wrl/client.h>
 #include <DirectXMath.h>
 #include "AbstractRender.h"
-#include "StructShaderBase.h"
-
-namespace D3D11 {
-	namespace Graphic {
-		struct MeshShaderBuffer{};
-
-		/*!
-			@NOTE	BaseConstantBufferを未継承の場合
-					正常に描画される！
-					構造体のサイズはどちらも"208"なのになんで？？？
-		*/
-		struct alignas(16) MeshConstantBuffer
-		//	: public BaseConstantBuffer 
-		{
-			
-			DirectX::XMMATRIX world;
-			DirectX::XMMATRIX view;
-			DirectX::XMMATRIX proj;
-			DirectX::XMFLOAT4 color;
-		};
-		struct MeshV {
-			//DirectX::XMFLOAT3 pos;
-			//DirectX::XMFLOAT4 color;
-			float pos[3];
-			float col[4];
-
-
-		};
-	}
-}
+#include "Transform.h"
 
 /*! APIの名前空間に含める */
 namespace API{
+
+	struct MV
+	{
+		DirectX::XMFLOAT3 pos;
+	};
+
+	struct CBuffer
+	{
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
+		DirectX::XMMATRIX proj;
+		DirectX::XMFLOAT4 color;
+	};
 
 	class Mesh
 		: public AbstractRender
@@ -87,6 +71,11 @@ namespace API{
 		*/
 		void Render()override;
 
+		/*!
+			@var	transform
+			@brief	トランスフォーム
+		*/
+		Transform transform;
 	private:
 		static HRESULT CreateInputLayout(Mesh*mesh);
 		static HRESULT CreateVertexBuffer(Mesh*mesh);
@@ -105,5 +94,4 @@ namespace API{
 		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
 	};
-
 }
