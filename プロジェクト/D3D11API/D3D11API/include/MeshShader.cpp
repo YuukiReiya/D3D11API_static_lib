@@ -93,23 +93,23 @@ HRESULT D3D11::Graphic::MeshShader::Setup()
 
 	//	コンスタントバッファ
 	{
-		D3D11_BUFFER_DESC cb;
-		cb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
-		cb.ByteWidth = sizeof(MeshShaderBuffer);
-		cb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-		cb.MiscFlags = 0;
-		cb.StructureByteStride = 0;
-		cb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
-		hr = dev.GetDevice()->CreateBuffer(
-			&cb,
-			NULL,
-			m_pConstantBuffer.GetAddressOf()
-		);
-		if (FAILED(hr)) {
-			std::string error = "\"MeshShader\" ConstantBuffer is not create!";
-			ErrorLog(error);
-			return E_FAIL;
-		}
+		//D3D11_BUFFER_DESC pcb;
+		//pcb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+		//pcb.ByteWidth = sizeof(MeshShaderBuffer);
+		//pcb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+		//pcb.MiscFlags = 0;
+		//pcb.StructureByteStride = 0;
+		//pcb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+		//hr = dev.GetDevice()->CreateBuffer(
+		//	&pcb,
+		//	NULL,
+		//	m_pConstantBuffer.GetAddressOf()
+		//);
+		//if (FAILED(hr)) {
+		//	std::string error = "\"MeshShader\" ConstantBuffer is not create!";
+		//	ErrorLog(error);
+		//	return E_FAIL;
+		//}
 	}
 	return S_OK;
 }
@@ -184,14 +184,15 @@ HRESULT D3D11::Graphic::MeshShader::DynamicSetup()
 */
 HRESULT D3D11::Graphic::MeshShader::CreateConstantBuffer()
 {
-	D3D11_BUFFER_DESC cb;
-	SecureZeroMemory(&cb, sizeof(cb));
-	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cb.ByteWidth = sizeof(MeshShaderBuffer);
-	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cb.Usage = D3D11_USAGE_DYNAMIC;
+	//D3D11_BUFFER_DESC pcb;
+	//SecureZeroMemory(&pcb, sizeof(pcb));
+	//pcb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//pcb.ByteWidth = sizeof(MeshShaderBuffer);
+	//pcb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//pcb.Usage = D3D11_USAGE_DYNAMIC;
 
-	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(&cb, NULL, m_pConstantBuffer.GetAddressOf());
+	return NULL;
+	//return Direct3D11::GetInstance().GetDevice()->CreateBuffer(&pcb, NULL, m_pConstantBuffer.GetAddressOf());
 }
 
 HRESULT D3D11::Graphic::MeshShader::CreateInputLayout(ID3DBlob * pBlob)
