@@ -159,12 +159,32 @@ void Camera::SetPerspective()
 }
 
 /*!
-	@fn			SetEyePt
-	@brief		視点位置のセッター
-	@param[in]	設定する視点位置
+	@fn			SetViewMatrix
+	@brief		ビュー行列のセット
+	@param[in]	ビュー行列として設定する行列
 */
-void API::Camera::SetEyePt(DirectX::XMFLOAT3 eyePt)
+void API::Camera::SetViewMatrix(DirectX::XMMATRIX viewMatrix)
 {
-	m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0);
+	m_ViewMat = viewMatrix;
+}
+
+/*!
+	@fn			SetViewMatrix
+	@brief		ビュー行列のセット
+	@param[in]	ビュー行列を構成する視点位置
+	@param[in]	ビュー行列を構成する注視点
+*/
+void API::Camera::SetViewMatrix(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookAtPt, DirectX::XMFLOAT3 upVector)
+{
+	m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0.0f);
+	m_LookAtPt = DirectX::XMVectorSet(lookAtPt.x, lookAtPt.y, lookAtPt.z, 0.0f);
+	m_UpVec = DirectX::XMVectorSet(upVector.x, upVector.y, upVector.z, 0.0f);
+
+	m_ViewMat = DirectX::XMMatrixLookAtLH(
+		m_EyePt,							// 視点位置
+		m_LookAtPt,							// 注視点
+		m_UpVec								// 上向き方向
+	);
+
 }
 

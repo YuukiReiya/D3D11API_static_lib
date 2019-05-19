@@ -161,11 +161,25 @@ namespace API {
 		void SetPerspective();
 
 		/*!
-			@fn			SetEyePt
-			@brief		視点位置のセッター
-			@param[in]	設定する視点位置
+			@fn			SetViewMatrix
+			@brief		ビュー行列のセット
+			@param[in]	ビュー行列として設定する行列
 		*/
-		void SetEyePt(DirectX::XMFLOAT3 eyePt);
+		void SetViewMatrix(DirectX::XMMATRIX viewMatrix);
+
+		/*!
+			@fn			SetViewMatrix
+			@brief		ビュー行列のセット
+			@param[in]	ビュー行列を構成する視点位置
+			@param[in]	ビュー行列を構成する注視点
+			@param[in]	ビュー行列を構成する上方ベクトル
+			@note		引数のデフォルト引数はメンバに設定された値
+		*/
+		void SetViewMatrix(
+			DirectX::XMFLOAT3 eyePt = VectorToFloat3(GetInstance().m_EyePt),
+			DirectX::XMFLOAT3 lookAtPt = VectorToFloat3(GetInstance().m_LookAtPt),
+			DirectX::XMFLOAT3 upVector = VectorToFloat3(GetInstance().m_UpVec)
+		);
 
 	private:
 		/*!
@@ -188,5 +202,21 @@ namespace API {
 		DirectX::XMVECTOR m_UpVec;		// 上向きベクトル
 		DirectX::XMMATRIX m_ViewMat;	// ビュー行列
 		DirectX::XMMATRIX m_ProjMat;	// プロジェクション行列
+
+		/*!
+			@fn			VectorToFloat3
+			@brief		XMVECTOR型からXMFLOAT3への変換関数
+			@detail		静的インライン関数で外部からの呼び出しは不可!
+			@param[in]	変換元のベクトル
+			@return		変換後のXMFLOAT3
+			@note		必要ならファイル分けをしてそちらに整備
+						※現状ココしか使わない
+		*/
+		static inline DirectX::XMFLOAT3 VectorToFloat3(DirectX::XMVECTOR& v)
+		{
+			DirectX::XMFLOAT3 ret;
+			DirectX::XMStoreFloat3(&ret, v);
+			return ret;
+		}
 	};
 }
