@@ -17,9 +17,26 @@ namespace D3D11 {
 		/*!
 			@brief	基底頂点構造体
 		*/
-		struct BaseVertex
+		struct BaseVertex abstract
 		{
-			DirectX::XMFLOAT3 m_Pos;	/*< 座標 */
+			/*!
+				@brief	デフォルトコンストラクタ
+			*/
+			BaseVertex() = default;
+
+			/*!
+				@brief	引数付きコンストラクタ
+			*/
+			inline BaseVertex(DirectX::XMFLOAT3 position)
+			{
+				this->position = position;
+			}
+
+			/*!
+				@var	position
+				@brief	3D空間上の座標
+			*/
+			DirectX::XMFLOAT3 position;
 		};
 
 #pragma pack(push,16)
@@ -45,7 +62,6 @@ namespace D3D11 {
 //
 //			以下で宣言している"mat"をコメントアウト等で消せば"mat"未定義動作が実行される。
 //------------------------------------------------------------------------------------
-
 #define mat
 #if defined mat
 			DirectX::XMMATRIX m_WorldMatrix;		/*!< ワールド */

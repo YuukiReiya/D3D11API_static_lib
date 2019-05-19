@@ -3,11 +3,16 @@
 #include "MyGame.h"
 #include "Direct3D11.h"
 #include <d3dcompiler.h>
-#include "AbstractShader.h"
 #include "MeshCompVS.h"
 #include "MeshCompPS.h"
 #include "WICTextureLoader.h"
 #include "Keyboard.h"
+#include "MeshReadHelper.h"
+
+//
+#include "MeshConstantBuffer.h"
+#include "MeshVertex.h"
+//
 
 using namespace D3D11;
 using namespace DirectX;
@@ -28,8 +33,8 @@ void Hoge::Init()
 
 		HRESULT hr = D3D11::Direct3D11::GetInstance().Device->CreateInputLayout(
 			vd,
-			//ARRAYSIZE(vd),
-			GetArraySize(vd),
+			ARRAYSIZE(vd),
+			//GetArraySize(vd),
 			g_vs_main,
 			sizeof(g_vs_main),
 			&il
@@ -40,93 +45,6 @@ void Hoge::Init()
 			ErrorLog("layout 作成失敗");
 		}
 	}
-
-	vector<Vertex>mV;
-	//	頂点
-	{
-		//右上
-		mV.push_back({ { 0.5f, 0.5f,0},{1,0,0,1} });
-		//右下
-		mV.push_back({ { 0.5f, -0.5f,0},{1,0,0,1} });
-		//左下
-		mV.push_back({ {-0.5f, -0.5f,0},{1,0,0,1} });
-		//左上
-		mV.push_back({ {-0.5f, 0.5f,0},{1,0,0,1} });
-
-		mV.push_back({ {-0.0f, 1.0f,0},{1,0,0,1} });
-	}
-
-	//	コンスタントバッファ
-	{
-		HRESULT hr;
-		D3D11_BUFFER_DESC cdesc;
-		cdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cdesc.ByteWidth = sizeof(CBuffer);
-		cdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cdesc.MiscFlags = 0;
-		cdesc.StructureByteStride = 0;
-		cdesc.Usage = D3D11_USAGE_DYNAMIC;
-		hr =Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-			&cdesc,
-			0,
-			&cb
-		);
-		if (FAILED(hr)) {
-			ErrorLog("CBUFFER");
-			return;
-		}
-	}
-
-	//	頂点バッファ
-	{
-		D3D11_BUFFER_DESC bd;
-		bd.ByteWidth = sizeof(Vertex) * mV.size();// * 要素数
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = 0;
-		bd.StructureByteStride = 0;
-
-		D3D11_SUBRESOURCE_DATA sd;
-		sd.pSysMem = mV.data();
-		sd.SysMemPitch = 0;
-		sd.SysMemSlicePitch = 0;
-
-		if (FAILED(dev.Device->CreateBuffer(&bd, &sd, &vb))) {
-			ErrorLog("vバッファ作成失敗");
-		}
-	}
-
-	vector<UINT>mI;
-	//	インデックスバッファ
-	{
-		mI.push_back(0);
-		mI.push_back(1);
-		mI.push_back(2);
-		mI.push_back(3);
-		mI.push_back(0);
-
-		D3D11_BUFFER_DESC bd;
-		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(int)*mI.size();
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = 0;
-
-		D3D11_SUBRESOURCE_DATA sd;
-		SecureZeroMemory(&sd, sizeof(sd));
-		sd.pSysMem = mI.data();
-
-		if (FAILED(dev.Device->CreateBuffer(
-			&bd, &sd, &ib
-		))) {
-			ErrorLog("iバッファ作成失敗");
-		}
-		dev.ImmediateContext->IASetIndexBuffer(
-			ib, DXGI_FORMAT_R32_UINT,0
-		);
-	}
-	indexCount = mI.size();
 
 	//	頂点シェーダー
 	{
@@ -141,7 +59,7 @@ void Hoge::Init()
 			ErrorLog("vs作成失敗");
 		}
 	}
-	
+
 	//	ピクセルシェーダー
 	{
 		if (FAILED(
@@ -156,6 +74,91 @@ void Hoge::Init()
 		}
 	}
 
+
+	//	コンスタントバッファ
+	{
+		HRESULT hr;
+		D3D11_BUFFER_DESC cb;
+		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		//cb.ByteWidth = sizeof(CBuffer);
+		cb.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
+		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cb.MiscFlags = 0;
+		cb.StructureByteStride = 0;
+		cb.Usage = D3D11_USAGE_DYNAMIC;
+		hr =Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+			&cb,
+			0,
+			&pcb
+		);
+		if (FAILED(hr)) {
+			ErrorLog("CBUFFER");
+			return;
+		}
+	}
+
+	auto rd = Helper::MeshReadHelper::Read("test.yfm");
+
+	//std::vector<Vertex>m_Vertex;
+	std::vector<D3D11::Graphic::MeshVertex>m_Vertex;
+	//	頂点
+	{
+		//reset
+		m_Vertex.clear();
+		int i = 0;
+		while (i < rd.vertices.size())
+		{
+			//mV.push_back({ { rd.vertices[i].position } });
+			m_Vertex.push_back({ rd.vertices[i].position });
+			//vertex.push_back({ { read.vertices[i].pos }, { 1,0,0,1 } });
+			i++;
+		}
+	}
+
+	//	頂点バッファ
+	{
+		D3D11_BUFFER_DESC bd;
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		//bd.ByteWidth = sizeof(Vertex) * m_Vertex.size();// * 要素数
+		bd.ByteWidth = sizeof(D3D11::Graphic::MeshVertex) * m_Vertex.size();// * 要素数
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = 0;
+		bd.MiscFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA sd;
+		sd.pSysMem = m_Vertex.data();
+
+		if (FAILED(dev.Device->CreateBuffer(&bd, &sd, &vb))) {
+			ErrorLog("vバッファ作成失敗");
+		}
+	}
+
+	std::vector<uint32_t>m_Index;
+	//	インデックスバッファ
+	{
+		m_Index = rd.indices;
+
+		D3D11_BUFFER_DESC bd;
+		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(uint32_t)*m_Index.size();
+		bd.CPUAccessFlags = 0;
+		bd.MiscFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA sd;
+		SecureZeroMemory(&sd, sizeof(sd));
+		sd.pSysMem = m_Index.data();
+
+		if (FAILED(dev.Device->CreateBuffer(
+			&bd, &sd, &ib
+		))) {
+			ErrorLog("iバッファ作成失敗");
+		}
+		dev.ImmediateContext->IASetIndexBuffer(
+			ib, DXGI_FORMAT_R32_UINT, 0
+		);
+	}
+	indexCount = m_Index.size();
 	//	SRV
 	{
 		//	テクスチャ読み込み
@@ -179,7 +182,7 @@ void Hoge::Init()
 			ErrorLog("srv"); 
 		};
 	}
-
+	
 	//	サンプラー
 	{
 		D3D11_SAMPLER_DESC sd;
@@ -244,30 +247,35 @@ void Hoge::Draw()
 	//	コンスタントバッファ送信
 	{
 		D3D11_MAPPED_SUBRESOURCE pData;
-		CBuffer cb_desc;
-		hr = Direct3D11::GetInstance().GetImmediateContext()->Map(cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData);
+		//CBuffer cb_desc;
+		D3D11::Graphic::MeshConstantBuffer cb_desc;
+		hr = Direct3D11::GetInstance().GetImmediateContext()->Map(pcb, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData);
 		if (FAILED(hr)) {
 			ErrorLog("map");
 			exit(0);
 		}
-		cb_desc.world = w;
-		cb_desc.view = v;
-		cb_desc.proj = p;
+		//cb_desc.world = w;
+		//cb_desc.view = v;
+		//cb_desc.proj = p;
+		cb_desc.m.world = w;
+		cb_desc.m.view= v;
+		cb_desc.m.proj = p;
 		cb_desc.color = { 1,1,1,1 };
 
 		memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb_desc), sizeof(cb_desc));
-		Direct3D11::GetInstance().GetImmediateContext()->Unmap(cb, 0);
+		Direct3D11::GetInstance().GetImmediateContext()->Unmap(pcb, 0);
 	}
 
 	//	CBufferを使うシェーダーのバインド
 	{
-		Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(0, 1, &cb);
-		Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(0, 1, &cb);
+		Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(0, 1, &pcb);
+		Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(0, 1, &pcb);
 	}
 
 	//	頂点バッファセット
 	{
-		UINT stride = sizeof(Vertex);
+		//UINT stride = sizeof(Vertex);
+		UINT stride = sizeof(D3D11::Graphic::MeshVertex);
 		UINT offset = 0;
 		Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 	}
@@ -305,6 +313,7 @@ void Hoge::Draw()
 
 	//Direct3D11::GetInstance().GetImmediateContext()->Draw(3, 0);
 	//Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(mI.size(), 0, 0);
+	//Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_Index.size(), 0, 0);
 	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(indexCount, 0, 0);
 }
 

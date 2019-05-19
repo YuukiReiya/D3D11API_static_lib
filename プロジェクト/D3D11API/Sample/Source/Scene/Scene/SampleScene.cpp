@@ -58,6 +58,8 @@ shared_ptr<Mesh>g_pMesh;
 shared_ptr<D3D11::Graphic::AbstractShader>g_pShader;
 shared_ptr<D3D11::Graphic::AbstractShader>g_pMeshShader;
 
+API::Mesh* gpMesh;
+
 /*!
 	@brief	コンストラクタ
 */
@@ -113,12 +115,14 @@ void SampleScene::Initialize()
 	HRESULT hr = g_pMesh->Initialize();
 	//g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
 	//if (FAILED(g_pMeshShader->Setup())) {
-	//	exit(0);
+	//@	exit(0);
 	//}
 
 	//g_pMesh->SetupShader(g_pMeshShader.get());
 
 
+	gpMesh = new API::Mesh();
+	gpMesh->Initialize();
 
 	gh = new Hoge();
 	gh->Init();
@@ -183,11 +187,12 @@ void SampleScene::Render()
 
 	//	メッシュ
 	{
-		g_pMesh->Render();
+		//g_pMesh->Render();
+		//gpMesh->Render();
 	}
 
 	//	頂点バッファ＆インデックスバッファ
 	{
-		//gh->Draw();
+		gh->Draw();
 	}
 }
