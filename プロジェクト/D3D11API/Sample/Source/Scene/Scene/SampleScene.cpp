@@ -148,25 +148,25 @@ void SampleScene::Update()
 	}
 
 	auto pos = g_pMesh->transform.GetPosition();
+	auto val = 0.1f;
 
-
-	if (Keyboard::GetButtonDown('a')) {
-		pos.x--;
+	if (Keyboard::GetButton('a')) {
+		pos.x -= val;
 	}
-	if (Keyboard::GetButtonDown('d')) {
-		pos.x++;
+	if (Keyboard::GetButton('d')) {
+		pos.x += val;
 	}
-	if (Keyboard::GetButtonDown('w')) {
-		pos.y++;
+	if (Keyboard::GetButton('w')) {
+		pos.y += val;
 	}
-	if (Keyboard::GetButtonDown('s')) {
-		pos.y--;
+	if (Keyboard::GetButton('s')) {
+		pos.y -= val;
 	}
-	if (Keyboard::GetButtonDown('q')) {
-		pos.z--;
+	if (Keyboard::GetButton('q')) {
+		pos.z -= val;
 	}
-	if (Keyboard::GetButtonDown('e')) {
-		pos.z++;
+	if (Keyboard::GetButton('e')) {
+		pos.z += val;
 	}
 
 	g_pMesh->transform.SetPosition(pos);

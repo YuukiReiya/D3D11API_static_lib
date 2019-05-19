@@ -245,7 +245,8 @@ void Mesh::Render()
 	XMMATRIX w, v, p;
 	//	world
 	{
-		w = XMMatrixTranslation(0, 0, 0);
+		//w = XMMatrixTranslation(0, 0, 0);
+		w = transform.GetMatrix();
 		w = XMMatrixTranspose(w);
 	}
 

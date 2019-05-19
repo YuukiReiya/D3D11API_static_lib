@@ -231,7 +231,7 @@ void Main::App()
 		// •`‰æˆ—
 		Render();
 		// FPS’²®
-		//SleepApp();
+		SleepApp();
 	}
 }
 
