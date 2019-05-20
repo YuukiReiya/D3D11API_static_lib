@@ -9,7 +9,6 @@
 #include "WICTextureLoader.h"
 #include "MeshConstantBuffer.h"
 #include "MeshReadHelper.h"
-#include <vector>
 #include "Camera.h"
 
 using namespace DirectX;
@@ -33,20 +32,23 @@ HRESULT Mesh::Initialize()
 	//	exit(0);
 	//}
 
-	//if (FAILED(CreateVertexBuffer(this))) {
-	//	ErrorLog("vertexbuffer");
-	//	exit(0);
-	//}
+	//	外部ファイルの読み取り
+	auto rd = Helper::MeshReadHelper::Read("test.yfm");
 
-	//if (FAILED(CreateIndexBuffer(this))) {
-	//	ErrorLog("indexbuffer");
-	//	exit(0);
-	//}
-	//Direct3D11::GetInstance().GetImmediateContext()->IASetIndexBuffer(
-	//	m_pIndexBuffer.Get(),
-	//	DXGI_FORMAT::DXGI_FORMAT_R32_UINT,
-	//	0
-	//);
+	//	頂点バッファ作成
+	if (FAILED(CreateVertexBuffer(this,rd.vertices))) {
+		ErrorLog("vertexbuffer");
+		exit(0);
+	}
+
+	//	インデックスバッファ作成
+	if (FAILED(CreateIndexBuffer(this,rd.indices))) {
+		ErrorLog("indexbuffer");
+		exit(0);
+	}
+	//	インデックスの設定
+	SetupIndexBuffer(this);
+
 
 	//if (FAILED(CreateVertexShader())) {
 	//	ErrorLog("vshader");
@@ -58,138 +60,140 @@ HRESULT Mesh::Initialize()
 	//	exit(0);
 	//}
 
-	//if (FAILED(CreateConstantBuffer(this))) {
-	//	ErrorLog("constant buffer");
-	//	exit(0);
-	//}
+	if (FAILED(CreateConstantBuffer(this))) {
+		ErrorLog("constant buffer");
+		exit(0);
+	}
 
 	//===================================
 	//	デバイス
-	auto& dev = D3D11::Direct3D11::GetInstance();
+#pragma region 直
 
-	//	頂点レイアウト
-	{
-		D3D11_INPUT_ELEMENT_DESC vd[]
-		{
-			{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,	 0,							  0,D3D11_INPUT_PER_VERTEX_DATA,0},
-			{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		};
+	//auto& dev = D3D11::Direct3D11::GetInstance();
 
-		HRESULT hr = D3D11::Direct3D11::GetInstance().Device->CreateInputLayout(
-			vd,
-			GetArraySize(vd),
-			g_vs_main,
-			sizeof(g_vs_main),
-			m_pInputLayout.GetAddressOf()
-		);
-		if (FAILED(
-			hr
-		)) {
-			ErrorLog("layout 作成失敗");
-		}
-	}
+	////	頂点レイアウト
+	//{
+	//	D3D11_INPUT_ELEMENT_DESC vd[]
+	//	{
+	//		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,	 0,							  0,D3D11_INPUT_PER_VERTEX_DATA,0},
+	//		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	//	};
 
-	//	頂点シェーダー
-	{
-		if (FAILED(
-			D3D11::Direct3D11::GetInstance().Device->CreateVertexShader(
-				&g_vs_main,
-				sizeof(g_vs_main),
-				NULL,
-				m_pVertexShader.GetAddressOf()
-			)
-		)) {
-			ErrorLog("vs作成失敗");
-		}
-	}
+	//	HRESULT hr = D3D11::Direct3D11::GetInstance().Device->CreateInputLayout(
+	//		vd,
+	//		GetArraySize(vd),
+	//		g_vs_main,
+	//		sizeof(g_vs_main),
+	//		m_pInputLayout.GetAddressOf()
+	//	);
+	//	if (FAILED(
+	//		hr
+	//	)) {
+	//		ErrorLog("layout 作成失敗");
+	//	}
+	//}
 
-	//	ピクセルシェーダー
-	{
-		if (FAILED(
-			D3D11::Direct3D11::GetInstance().Device->CreatePixelShader(
-				&g_ps_main,
-				sizeof(g_ps_main),
-				NULL,
-				m_pPixelShader.GetAddressOf()
-			)
-		)) {
-			ErrorLog("ps作成失敗");
-		}
-	}
+	////	頂点シェーダー
+	//{
+	//	if (FAILED(
+	//		D3D11::Direct3D11::GetInstance().Device->CreateVertexShader(
+	//			&g_vs_main,
+	//			sizeof(g_vs_main),
+	//			NULL,
+	//			m_pVertexShader.GetAddressOf()
+	//		)
+	//	)) {
+	//		ErrorLog("vs作成失敗");
+	//	}
+	//}
 
-	auto rd = Helper::MeshReadHelper::Read("test.yfm");
+	////	ピクセルシェーダー
+	//{
+	//	if (FAILED(
+	//		D3D11::Direct3D11::GetInstance().Device->CreatePixelShader(
+	//			&g_ps_main,
+	//			sizeof(g_ps_main),
+	//			NULL,
+	//			m_pPixelShader.GetAddressOf()
+	//		)
+	//	)) {
+	//		ErrorLog("ps作成失敗");
+	//	}
+	//}
 
+	//auto rd = Helper::MeshReadHelper::Read("test.yfm");
 
-	//	コンスタントバッファ
-	{
-		HRESULT hr;
-		D3D11_BUFFER_DESC cb;
-		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cb.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
-		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cb.MiscFlags = 0;
-		cb.StructureByteStride = 0;
-		cb.Usage = D3D11_USAGE_DYNAMIC;
-		hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-			&cb,
-			0,
-			m_pConstantBuffer.GetAddressOf()
-		);
-		if (FAILED(hr)) {
-			ErrorLog("CBUFFER");
-			return E_FAIL;
-		}
-	}
+	////	コンスタントバッファ
+	//{
+	//	HRESULT hr;
+	//	D3D11_BUFFER_DESC cb;
+	//	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//	cb.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
+	//	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//	cb.MiscFlags = 0;
+	//	cb.StructureByteStride = 0;
+	//	cb.Usage = D3D11_USAGE_DYNAMIC;
+	//	hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+	//		&cb,
+	//		0,
+	//		m_pConstantBuffer.GetAddressOf()
+	//	);
+	//	if (FAILED(hr)) {
+	//		ErrorLog("CBUFFER");
+	//		return E_FAIL;
+	//	}
+	//}
 
-	vector<MeshVertex>vertex;
-	//	頂点バッファ
-	{
-		vertex.clear();
-		for (auto it : rd.vertices) {
-			vertex.push_back({ it.position });
-		}
+	//auto&dev = Direct3D11::GetInstance();
+	//vector<MeshVertex>vertex;
+	////	頂点バッファ
+	//{
+	//	vertex.clear();
+	//	for (auto it : rd.vertices) {
+	//		vertex.push_back({ it.position });
+	//	}
 
-		D3D11_BUFFER_DESC bd;
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(MeshVertex) * vertex.size();// * 要素数
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = 0;
+	//	D3D11_BUFFER_DESC bd;
+	//	bd.Usage = D3D11_USAGE_DEFAULT;
+	//	bd.ByteWidth = sizeof(MeshVertex) * vertex.size();// * 要素数
+	//	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//	bd.CPUAccessFlags = 0;
+	//	bd.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA sd;
-		sd.pSysMem = vertex.data();
+	//	D3D11_SUBRESOURCE_DATA sd;
+	//	sd.pSysMem = vertex.data();
 
-		if (FAILED(dev.Device->CreateBuffer(&bd, &sd, m_pVertexBuffer.GetAddressOf()))) {
-			ErrorLog("vバッファ作成失敗");
-		}
-	}
+	//	if (FAILED(dev.Device->CreateBuffer(&bd, &sd, m_pVertexBuffer.GetAddressOf()))) {
+	//		ErrorLog("vバッファ作成失敗");
+	//	}
+	//}
 
-	std::vector<uint32_t>index;
-	//	インデックスバッファ
-	{
-		index = rd.indices;
+	//std::vector<uint32_t>index;
+	////	インデックスバッファ
+	//{
+	//	index = rd.indices;
 
-		D3D11_BUFFER_DESC bd;
-		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(uint32_t)*index.size();
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = 0;
+	//	D3D11_BUFFER_DESC bd;
+	//	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	//	bd.Usage = D3D11_USAGE_DEFAULT;
+	//	bd.ByteWidth = sizeof(uint32_t)*index.size();
+	//	bd.CPUAccessFlags = 0;
+	//	bd.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA sd;
-		SecureZeroMemory(&sd, sizeof(sd));
-		sd.pSysMem = index.data();
+	//	D3D11_SUBRESOURCE_DATA sd;
+	//	SecureZeroMemory(&sd, sizeof(sd));
+	//	sd.pSysMem = index.data();
 
-		if (FAILED(dev.Device->CreateBuffer(
-			&bd, &sd, m_pIndexBuffer.GetAddressOf()
-		))) {
-			ErrorLog("iバッファ作成失敗");
-		}
-		dev.ImmediateContext->IASetIndexBuffer(
-			m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0
-		);
-	}
-	indexCount = index.size();
+	//	if (FAILED(dev.Device->CreateBuffer(
+	//		&bd, &sd, m_pIndexBuffer.GetAddressOf()
+	//	))) {
+	//		ErrorLog("iバッファ作成失敗");
+	//	}
+	//	dev.ImmediateContext->IASetIndexBuffer(
+	//		m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0
+	//	);
+	//}
+	//indexCount = index.size();
 
 	//	SRV
 	{
@@ -234,6 +238,7 @@ HRESULT Mesh::Initialize()
 		}
 	}
 
+#pragma endregion
 
 
 	return S_OK;
@@ -274,8 +279,11 @@ void Mesh::Render()
 
 	//	シェーダーセット
 	{
-		Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(m_pVertexShader.Get(), 0, 0);
-		Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(m_pPixelShader.Get(), 0, 0);
+		//Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(m_pVertexShader.Get(), 0, 0);
+		//Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(m_pPixelShader.Get(), 0, 0);
+		auto shader = *m_pShader.lock();
+		Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(shader->GetVertexShader(), 0, 0);
+		Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(shader->GetPixelShader(), 0, 0);
 	}
 
 	//	コンスタントバッファ送信
@@ -329,7 +337,9 @@ void Mesh::Render()
 
 	//	頂点レイアウトセット
 	{
-		Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(m_pInputLayout.Get());
+		//Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(m_pInputLayout.Get());
+		auto shader = *m_pShader.lock();
+		Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(shader->GetInputLayout());
 	}
 
 	//	トポロジー
@@ -358,44 +368,119 @@ void Mesh::Render()
 
 }
 
-HRESULT API::Mesh::CreateInputLayout(Mesh * mesh)
-{
-	D3D11_INPUT_ELEMENT_DESC vd[]
-	{
-		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,	 0,							  0,D3D11_INPUT_PER_VERTEX_DATA,0},
-		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
-	};
 
-	return Direct3D11::GetInstance().GetDevice()->CreateInputLayout(
-		vd,
-		GetArraySize(vd),
-		g_vs_main,
-		sizeof(g_vs_main),
-		mesh->m_pInputLayout.GetAddressOf()
+HRESULT API::Mesh::CreateIndexBuffer(Mesh * mesh, std::vector<uint32_t> indices)
+{
+	//	頂点数保持
+	mesh->indexCount = indices.size();
+
+	//	バッファの仕様
+	D3D11_BUFFER_DESC bd;
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(uint32_t)*indices.size();
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = NULL;
+
+	//	サブリソースの仕様	
+	D3D11_SUBRESOURCE_DATA sd;
+	SecureZeroMemory(&sd, sizeof(sd));
+	sd.pSysMem = indices.data();
+
+	//	インデックスバッファ作成
+	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&sd,
+		mesh->m_pIndexBuffer.GetAddressOf()
 	);
-}
-
-HRESULT API::Mesh::CreateVertexBuffer(Mesh * mesh)
-{
-	return E_FAIL;
-}
-
-HRESULT API::Mesh::CreateIndexBuffer(Mesh * mesh)
-{
-	return E_FAIL;
 }
 
 HRESULT API::Mesh::CreateConstantBuffer(Mesh * mesh)
 {
-	return E_FAIL;
+	//	バッファの仕様
+	D3D11_BUFFER_DESC bd;
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bd.ByteWidth = sizeof(MeshConstantBuffer);
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bd.MiscFlags = NULL;
+	bd.StructureByteStride = 0;
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+
+	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		NULL,
+		mesh->m_pConstantBuffer.GetAddressOf()
+	);
 }
 
-HRESULT API::Mesh::CreateVertexShader()
+void API::Mesh::SetupIndexBuffer(Mesh * mesh)
 {
-	return E_FAIL;
+	static const uint32_t indexBufferOffset = 0;
+	Direct3D11::GetInstance().GetImmediateContext()->IASetIndexBuffer(
+		mesh->m_pIndexBuffer.Get(),
+		DXGI_FORMAT_R32_UINT,
+		indexBufferOffset
+	);
+
 }
 
-HRESULT API::Mesh::CreatePixelShader()
+//HRESULT API::Mesh::CreateInputLayout(Mesh * mesh)
+//{
+//	D3D11_INPUT_ELEMENT_DESC vd[]
+//	{
+//		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,	 0,							  0,D3D11_INPUT_PER_VERTEX_DATA,0},
+//		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+//	};
+//
+//	return Direct3D11::GetInstance().GetDevice()->CreateInputLayout(
+//		vd,
+//		GetArraySize(vd),
+//		g_vs_main,
+//		sizeof(g_vs_main),
+//		mesh->m_pInputLayout.GetAddressOf()
+//	);
+//}
+//
+//HRESULT API::Mesh::CreateVertexShader()
+//{
+//	return Direct3D11::GetInstance().GetDevice()->CreateVertexShader(
+//		&g_vs_main,
+//		sizeof(g_vs_main),
+//		NULL,
+//		m_pVertexShader.GetAddressOf()
+//	);
+//}
+//
+//HRESULT API::Mesh::CreatePixelShader()
+//{
+//	return Direct3D11::GetInstance().GetDevice()->CreatePixelShader(
+//		&g_ps_main,
+//		sizeof(g_ps_main),
+//		NULL,
+//		m_pPixelShader.GetAddressOf()
+//	);
+//}
+//
+template <class T>
+HRESULT API::Mesh::CreateVertexBuffer(Mesh*mesh, std::vector<T>verttices)
 {
-	return E_FAIL;
+	//	バッファの仕様
+	D3D11_BUFFER_DESC bd;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(T) * verttices.size();
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = NULL;
+
+	//	サブリソースの仕様
+	D3D11_SUBRESOURCE_DATA sd;
+	sd.pSysMem = verttices.data();
+
+	//	頂点バッファ作成
+	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&sd,
+		mesh->m_pVertexBuffer.GetAddressOf()
+	);
+
 }

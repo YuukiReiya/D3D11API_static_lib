@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Direct3D11.h"
 #include "MeshShader.h"
+#include "MeshConstantBuffer.h"
 #include "Mesh.h"
 #include "MyGame.h"
 #include <wrl/client.h>
@@ -93,23 +94,23 @@ HRESULT D3D11::Graphic::MeshShader::Setup()
 
 	//	コンスタントバッファ
 	{
-		//D3D11_BUFFER_DESC pcb;
-		//pcb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
-		//pcb.ByteWidth = sizeof(MeshShaderBuffer);
-		//pcb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-		//pcb.MiscFlags = 0;
-		//pcb.StructureByteStride = 0;
-		//pcb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
-		//hr = dev.GetDevice()->CreateBuffer(
-		//	&pcb,
-		//	NULL,
-		//	m_pConstantBuffer.GetAddressOf()
-		//);
-		//if (FAILED(hr)) {
-		//	std::string error = "\"MeshShader\" ConstantBuffer is not create!";
-		//	ErrorLog(error);
-		//	return E_FAIL;
-		//}
+		D3D11_BUFFER_DESC pcb;
+		pcb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+		pcb.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
+		pcb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+		pcb.MiscFlags = 0;
+		pcb.StructureByteStride = 0;
+		pcb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+		hr = dev.GetDevice()->CreateBuffer(
+			&pcb,
+			NULL,
+			m_pConstantBuffer.GetAddressOf()
+		);
+		if (FAILED(hr)) {
+			std::string error = "\"MeshShader\" ConstantBuffer is not create!";
+			ErrorLog(error);
+			return E_FAIL;
+		}
 	}
 	return S_OK;
 }

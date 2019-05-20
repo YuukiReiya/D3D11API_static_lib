@@ -7,10 +7,13 @@
 #pragma once
 #include <d3d11.h>
 #include <string>
+#include <vector>
+#include <memory>
 #include <wrl/client.h>
 #include <DirectXMath.h>
 #include "AbstractRender.h"
 #include "Transform.h"
+#include "AbstractShader.h"
 
 /*! APIÇÃñºëOãÛä‘Ç…ä‹ÇﬂÇÈ */
 namespace API{
@@ -44,6 +47,10 @@ namespace API{
 		*/
 		HRESULT Initialize(std::string path);
 
+		void SetupShader(D3D11::Graphic::AbstractShader*s) {
+			m_pShader = s->GetSharedPtr();
+		}
+
 		/*!	
 			@fn		Finalize
 			@brief	îjä¸èàóù
@@ -65,19 +72,28 @@ namespace API{
 		Transform transform;
 	private:
 		static HRESULT CreateInputLayout(Mesh*mesh);
-		static HRESULT CreateVertexBuffer(Mesh*mesh);
-		static HRESULT CreateIndexBuffer(Mesh*mesh);
+		static HRESULT CreateVertexBuffer(Mesh*mesh, std::vector<DirectX::XMFLOAT3>verttices);
+		static HRESULT CreateIndexBuffer(Mesh*mesh,std::vector<uint32_t>indices);
 		static HRESULT CreateConstantBuffer(Mesh*mesh);
+		static void SetupIndexBuffer(Mesh*mesh);
+		std::weak_ptr<D3D11::Graphic::AbstractShader*>m_pShader;
+		template <class Vertex>
+		static HRESULT CreateVertexBuffer(Mesh*mesh, std::vector<Vertex>verttices);
+
+
 		HRESULT CreateVertexShader();
 		HRESULT CreatePixelShader();
+
+		
 
 		uint32_t indexCount;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pConstantBuffer;
-		Microsoft::WRL::ComPtr<ID3D11InputLayout>m_pInputLayout;
-		Microsoft::WRL::ComPtr<ID3D11VertexShader>m_pVertexShader;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader>m_pPixelShader;
+
+		//Microsoft::WRL::ComPtr<ID3D11InputLayout>m_pInputLayout;
+		//Microsoft::WRL::ComPtr<ID3D11VertexShader>m_pVertexShader;
+		//Microsoft::WRL::ComPtr<ID3D11PixelShader>m_pPixelShader;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
 	};
