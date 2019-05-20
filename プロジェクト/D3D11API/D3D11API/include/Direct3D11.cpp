@@ -404,58 +404,13 @@ HRESULT Direct3D11::Initialize(HWND& hWnd)
 */
 void Direct3D11::Release()
 {
-	//if (m_pRasterizerState != nullptr) {
-	//m_pRasterizerState->Release();
-	//m_pRasterizerState.Reset();
-	//m_pRasterizerState = nullptr;
-	//}
-	//if (m_pSwapChain != nullptr) {
-	//m_pSwapChain->Release();
-	//m_pSwapChain.Reset();
-	//m_pSwapChain = nullptr;
-	//}
-	//if (m_pRenderTargetView != nullptr) {
-	//m_pRenderTargetView->Release();
-	//m_pRenderTargetView.Reset();
-	//m_pRenderTargetView = nullptr;
-	//}
-	//if (m_pDepthStencil != nullptr) {
-	//m_pDepthStencil->Release();
-	//m_pDepthStencil.Reset();
-	//m_pDepthStencil = nullptr;
-	//}
-	//if (m_pDepthStencilView != nullptr) {
-	//m_pDepthStencilView->Release();
-	//m_pDepthStencilView.Reset();
-	//m_pDepthStencilView = nullptr;
-
-	//}
-	//if (m_pDepthStencilState != nullptr) {
-	//m_pDepthStencilState->Release();
-	//m_pDepthStencilState.Reset();
-	//m_pDepthStencilState = nullptr;
-
-	//}
-	//if (m_pDebug != nullptr) { m_pDebug->Release(); }
-	//if (m_pDevice != nullptr) {
-	//m_pDevice->Release();
-	//m_pDevice.Reset();
-	//m_pDevice = nullptr;
-	//}
-	//if (m_pImmediateContext != nullptr) {
-	//m_pImmediateContext->Release();
-	//m_pImmediateContext.Reset();
-	//m_pImmediateContext = nullptr;
-	//}
-
-
 	m_pRasterizerState.Reset();
 	m_pSwapChain.Reset();
 	m_pRenderTargetView.Reset();
 	m_pDepthStencil.Reset();
 	m_pDepthStencilView.Reset();
 	m_pDepthStencilState.Reset();
-	if (m_pDebug != nullptr) { m_pDebug.Reset(); }
+	m_pDebug.Reset();
 	m_pDevice.Reset();
 	m_pImmediateContext.Reset();
 }
