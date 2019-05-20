@@ -47,8 +47,26 @@ namespace API{
 		*/
 		HRESULT Initialize(std::string path);
 
-		void SetupShader(D3D11::Graphic::AbstractShader*s) {
-			m_pShader = s->GetSharedPtr();
+		/*!
+			@fn			SetupShader
+			@brief		シェーダーの参照のセット
+			@detail		静的関数で作っておけばループ文で回せる
+			@param[in]	設定先のメッシュ
+			@param[in]	設定元のシェーダー
+		*/
+		static inline void SetupShader(Mesh*mesh, D3D11::Graphic::AbstractShader*shader)
+		{
+			mesh->m_pShader = shader->GetSharedPtr();
+		}
+
+		/*!
+			@fn			SetupShader
+			@brief		シェーダーの参照のセット
+			@param[in]	設定元のシェーダー
+		*/
+		inline void SetupShader(D3D11::Graphic::AbstractShader*shader)
+		{
+			SetupShader(this, shader);
 		}
 
 		/*!	
@@ -71,30 +89,77 @@ namespace API{
 		*/
 		Transform transform;
 	private:
-		static HRESULT CreateInputLayout(Mesh*mesh);
-		static HRESULT CreateVertexBuffer(Mesh*mesh, std::vector<DirectX::XMFLOAT3>verttices);
+		/*!
+			@fn			CreateIndexBuffer
+			@brief		インデックスバッファ作成
+			@detail		生成関数は静的でいい
+			@param[in]	バインドするメッシュ
+			@param[in]	インデックス情報
+			@return		S_OK:成功 E_FAIL:失敗
+		*/
 		static HRESULT CreateIndexBuffer(Mesh*mesh,std::vector<uint32_t>indices);
-		static HRESULT CreateConstantBuffer(Mesh*mesh);
+
+		/*!
+			@fn			SetupIndexBuffer
+			@brief		生成したインデックスバッファのセット
+			@param[in]	バインド先のメッシュ
+		*/
 		static void SetupIndexBuffer(Mesh*mesh);
-		std::weak_ptr<D3D11::Graphic::AbstractShader*>m_pShader;
+
+		/*!
+			@template	Vertex
+			@brief		CreateVertexBuffer関数で使う頂点構造体のためのテンプレート
+		*/
 		template <class Vertex>
+
+		/*!
+			@fn			CreateVertexBuffer
+			@brief		頂点バッファ生成
+			@param[in]	生成先のメッシュ
+			@param[in]	頂点バッファを構成する頂点情報
+			@return		S_OK:成功 E_FAIL:失敗
+		*/
 		static HRESULT CreateVertexBuffer(Mesh*mesh, std::vector<Vertex>verttices);
 
+		/*!
+			@var	m_IndexCount
+			@brief	頂点インデックスのインデックス数
+		*/
+		uint32_t m_IndexCount;
 
-		HRESULT CreateVertexShader();
-		HRESULT CreatePixelShader();
+		/*!
+			@var	m_pShader
+			@brief	Meshクラスで使用するシェーダーの弱参照
+			@detail	weak_ptr
+		*/
+		std::weak_ptr<D3D11::Graphic::AbstractShader*>m_pShader;
 
-		
-
-		uint32_t indexCount;
+		/*!
+			@var	m_pVertexBuffer
+			@brief	頂点バッファ
+			@detail	ComPtr
+		*/
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pVertexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pConstantBuffer;
 
-		//Microsoft::WRL::ComPtr<ID3D11InputLayout>m_pInputLayout;
-		//Microsoft::WRL::ComPtr<ID3D11VertexShader>m_pVertexShader;
-		//Microsoft::WRL::ComPtr<ID3D11PixelShader>m_pPixelShader;
+		/*!
+			@var	m_pIndexBuffer
+			@brief	インデックスバッファ
+			@detail	ComPtr
+		*/
+		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
+
+		/*!
+			@var	m_pSamplerState
+			@brief	サンプラーステート
+			@detail	ComPtr
+		*/
 		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
+
+		/*!
+			@var	m_pSRV
+			@brief	シェーダーリソースビュー
+			@detail	ComPtr
+		*/
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
 	};
 }

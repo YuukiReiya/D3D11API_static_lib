@@ -23,60 +23,6 @@ D3D11::Graphic::AbstractShader::AbstractShader()
 }
 
 /*!
-	@fn			PreCompile
-	@brief		プリコンパイル済みファイルを用いたシェーダーファイルのコンパイル
-	@param[in]	シェーダーファイルのパス
-	@param[in]	エントリーポイント名
-	@param[in]	シェーダーのプロファイル名 ex)vs_5_0
-	@param[in]	コンパイル用のブロブ
-	@return		S_OK:成功 E_FAIL:失敗
-*/
-HRESULT D3D11::Graphic::AbstractShader::PreCompile(std::string path, std::string funcName, std::string profileName, ID3DBlob ** ppBlob)
-{
-	HRESULT hr;
-
-	Microsoft::WRL::ComPtr<ID3DBlob>pError = nullptr;
-
-	//	読み込みパスはマルチバイト文字
-	auto wPath = const_cast<LPCWSTR>(To_WString(path).c_str());
-
-	//	コンパイルオプション
-	DWORD compileOption = D3DCOMPILE_SKIP_VALIDATION;
-#if defined DEBUG||_DEBUG
-	compileOption = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_VALIDATION;
-#endif
-
-	//	コンパイル
-	hr = D3DCompileFromFile(
-		wPath,
-		NULL,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		funcName.c_str(),
-		profileName.c_str(),
-		compileOption,
-		NULL,
-		ppBlob,
-		pError.GetAddressOf()
-	);
-
-	//	エラー処理
-	if (FAILED(hr)) {
-		std::string bufferError = static_cast<char*>(pError->GetBufferPointer());
-		std::string error = "\"" + path + "\" is not compile from file!\n" + bufferError;
-		ErrorLog(error);
-		return E_FAIL;
-	}
-
-	//	明示的開放
-	if (pError != nullptr) {
-		pError->Release();
-		pError = nullptr;
-	}
-
-	return S_OK;
-}
-
-/*!
 	@fn		DynamicCompile
 	@brief	シェーダーファイルの動的コンパイル
 	@param[in]	シェーダーファイルのパス

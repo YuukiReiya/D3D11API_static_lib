@@ -44,41 +44,34 @@ namespace D3D11 {
 			virtual HRESULT DynamicSetup()abstract;
 
 			/*!
-				@fn		GetInputLayoutPtr
+				@fn		GetInputLayout
 				@brief	頂点レイアウトの取得
 				@detail	インライン関数
 			*/
-			inline ID3D11InputLayout**GetInputLayoutPtr() { return m_pVertexLayout.GetAddressOf(); }
+			inline ID3D11InputLayout**GetInputLayout() { return m_pVertexLayout.GetAddressOf(); }
 
 			/*!
-			
-			*/
-			inline ID3D11InputLayout*GetInputLayout() { return m_pVertexLayout.Get(); }
-
-			/*!
-				@fn		GetVertexShaderPtr
+				@fn		GetVertexShader
 				@brief	頂点シェーダーの取得
 				@detail	インライン関数
 			*/
-			inline ID3D11VertexShader**GetVertexShaderPtr(){ return m_pVertexShader.GetAddressOf(); }
-
-			inline ID3D11VertexShader*GetVertexShader() { return m_pVertexShader.Get(); }
+			inline ID3D11VertexShader**GetVertexShader(){ return m_pVertexShader.GetAddressOf(); }
 
 			/*!
-				@fn		GetPixelShaderPtr
+				@fn		GetPixelShader
 				@brief	ピクセルシェーダーの取得
 				@detail	インライン関数
 
 			*/
-			inline ID3D11PixelShader**GetPixelShaderPtr() { return m_pPixelShader.GetAddressOf(); }
-			inline ID3D11PixelShader*GetPixelShader() { return m_pPixelShader.Get(); }
+			inline ID3D11PixelShader**GetPixelShader() { return m_pPixelShader.GetAddressOf(); }
+			
 			/*!
-				@fn		GetConstantBufferPtr
+				@fn		GetConstantBuffer
 				@brief	コンスタントバッファの取得
 				@detail	インライン関数
 			*/
-			inline ID3D11Buffer**GetConstantBufferPtr() { return m_pConstantBuffer.GetAddressOf(); }
-			inline ID3D11Buffer*GetConstantBuffer() { return m_pConstantBuffer.Get(); }
+			inline ID3D11Buffer**GetConstantBuffer() { return m_pConstantBuffer.GetAddressOf(); }
+			
 			/*!
 				@fn		GetSharedPtr
 				@brief	AbstractShader型シェアード・ポインタの取得
@@ -90,19 +83,8 @@ namespace D3D11 {
 
 		protected:
 			/*!
-				@fn			PreCompile
-				@brief		プリコンパイル済みファイルを用いたシェーダーファイルのコンパイル
-				@param[in]	シェーダーファイルのパス
-				@param[in]	エントリーポイント名
-				@param[in]	シェーダーのプロファイル名 ex)vs_5_0
-				@param[in]	コンパイル用のブロブ
-				@return		S_OK:成功 E_FAIL:失敗
-			*/
-			static HRESULT PreCompile(std::string path, std::string funcName, std::string profileName, ID3DBlob**ppBlob);
-
-			/*!
-				@fn		DynamicCompile
-				@brief	シェーダーファイルの動的コンパイル
+				@fn			DynamicCompile
+				@brief		シェーダーファイルの動的コンパイル
 				@param[in]	シェーダーファイルのパス
 				@param[in]	エントリーポイント名
 				@param[in]	シェーダーのプロファイル名 ex)vs_5_0

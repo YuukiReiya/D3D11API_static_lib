@@ -408,6 +408,8 @@ void Direct3D11::Release()
 	m_pDepthStencil.Reset();
 	m_pDepthStencilView.Reset();
 	m_pDepthStencilState.Reset();
+	ReportCOMs("ƒ‰ƒXƒg");
+	if (m_pDebug != nullptr) { m_pDebug.Reset(); }
 	m_pDevice.Reset();
 	m_pImmediateContext.Reset();
 }

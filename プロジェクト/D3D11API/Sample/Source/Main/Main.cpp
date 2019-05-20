@@ -245,7 +245,7 @@ void Main::Update()
 	Keyboard::UpdateBuffer();
 
 	//	シーンの更新
-	SceneRoot::GetInstance().Update();
+	//SceneRoot::GetInstance().Update();
 }
 
 /*!
@@ -258,7 +258,7 @@ void Main::Render()
 	Direct3D11::GetInstance().Clear();
 
 	// シーンの描画
-	SceneRoot::GetInstance().Render();
+	//SceneRoot::GetInstance().Render();
 
 	// 画面更新 
 	Direct3D11::GetInstance().Present();

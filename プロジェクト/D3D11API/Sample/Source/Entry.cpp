@@ -12,6 +12,8 @@
 #include <locale>
 #include <memory>
 
+
+#include <Direct3D11.h>
 /*!
 	@var	g_pMain
 	@brief	•Ï”éŒ¾
@@ -49,6 +51,8 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, INT)
 	if (g_pMain->Init(hInstance)) {
 		g_pMain->Loop();
 	}
+
+	D3D11::Direct3D11::GetInstance().ReportCOMs("ŠJ•ú‚Í‚¶‚ß");
 
 	//	–¾Ž¦“IŠJ•ú
 	g_pMain.reset(nullptr);
