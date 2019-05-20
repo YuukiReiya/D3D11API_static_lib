@@ -121,6 +121,9 @@ void SampleScene::Initialize()
 
 	//g_pMesh->SetupShader(g_pMeshShader.get());
 
+	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
+	g_pMeshShader->Setup();
+	g_pMesh->SetupShader(g_pMeshShader.get());
 
 
 	gh = new Hoge();
