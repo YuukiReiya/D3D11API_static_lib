@@ -56,6 +56,13 @@ SampleScene::SampleScene()
 void SampleScene::Initialize() 
 {
 	cout << "sample init" << endl;
+
+	g_pMesh = make_shared<Mesh>();
+	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
+
+	g_pMesh->Initialize();
+	g_pMeshShader->Setup();
+	g_pMesh->SetupShader(g_pMeshShader.get());
 }
 
 /*!
@@ -127,4 +134,5 @@ void SampleScene::Update()
 */
 void SampleScene::Render()
 {
+	g_pMesh->Render();
 }
