@@ -63,7 +63,7 @@ namespace D3D11 {
 			@param[in]	ウィンドウハンドラ
 			@return		S_OK:成功 E_FAIL:失敗
 		*/
-		HRESULT Initialize(HWND hWnd);
+		HRESULT Initialize(HWND& hWnd);
 
 		/*!
 			@fn		リリース

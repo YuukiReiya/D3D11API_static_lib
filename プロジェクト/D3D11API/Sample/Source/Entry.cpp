@@ -49,13 +49,13 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, INT)
 
 	//	アプリケーションを初期化し、メインループへ
 	if (g_pMain->Init(hInstance)) {
-		g_pMain->Loop();
+		//g_pMain->Loop();
 	}
 
-	D3D11::Direct3D11::GetInstance().ReportCOMs("開放はじめ");
 
 	//	明示的開放
 	g_pMain.reset(nullptr);
 
+	D3D11::Direct3D11::GetInstance().ReportCOMs("開放はじめ");
 	return 0;
 }

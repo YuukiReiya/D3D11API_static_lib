@@ -40,6 +40,8 @@ Direct3D11::Direct3D11()
 */
 Direct3D11::~Direct3D11()
 {
+	GetInstance().m_WindowHeight	= 0;
+	GetInstance().m_WindowWidth		= 0;
 	Release();
 }
 
@@ -72,7 +74,7 @@ void D3D11::Direct3D11::SetClearColor(Color clearColor)
 	@param[in]	ウィンドウハンドラ
 	@return		S_OK:成功 E_FAIL:失敗
 */
-HRESULT Direct3D11::Initialize(HWND hWnd)
+HRESULT Direct3D11::Initialize(HWND& hWnd)
 {
 	// デバイスとスワップ・チェイン作成
 	DXGI_SWAP_CHAIN_DESC sd;
@@ -145,8 +147,8 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 		NULL,
 		createDeviceFlags,								// 使用するAPI レイヤーの指定
 		&featureLevels[0],								// 機能レベルを指定する配列
-		//static_cast<UINT>(GetArraySize(featureLevels)),	// 上記配列の要素数
-		1,
+		static_cast<UINT>(GetArraySize(featureLevels)),	// 上記配列の要素数
+		//1,
 		D3D11_SDK_VERSION,								// 使用しているSDKのバージョン
 		&sd,											// スワップ・チェインの設定
 		m_pSwapChain.GetAddressOf(),					// IDXGISwapChain インターフェースの変数
@@ -276,11 +278,11 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	SecureZeroMemory(&rd, sizeof(rd));
 	rd.CullMode = D3D11_CULL_NONE;	// 両面を描画
 	rd.FillMode = D3D11_FILL_SOLID;			// 普通に描画
-	ID3D11RasterizerState*pRS = NULL;
+	//ID3D11RasterizerState*pRS = NULL;
 	// ラスタライズ設定の作成
 	hr = m_pDevice->CreateRasterizerState(
 		&rd,								// ラスタライズ設定
-		&pRS	// 設定を受け取る変数
+		m_pRasterizerState.GetAddressOf()	// 設定を受け取る変数
 	);
 	if (FAILED(hr)) {
 		ErrorLog("Rasterizer is not create!");
@@ -288,7 +290,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	}
 
 	// ラスタライズを設定
-	m_pImmediateContext->RSSetState(pRS);
+	m_pImmediateContext->RSSetState(m_pRasterizerState.Get());
 
 	//// 深度テクスチャ / ステンシルビュー / ステンシルステートの作成
 	//// 深度 /ステンシル・ステート設定
@@ -402,13 +404,57 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 */
 void Direct3D11::Release()
 {
+	//if (m_pRasterizerState != nullptr) {
+	//m_pRasterizerState->Release();
+	//m_pRasterizerState.Reset();
+	//m_pRasterizerState = nullptr;
+	//}
+	//if (m_pSwapChain != nullptr) {
+	//m_pSwapChain->Release();
+	//m_pSwapChain.Reset();
+	//m_pSwapChain = nullptr;
+	//}
+	//if (m_pRenderTargetView != nullptr) {
+	//m_pRenderTargetView->Release();
+	//m_pRenderTargetView.Reset();
+	//m_pRenderTargetView = nullptr;
+	//}
+	//if (m_pDepthStencil != nullptr) {
+	//m_pDepthStencil->Release();
+	//m_pDepthStencil.Reset();
+	//m_pDepthStencil = nullptr;
+	//}
+	//if (m_pDepthStencilView != nullptr) {
+	//m_pDepthStencilView->Release();
+	//m_pDepthStencilView.Reset();
+	//m_pDepthStencilView = nullptr;
+
+	//}
+	//if (m_pDepthStencilState != nullptr) {
+	//m_pDepthStencilState->Release();
+	//m_pDepthStencilState.Reset();
+	//m_pDepthStencilState = nullptr;
+
+	//}
+	//if (m_pDebug != nullptr) { m_pDebug->Release(); }
+	//if (m_pDevice != nullptr) {
+	//m_pDevice->Release();
+	//m_pDevice.Reset();
+	//m_pDevice = nullptr;
+	//}
+	//if (m_pImmediateContext != nullptr) {
+	//m_pImmediateContext->Release();
+	//m_pImmediateContext.Reset();
+	//m_pImmediateContext = nullptr;
+	//}
+
+
 	m_pRasterizerState.Reset();
 	m_pSwapChain.Reset();
 	m_pRenderTargetView.Reset();
 	m_pDepthStencil.Reset();
 	m_pDepthStencilView.Reset();
 	m_pDepthStencilState.Reset();
-	ReportCOMs("ラスト");
 	if (m_pDebug != nullptr) { m_pDebug.Reset(); }
 	m_pDevice.Reset();
 	m_pImmediateContext.Reset();

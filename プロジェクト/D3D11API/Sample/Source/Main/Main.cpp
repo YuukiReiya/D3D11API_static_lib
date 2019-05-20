@@ -12,7 +12,6 @@
 #include <AudioMaster.h>
 #include <Camera.h>
 #include <Keyboard.h>
-#include <ShaderManager.h>
 #include "Main.h"
 #include <StructShaderBase.h> 
 #include "../Scene/Root/SceneRoot.h"
@@ -44,9 +43,7 @@ Main::Main()
 */
 Main::~Main()
 {
-	//delete(wave);
 	Release();
-	//SAFE_DELETE(m_pWindow);
 }
 
 /*!
@@ -110,6 +107,7 @@ bool Main::Init(HINSTANCE hInstance)
 void Main::Release()
 {
 	SceneRoot::GetInstance().Finalize();
+	Direct3D11::GetInstance().Release();
 	m_pWindow.reset(nullptr);
 }
 
@@ -121,31 +119,6 @@ void Main::Loop()
 {
 	// FPSの初期化
 	SetUpFPS();
-
-	//------------------------------------------------------------------------------------
-	//	@NOTE	コンスタントバッファのメンバ変更に伴う、
-	//			シェーダーの切り替えを行う
-	//			(※シェーダーの切り替えは参照するディレクトリを変更することで実現する！)
-	//			そのための以下の処理↓
-	//
-	//			StractShaderBase内の"mat"マクロで切り替え
-	//			"mat"定義済み→行列をワールド、ビュー、プロジェクションに分割
-	//			"mat"未定義  →3つを掛けた変換済みの行列を渡す
-	//			
-	//			"mat"マクロを参照しているファイル
-	//			※依存関係
-	//			・Sprite.cpp/h
-	//			・StractShaderBase.h
-	//			・main.cpp
-	//------------------------------------------------------------------------------------
-	std::string changePath = "";
-#ifdef mat
-#else
-	changePath = "Resources/";
-#endif
-
-	//	シェーダーマネージャーの初期化
-	D3D11::Graphic::ShaderManager::GetInstance().Initialize(changePath);
 
 	// カメラの初期化
 	Camera::GetInstance().Initialize({ c_WindowWidth,c_WindowHeight }, { 0,0,-10 });
