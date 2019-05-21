@@ -12,8 +12,9 @@
 #include <wrl/client.h>
 #include <DirectXMath.h>
 #include "AbstractRender.h"
-#include "Transform.h"
 #include "AbstractShader.h"
+#include "Transform.h"
+#include "Color.h"
 
 /*! APIの名前空間に含める */
 namespace API{
@@ -33,19 +34,23 @@ namespace API{
 		~Mesh();
 
 		/*!
-			@fn		Initialize
-			@brief	初期化
-			@return	S_OK:成功 E_FAIL:失敗
-		*/
-		HRESULT Initialize();
-
-		/*!
 			@fn			Initialize
 			@brief		初期化
+			@detail		モデルのみの読み込みで別途テクスチャを作成する必要がある
 			@param[in]	外部ファイルのパス
 			@return	S_OK:成功 E_FAIL:失敗
 		*/
 		HRESULT Initialize(std::string path);
+
+		/*!
+			@fn			Initialize
+			@brief		初期化
+			@detail		モデルとテクスチャを同時に生成する
+			@param[in]	外部ファイルのパス
+			@param[in]	割り当てるテクスチャのパス
+			@return	S_OK:成功 E_FAIL:失敗
+		*/
+		HRESULT Initialize(std::string meshPath, std::string texPath);
 
 		/*!
 			@fn			SetupShader
@@ -69,6 +74,29 @@ namespace API{
 			SetupShader(this, shader);
 		}
 
+		/*!
+			@fn			CreateTexture
+			@brief		テクスチャデータの作成
+			@detail		SRVの作成
+			@param[in]	バインドするメッシュ
+			@param[in]	読み込むテクスチャのパス
+			@return		S_OK:成功 E_FAIL:失敗
+
+			@TODO		関数で用意するか専用のFactorクラスを設けるかは使用感次第
+		*/
+		static HRESULT CreateTexture(Mesh* mesh, std::string path);
+
+		/*!
+			@fn			CreateTexture
+			@brief		テクスチャデータの作成
+			@detail		SRVの作成(インライン版)
+			@param[in]	読み込むテクスチャのパス
+			@return		S_OK:成功 E_FAIL:失敗
+		*/
+		inline HRESULT CreateTexture(std::string path) {
+			return CreateTexture(this, path);
+		}
+
 		/*!	
 			@fn		Finalize
 			@brief	破棄処理
@@ -88,7 +116,33 @@ namespace API{
 			@brief	トランスフォーム
 		*/
 		Transform transform;
+
+		/*!
+			@var	color
+			@brief	メッシュの色
+		*/
+		Color color;
 	private:
+		/*!
+			@fn			CreateSamplerState
+			@brief		サンプラーステートの作成
+			@param[in]	バインドするメッシュ
+			@return		S_OK:成功 E_FAIL:失敗
+		*/
+		static HRESULT CreateSamplerState(Mesh*mesh);
+
+		/*!
+			@fn		SetupTopology
+			@brief	トポロジーのセットアップ
+		*/
+		void SetupTopology();
+
+		/*!
+			@fn		SetupInputLayout
+			@brief	頂点レイアウトのセットアップ
+		*/
+		void SetupInputLayout();
+
 		/*!
 			@fn			CreateIndexBuffer
 			@brief		インデックスバッファ作成
@@ -102,9 +156,8 @@ namespace API{
 		/*!
 			@fn			SetupIndexBuffer
 			@brief		生成したインデックスバッファのセット
-			@param[in]	バインド先のメッシュ
 		*/
-		static void SetupIndexBuffer(Mesh*mesh);
+		void SetupIndexBuffer();
 
 		/*!
 			@template	Vertex
@@ -120,6 +173,34 @@ namespace API{
 			@return		S_OK:成功 E_FAIL:失敗
 		*/
 		static HRESULT CreateVertexBuffer(Mesh*mesh, std::vector<Vertex>verttices);
+
+		/*!
+			@fn		SetupVertexBuffer
+			@brief	頂点バッファのセットアップ
+		*/
+		void SetupVertexBuffer();
+
+		/*!
+			@fn		SetupConstantBuffer
+			@brief	コンスタントバッファのセットアップ
+			@return	S_OK:成功 E_FAIL:失敗
+		*/
+		HRESULT SetupConstantBuffer();
+
+		/*!
+			@fn		SetupBindShader
+			@brief	ImmediateContextにシェーダーをバインド
+			@detail	セットするシェーダーは頂点シェーダーとピクセルシェーダー
+		*/
+		void SetupBindShader();
+
+		/*!
+			@fn		SetupTexture
+			@brief	テクスチャのセットアップ
+			@detail	SRVとサンプラーのセットアップを行う
+			@note	テクスチャの無いモデルも想定し、Errorによるメッセージボックスは表示しない
+		*/
+		void SetupTexture();
 
 		/*!
 			@var	m_IndexCount
