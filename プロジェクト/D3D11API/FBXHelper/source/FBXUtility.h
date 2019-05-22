@@ -96,6 +96,14 @@ namespace FBX {
 			@detail	スマートポインタでアドレス管理
 		*/
 		static std::shared_ptr<fbxsdk::FbxImporter*>	m_pImporter;
+
+
+		////
+		static fbxsdk::FbxManager* pManager;
+		static fbxsdk::FbxScene* pScene;
+		static fbxsdk::FbxImporter* pImporter;
+		static fbxsdk::FbxIOSettings*pSettings;
+
 	};
 
 }

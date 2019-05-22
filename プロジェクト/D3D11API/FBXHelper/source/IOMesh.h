@@ -10,7 +10,7 @@
 #include <string_view>
 #include <iostream>
 #include "AbstractMesh.h"
-
+#include "Mesh.h"
 namespace Utility{
 	class IOMesh
 	{
@@ -18,6 +18,8 @@ namespace Utility{
 		static void Setup();
 		
 		static void Output(std::string directoryPath, std::string fileName, Abstract::AbstractMesh*mesh);
+
+		static void Output(std::string directoryPath, std::string fileName, Utility::OutputMesh mesh);
 	private:
 		IOMesh() = delete;
 		~IOMesh() = delete;

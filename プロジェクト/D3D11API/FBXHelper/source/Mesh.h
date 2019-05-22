@@ -11,6 +11,22 @@
 #include "AbstractMesh.h"
 #include "Vertex.h"
 
+struct FLOAT4
+{
+	float x, y, z, w;
+};
+
+struct FLOAT3
+{
+	float x, y, z;
+};
+
+struct FLOAT2
+{
+	float x, y;
+};
+
+
 namespace Utility {
 	class Mesh 
 		: public Abstract::AbstractMesh
@@ -20,5 +36,11 @@ namespace Utility {
 		~Mesh()override {}
 
 		void Setup()override;
+	};
+
+	struct OutputMesh
+	{
+		std::vector<FLOAT4>vertexPos;
+		std::vector<int>index;
 	};
 }

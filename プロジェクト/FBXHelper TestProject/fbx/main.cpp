@@ -16,7 +16,7 @@ int main()
 	FBX::FBXUtility::Setup();
 	Mesh*mesh = new Mesh;
 	mesh->Setup();
-	auto ret = FBXUtility::Load("Cube.fbx", mesh);
+	auto ret = FBXUtility::Load("ao_twinte_chan.fbx", mesh);
 
 	if (ret) {
 		printf("ê¨å˜");
@@ -26,7 +26,7 @@ int main()
 	}
 
 	//IOMesh::Output("../", "uvTest", mesh);
-	IOMesh::Output("", "d", mesh);
+	//IOMesh::Output("", "fbx", mesh);
 	FBXUtility::Destroy();
 	delete mesh;
 	system("pause");

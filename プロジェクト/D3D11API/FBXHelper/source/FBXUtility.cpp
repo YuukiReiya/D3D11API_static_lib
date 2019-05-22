@@ -11,6 +11,10 @@
 #include <fstream>
 #include <algorithm>
 
+#include "Vertex.h"
+#include "Mesh.h"
+#include "IOMesh.h"
+
 /*!
 	@brief	usingディレクティブ
 	@using	std
@@ -51,6 +55,14 @@ shared_ptr<fbxsdk::FbxScene*>		FBXUtility::m_pScene		= nullptr;
 */
 shared_ptr<fbxsdk::FbxImporter*>	FBXUtility::m_pImporter		= nullptr;
 
+
+//	生宣言
+fbxsdk::FbxManager* FBXUtility::pManager;
+fbxsdk::FbxScene* FBXUtility::pScene;
+fbxsdk::FbxImporter* FBXUtility::pImporter;
+fbxsdk::FbxIOSettings*FBXUtility::pSettings;
+
+
 /*!
 	@fn		Setup
 	@brief	初期化
@@ -68,6 +80,14 @@ void FBXUtility::Setup()
 	(*m_pManager)->SetIOSettings(*m_pIOsetting);
 	*m_pScene		= fbxsdk::FbxScene::Create(*m_pManager.get(), NULL);
 	*m_pImporter	= fbxsdk::FbxImporter::Create(*m_pManager.get(), NULL);
+
+	//	生
+	pManager = FbxManager::Create();
+	pSettings = FbxIOSettings::Create(pManager, IOSROOT);
+	pManager->SetIOSettings(pSettings);
+	pScene = FbxScene::Create(pManager, NULL);
+	pImporter = FbxImporter::Create(pManager, NULL);
+
 }
 
 bool FBX::FBXUtility::Load(std::string path)
@@ -126,66 +146,66 @@ vector<string>g_vTexPath;
 bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 {
 	//	fbx読み込み
-	try
-	{
-
-		if (!(*m_pImporter.get())->Initialize(
-			path.c_str(),
-			-1,
-			(*m_pManager.get())->GetIOSettings()
-		)) {
-			throw path;
-		}
-	}
-	catch (string&str)
-	{
-#pragma region 例外処理
-#if defined DEBUG||_DEBUG
-		std::cout << "Could not read \"" << str << "\"" << endl;
-		std::system("pause");
-		std::exit(EXIT_FAILURE);
-#endif
-#pragma endregion
-		return false;
-	}
-
-	//	シーンにインポート
-	try
-	{
-		if (!(*m_pImporter.get())->Import(
-			*m_pScene.get()
-		)) {
-			throw path;
-		}
-	}
-	catch (string&str)
-	{
-#pragma region 例外処理
-#if defined DEBUG||_DEBUG
-		std::cout << "Could not output \"" << str << "\" to the scene" << endl;
-		std::system("pause");
-		std::exit(EXIT_FAILURE);
-#endif
-#pragma endregion
-		return false;
-	}
-
-	ifstream is(path);
-	if (is.fail()) {
-		cout << endl << "そもそもメッシュがねーよ" << endl;
-	}
-
-	auto fbxMesh = (*m_pScene.get())->GetSrcObject<fbxsdk::FbxMesh>(0);
-	if (!fbxMesh) {
-		cout << endl << "メッシュ情報がねーよ" << endl;
-		return false;
-	}
+//	try
+//	{
+//
+//		if (!(*m_pImporter.get())->Initialize(
+//			path.c_str(),
+//			-1,
+//			(*m_pManager.get())->GetIOSettings()
+//		)) {
+//			throw path;
+//		}
+//	}
+//	catch (string&str)
+//	{
+//#pragma region 例外処理
+//#if defined DEBUG||_DEBUG
+//		std::cout << "Could not read \"" << str << "\"" << endl;
+//		std::system("pause");
+//		std::exit(EXIT_FAILURE);
+//#endif
+//#pragma endregion
+//		return false;
+//	}
+//
+//	//	シーンにインポート
+//	try
+//	{
+//		if (!(*m_pImporter.get())->Import(
+//			*m_pScene.get()
+//		)) {
+//			throw path;
+//		}
+//	}
+//	catch (string&str)
+//	{
+//#pragma region 例外処理
+//#if defined DEBUG||_DEBUG
+//		std::cout << "Could not output \"" << str << "\" to the scene" << endl;
+//		std::system("pause");
+//		std::exit(EXIT_FAILURE);
+//#endif
+//#pragma endregion
+//		return false;
+//	}
+//
+//	ifstream is(path);
+//	if (is.fail()) {
+//		cout << endl << "そもそもメッシュがねーよ" << endl;
+//	}
+//
+//	auto fbxMesh = (*m_pScene.get())->GetSrcObject<fbxsdk::FbxMesh>(0);
+//	if (!fbxMesh) {
+//		cout << endl << "メッシュ情報がねーよ" << endl;
+//		return false;
+//	}
 
 	//	頂点
-	SetupVertex(fbxMesh, mesh);
+	//SetupVertex(fbxMesh, mesh);
 
 	//	インデックス
-	SetupIndexBuffer(fbxMesh, mesh);
+	//SetupIndexBuffer(fbxMesh, mesh);
 
 	//	法線
 	//SetupNormal(fbxMesh, mesh);
@@ -194,7 +214,7 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 	//SetupUV(fbxMesh, mesh);
 
 	//参考:http://shikemokuthinking.blogspot.com/2013/08/fbx.html
-	
+
 	//	UVセット
 	//{
 	//	auto uvSetCount = fbxMesh->GetElementUVCount();
@@ -351,6 +371,265 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 	//{
 	//	cout << it << endl;
 	//}
+
+#pragma region init
+
+	pImporter = FbxImporter::Create(pManager, "");
+	pManager->SetIOSettings(pSettings);
+	int fileformat = -1;
+
+	//	インポーター
+	if (!pImporter->Initialize(path.c_str(), fileformat, pManager->GetIOSettings()))
+	{
+		cout << "Importer false;";
+		return false;
+	}
+
+	//	シーン
+	FbxScene*scene = FbxScene::Create(pManager, path.c_str());
+	pImporter->Import(scene);
+	pImporter->Destroy();
+
+	//	三角化
+	FbxGeometryConverter cv(pManager);
+	cv.Triangulate(scene, true);
+	cv.RemoveBadPolygonsFromMeshes(scene);
+
+	//==================================================================
+	//	読み込み
+	//==================================================================
+
+	int meshCount = scene->GetSrcObjectCount<fbxsdk::FbxMesh>();
+	cout << "mesh count = " << meshCount << endl << endl;
+
+	//	書き出すメッシュ情報
+	Utility::OutputMesh output;
+
+	//	
+	for (int i = 0; i < meshCount; ++i)
+	{
+		FbxMesh*pMesh = scene->GetSrcObject<FbxMesh>(i);
+
+		cout << "mesh name =" << pMesh->GetName() << endl;
+
+		//	polygon group
+		{
+			int matCount = pMesh->GetNode()->GetMaterialCount();
+
+			cout << "matrial count = " << matCount << endl;
+
+			if (matCount > 0)
+			{
+
+				//	コントロール点
+				int controlPointsCount = pMesh->GetControlPointsCount();
+				cout << "control point count = " << controlPointsCount << endl;
+
+				//	ポリゴンインデックス
+				vector<int>polygonIndex;
+
+				//	vertex
+				{
+					//	ポリゴン数
+					int polygonCount = pMesh->GetPolygonCount();
+
+					cout << "polygon count = " << polygonCount << endl;
+
+					if (polygonCount <= 0) { continue; }
+
+					//	頂点座標
+					//vector<FLOAT4>positions;
+
+					//	UV
+					//vector<FLOAT2>UVs;
+
+					//	レイヤー数
+					int layerCount = pMesh->GetLayerCount();
+
+					cout << "layer count = " << layerCount << endl;
+
+					//	ポリゴン頂点数
+					int polygonVertexCount = pMesh->GetPolygonVertexCount();
+
+					cout << "polygon vertex count = " << polygonVertexCount << endl;
+
+					//	頂点格納
+					{
+						FbxVector4*vertex = pMesh->GetControlPoints();
+						cout << "vertex" << endl << "No " << "x " << "y " << "z" << endl;
+						for (int j = 0; j < controlPointsCount; ++j)
+						{
+							FLOAT4 pos;
+							pos.x = (float)vertex[j][0];
+							pos.y = (float)vertex[j][1];
+							pos.z = (float)vertex[j][2];
+							pos.w = (float)vertex[j][3];
+
+							cout << j << ":" << pos.x << ", " << pos.y << ", " << pos.z << ", " << pos.w << endl;
+							//positions.push_back(pos);
+							output.vertexPos.push_back(pos);
+						}
+					}
+
+					//	インデックス
+					{
+						auto polygonVertex = pMesh->GetPolygonVertices();
+
+						//	頂点バッファのサイズ
+						polygonIndex.resize(polygonCount * 3);
+
+						//	インデックス格納用の配列の添え字(限定スコープ)
+						int index = 0;
+
+						cout << endl << "index buffer size = " << polygonCount * 3 << endl;
+
+						cout << "index" << endl << "polygon No" << ", vertex index" << endl;
+
+						for (int j = 0; j < polygonCount; ++j) {
+
+							int polygonSize = pMesh->GetPolygonSize(j);
+							for (int k = 0; k < polygonSize; ++k)
+							{
+								polygonIndex[index + k] = pMesh->GetPolygonVertex(j, k);
+								cout << j << ":" << j << ", " << pMesh->GetPolygonVertex(j, k) << endl;
+							}
+							index += polygonSize;
+						}
+					}
+					output.index = polygonIndex;
+
+					//	法線ベクトル
+					vector<FLOAT3>normals;
+
+					//	法線
+					{
+
+						//	レイヤー
+						FbxLayer*pLayer = pMesh->GetLayer(0);
+
+
+						FbxLayerElementNormal*normalElem = pLayer->GetNormals();
+						if (normalElem == NULL) { continue; }
+
+						int normalCount = normalElem->GetDirectArray().GetCount();
+						int normalIndexCount = normalElem->GetIndexArray().GetCount();
+
+						cout << "normal count = " << normalCount << endl;
+						cout << "normal index count = " << normalCount << endl;
+
+
+						FbxLayerElement::EMappingMode	normalMapMode = normalElem->GetMappingMode();
+						FbxLayerElement::EReferenceMode normalRefMode = normalElem->GetReferenceMode();
+
+						switch (normalMapMode)
+						{
+						case fbxsdk::FbxLayerElement::eNone:
+							break;
+						case fbxsdk::FbxLayerElement::eByControlPoint:
+						case fbxsdk::FbxLayerElement::eByPolygonVertex:
+						{
+							if (normalRefMode == FbxLayerElement::eDirect) {
+								for (int j = 0; j < normalCount; ++j)
+								{
+									FLOAT3 n;
+									n =
+									{
+										(float)normalElem->GetDirectArray().GetAt(j)[0],
+										(float)normalElem->GetDirectArray().GetAt(j)[1],
+										(float)normalElem->GetDirectArray().GetAt(j)[2],
+									};
+									normals.push_back(n);
+								}
+
+							}
+						}
+						break;
+						case fbxsdk::FbxLayerElement::eByPolygon:
+							break;
+						case fbxsdk::FbxLayerElement::eByEdge:
+							break;
+						case fbxsdk::FbxLayerElement::eAllSame:
+							break;
+						default:
+							break;
+						}
+					}
+
+					//	ソート
+					{
+						vector<FLOAT3>sortNormal;
+						sortNormal.resize(controlPointsCount);
+
+						for (unsigned int j = 0; j < normals.size(); ++j)
+						{
+							sortNormal[polygonIndex[i]] = normals[i];
+						}
+					}
+				}
+			}
+
+			else
+			{
+				//	コントロール点
+				int controlPointsCount = pMesh->GetControlPointsCount();
+				cout << "control point count = " << controlPointsCount << endl;
+
+
+				int polygonCount = pMesh->GetPolygonCount();
+
+				cout << "polygon count = " << polygonCount << endl;
+
+				//	頂点
+				vector<FLOAT4>vertex;
+
+				auto vertics = pMesh->GetPolygonVertices();
+
+				//	頂点格納
+				{
+					FbxVector4*vertex = pMesh->GetControlPoints();
+					cout << "vertex" << endl << "No " << "x " << "y " << "z" << endl;
+					for (int j = 0; j < controlPointsCount; ++j)
+					{
+						FLOAT4 pos;
+						pos.x = (float)vertex[j][0];
+						pos.y = (float)vertex[j][1];
+						pos.z = (float)vertex[j][2];
+						pos.w = (float)vertex[j][3];
+
+						cout << j << ":" << pos.x << ", " << pos.y << ", " << pos.z << ", " << pos.w << endl;
+						//positions.push_back(pos);
+						output.vertexPos.push_back(pos);
+					}
+				}
+
+				vector<int>index;
+
+				cout << endl << "index buffer size = " << polygonCount * 3 << endl;
+
+				cout << "index" << endl << "polygon No" << ", vertex index" << endl;
+
+				//	インデックス
+				for (int j = 0; j < polygonCount; ++j)
+				{
+					int polygonSize = pMesh->GetPolygonSize(j);
+
+					for (int k = 0; k < polygonSize; ++k)
+					{
+						index.push_back(pMesh->GetPolygonVertex(j, k));
+						cout << j << ":" << j << ", " << pMesh->GetPolygonVertex(j, k) << endl;
+					}
+				}
+				output.index = index;
+
+			}
+			//	マテリアルインデックス
+			//FbxLayerElementArrayTemplate<int>*matIndex;
+		}
+	}
+#pragma endregion
+
+	Utility::IOMesh::Output("", "abc", output);
+
 	return true;
 }
 
