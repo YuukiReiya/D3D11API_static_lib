@@ -579,9 +579,6 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 
 				cout << "polygon count = " << polygonCount << endl;
 
-				//	頂点
-				vector<FLOAT4>vertex;
-
 				auto vertics = pMesh->GetPolygonVertices();
 
 				//	頂点格納
@@ -607,7 +604,7 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 				cout << endl << "index buffer size = " << polygonCount * 3 << endl;
 
 				cout << "index" << endl << "polygon No" << ", vertex index" << endl;
-
+				
 				//	インデックス
 				for (int j = 0; j < polygonCount; ++j)
 				{
@@ -621,14 +618,82 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 				}
 				output.index = index;
 
+				//	レイヤー数
+				int layerCount = pMesh->GetLayerCount();
+				cout << "layer count = " << layerCount << endl;
+
+				if (layerCount == 0) { return false; }
+
+				//	レイヤー
+				FbxLayer*pLayer = pMesh->GetLayer(0);
+
+				//	UV
+				auto uvElem = pLayer->GetUVs();
+				
+				int uvCount = uvElem->GetDirectArray().GetCount();
+				int uvIndexCount = uvElem->GetIndexArray().GetCount();
+				cout << "uv count = " << uvCount << endl;
+				cout << "uv index count = " << uvIndexCount << endl;
+				cout << "vertex index count = " << output.index.size() << endl;
+
+				//	重複したuvIndexを特定する
+#pragma region 特定
+				//vector<int>uvIndex;
+				//int vertexIndexSize = output.index.size();
+				//int missCount = 0;
+				//for (int k = 0; k < vertexIndexSize; ++k)
+				//{
+				//	//	uvのインデックス配列
+				//	auto a = uvElem->GetIndexArray()[k];
+
+				//	//	頂点のインデックス配列
+				//	auto b = output.index[k];
+
+				//	if (a != b)
+				//	{
+				//		missCount++;
+				//	}
+				//	uvIndex.push_back(a);
+				//}
+				//cout << "ミスTake : " << missCount << endl;
+
+				//vector<int>same;
+				//for (int j = 0; j < polygonCount; ++j)
+				//{
+				//	int polygonSize = pMesh->GetPolygonSize(j);
+
+				//	for (int k = 0; k < polygonSize; ++k)
+				//	{
+				//		auto a = pMesh->GetPolygonVertex(j, k);
+				//		auto b = uvIndex[j + k];
+				//		if (a == b)
+				//		{
+				//			cout << "same : " << j + k << endl;
+				//			same.push_back(j + k);
+				//		}
+
+				//	}
+				//}
+				//cout << "end of same count = " << same.size() << endl;
+#pragma endregion
+
+#pragma region uv定義の頂点とインデックス
+				auto f = uvElem->GetDirectArray();
+				//uvElem->get
+#pragma endregion
+
+
+				//output.index.clear();
+				//output.index = uvIndex;
 			}
+
 			//	マテリアルインデックス
 			//FbxLayerElementArrayTemplate<int>*matIndex;
 		}
 	}
 #pragma endregion
 
-	Utility::IOMesh::Output("", "abc", output);
+	Utility::IOMesh::Output("", "test", output);
 
 	return true;
 }
@@ -730,7 +795,7 @@ void FBX::FBXUtility::SetupUV(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractMesh 
 	auto tmp = vf;
 	int bNum = tmp.size();
 	//ソート後
-	sort(vf.begin(),vf.end());
+	//sort(vf.begin(),vf.end());
 	//	重複削除
 	int aNum = vf.size();
 }
