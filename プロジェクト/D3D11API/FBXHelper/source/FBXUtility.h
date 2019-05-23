@@ -38,7 +38,7 @@ namespace FBX {
 			@param[in]	読み込むファイルのパス
 			@return		true:成功 false:失敗
 		*/
-		static bool Load(std::string path, Abstract::AbstractMesh*mesh);
+		static bool Load(std::string path, std::string outputPath, Abstract::AbstractMesh*mesh);
 
 		static void SetupVertex(fbxsdk::FbxMesh*fbxMesh, Abstract::AbstractMesh*mesh);
 

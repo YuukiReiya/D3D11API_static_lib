@@ -61,9 +61,9 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 
 	//	uv
 	//ofs << "//uv" << endl;
-	//for (auto it : mesh->uv)
-	//{
-	//	ofs << "{" << it.u << c_Space << it.v << "}";// << endl;
-	//}
+	for (auto it : mesh.uv)
+	{
+		ofs << "{" << it.x << c_Space << it.y << "}";// << endl;
+	}
 
 }

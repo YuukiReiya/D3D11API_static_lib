@@ -62,6 +62,20 @@ fbxsdk::FbxScene* FBXUtility::pScene;
 fbxsdk::FbxImporter* FBXUtility::pImporter;
 fbxsdk::FbxIOSettings*FBXUtility::pSettings;
 
+bool F2HOGE(FLOAT2&self, FLOAT2&other)
+{
+	return self.x < other.x;
+}
+
+bool F2HUGA(FLOAT2&self, FLOAT2&other)
+{
+	return self.y < other.y;
+}
+
+bool F2EQUAL(FLOAT2&self, FLOAT2&other)
+{
+	return self.x == other.x&&self.y == other.y;
+}
 
 /*!
 	@fn		Setup
@@ -143,8 +157,9 @@ bool FBX::FBXUtility::Load(std::string path)
 
 vector<string>g_vUVSetName;
 vector<string>g_vTexPath;
-bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
+bool FBX::FBXUtility::Load(std::string path, std::string outputPath, Abstract::AbstractMesh * mesh)
 {
+#pragma region コメントアウト
 	//	fbx読み込み
 //	try
 //	{
@@ -371,6 +386,7 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 	//{
 	//	cout << it << endl;
 	//}
+#pragma endregion
 
 #pragma region init
 
@@ -394,7 +410,7 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 	FbxGeometryConverter cv(pManager);
 	cv.Triangulate(scene, true);
 	cv.RemoveBadPolygonsFromMeshes(scene);
-
+#pragma endregion
 	//==================================================================
 	//	読み込み
 	//==================================================================
@@ -565,6 +581,79 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 							sortNormal[polygonIndex[i]] = normals[i];
 						}
 					}
+
+					if (layerCount == 0) { return false; }
+
+					//	レイヤー
+					FbxLayer*pLayer = pMesh->GetLayer(0);
+
+					//	UV
+					{
+						auto uvElem = pLayer->GetUVs();
+
+						int uvCount = uvElem->GetDirectArray().GetCount();
+						int uvIndexCount = uvElem->GetIndexArray().GetCount();
+						cout << "uv count = " << uvCount << endl;
+						cout << "uv index count = " << uvIndexCount << endl;
+						cout << "vertex index count = " << output.index.size() << endl;
+
+						auto uvMapMode = uvElem->GetMappingMode();
+						auto uvRefMode = uvElem->GetReferenceMode();
+
+						cout << "uv map mpde = ";// << uvMapMode << endl;
+						switch (uvMapMode)
+						{
+						case fbxsdk::FbxLayerElement::eNone: cout << "eNone" << endl; break;
+						case fbxsdk::FbxLayerElement::eByControlPoint: cout << "eByControlPoint" << endl; break;
+						case fbxsdk::FbxLayerElement::eByPolygonVertex: cout << "eByControlVertex" << endl; break;
+						case fbxsdk::FbxLayerElement::eByPolygon: cout << "eByPolygon" << endl; break;
+						case fbxsdk::FbxLayerElement::eByEdge: cout << "eByEdge" << endl; break;
+						case fbxsdk::FbxLayerElement::eAllSame:cout << "eAllSame" << endl; break;
+						default:
+							break;
+						}
+
+						cout << "uv ref mode = ";
+						switch (uvRefMode)
+						{
+						case fbxsdk::FbxLayerElement::eDirect: cout << "eDirect" << endl; break;
+						case fbxsdk::FbxLayerElement::eIndex: cout << "eIndex" << endl; break;
+						case fbxsdk::FbxLayerElement::eIndexToDirect: cout << "eIndexToDirect" << endl; break;
+						default:
+							break;
+						}
+
+						//	map = eByControlVertex
+						//	ref = eIndexToDirect
+
+						FbxArray<FbxVector2>uvArray;
+						uvElem->GetDirectArray().CopyTo(uvArray);
+
+						int temp = -1;
+						vector<FLOAT2>uv_stack;
+						for (int l = 0; l < uvIndexCount; ++l)
+						{
+							temp = uvElem->GetIndexArray().GetAt(l);
+							FLOAT2 uv =
+							{
+								(float)uvArray.GetAt(temp)[0],
+								1.0f - (float)uvArray.GetAt(temp)[1],
+							};
+							//	保存用
+							uv_stack.push_back(uv);
+						}
+
+						vector<FLOAT2>sortUV;
+						sortUV.resize(controlPointsCount);
+						for (int l = 0; l < uv_stack.size(); ++l)
+						{
+							sortUV[output.index[l]] = uv_stack[l];
+						}
+						cout << "sort uv count = " << sortUV.size() << endl;
+
+						output.uv.clear();
+						output.uv = sortUV;
+					}
 				}
 			}
 
@@ -600,21 +689,27 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 				}
 
 				vector<int>index;
+				vector<int>vIndexCpy;
+				vIndexCpy.resize(polygonCount * 3);
 
 				cout << endl << "index buffer size = " << polygonCount * 3 << endl;
 
 				cout << "index" << endl << "polygon No" << ", vertex index" << endl;
-				
+
+				int polyNum = 0;
 				//	インデックス
 				for (int j = 0; j < polygonCount; ++j)
 				{
+					//	三角化しているので polygonSize = 3 になるはず
 					int polygonSize = pMesh->GetPolygonSize(j);
 
 					for (int k = 0; k < polygonSize; ++k)
 					{
+						vIndexCpy[polyNum + k] = pMesh->GetPolygonVertex(j, k);
 						index.push_back(pMesh->GetPolygonVertex(j, k));
 						cout << j << ":" << j << ", " << pMesh->GetPolygonVertex(j, k) << endl;
 					}
+					polyNum += polygonSize;
 				}
 				output.index = index;
 
@@ -629,14 +724,75 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 
 				//	UV
 				auto uvElem = pLayer->GetUVs();
-				
+				if (!uvElem)
+				{
+					cout << "uv Element = NULL" << endl;
+					continue;
+				}
 				int uvCount = uvElem->GetDirectArray().GetCount();
 				int uvIndexCount = uvElem->GetIndexArray().GetCount();
 				cout << "uv count = " << uvCount << endl;
 				cout << "uv index count = " << uvIndexCount << endl;
 				cout << "vertex index count = " << output.index.size() << endl;
 
-				//	重複したuvIndexを特定する
+				auto uvMapMode = uvElem->GetMappingMode();
+				auto uvRefMode = uvElem->GetReferenceMode();
+
+				cout << "uv map mpde = ";// << uvMapMode << endl;
+				switch (uvMapMode)
+				{
+				case fbxsdk::FbxLayerElement::eNone: cout << "eNone" << endl; break;
+				case fbxsdk::FbxLayerElement::eByControlPoint: cout << "eByControlPoint" << endl; break;
+				case fbxsdk::FbxLayerElement::eByPolygonVertex: cout << "eByControlVertex" << endl; break;
+				case fbxsdk::FbxLayerElement::eByPolygon: cout << "eByPolygon" << endl; break;
+				case fbxsdk::FbxLayerElement::eByEdge: cout << "eByEdge" << endl; break;
+				case fbxsdk::FbxLayerElement::eAllSame:cout << "eAllSame" << endl; break;
+				default:
+					break;
+				}
+
+				cout << "uv ref mode = ";
+				switch (uvRefMode)
+				{
+				case fbxsdk::FbxLayerElement::eDirect: cout << "eDirect" << endl; break;
+				case fbxsdk::FbxLayerElement::eIndex: cout << "eIndex" << endl; break;
+				case fbxsdk::FbxLayerElement::eIndexToDirect: cout << "eIndexToDirect" << endl; break;
+				default:
+					break;
+				}
+
+				//	以降の処理は
+				//	eByControlVertex & eIndexToDirectで抜き取る(↑で直接判定した)
+				FbxArray<FbxVector2>uvArray;
+				uvElem->GetDirectArray().CopyTo(uvArray);
+
+				int temp = -1;
+				vector<FLOAT2>uv_stack;
+				for (int l = 0; l < uvIndexCount; ++l)
+				{
+					temp = uvElem->GetIndexArray().GetAt(l);
+					FLOAT2 uv =
+					{
+						(float)uvArray.GetAt(temp)[0],
+						1.0f - (float)uvArray.GetAt(temp)[1],
+					};
+					//	保存用
+					uv_stack.push_back(uv);
+
+					//	出力用
+					output.uv.push_back(uv);
+				}
+
+				vector<FLOAT2>sortUV;
+				sortUV.resize(controlPointsCount);
+				for (int l = 0; l < uv_stack.size(); ++l)
+				{
+					sortUV[vIndexCpy[l]] = uv_stack[l];
+				}
+				cout << "sort uv count = " << sortUV.size() << endl;
+
+				output.uv.clear();
+				output.uv = sortUV;
 #pragma region 特定
 				//vector<int>uvIndex;
 				//int vertexIndexSize = output.index.size();
@@ -677,12 +833,6 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 				//cout << "end of same count = " << same.size() << endl;
 #pragma endregion
 
-#pragma region uv定義の頂点とインデックス
-				auto f = uvElem->GetDirectArray();
-				//uvElem->get
-#pragma endregion
-
-
 				//output.index.clear();
 				//output.index = uvIndex;
 			}
@@ -691,9 +841,10 @@ bool FBX::FBXUtility::Load(std::string path, Abstract::AbstractMesh * mesh)
 			//FbxLayerElementArrayTemplate<int>*matIndex;
 		}
 	}
-#pragma endregion
 
-	Utility::IOMesh::Output("", "test", output);
+	//Utility::IOMesh::Output("", "test", output);v
+	Utility::IOMesh::Output("", outputPath, output);
+	//Utility::IOMesh::Output("", "test_draw", output);
 
 	return true;
 }

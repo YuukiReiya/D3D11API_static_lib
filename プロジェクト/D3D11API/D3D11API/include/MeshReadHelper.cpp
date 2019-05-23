@@ -48,7 +48,6 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 		//	1 1 1
 		{
 			Graphic::MeshVertex tmp;
-
 			//	x
 			auto d = b.find(" ");
 			auto e = b.substr(0, d);
@@ -84,5 +83,37 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 		buf = buf.substr(a + 1);
 	}
 
+	//uv
+	getline(ifs, buf);
+	for(auto& it:ret.vertices)
+	{
+		auto a = buf.find(t);
+		if (a == string::npos) { break; }
+
+		//	{1 1
+		auto b = buf.substr(0, a);
+
+		//	 1 1
+		auto c = b.find("{");
+		if (c != string::npos) {
+			b = b.substr(c + 1);
+		}
+
+		//	x
+		auto d = b.find(" ");
+		auto e = b.substr(0, d);
+
+		b = b.substr(d + 1);
+
+		//	y
+
+
+		it.uv =
+		{
+			stof(e),
+			stof(b)
+		};
+		buf = buf.substr(a + 1);
+	}
 	return ret;
 }

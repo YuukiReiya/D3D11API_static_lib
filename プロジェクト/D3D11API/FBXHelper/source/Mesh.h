@@ -24,6 +24,10 @@ struct FLOAT3
 struct FLOAT2
 {
 	float x, y;
+	bool operator==(FLOAT2 f2)
+	{
+		return this->x == f2.x&&this->y == f2.y;
+	}
 };
 
 
@@ -41,6 +45,7 @@ namespace Utility {
 	struct OutputMesh
 	{
 		std::vector<FLOAT4>vertexPos;
+		std::vector<FLOAT2>uv;
 		std::vector<int>index;
 	};
 }
