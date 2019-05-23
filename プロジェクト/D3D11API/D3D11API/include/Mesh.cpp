@@ -6,7 +6,6 @@
 */
 #include "stdafx.h"
 #include "Mesh.h"
-#include "MeshVertex.h"
 #include "Direct3D11.h"
 #include "MyGame.h"
 #include "MemoryLeaks.h"

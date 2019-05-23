@@ -21,13 +21,19 @@ namespace D3D11 {
 			/*!
 				@brief	デフォルトコンストラクタ
 			*/
-			MeshVertex() = default;
+			//MeshVertex() = default;
+
+			MeshVertex() :BaseVertex(), uv({ -1,-1 }) {}
 
 			/*!
 				@brief		引数付きコンストラクタ
 				@param[in]	座標
 			*/
-			MeshVertex(DirectX::XMFLOAT3 position) :BaseVertex(position) {}
+			MeshVertex(DirectX::XMFLOAT3 position) :BaseVertex(position), uv({ -1,-1 }) {}
+
+
+			//TODO:コメントをしっかり書く
+			DirectX::XMFLOAT2 uv;
 		};
 
 	}
