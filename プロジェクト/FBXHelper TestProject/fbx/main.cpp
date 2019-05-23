@@ -16,7 +16,8 @@ int main()
 	FBX::FBXUtility::Setup();
 	Mesh*mesh = new Mesh;
 	mesh->Setup();
-	auto ret = FBXUtility::Load("ao_twinte_chan.fbx", mesh);
+	auto ret = FBXUtility::Load("ao_twinte_chan.fbx", "hoge", mesh);
+	//auto ret = FBXUtility::Load("JNT_00100_anathema_H.fbx", mesh);
 
 	if (ret) {
 		printf("ê¨å˜");
