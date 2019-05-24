@@ -204,9 +204,10 @@ bool FBX::FBXUtility::Load(std::string path, std::string outputPath, Abstract::A
 			int matCount = pMesh->GetNode()->GetMaterialCount();
 
 			cout << "matrial count = " << matCount << endl;
-
+			system("pause");
 			if (matCount > 0)
 			{
+				//	
 
 				//	コントロール点
 				int controlPointsCount = pMesh->GetControlPointsCount();
@@ -553,26 +554,70 @@ bool FBX::FBXUtility::Load(std::string path, std::string outputPath, Abstract::A
 					//	出力用
 					output.uv.push_back(uv);
 				}
+				
+				vector<int>uvIndex;
+
+				// (UVインデックスの個数 = 頂点インデックスの個数)
+				//	uvIndexCount = vertexIndexCount
+				for (int p = 0; p < uvIndexCount; ++p)
+				{
+					int tmp;
+					tmp = uvElem->GetIndexArray().GetAt(p);
+					uvIndex.push_back(tmp);
+				}
 
 				vector<FLOAT2>sortUV;
 				sortUV.resize(controlPointsCount);
 				for (int l = 0; l < uv_stack.size(); ++l)
 				{
 					sortUV[vIndexCpy[l]] = uv_stack[l];
+					//sortUV[uvIndex[l]] = uv_stack[l];
 				}
 				cout << "sort uv count = " << sortUV.size() << endl;
 
 				output.uv.clear();
 				output.uv = sortUV;
+				
+				//	ループ 3492
+				vector<FLOAT2> allUV;//重複した
+				for (int l = 0; l < uvIndexCount; ++l)
+				{
+					//	l番目の頂点インデックス
+					int uIndex = uvElem->GetIndexArray().GetAt(l);
+					
+					//	
+					FLOAT2 uv;
+					uv.x = (float)uvArray.GetAt(uIndex)[0];
+					uv.y = 1.0f - (float)uvArray.GetAt(uIndex)[1];
 
-				//output.index.clear();
-				//output.index = uvIndex;
+					allUV.push_back(uv);
+				}
+				cout << "uv size = " << allUV.size() << endl;
+
+				//	UVの頂点紐づけ
+				vector<FLOAT2>uvData;
+				for (int l = 0; l < controlPointsCount; ++l)
+				{
+					FLOAT2 uv = allUV[l];
+					uvData.push_back(uv);
+				}
+
+				cout << "uv data = " << uvData.size() << endl;
+				output.uv.clear();
+				output.uv = uvData;
 			}
+
 
 			//	マテリアルインデックス
 			//FbxLayerElementArrayTemplate<int>*matIndex;
 		}
 	}
+
+	//	output data show
+	cout << "output data" << endl;
+	cout << "output vertex size = " << output.vertexPos.size() << endl;
+	cout << "output index size = " << output.index.size() << endl;
+	cout << "output uv size = " << output.uv.size() << endl;
 
 	//Utility::IOMesh::Output("", "test", output);v
 	Utility::IOMesh::Output("", outputPath, output);
