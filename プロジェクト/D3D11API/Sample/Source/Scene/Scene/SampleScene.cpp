@@ -66,8 +66,9 @@ void SampleScene::Initialize()
 	//g_pMesh->Initialize("test3.yfm", "hoge.png");
 	//g_pMesh->Initialize("test4.yfm","TEX_00100_anathema_H_D.png");
 	//g_pMesh->Initialize("test.yfm","pm0025_00_BodyA1.png");
-	//g_pMesh->Initialize("test5.yfm", "hoge.png");
-	g_pMesh->Initialize("cube.yfm", "hoge.png");
+	g_pMesh->Initialize("test7.yfm", "hoge.png");
+	//g_pMesh->Initialize("test6.yfm");
+	//g_pMesh->Initialize("cube.yfm", "hoge.png");
 
 	//g_pMesh->Initialize("•`‰æƒeƒXƒg/test_draw.yfm", "hoge.png");
 	//g_pMesh->Initialize("abc.yfm");
@@ -180,7 +181,7 @@ void SampleScene::Update()
 		look.z += val;
 	}
 
-	system("cls");
+	//system("cls");
 	cout << "eye:" << eye.x << "," << eye.y << "," << eye.z << endl;
 	cout << "look:" << look.x << "," << look.y << "," << look.z << endl;
 	camera.SetViewMatrix(eye,look);

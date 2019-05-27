@@ -287,11 +287,15 @@ bool FBX::FBXUtility::CreateMesh(Utility::Mesh * mesh, bool isDebug)
 			//	構成しているポリゴンがなければ処理しない
 			if (polygonCount <= 0) { continue; }
 
+			//	インデックス
+			SetupIndex(pMesh, mesh, isDebug);
+
 			//	頂点生成
 			SetupVertex(pMesh, mesh, isDebug);
 
-			//	インデックス
-			SetupIndex(pMesh, mesh, isDebug);
+			auto size = mesh->index.size();
+			mesh->index.clear();
+			for (int i = 0; i < size; ++i) { mesh->index.push_back(i); }
 
 			//	UV
 			SetupUV(pMesh, mesh, isDebug);
@@ -325,17 +329,24 @@ void FBX::FBXUtility::SetupVertex(FbxMesh * mesh, Utility::Mesh * data, bool isS
 
 	//	頂点インデックス
 	int index = 0;
+	auto indexCount = data->index.size();
 	while (true)
 	{
 		//	頂点分格納したら終了
-		if (vertexCount <= index) { break; }
+		//if (vertexCount <= index) { break; }
+		if (indexCount <= index) { break; }
 
 		Math::FLOAT4 vertex =
 		{
-			(float)vertices[index][0],
-			(float)vertices[index][1],
-			(float)vertices[index][2],
-			(float)vertices[index][3],
+			//(float)vertices[index][0],
+			//(float)vertices[index][1],
+			//(float)vertices[index][2],
+			//(float)vertices[index][3],
+
+			(float)vertices[data->index[index]][0],
+			(float)vertices[data->index[index]][1],
+			(float)vertices[data->index[index]][2],
+			(float)vertices[data->index[index]][3],
 		};
 		index++;
 		data->vertices.push_back(vertex);
@@ -484,21 +495,20 @@ void FBX::FBXUtility::SetupUV(FbxMesh * mesh, Utility::Mesh * data, bool isShowV
 			auto offset = data->uv.size();
 			for (int j = 0; j < uvIndexCount; ++j)
 			{
+
 				auto index = uvElem->GetIndexArray().GetAt(j);
+				//auto index = uvElem->GetIndexArray().GetAt(data->index[j]);
+
 				Math::FLOAT2 uv =
 				{
-					//static_cast<float>(uvArray.GetAt(index)[0]),
-					//1.0f - static_cast<float>(uvArray.GetAt(index)[1]),
+					static_cast<float>(uvArray.GetAt(index)[0]),
+					1.0f - static_cast<float>(uvArray.GetAt(index)[1]),
 
 					//static_cast<float>(uvArray.GetAt(index)[0]),
 					//1.0f - static_cast<float>(uvArray.GetAt(index)[1]),
-
-					static_cast<float>(uvElem->GetDirectArray().GetAt(index)[0]),
-					1.0f - static_cast<float>(uvElem->GetDirectArray().GetAt(index)[1]),
-
 				};
 				uvAll.push_back(uv);
-				//data->uv.push_back(uv);
+				data->uv.push_back(uv);
 
 				if (isShowValue)
 				{
@@ -506,15 +516,15 @@ void FBX::FBXUtility::SetupUV(FbxMesh * mesh, Utility::Mesh * data, bool isShowV
 				}
 			}
 			
-			int vertexCount = data->vertices.size();
-			cout << "vertex count = " << vertexCount<<endl;
+			//int vertexCount = data->vertices.size();
+			//cout << "vertex count = " << vertexCount<<endl;
 
-			//	格納したUVからメッシュを構成するUV情報をmeshのメンバに！
-			for (int j = 0; j < vertexCount; ++j)
-			{
-				Math::FLOAT2 v = uvAll[uvElem->GetIndexArray()[j]];
-				data->uv.push_back(v);
-			}
+			////	格納したUVからメッシュを構成するUV情報をmeshのメンバに！
+			//for (int j = 0; j < vertexCount; ++j)
+			//{
+			//	Math::FLOAT2 v = uvAll[uvElem->GetIndexArray()[j]];
+			//	data->uv.push_back(v);
+			//}
 		}
 			break;
 		default:
