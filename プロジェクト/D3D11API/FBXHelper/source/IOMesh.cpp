@@ -3,39 +3,30 @@
 
 using namespace std;
 
-void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Abstract::AbstractMesh * mesh)
+
+void Utility::IOMesh::Delete(std::string directoryPath, std::string fileName)
 {
 	string path = directoryPath + fileName + c_Delimiter.data() + c_Extension.data();
-	ofstream ofs;
-	ofs.open(path, ios::out);
+	ifstream ifs;
 
-	//	書き込み
+	//	ファイルを開いてみる
+	ifs.open(path);
 
-	//頂点
-	const string c_Space = " ";
-	for (auto it : mesh->vertex) 
-	{
-		ofs << "{" << it.x << c_Space << it.y << c_Space << it.z << "}";// << endl;
+	//	開くのに失敗
+	if (ifs.fail()) {
+		cout << "\""<<path<<"\" is open failed!" << endl;
+		ifs.close();
+		return; 
 	}
-	ofs << endl;
 
-	//	頂点インデックス
-	//ofs << "//i" << endl;
-	for (auto it : mesh->indexBuffer)
-	{
-		ofs << it << c_Space;
-	}
-	ofs << endl;
+	//	ファイルを忘れずに閉じておく
+	ifs.close();
 
-	//	uv
-	ofs << "//uv" << endl;
-	for (auto it : mesh->uv)
-	{
-		ofs << "{" << it.u << c_Space << it.v << "}";// << endl;
-	}
+	//	該当ファイル削除
+	remove(path.c_str());
+	cout << "\"" << path << "\" is deleted!" << endl;
 }
-
-void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Utility::OutputMesh mesh)
+void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Utility::Mesh mesh)
 {
 	string path = directoryPath + fileName + c_Delimiter.data() + c_Extension.data();
 	ofstream ofs;
@@ -45,7 +36,7 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 
 	//頂点
 	const string c_Space = " ";
-	for (auto it : mesh.vertexPos)
+	for (auto it : mesh.vertices)
 	{
 		ofs << "{" << it.x << c_Space << it.y << c_Space << it.z << "}";// << endl;
 	}

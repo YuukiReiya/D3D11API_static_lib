@@ -4,7 +4,14 @@
 using namespace std;
 using namespace Utility;
 
-void Utility::Mesh::Setup()
+Mesh::Mesh()
 {
-	vertex.clear();
+	vertices.clear();
+	uv.clear();
+	index.clear();
+}
+
+Mesh::~Mesh()
+{
+
 }
