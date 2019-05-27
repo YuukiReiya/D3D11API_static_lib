@@ -169,6 +169,7 @@
     <ClInclude Include="source\FBXUtility.h" />
     <ClInclude Include="source\IOMesh.h" />
     <ClInclude Include="source\Mesh.h" />
+    <ClInclude Include="source\OriginalFormatMath.h" />
     <ClInclude Include="source\targetver.h" />
     <ClInclude Include="source\Vertex.h" />
   </ItemGroup>
