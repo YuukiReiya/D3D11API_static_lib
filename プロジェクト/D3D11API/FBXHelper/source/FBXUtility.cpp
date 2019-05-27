@@ -10,11 +10,7 @@
 #endif
 #include <fstream>
 #include <algorithm>
-
-#include "Vertex.h"
-#include "Mesh.h"
-#include "IOMesh.h"
-
+#include <Windows.h>
 /*!
 	@brief	usingディレクティブ
 	@using	std
@@ -55,28 +51,6 @@ shared_ptr<fbxsdk::FbxScene*>		FBXUtility::m_pScene		= nullptr;
 */
 shared_ptr<fbxsdk::FbxImporter*>	FBXUtility::m_pImporter		= nullptr;
 
-
-//	生宣言
-fbxsdk::FbxManager* FBXUtility::pManager;
-fbxsdk::FbxScene* FBXUtility::pScene;
-fbxsdk::FbxImporter* FBXUtility::pImporter;
-fbxsdk::FbxIOSettings*FBXUtility::pSettings;
-
-bool F2HOGE(FLOAT2&self, FLOAT2&other)
-{
-	return self.x < other.x;
-}
-
-bool F2HUGA(FLOAT2&self, FLOAT2&other)
-{
-	return self.y < other.y;
-}
-
-bool F2EQUAL(FLOAT2&self, FLOAT2&other)
-{
-	return self.x == other.x&&self.y == other.y;
-}
-
 /*!
 	@fn		Setup
 	@brief	初期化
@@ -94,13 +68,6 @@ void FBXUtility::Setup()
 	(*m_pManager)->SetIOSettings(*m_pIOsetting);
 	*m_pScene		= fbxsdk::FbxScene::Create(*m_pManager.get(), NULL);
 	*m_pImporter	= fbxsdk::FbxImporter::Create(*m_pManager.get(), NULL);
-
-	//	生
-	pManager = FbxManager::Create();
-	pSettings = FbxIOSettings::Create(pManager, IOSROOT);
-	pManager->SetIOSettings(pSettings);
-	pScene = FbxScene::Create(pManager, NULL);
-	pImporter = FbxImporter::Create(pManager, NULL);
 
 }
 
@@ -155,584 +122,46 @@ bool FBX::FBXUtility::Load(std::string path)
 	return true;
 }
 
-vector<string>g_vUVSetName;
-vector<string>g_vTexPath;
-bool FBX::FBXUtility::Load(std::string path, std::string outputPath, Abstract::AbstractMesh * mesh)
+bool FBX::FBXUtility::Load(std::string path, Utility::Mesh * mesh)
 {
 #pragma region init
 
-	pImporter = FbxImporter::Create(pManager, "");
-	pManager->SetIOSettings(pSettings);
-	int fileformat = -1;
-
-	//	インポーター
-	if (!pImporter->Initialize(path.c_str(), fileformat, pManager->GetIOSettings()))
+	try
 	{
-		cout << "Importer false;";
-		return false;
+		//	インポーター
+		if (!SetupImporter(path)) { throw "fbx importer"; }
+
+		//	シーン
+		if (!SetupScene(path)) { throw "fbx scene"; }
+
+		//	三角化
+		if (!Triangulate()) { throw "trianglate"; }
+
+		//	インポーターの破棄
+		TeardownImporter();
+
+		//	メッシュ作成
+		if (!CreateMesh(mesh)) { throw "create mesh"; }
 	}
-
-	//	シーン
-	FbxScene*scene = FbxScene::Create(pManager, path.c_str());
-	pImporter->Import(scene);
-	pImporter->Destroy();
-
-	//	三角化
-	FbxGeometryConverter cv(pManager);
-	cv.Triangulate(scene, true);
-	cv.RemoveBadPolygonsFromMeshes(scene);
+	catch (std::string&error)
+	{
+		cout << "Failed to setup \"" << error << "\"" << endl;
+		cout << "this program exit here!" << endl;
+		system("pause");
+		exit(NULL);
+	}
 #pragma endregion
 	//==================================================================
 	//	読み込み
 	//==================================================================
 
-	int meshCount = scene->GetSrcObjectCount<fbxsdk::FbxMesh>();
-	cout << "mesh count = " << meshCount << endl << endl;
-
-	//	書き出すメッシュ情報
-	Utility::OutputMesh output;
-
-	//	
-	for (int i = 0; i < meshCount; ++i)
-	{
-		FbxMesh*pMesh = scene->GetSrcObject<FbxMesh>(i);
-
-		cout << "mesh name =" << pMesh->GetName() << endl;
-
-		//	polygon group
-		{
-			int matCount = pMesh->GetNode()->GetMaterialCount();
-
-			cout << "matrial count = " << matCount << endl;
-			system("pause");
-			if (matCount > 0)
-			{
-				//	
-
-				//	コントロール点
-				int controlPointsCount = pMesh->GetControlPointsCount();
-				cout << "control point count = " << controlPointsCount << endl;
-
-				//	ポリゴンインデックス
-				vector<int>polygonIndex;
-
-				//	vertex
-				{
-					//	ポリゴン数
-					int polygonCount = pMesh->GetPolygonCount();
-
-					cout << "polygon count = " << polygonCount << endl;
-
-					if (polygonCount <= 0) { continue; }
-
-					//	頂点座標
-					//vector<FLOAT4>positions;
-
-					//	UV
-					//vector<FLOAT2>UVs;
-
-					//	レイヤー数
-					int layerCount = pMesh->GetLayerCount();
-
-					cout << "layer count = " << layerCount << endl;
-
-					//	ポリゴン頂点数
-					int polygonVertexCount = pMesh->GetPolygonVertexCount();
-
-					cout << "polygon vertex count = " << polygonVertexCount << endl;
-
-					//	頂点格納
-					{
-						FbxVector4*vertex = pMesh->GetControlPoints();
-						cout << "vertex" << endl << "No " << "x " << "y " << "z" << endl;
-						for (int j = 0; j < controlPointsCount; ++j)
-						{
-							FLOAT4 pos;
-							pos.x = (float)vertex[j][0];
-							pos.y = (float)vertex[j][1];
-							pos.z = (float)vertex[j][2];
-							pos.w = (float)vertex[j][3];
-
-							cout << j << ":" << pos.x << ", " << pos.y << ", " << pos.z << ", " << pos.w << endl;
-							//positions.push_back(pos);
-							output.vertexPos.push_back(pos);
-						}
-					}
-
-					//	インデックス
-					{
-						auto polygonVertex = pMesh->GetPolygonVertices();
-
-						//	頂点バッファのサイズ
-						polygonIndex.resize(polygonCount * 3);
-
-						//	インデックス格納用の配列の添え字(限定スコープ)
-						int index = 0;
-
-						cout << endl << "index buffer size = " << polygonCount * 3 << endl;
-
-						cout << "index" << endl << "polygon No" << ", vertex index" << endl;
-
-						for (int j = 0; j < polygonCount; ++j) {
-
-							int polygonSize = pMesh->GetPolygonSize(j);
-							for (int k = 0; k < polygonSize; ++k)
-							{
-								polygonIndex[index + k] = pMesh->GetPolygonVertex(j, k);
-								cout << j << ":" << j << ", " << pMesh->GetPolygonVertex(j, k) << endl;
-							}
-							index += polygonSize;
-						}
-					}
-					output.index = polygonIndex;
-
-					//	法線ベクトル
-					vector<FLOAT3>normals;
-
-					//	法線
-					{
-
-						//	レイヤー
-						FbxLayer*pLayer = pMesh->GetLayer(0);
-
-
-						FbxLayerElementNormal*normalElem = pLayer->GetNormals();
-						if (normalElem == NULL) { continue; }
-
-						int normalCount = normalElem->GetDirectArray().GetCount();
-						int normalIndexCount = normalElem->GetIndexArray().GetCount();
-
-						cout << "normal count = " << normalCount << endl;
-						cout << "normal index count = " << normalCount << endl;
-
-
-						FbxLayerElement::EMappingMode	normalMapMode = normalElem->GetMappingMode();
-						FbxLayerElement::EReferenceMode normalRefMode = normalElem->GetReferenceMode();
-
-						switch (normalMapMode)
-						{
-						case fbxsdk::FbxLayerElement::eNone:
-							break;
-						case fbxsdk::FbxLayerElement::eByControlPoint:
-						case fbxsdk::FbxLayerElement::eByPolygonVertex:
-						{
-							if (normalRefMode == FbxLayerElement::eDirect) {
-								for (int j = 0; j < normalCount; ++j)
-								{
-									FLOAT3 n;
-									n =
-									{
-										(float)normalElem->GetDirectArray().GetAt(j)[0],
-										(float)normalElem->GetDirectArray().GetAt(j)[1],
-										(float)normalElem->GetDirectArray().GetAt(j)[2],
-									};
-									normals.push_back(n);
-								}
-
-							}
-						}
-						break;
-						case fbxsdk::FbxLayerElement::eByPolygon:
-							break;
-						case fbxsdk::FbxLayerElement::eByEdge:
-							break;
-						case fbxsdk::FbxLayerElement::eAllSame:
-							break;
-						default:
-							break;
-						}
-					}
-
-					//	ソート
-					{
-						vector<FLOAT3>sortNormal;
-						sortNormal.resize(controlPointsCount);
-
-						for (unsigned int j = 0; j < normals.size(); ++j)
-						{
-							sortNormal[polygonIndex[i]] = normals[i];
-						}
-					}
-
-					if (layerCount == 0) { return false; }
-
-					//	レイヤー
-					FbxLayer*pLayer = pMesh->GetLayer(0);
-
-					//	UV
-					{
-						auto uvElem = pLayer->GetUVs();
-
-						int uvCount = uvElem->GetDirectArray().GetCount();
-						int uvIndexCount = uvElem->GetIndexArray().GetCount();
-						cout << "uv count = " << uvCount << endl;
-						cout << "uv index count = " << uvIndexCount << endl;
-						cout << "vertex index count = " << output.index.size() << endl;
-
-						auto uvMapMode = uvElem->GetMappingMode();
-						auto uvRefMode = uvElem->GetReferenceMode();
-
-						cout << "uv map mpde = ";// << uvMapMode << endl;
-						switch (uvMapMode)
-						{
-						case fbxsdk::FbxLayerElement::eNone: cout << "eNone" << endl; break;
-						case fbxsdk::FbxLayerElement::eByControlPoint: cout << "eByControlPoint" << endl; break;
-						case fbxsdk::FbxLayerElement::eByPolygonVertex: cout << "eByControlVertex" << endl; break;
-						case fbxsdk::FbxLayerElement::eByPolygon: cout << "eByPolygon" << endl; break;
-						case fbxsdk::FbxLayerElement::eByEdge: cout << "eByEdge" << endl; break;
-						case fbxsdk::FbxLayerElement::eAllSame:cout << "eAllSame" << endl; break;
-						default:
-							break;
-						}
-
-						cout << "uv ref mode = ";
-						switch (uvRefMode)
-						{
-						case fbxsdk::FbxLayerElement::eDirect: cout << "eDirect" << endl; break;
-						case fbxsdk::FbxLayerElement::eIndex: cout << "eIndex" << endl; break;
-						case fbxsdk::FbxLayerElement::eIndexToDirect: cout << "eIndexToDirect" << endl; break;
-						default:
-							break;
-						}
-
-						//	map = eByControlVertex
-						//	ref = eIndexToDirect
-
-						FbxArray<FbxVector2>uvArray;
-						uvElem->GetDirectArray().CopyTo(uvArray);
-
-						int temp = -1;
-						vector<FLOAT2>uv_stack;
-						for (int l = 0; l < uvIndexCount; ++l)
-						{
-							temp = uvElem->GetIndexArray().GetAt(l);
-							FLOAT2 uv =
-							{
-								(float)uvArray.GetAt(temp)[0],
-								1.0f - (float)uvArray.GetAt(temp)[1],
-							};
-							//	保存用
-							uv_stack.push_back(uv);
-						}
-
-						vector<FLOAT2>sortUV;
-						sortUV.resize(controlPointsCount);
-						for (int l = 0; l < uv_stack.size(); ++l)
-						{
-							sortUV[output.index[l]] = uv_stack[l];
-						}
-						cout << "sort uv count = " << sortUV.size() << endl;
-
-						output.uv.clear();
-						output.uv = sortUV;
-					}
-				}
-			}
-
-			else
-			{
-				//	コントロール点
-				int controlPointsCount = pMesh->GetControlPointsCount();
-				cout << "control point count = " << controlPointsCount << endl;
-
-
-				int polygonCount = pMesh->GetPolygonCount();
-
-				cout << "polygon count = " << polygonCount << endl;
-
-				auto vertics = pMesh->GetPolygonVertices();
-
-				//	頂点格納
-				{
-					FbxVector4*vertex = pMesh->GetControlPoints();
-					cout << "vertex" << endl << "No " << "x " << "y " << "z" << endl;
-					for (int j = 0; j < controlPointsCount; ++j)
-					{
-						FLOAT4 pos;
-						pos.x = (float)vertex[j][0];
-						pos.y = (float)vertex[j][1];
-						pos.z = (float)vertex[j][2];
-						pos.w = (float)vertex[j][3];
-
-						cout << j << ":" << pos.x << ", " << pos.y << ", " << pos.z << ", " << pos.w << endl;
-						//positions.push_back(pos);
-						output.vertexPos.push_back(pos);
-					}
-				}
-
-				vector<int>index;
-				vector<int>vIndexCpy;
-				vIndexCpy.resize(polygonCount * 3);
-
-				cout << endl << "index buffer size = " << polygonCount * 3 << endl;
-
-				cout << "index" << endl << "polygon No" << ", vertex index" << endl;
-
-				int polyNum = 0;
-				//	インデックス
-				for (int j = 0; j < polygonCount; ++j)
-				{
-					//	三角化しているので polygonSize = 3 になるはず
-					int polygonSize = pMesh->GetPolygonSize(j);
-
-					for (int k = 0; k < polygonSize; ++k)
-					{
-						vIndexCpy[polyNum + k] = pMesh->GetPolygonVertex(j, k);
-						index.push_back(pMesh->GetPolygonVertex(j, k));
-						cout << j << ":" << j << ", " << pMesh->GetPolygonVertex(j, k) << endl;
-					}
-					polyNum += polygonSize;
-				}
-				output.index = index;
-
-				//	レイヤー数
-				int layerCount = pMesh->GetLayerCount();
-				cout << "layer count = " << layerCount << endl;
-
-				if (layerCount == 0) { return false; }
-
-				//	レイヤー
-				FbxLayer*pLayer = pMesh->GetLayer(0);
-
-				//	UV
-				auto uvElem = pLayer->GetUVs();
-				if (!uvElem)
-				{
-					cout << "uv Element = NULL" << endl;
-					continue;
-				}
-				int uvCount = uvElem->GetDirectArray().GetCount();
-				int uvIndexCount = uvElem->GetIndexArray().GetCount();
-				cout << "uv count = " << uvCount << endl;
-				cout << "uv index count = " << uvIndexCount << endl;
-				cout << "vertex index count = " << output.index.size() << endl;
-
-				auto uvMapMode = uvElem->GetMappingMode();
-				auto uvRefMode = uvElem->GetReferenceMode();
-
-				cout << "uv map mpde = ";// << uvMapMode << endl;
-				switch (uvMapMode)
-				{
-				case fbxsdk::FbxLayerElement::eNone: cout << "eNone" << endl; break;
-				case fbxsdk::FbxLayerElement::eByControlPoint: cout << "eByControlPoint" << endl; break;
-				case fbxsdk::FbxLayerElement::eByPolygonVertex: cout << "eByControlVertex" << endl; break;
-				case fbxsdk::FbxLayerElement::eByPolygon: cout << "eByPolygon" << endl; break;
-				case fbxsdk::FbxLayerElement::eByEdge: cout << "eByEdge" << endl; break;
-				case fbxsdk::FbxLayerElement::eAllSame:cout << "eAllSame" << endl; break;
-				default:
-					break;
-				}
-
-				cout << "uv ref mode = ";
-				switch (uvRefMode)
-				{
-				case fbxsdk::FbxLayerElement::eDirect: cout << "eDirect" << endl; break;
-				case fbxsdk::FbxLayerElement::eIndex: cout << "eIndex" << endl; break;
-				case fbxsdk::FbxLayerElement::eIndexToDirect: cout << "eIndexToDirect" << endl; break;
-				default:
-					break;
-				}
-
-				//	以降の処理は
-				//	eByControlVertex & eIndexToDirectで抜き取る(↑で直接判定した)
-				FbxArray<FbxVector2>uvArray;
-				uvElem->GetDirectArray().CopyTo(uvArray);
-
-				int temp = -1;
-				vector<FLOAT2>uv_stack;
-				for (int l = 0; l < uvIndexCount; ++l)
-				{
-					temp = uvElem->GetIndexArray().GetAt(l);
-					FLOAT2 uv =
-					{
-						(float)uvArray.GetAt(temp)[0],
-						1.0f - (float)uvArray.GetAt(temp)[1],
-					};
-					//	保存用
-					uv_stack.push_back(uv);
-
-					//	出力用
-					output.uv.push_back(uv);
-				}
-				
-				vector<int>uvIndex;
-
-				// (UVインデックスの個数 = 頂点インデックスの個数)
-				//	uvIndexCount = vertexIndexCount
-				for (int p = 0; p < uvIndexCount; ++p)
-				{
-					int tmp;
-					tmp = uvElem->GetIndexArray().GetAt(p);
-					uvIndex.push_back(tmp);
-				}
-
-				vector<FLOAT2>sortUV;
-				sortUV.resize(controlPointsCount);
-				for (int l = 0; l < uv_stack.size(); ++l)
-				{
-					sortUV[vIndexCpy[l]] = uv_stack[l];
-					//sortUV[uvIndex[l]] = uv_stack[l];
-				}
-				cout << "sort uv count = " << sortUV.size() << endl;
-
-				output.uv.clear();
-				output.uv = sortUV;
-				
-				//	ループ 3492
-				vector<FLOAT2> allUV;//重複した
-				for (int l = 0; l < uvIndexCount; ++l)
-				{
-					//	l番目の頂点インデックス
-					int uIndex = uvElem->GetIndexArray().GetAt(l);
-					
-					//	
-					FLOAT2 uv;
-					uv.x = (float)uvArray.GetAt(uIndex)[0];
-					uv.y = 1.0f - (float)uvArray.GetAt(uIndex)[1];
-
-					allUV.push_back(uv);
-				}
-				cout << "uv size = " << allUV.size() << endl;
-
-				//	UVの頂点紐づけ
-				vector<FLOAT2>uvData;
-				for (int l = 0; l < controlPointsCount; ++l)
-				{
-					FLOAT2 uv = allUV[l];
-					uvData.push_back(uv);
-				}
-
-				cout << "uv data = " << uvData.size() << endl;
-				output.uv.clear();
-				output.uv = uvData;
-			}
-
-
-			//	マテリアルインデックス
-			//FbxLayerElementArrayTemplate<int>*matIndex;
-		}
-	}
-
-	//	output data show
-	cout << "output data" << endl;
-	cout << "output vertex size = " << output.vertexPos.size() << endl;
-	cout << "output index size = " << output.index.size() << endl;
-	cout << "output uv size = " << output.uv.size() << endl;
-
-	//Utility::IOMesh::Output("", "test", output);v
-	Utility::IOMesh::Output("", outputPath, output);
-	//Utility::IOMesh::Output("", "test_draw", output);
-
 	return true;
-}
-
-void FBX::FBXUtility::SetupVertex(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractMesh * mesh)
-{
-	auto v = fbxMesh->GetControlPoints();
-	mesh->vertex.resize(fbxMesh->GetControlPointsCount());
-	int i = 0;
-	while (i < fbxMesh->GetControlPointsCount())
-	{
-		//TODO:vector<Vertex>型のインスタンスを宣言し、push_backすることでresizeを使わなくて良くなる
-		mesh->vertex[i].x = v[i][0];
-		mesh->vertex[i].y = v[i][1];
-		mesh->vertex[i].z = v[i][2];
-		mesh->vertex[i].w = v[i][3];
-		i++;
-	}
-}
-
-void FBX::FBXUtility::SetupIndexBuffer(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractMesh * mesh)
-{
-	int index = 0;
-	auto vertices= fbxMesh->GetPolygonVertices();
-	while (index < fbxMesh->GetPolygonVertexCount())
-	{
-		mesh->indexBuffer.push_back(vertices[index++]);
-	}
-}
-
-void FBX::FBXUtility::SetupNormal(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractMesh * mesh)
-{
-	auto layer = fbxMesh->GetLayer(0);
-	auto normal = layer->GetNormals();
-
-	bool isMapMode = normal->GetMappingMode() == FbxLayerElement::eByPolygonVertex || normal->GetMappingMode() == FbxLayerElement::eByControlPoint;
-	bool isRefMode = normal->GetReferenceMode() == FbxLayerElement::eDirect;
-	bool isGet = isMapMode && isRefMode;
-
-	if (!isGet) { return; }
-
-	int index = 0;
-	while (index < normal->GetDirectArray().GetCount())
-	{
-		mesh->vertex[index].normal.x = normal->GetDirectArray().GetAt(index)[0];
-		mesh->vertex[index].normal.y = normal->GetDirectArray().GetAt(index)[1];
-		mesh->vertex[index].normal.z = normal->GetDirectArray().GetAt(index)[2];
-		index++;
-	}
-}
-
-void FBX::FBXUtility::SetupUV(fbxsdk::FbxMesh * fbxMesh, Abstract::AbstractMesh * mesh)
-{
-	auto layer = fbxMesh->GetLayer(0);
-	auto uvs = layer->GetUVs();
-	auto a = uvs->GetMappingMode();
-	if (uvs->GetMappingMode() != FbxLayerElement::eByPolygonVertex) {
-		cout << "uv取得失敗" << endl;
-		return;
-	}
-	auto refMode = uvs->GetReferenceMode();
-
-	FbxArray<FbxVector2>uvArray;
-	uvs->GetDirectArray().CopyTo(uvArray);
-
-	switch (refMode)
-	{
-	case fbxsdk::FbxLayerElement::eDirect:
-		for (int i = 0; i < uvArray.Size(); ++i)
-		{
-			float u = (float)uvArray.GetAt(i)[0];
-			float v = (float)uvArray.GetAt(i)[1];
-			mesh->uv.push_back({ u,v });
-		}
-		break;
-	case fbxsdk::FbxLayerElement::eIndex:
-		cout << "設定なし" << endl;
-		break;
-	case fbxsdk::FbxLayerElement::eIndexToDirect:
-		//NOTE:参考は "y:1.0f-uvArray.Get(index)[1]"を代入している
-		for (int i = 0; i < uvArray.Size(); ++i)
-		{
-			auto index = uvs->GetIndexArray().GetAt(i);
-			float u = (float)uvArray.GetAt(index)[0];
-			float v = (float)uvArray.GetAt(index)[1];
-			mesh->uv.push_back({ u, v });
-		}
-		break;
-	default:
-		break;
-	}
-	vector<FbxVector2>vf;
-	for (auto it : mesh->uv)
-	{
-		vf.push_back({ (double)it.u,(double)it.v });
-	}
-	//ソート前
-	vf.erase(unique(vf.begin(), vf.end()), vf.end());
-	auto tmp = vf;
-	int bNum = tmp.size();
-	//ソート後
-	//sort(vf.begin(),vf.end());
-	//	重複削除
-	int aNum = vf.size();
 }
 
 void FBX::FBXUtility::Destroy()
 {
 	if (m_pImporter) {
-		(*m_pImporter.get())->Destroy();
-		m_pImporter.reset();
+		TeardownImporter();
 	}
 	if (m_pIOsetting) {
 		(*m_pIOsetting.get())->Destroy();
@@ -746,7 +175,6 @@ void FBX::FBXUtility::Destroy()
 		(*m_pManager.get())->Destroy();
 		m_pManager.reset();
 	}
-
 }
 
 bool FBX::FBXUtility::Triangulate()
@@ -755,12 +183,14 @@ bool FBX::FBXUtility::Triangulate()
 
 	try
 	{
-
 		if (!converter.Triangulate(*m_pScene.get(), true)) {
-			throw - 1;
+			throw;
 		}
+
+		//	メッシュから不要なポリゴンを削除する
+		converter.RemoveBadPolygonsFromMeshes(*m_pScene.get());
 	}
-	catch (int&)
+	catch (...)
 	{
 #pragma region 例外処理
 #if defined DEBUG||_DEBUG
@@ -774,3 +204,543 @@ bool FBX::FBXUtility::Triangulate()
 
 	return true;
 }
+
+bool FBX::FBXUtility::SetupImporter(std::string fbxPath)
+{
+	try
+	{
+		if (!(*m_pImporter.get())->Initialize(
+			fbxPath.c_str(),
+			-1,
+			(*m_pManager.get())->GetIOSettings()
+		)) {
+			throw fbxPath;
+		}
+	}
+	catch (string&str)
+	{
+#pragma region 例外処理
+#if defined DEBUG||_DEBUG
+		std::cout << "Could not read \"" << str << "\"" << endl;
+		std::system("pause");
+		std::exit(EXIT_FAILURE);
+#endif
+#pragma endregion
+		return false;
+	}
+	return true;
+}
+
+void FBX::FBXUtility::TeardownImporter()
+{
+	if (m_pImporter)
+	{
+		(*m_pImporter.get())->Destroy();
+		m_pImporter.reset();
+	}
+}
+
+bool FBX::FBXUtility::SetupScene(std::string fbxPath)
+{
+	try
+	{
+		if (!(*m_pImporter.get())->Import(
+			*m_pScene.get()
+		)) {
+			throw fbxPath;
+		}
+	}
+	catch (string&str)
+	{
+#pragma region 例外処理
+#if defined DEBUG||_DEBUG
+		std::cout << "Could not output \"" << str << "\" to the scene" << endl;
+		std::system("pause");
+		std::exit(EXIT_FAILURE);
+#endif
+#pragma endregion
+		return false;
+	}
+	return true;
+}
+
+bool FBX::FBXUtility::CreateMesh(Utility::Mesh * mesh, bool isDebug)
+{
+	//	FBXを構成しているメッシュの数
+	int meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
+
+	cout << "mesh count = " << meshCount << endl;
+
+	try
+	{
+		for (int i = 0; i < meshCount; ++i)
+		{
+			cout << endl;
+
+			FbxMesh* pMesh = (*m_pScene.get())->GetSrcObject<FbxMesh>(i);
+			cout << "mesh name = " << pMesh->GetName() << endl;
+
+			//	構成ポリゴン数
+			auto polygonCount = pMesh->GetPolygonCount();
+			cout << "mesh polygon count = " << polygonCount << endl;
+			
+			//	構成しているポリゴンがなければ処理しない
+			if (polygonCount <= 0) { continue; }
+
+			//	頂点生成
+			SetupVertex(pMesh, mesh, isDebug);
+
+			//	インデックス
+			SetupIndex(pMesh, mesh, isDebug);
+
+			//	UV
+			SetupUV(pMesh, mesh, isDebug);
+
+			//============================
+			//TODO
+			//============================
+			Hoge(pMesh);
+		}
+	}
+	catch (const string&error)
+	{
+		cout << "Failed to \"" << error << "\"" << endl;
+		system("pause");
+		return false;
+	}
+	cout << endl << endl;
+	cout << "CreateMesh success!" << endl;
+	cout << "Quit the program." << endl;
+
+	return true;
+}
+
+void FBX::FBXUtility::SetupVertex(FbxMesh * mesh, Utility::Mesh * data, bool isShowValue)
+{
+	//	頂点数
+	auto vertexCount = mesh->GetControlPointsCount();	
+
+	//	頂点配列の先頭ポインタ
+	FbxVector4* vertices = mesh->GetControlPoints();
+
+	//	頂点インデックス
+	int index = 0;
+	while (true)
+	{
+		//	頂点分格納したら終了
+		if (vertexCount <= index) { break; }
+
+		Math::FLOAT4 vertex =
+		{
+			(float)vertices[index][0],
+			(float)vertices[index][1],
+			(float)vertices[index][2],
+			(float)vertices[index][3],
+		};
+		index++;
+		data->vertices.push_back(vertex);
+
+		if (isShowValue)
+		{
+			cout << "x = " << vertex.x << ",y = " << vertex.y
+				<< ",z = " << vertex.z << ",w = " << vertex.w << endl;
+		}
+	}
+
+	//
+	//	TODO:頂点の格納順がおかしい？
+	//	頂点情報は順番に関係なくメッシュを構成するが、この時の格納順をもとにUVの順番を決めている
+	//	http://shikemokuthinking.blogspot.com/ float posX = vertex[index[0]][0];←ココ
+
+	//	ポリゴン数
+	cout << "SetupVertex():Polygon count = " << mesh->GetPolygonCount() << endl;
+	
+	//	頂点数
+	cout << "Vertex count = " << vertexCount << endl;
+
+	//	実際に格納した頂点数
+	cout << "Stored vertex count = " << data->vertices.size() << endl;
+
+}
+
+void FBX::FBXUtility::SetupIndex(FbxMesh * mesh, Utility::Mesh * data, bool isShowValue)
+{
+	//	ポリゴン数
+	auto polygonCount = mesh->GetPolygonCount();
+
+	//	既に格納されたインデックスの個数
+	auto offset = data->index.size();
+
+	for (int i = 0; i < polygonCount; ++i)
+	{
+		//	ポリゴンを構成する頂点数
+		auto polygonVertexCount = mesh->GetPolygonSize(i);
+
+		for (int j = 0; j < polygonVertexCount; ++j)
+		{
+			//	メッシュが複数の場合、インデックス番号 + オフセット
+			auto index = mesh->GetPolygonVertex(i, j) + offset;
+			data->index.push_back(index);
+		}
+	}
+
+	//	ポリゴン数
+	cout << "SetupIndex():Polygon count = " << mesh->GetPolygonCount() << endl;
+
+	//	インデックス数
+	cout << "index count = " << mesh->GetPolygonVertexCount() << endl;
+
+	//	実際に格納した頂点数
+	cout << "Stored index count = " << data->index.size() << endl;
+
+}
+
+void FBX::FBXUtility::SetupUV(FbxMesh * mesh, Utility::Mesh * data, bool isShowValue)
+{
+	//	レイヤー数
+	auto layerCount = mesh->GetLayerCount();
+	if (layerCount <= 0) { return; }
+
+	cout << "layer count = " << layerCount << endl;
+	
+#pragma region sample1
+	for (int i = 0; i < layerCount; ++i)
+	{
+		cout << "SetupIndex():layer No = " << i << endl;
+
+		auto pLayer = mesh->GetLayer(i);
+		auto uvElem = pLayer->GetUVs();
+		auto uvCount = uvElem->GetDirectArray().GetCount();
+		auto uvIndexCount = uvElem->GetIndexArray().GetCount();
+
+		if (uvIndexCount < uvCount) {
+			cout << endl;
+			cout << "--------WARNING!!--------" << endl;
+			cout << "uv count < uv index count" << endl;
+			cout << "--------WARNING!!--------" << endl;
+			cout << endl;
+		}
+
+		cout << "uv count = " << uvCount << endl;
+		cout << "uv index count = " << uvIndexCount << endl;
+
+		auto mapMode = uvElem->GetMappingMode();
+		cout << "mapping mode = ";
+		string cast;
+		switch (mapMode)
+		{
+		case fbxsdk::FbxLayerElement::eNone:cast = "eNone"; break;
+		case fbxsdk::FbxLayerElement::eByControlPoint:cast = "eByControlPoint"; break;
+		case fbxsdk::FbxLayerElement::eByPolygonVertex:cast = "eByPolygonVertex"; break;
+		case fbxsdk::FbxLayerElement::eByPolygon:cast = "eByPolygon"; break;
+		case fbxsdk::FbxLayerElement::eByEdge:cast = "eByEdge"; break;
+		case fbxsdk::FbxLayerElement::eAllSame:cast = "eAllSame"; break;
+		default:cast = "invalid value"; break;
+		}
+		cout << cast << endl;
+
+		if (mapMode != FbxLayerElement::eByPolygonVertex) { continue; }
+
+		auto refMode = uvElem->GetReferenceMode();
+		cout << "reference mode = ";
+		switch (refMode)
+		{
+		case fbxsdk::FbxLayerElement::eDirect:cast = "eDirect"; break;
+		case fbxsdk::FbxLayerElement::eIndex:cast = "eIndex"; break;
+		case fbxsdk::FbxLayerElement::eIndexToDirect:cast = "eIndexToDirect"; break;
+		default:cast = "invalid value"; break;
+		}
+		cout << cast << endl;
+
+		FbxArray<FbxVector2> uvArray;
+		uvElem->GetDirectArray().CopyTo(uvArray);
+
+		switch (refMode)
+		{
+		case fbxsdk::FbxLayerElement::eDirect:
+		{
+			for (int j = 0; j < uvIndexCount; ++j)
+			{
+				Math::FLOAT2 uv=
+				{
+					static_cast<float>(uvArray.GetAt(j)[0]),
+					static_cast<float>(uvArray.GetAt(j)[1]),
+				};
+				data->uv.push_back(uv);
+
+				if (isShowValue)
+				{
+					cout << "u = " << uv.x << ",v = " << uv.y << endl;
+				}
+			}
+		}
+			break;
+		case fbxsdk::FbxLayerElement::eIndex: break;
+		case fbxsdk::FbxLayerElement::eIndexToDirect:
+		{
+			vector<Math::FLOAT2>uvAll;
+
+			//TODO:インデックス⇒頂点数へ変換する処理
+			auto offset = data->uv.size();
+			for (int j = 0; j < uvIndexCount; ++j)
+			{
+				auto index = uvElem->GetIndexArray().GetAt(j);
+				Math::FLOAT2 uv =
+				{
+					//static_cast<float>(uvArray.GetAt(index)[0]),
+					//1.0f - static_cast<float>(uvArray.GetAt(index)[1]),
+
+					//static_cast<float>(uvArray.GetAt(index)[0]),
+					//1.0f - static_cast<float>(uvArray.GetAt(index)[1]),
+
+					static_cast<float>(uvElem->GetDirectArray().GetAt(index)[0]),
+					1.0f - static_cast<float>(uvElem->GetDirectArray().GetAt(index)[1]),
+
+				};
+				uvAll.push_back(uv);
+				//data->uv.push_back(uv);
+
+				if (isShowValue)
+				{
+					cout << "u = " << uv.x << ",v = " << uv.y << endl;
+				}
+			}
+			
+			int vertexCount = data->vertices.size();
+			cout << "vertex count = " << vertexCount<<endl;
+
+			//	格納したUVからメッシュを構成するUV情報をmeshのメンバに！
+			for (int j = 0; j < vertexCount; ++j)
+			{
+				Math::FLOAT2 v = uvAll[uvElem->GetIndexArray()[j]];
+				data->uv.push_back(v);
+			}
+		}
+			break;
+		default:
+			break;
+		}
+
+
+		//	実際に格納したuv
+		cout << "Stored uv vertex count = " << data->uv.size() << endl;
+
+	}
+#pragma endregion
+
+#pragma region sample2
+//FbxStringList uvSetNames;
+//mesh->GetUVSetNames(uvSetNames);
+//
+//auto uvSetCount = uvSetNames.GetCount();
+//cout << "uv set name count = " << uvSetCount << endl;
+//
+//if (uvSetCount <= 0)
+//{
+//	cout << endl << "Error" << endl;
+//	return;
+//}
+//
+//cout << "uv set name = " << uvSetNames.GetStringAt(0) << endl;
+//
+//FbxArray<FbxVector2>uvsets;
+//mesh->GetPolygonVertexUVs(uvSetNames.GetStringAt(0), uvsets);
+//
+//cout << "uv set vertex count = " << uvsets.Size() << endl;
+//
+//for (int i = 0; i < uvsets.Size(); ++i)
+//{
+//	const FbxVector2&uv = uvsets[i];
+//	Math::FLOAT2 set =
+//	{
+//		uv[0],
+//		uv[1],
+//	};
+//	data->uv.push_back(set);
+//}
+//cout << "stored uv count = " << data->uv.size() << endl;
+#pragma endregion
+
+}
+
+void FBX::FBXUtility::Hoge(fbxsdk::FbxMesh * mesh)
+{
+	//	色
+	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(h,
+		FOREGROUND_GREEN);
+
+	FbxStringList uvNameList;
+	mesh->GetUVSetNames(uvNameList);
+	auto uvsetCount = uvNameList.GetCount();
+	cout << endl << "count = " << uvsetCount << endl;
+	for (int i = 0; i < uvsetCount; ++i)
+	{
+		cout << i << ":" << uvNameList.GetStringAt(i) << endl;
+	}
+
+	//	色
+	SetConsoleTextAttribute(h,
+		FOREGROUND_RED);
+
+	cout << endl << endl << "HOGE" << endl;
+
+	auto uvLayerCount = mesh->GetElementUVCount();
+
+	vector<string>uvSetNames;
+	for (int i = 0; i < uvLayerCount; ++i)
+	{
+
+		auto uv = mesh->GetElementUV(i);
+		auto mapMode = uv->GetMappingMode();
+		cout << "mapping mode = ";
+		string cast;
+		switch (mapMode)
+		{
+		case fbxsdk::FbxLayerElement::eNone:cast = "eNone"; break;
+		case fbxsdk::FbxLayerElement::eByControlPoint:cast = "eByControlPoint"; break;
+		case fbxsdk::FbxLayerElement::eByPolygonVertex:cast = "eByPolygonVertex"; break;
+		case fbxsdk::FbxLayerElement::eByPolygon:cast = "eByPolygon"; break;
+		case fbxsdk::FbxLayerElement::eByEdge:cast = "eByEdge"; break;
+		case fbxsdk::FbxLayerElement::eAllSame:cast = "eAllSame"; break;
+		default:cast = "invalid value"; break;
+		}
+		cout << cast << endl;
+
+		if (mapMode != FbxLayerElement::eByPolygonVertex) { continue; }
+
+		auto refMode = uv->GetReferenceMode();
+		cout << "reference mode = ";
+		switch (refMode)
+		{
+		case fbxsdk::FbxLayerElement::eDirect:cast = "eDirect"; break;
+		case fbxsdk::FbxLayerElement::eIndex:cast = "eIndex"; break;
+		case fbxsdk::FbxLayerElement::eIndexToDirect:cast = "eIndexToDirect"; break;
+		default:cast = "invalid value"; break;
+		}
+		cout << cast << endl;
+
+		//	マッピングモード判別
+		if (mapMode != FbxGeometryElement::eByPolygonVertex) { continue; }
+
+		//	リファレンスモード判別
+		if (refMode != FbxGeometryElement::eIndexToDirect) { continue; }
+
+		auto uvIndex = &uv->GetIndexArray();
+		auto uvIndexCount = uvIndex->GetCount();
+
+		vector<Math::FLOAT2>uvBuffer;
+
+		for (int i = 0; i < uvIndexCount; ++i)
+		{
+			int index = uvIndex->GetAt(i);
+			Math::FLOAT2 temp =
+			{
+				(float)uv->GetDirectArray().GetAt(index)[0],
+				1.0f - (float)uv->GetDirectArray().GetAt(index)[1],
+			};
+			uvBuffer.push_back(temp);
+		}
+
+		//	UVSet名
+		auto name = uv->GetName();
+		uvSetNames.push_back(name);
+	}
+
+
+	//-----------------------------------------------
+	//マテリアル
+	auto node = mesh->GetNode();
+
+	auto matCount = node->GetMaterialCount();
+	cout << "material count = " << matCount << endl;
+
+	vector<string>vTexFilePathes;
+	vector<string>matSetNames;
+	for (int i = 0; i < matCount; ++i)
+	{
+		auto mat = node->GetMaterial(i);
+
+		//	ディフューズ
+		auto prop = mat->FindProperty(FbxSurfaceMaterial::sDiffuse);
+
+		auto layeredTextureCount = prop.GetSrcObjectCount<FbxLayeredTexture>();
+
+		if (0 < layeredTextureCount)
+		{
+			//cout << "こっちは入らないよ!!" << endl;
+			//system("pause");
+			//exit(NULL);
+
+			for (int j = 0; j < layeredTextureCount; ++j)
+			{
+				auto layeredTexture = prop.GetSrcObject<FbxLayeredTexture>(j);
+				auto texCount = layeredTexture->GetSrcObjectCount<FbxFileTexture>();
+
+				for (int k = 0; k < texCount; ++k)
+				{
+					auto tex = prop.GetSrcObject<FbxFileTexture>(k);
+
+					if (!tex) { continue; }
+
+					auto texPath = tex->GetRelativeFileName();
+					vTexFilePathes.push_back(texPath);
+				}
+			}
+
+		}
+		else
+		{
+			auto fileTextureCount = prop.GetSrcObjectCount<FbxFileTexture>();
+
+			if (0 < fileTextureCount)
+			{
+				for (int j = 0; j < fileTextureCount; ++j)
+				{
+					auto tex = prop.GetSrcObject<FbxFileTexture>(j);
+					if (!tex) { continue; }
+
+					auto texPath = tex->GetRelativeFileName();
+					vTexFilePathes.push_back(texPath);
+
+					auto name = tex->UVSet.Get().Buffer();
+					matSetNames.push_back(name);
+				}
+			}
+			else
+			{
+				cout << "ERROR" << endl;
+				system("pause");
+				//exit(NULL);
+			}
+		}
+	}
+
+	auto a = mesh->GetName();
+	cout << "Mesh Name = " << a << endl;
+	cout << "uv set name " << endl;
+	int c = 0;
+	for (auto it : uvSetNames)
+	{
+		c++;
+		cout << c << ":" << it << endl;
+	}
+	c = 0;
+	cout << "mat set name " << endl;
+	for (auto it : matSetNames)
+	{
+		c++;
+		cout << c << ":" << it << endl;
+	}
+	c = 0;
+	cout << "uv path " << endl;
+	for (auto it : vTexFilePathes)
+	{
+		c++;
+		cout << c << ":" << it << endl;
+	}
+	cout << "=============================================" << endl;
+	cout << "// End of Hoge" << endl;
+	cout << "=============================================" << endl;
+}
+

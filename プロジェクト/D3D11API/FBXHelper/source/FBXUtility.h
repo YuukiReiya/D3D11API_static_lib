@@ -6,8 +6,11 @@
 	@detail	シングルトン
 */
 #pragma once
-#include "AbstractMesh.h"
-
+#include "Mesh.h"
+#include "OriginalFormatMath.h"
+#include <fbxsdk/scene/geometry/fbxmesh.h>
+#include <fbxsdk/core/fbxmanager.h>
+#include <fbxsdk/fileio/fbximporter.h>
 namespace FBX {
 	class FBXUtility
 	{
@@ -38,16 +41,8 @@ namespace FBX {
 			@param[in]	読み込むファイルのパス
 			@return		true:成功 false:失敗
 		*/
-		static bool Load(std::string path, std::string outputPath, Abstract::AbstractMesh*mesh);
-
-		static void SetupVertex(fbxsdk::FbxMesh*fbxMesh, Abstract::AbstractMesh*mesh);
-
-		static void SetupIndexBuffer(fbxsdk::FbxMesh*fbxMesh, Abstract::AbstractMesh*mesh);
-
-		static void SetupNormal(fbxsdk::FbxMesh*fbxMesh, Abstract::AbstractMesh*mesh);
-
-		static void SetupUV(fbxsdk::FbxMesh*fbxMesh, Abstract::AbstractMesh*mesh);
-
+		static bool Load(std::string path, Utility::Mesh* mesh);
+		
 		static void Destroy();
 
 		/*!
@@ -68,6 +63,21 @@ namespace FBX {
 		*/
 		~FBXUtility() = delete;
 
+		static bool SetupImporter(std::string fbxPath);
+
+		static void TeardownImporter();
+
+		static bool SetupScene(std::string fbxPath);
+
+		static bool CreateMesh(Utility::Mesh*mesh, bool isDebug = false);
+
+		static void SetupVertex(fbxsdk::FbxMesh* mesh,Utility::Mesh* data,bool isShowValue = false);
+
+		static void SetupIndex(fbxsdk::FbxMesh* mesh, Utility::Mesh* data, bool isShowValue = false);
+
+		static void SetupUV(fbxsdk::FbxMesh* mesh, Utility::Mesh* data, bool isShowValue = false);
+
+		static void Hoge(fbxsdk::FbxMesh*mesh);
 
 		/*!
 			@var	m_pManager
@@ -97,12 +107,6 @@ namespace FBX {
 		*/
 		static std::shared_ptr<fbxsdk::FbxImporter*>	m_pImporter;
 
-
-		////
-		static fbxsdk::FbxManager* pManager;
-		static fbxsdk::FbxScene* pScene;
-		static fbxsdk::FbxImporter* pImporter;
-		static fbxsdk::FbxIOSettings*pSettings;
 
 	};
 
