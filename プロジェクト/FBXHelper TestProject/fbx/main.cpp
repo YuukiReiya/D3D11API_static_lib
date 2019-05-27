@@ -15,16 +15,22 @@ int main()
 
 	FBX::FBXUtility::Setup();
 	Mesh*mesh = new Mesh;
-	mesh->Setup();
-	auto ret = FBXUtility::Load("ao_twinte_chan.fbx", "hoge", mesh);
-	//auto ret = FBXUtility::Load("JNT_00100_anathema_H.fbx", mesh);
 
-	if (ret) {
-		printf("ê¨å˜");
+	//std::string fbxPath = "SD_unitychan_humanoid.fbx";
+	std::string fbxPath = "ao_twinte_chan.fbx"; 
+	//std::string fbxPath = "Kouhai_chan.fbx";
+	//std::string fbxPath = "JNT_00100_anathema_H.fbx";
+	//std::string fbxPath = "Pikachu.fbx";
+
+
+	std::string yfmPath = "test5";
+
+	IOMesh::Delete("", yfmPath);
+	if (FBX::FBXUtility::Load(fbxPath, mesh))
+	{
+		IOMesh::Output("", yfmPath, *mesh);
 	}
-	else {
-		printf("é∏îs");
-	}
+
 
 	//IOMesh::Output("../", "uvTest", mesh);
 	//IOMesh::Output("", "fbx", mesh);
