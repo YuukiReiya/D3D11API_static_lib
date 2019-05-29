@@ -295,11 +295,17 @@ bool FBX::FBXUtility::CreateMesh(Utility::Mesh * mesh, bool isDebug)
 
 			auto size = mesh->index.size();
 			mesh->index.clear();
-			for (int i = 0; i < size; ++i) { mesh->index.push_back(i); }
+			for (UINT i = 0; i < size; ++i) { mesh->index.push_back(i); }
 
 			//	UV
 			SetupUV(pMesh, mesh, isDebug);
 
+
+			//============================
+			//CONV
+			//============================
+			Utility::Mesh* om=new Utility::Mesh();
+			SetupConversion(mesh, om, pMesh);
 			//============================
 			//TODO
 			//============================
@@ -328,7 +334,7 @@ void FBX::FBXUtility::SetupVertex(FbxMesh * mesh, Utility::Mesh * data, bool isS
 	FbxVector4* vertices = mesh->GetControlPoints();
 
 	//	頂点インデックス
-	int index = 0;
+	UINT index = 0;
 	auto indexCount = data->index.size();
 	while (true)
 	{
@@ -573,6 +579,185 @@ void FBX::FBXUtility::SetupUV(FbxMesh * mesh, Utility::Mesh * data, bool isShowV
 
 }
 
+#include "IOMesh.h"
+void FBX::FBXUtility::SetupConversion(Utility::Mesh * from, Utility::Mesh * to, fbxsdk::FbxMesh * mesh)
+{
+	struct
+	{
+		vector<Math::FLOAT4> vertices;
+		vector<int>vertexIndices;
+		vector<Math::FLOAT2>uv;
+		vector<int>uvIndices;
+	}data;
+
+#pragma region 頂点
+	FbxVector4* vertices = mesh->GetControlPoints();
+	auto vertexCount = mesh->GetControlPointsCount();
+
+	for (int i = 0; i < vertexCount; ++i)
+	{
+		Math::FLOAT4 temp =
+		{
+			(float)vertices[i][0],
+			(float)vertices[i][1],
+			(float)vertices[i][2],
+			(float)vertices[i][3],
+		};
+		data.vertices.push_back(temp);
+	}
+	cout << "頂点数:" << data.vertices.size() << endl;
+#pragma endregion
+
+#pragma region 頂点インデックス
+	auto polygonCount = mesh->GetPolygonCount();
+
+	for (int i = 0; i < polygonCount; ++i)
+	{
+		auto polyVerCount = mesh->GetPolygonSize(i);
+		for(int j=0;j<polyVerCount;++j)
+		{
+			auto index = mesh->GetPolygonVertex(i, j);
+			data.vertexIndices.push_back(index);
+		}
+	}
+	cout << "頂点インデックス数:" << data.vertexIndices.size() << endl;
+#pragma endregion
+
+
+	//	UV関連
+	auto pLayer = mesh->GetLayer(0);
+	auto uvElem = pLayer->GetUVs();
+#pragma region UV
+	auto uvCount = uvElem->GetDirectArray().GetCount();
+	FbxArray<FbxVector2>uvArray;
+	uvElem->GetDirectArray().CopyTo(uvArray);
+	for (int i = 0; i < uvCount; ++i)
+	{
+		Math::FLOAT2 temp =
+		{
+			(float)uvElem->GetDirectArray().GetAt(i)[0],
+			1.0f - (float)uvElem->GetDirectArray().GetAt(i)[1],
+		};
+		data.uv.push_back(temp);
+	}
+	cout << "UV数:" << data.uv.size() << endl;
+#pragma endregion
+
+#pragma region UVインデックス
+	auto uvIndexCount = uvElem->GetIndexArray().GetCount();
+	for (int i = 0;i < uvIndexCount; ++i)
+	{
+		auto index = uvElem->GetIndexArray().GetAt(i);
+		data.uvIndices.push_back(index);
+	}
+	cout << "UVインデックス数:" << data.uvIndices.size() << endl;
+#pragma endregion
+
+	//	書き出し用のメッシュのデータ
+	Utility::Mesh outMesh;
+
+	/*!
+	//=================================
+	//	書き出すファイルのサイズ(バッファ)
+	//---------------------------------
+		v  = 頂点
+		vi = 頂点インデックス
+		uv = UV
+		n.size = nのサイズ
+		それぞれ
+		v.size = a, vi.size = b,uv.size = c コとする
+
+		詳細
+		・1頂点あたり {}と空白で5byteかかる(頂点はdouble)
+		・インデックスは空白のみなので1byte
+		・uvは{ }で3byte(※頂点と違うのは空白の個数)
+	*/
+#pragma region //頂点数(630)→UV数(778)へ揃える 失敗
+	/*!
+		<サイズ考察>
+		今回 a = cなのでサイズは
+		2a + b
+
+		<詳細>
+		(5 * a) + (b * 2 - 1) + (3 * c)
+
+		このサイズ(byte)が出力ファイルの最低サイズ
+		
+		ex)
+			5 * 630 = 3150		: 左
+			3492 * 2 - 1 = 6983	: 中
+			3 * 778 = 2334		: 右
+
+			3150 + 6983 + 2334 = 12,467byte = 12.467kbyte
+	*/
+
+	//outMesh.index.clear();
+	//outMesh.uv.clear();
+	//outMesh.vertices.clear();
+
+	////	UV数 - 頂点数 の増やすべきダミーバッファの数
+	//auto diff = data.uv.size() - data.vertices.size();
+
+	////	頂点	
+	//outMesh.vertices = data.vertices;
+	//for (size_t i = 0; i < diff; i++)
+	//{
+	//	Math::FLOAT4 dummyBuff =
+	//	{
+	//		-99,
+	//		-99,
+	//		-99,
+	//		-99,
+	//	};
+	//	outMesh.vertices.push_back(dummyBuff);
+	//}
+
+	////	頂点インデックス
+	//outMesh.index = data.vertexIndices;
+
+	////	UV
+	//for (size_t i = 0; i < outMesh.vertices.size(); i++)
+	//{
+	//	Math::FLOAT2 uv = data.uv[data.uvIndices[i]];
+	//	outMesh.uv.push_back(uv);
+	//}
+#pragma endregion
+
+
+#pragma region //頂点数(630)とUV数(778) =インデックス数(3492)に揃える
+	//	インデックス数に合わせているのでインデックスは0~nの順に入るためそもそもインデックスいらない
+	outMesh.vertices.clear();
+	outMesh.index.clear();
+	outMesh.uv.clear();
+
+	auto indexCount = data.vertexIndices.size();
+
+	//	頂点をインデックスに合わせて格納
+	for (size_t i = 0; i < indexCount; ++i)
+	{
+		outMesh.vertices.push_back(data.vertices[data.vertexIndices[i]]);
+	}
+
+	//	UVをインデックスに合わせて格納
+	for (size_t i = 0; i < indexCount; i++)
+	{
+		outMesh.uv.push_back(data.uv[data.uvIndices[i]]);
+	}
+
+#pragma endregion
+
+
+
+	string outputPath = "test_8";
+	cout << endl << "書き出しメッシュの情報" << endl;
+	cout << "書き出しファイル名 = " << outputPath << endl;
+	cout << "頂点数 = " << outMesh.vertices.size() << endl;
+	cout << "頂点インデックス数 = " << outMesh.index.size() << endl;
+	cout << "UV数 = " << outMesh.uv.size() << endl;
+
+	Utility::IOMesh::OutputDebug(outputPath, outMesh, data.uvIndices);
+}
+\
 void FBX::FBXUtility::Hoge(fbxsdk::FbxMesh * mesh)
 {
 	//	色

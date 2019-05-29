@@ -77,6 +77,8 @@ namespace FBX {
 
 		static void SetupUV(fbxsdk::FbxMesh* mesh, Utility::Mesh* data, bool isShowValue = false);
 
+		static void SetupConversion(Utility::Mesh*from, Utility::Mesh*to, fbxsdk::FbxMesh* mesh);
+
 		static void Hoge(fbxsdk::FbxMesh*mesh);
 
 		/*!

@@ -58,3 +58,44 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 	}
 
 }
+
+void Utility::IOMesh::OutputDebug(std::string fileName, Mesh mesh, std::vector<int> uvIndex)
+{
+	string path = fileName + c_Delimiter.data() + c_Extension.data();
+	ofstream ofs;
+	ofs.open(path, ios::out);
+
+	//	書き込み
+
+	//頂点
+	const string c_Space = " ";
+	for (auto it : mesh.vertices)
+	{
+		ofs << "{" << it.x << c_Space << it.y << c_Space << it.z << "}";// << endl;
+	}
+	ofs << endl;
+
+	//	頂点インデックス
+	//ofs << "//i" << endl;
+	for (auto it : mesh.index)
+	{
+		ofs << it << c_Space;
+	}
+	ofs << endl;
+
+	//	uv
+	//ofs << "//uv" << endl;
+	for (auto it : mesh.uv)
+	{
+		ofs << "{" << it.x << c_Space << it.y << "}";// << endl;
+	}
+	ofs << endl;
+
+	//	uv index
+	for (auto it : uvIndex)
+	{
+		ofs << it << c_Space;
+	}
+
+	cout << "デバッグアウトプット完了!" << endl;
+}

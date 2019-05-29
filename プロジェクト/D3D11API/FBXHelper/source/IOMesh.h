@@ -16,6 +16,7 @@ namespace Utility{
 	public:
 		static void Delete(std::string directoryPath, std::string fileName);
 		static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
+		static void OutputDebug(std::string fileName, Mesh mesh, std::vector<int>uvIndex);
 	private:
 		IOMesh() = delete;
 		~IOMesh() = delete;
