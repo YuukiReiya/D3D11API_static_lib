@@ -23,7 +23,7 @@ int main()
 	//std::string fbxPath = "Pikachu.fbx";
 
 
-	std::string yfmPath = "test7";
+	std::string yfmPath = "test8";
 
 	IOMesh::Delete("", yfmPath);
 	if (FBX::FBXUtility::Load(fbxPath, mesh))
