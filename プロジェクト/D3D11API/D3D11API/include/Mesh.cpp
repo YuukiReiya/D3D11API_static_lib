@@ -73,6 +73,12 @@ HRESULT Mesh::Initialize(std::string path)
 		//	外部ファイルの読み取り
 		auto rd = Helper::MeshReadHelper::Read(path);
 
+		//	サンプラー
+		if (FAILED(CreateSamplerState(this))) {
+			string error = "\"" + path + "\" (mesh sampler) is not create!";
+			throw error;
+		}
+
 		//	頂点バッファ作成
 		if (FAILED(CreateVertexBuffer(this, rd.vertices))) {
 			string error = "\"" + path + "\" (mesh vertex) is not create!";
@@ -82,12 +88,6 @@ HRESULT Mesh::Initialize(std::string path)
 		//	インデックスバッファ作成
 		if (FAILED(CreateIndexBuffer(this, rd.indices))) {
 			string error = "\"" + path + "\" (mesh index) is not create!";
-			throw error;
-		}
-
-		//	サンプラー
-		if (FAILED(CreateSamplerState(this))) {
-			string error = "\"" + path + "\" (mesh sampler) is not create!";
 			throw error;
 		}
 	}
@@ -112,11 +112,6 @@ HRESULT API::Mesh::Initialize(std::string meshPath, std::string texPath)
 	HRESULT hr;
 	hr = Initialize(meshPath);
 	
-	if (FAILED(hr)) {
-		//	メッシュの初期化に失敗
-		return E_FAIL;
-	}
-
 	//	SRV
 	hr = CreateTexture(texPath);
 	if (FAILED(hr)) {
@@ -124,6 +119,12 @@ HRESULT API::Mesh::Initialize(std::string meshPath, std::string texPath)
 		ErrorLog(error);
 		return E_FAIL;
 	}
+
+	if (FAILED(hr)) {
+		//	メッシュの初期化に失敗
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -216,7 +217,8 @@ void Mesh::Render()
 	SetupTexture();
 
 	//	描画命令
-	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_IndexCount, 0, 0);
+	//Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_IndexCount, 0, 0);
+	Direct3D11::GetInstance().GetImmediateContext()->Draw(3492, 0);
 }
 
 /*!
