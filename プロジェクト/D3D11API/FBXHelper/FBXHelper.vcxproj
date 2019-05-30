@@ -166,6 +166,7 @@
     <ClInclude Include="source\AbstractMesh.h" />
     <ClInclude Include="source\AbstractVertex.h" />
     <ClInclude Include="source\Common.h" />
+    <ClInclude Include="source\WinConsoleExpansion.h" />
     <ClInclude Include="source\FBXUtility.h" />
     <ClInclude Include="source\IOMesh.h" />
     <ClInclude Include="source\Mesh.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="source\FBXUtility.cpp" />
     <ClCompile Include="source\IOMesh.cpp" />
     <ClCompile Include="source\Mesh.cpp" />
+    <ClCompile Include="source\WinConsoleExpansion.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -42,6 +42,9 @@
     <ClInclude Include="source\OriginalFormatMath.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\WinConsoleExpansion.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\FBXUtility.cpp">
@@ -54,6 +57,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\IOMesh.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\WinConsoleExpansion.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
