@@ -217,8 +217,7 @@ void Mesh::Render()
 	SetupTexture();
 
 	//	•`‰æ–½—ß
-	//Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_IndexCount, 0, 0);
-	Direct3D11::GetInstance().GetImmediateContext()->Draw(3492, 0);
+	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_IndexCount, 0, 0);
 }
 
 /*!

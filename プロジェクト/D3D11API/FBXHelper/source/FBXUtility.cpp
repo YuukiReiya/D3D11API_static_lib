@@ -580,6 +580,7 @@ void FBX::FBXUtility::SetupUV(FbxMesh * mesh, Utility::Mesh * data, bool isShowV
 }
 
 #include "IOMesh.h"
+
 void FBX::FBXUtility::SetupConversion(Utility::Mesh * from, Utility::Mesh * to, fbxsdk::FbxMesh * mesh)
 {
 	struct
@@ -723,32 +724,124 @@ void FBX::FBXUtility::SetupConversion(Utility::Mesh * from, Utility::Mesh * to, 
 	//}
 #pragma endregion
 
+#pragma region (頂点 + UV)をセットで主キーに！
+	outMesh.index.clear();
+	outMesh.uv.clear();
+	outMesh.vertices.clear();
+
+	struct IndexSortData
+	{
+		Math::FLOAT4 v;
+		Math::FLOAT2 uv;
+		//inline bool operator==(IndexSortData&isd)
+		//{
+		//	return this->v == isd.v&&this->uv == isd.uv;
+		//}
+		//inline bool operator==(IndexSortData*isd)
+		//{
+		//	return this->v == isd->v&&this->uv == isd->uv;
+		//}
+		inline bool operator==(IndexSortData isd)
+		{
+			return this->v == isd.v&&this->uv == isd.uv;
+		}
+		inline bool operator!=(IndexSortData isd)
+		{
+			return this->v != isd.v||this->uv != isd.uv;
+		}
+	};
+	vector<IndexSortData>isd;
+	//	isdにインデックス順にデータを格納(SIZE = 3492になるはず)
+	for (size_t i = 0; i < data.vertexIndices.size(); ++i)
+	{
+		isd.push_back(
+			{ {data.vertices[data.vertexIndices[i]]},{data.uv[data.uvIndices[i]]} }
+		);
+	}
+	cout << "isd size = " << isd.size() << endl;
+
+	vector<IndexSortData>keys;
+	for (size_t i = 0; i < isd.size(); i++)
+	{
+		IndexSortData item = isd[i];
+		if (std::find(keys.begin(), keys.end(), item) != keys.end()) { continue; }
+		keys.push_back(isd[i]);
+	}
+	cout << "keys size = " << keys.size() << endl;
+
+	//	データの格納
+	for (size_t i = 0; i < keys.size(); i++)
+	{
+		outMesh.vertices.push_back(keys[i].v);
+		outMesh.uv.push_back(keys[i].uv);
+	}
+	//	インデックス
+	//	※vIndex.size()==uvIndex.size() 前提
+	for (size_t i = 0; i < data.vertexIndices.size(); ++i)
+	{
+		IndexSortData findData =
+		{
+			data.vertices[data.vertexIndices[i]],
+			data.uv[data.uvIndices[i]],
+		};
+
+		auto item = find(keys.begin(), keys.end(), findData);
+		if (item != keys.end())
+		{
+			size_t index = distance(keys.begin(), item);
+			outMesh.index.push_back(index);;
+		}
+	}
+
+	cout << endl << "整合確認" << endl;
+	for (size_t i = 0; i < data.vertexIndices.size(); i++)
+	{
+		IndexSortData a, b;
+		a = {
+			data.vertices[data.vertexIndices[i]],
+			data.uv[data.uvIndices[i]]
+		};
+		b = {
+			outMesh.vertices[outMesh.index[i]],
+			outMesh.uv[outMesh.index[i]],
+		};
+		if (a != b)
+		{
+			cout << "データが違う!!!!!!" << endl;	
+			cout << "比較データ" << endl;
+			cout << "A:{" << a.v.x << "," << a.v.y << "," << a.v.z << "," << a.v.w << "}" << endl;
+			cout << "B:{" << b.v.x << "," << b.v.y << "," << b.v.z << "," << b.v.w << "}" << endl;
+		}
+	}
+	cout << "整合確認:終了" << endl;
+#pragma endregion
+
 
 #pragma region //頂点数(630)とUV数(778) =インデックス数(3492)に揃える
 	//	インデックス数に合わせているのでインデックスは0~nの順に入るためそもそもインデックスいらない
-	outMesh.vertices.clear();
-	outMesh.index.clear();
-	outMesh.uv.clear();
+	//outMesh.vertices.clear();
+	//outMesh.index.clear();
+	//outMesh.uv.clear();
 
-	auto indexCount = data.vertexIndices.size();
+	//auto indexCount = data.vertexIndices.size();
 
-	//	頂点をインデックスに合わせて格納
-	for (size_t i = 0; i < indexCount; ++i)
-	{
-		outMesh.vertices.push_back(data.vertices[data.vertexIndices[i]]);
-	}
+	////	頂点をインデックスに合わせて格納
+	//for (size_t i = 0; i < indexCount; ++i)
+	//{
+	//	outMesh.vertices.push_back(data.vertices[data.vertexIndices[i]]);
+	//}
 
-	//	UVをインデックスに合わせて格納
-	for (size_t i = 0; i < indexCount; i++)
-	{
-		outMesh.uv.push_back(data.uv[data.uvIndices[i]]);
-	}
+	////	UVをインデックスに合わせて格納
+	//for (size_t i = 0; i < indexCount; i++)
+	//{
+	//	outMesh.uv.push_back(data.uv[data.uvIndices[i]]);
+	//}
 
 #pragma endregion
 
 
 
-	string outputPath = "test_8";
+	string outputPath = "test_9";
 	cout << endl << "書き出しメッシュの情報" << endl;
 	cout << "書き出しファイル名 = " << outputPath << endl;
 	cout << "頂点数 = " << outMesh.vertices.size() << endl;

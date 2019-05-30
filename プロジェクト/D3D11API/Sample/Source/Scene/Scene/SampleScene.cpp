@@ -67,7 +67,8 @@ void SampleScene::Initialize()
 	//g_pMesh->Initialize("test4.yfm","TEX_00100_anathema_H_D.png");
 	//g_pMesh->Initialize("test.yfm","pm0025_00_BodyA1.png");
 	//g_pMesh->Initialize("test7.yfm", "hoge.png");
-	g_pMesh->Initialize("test_8.yfm", "hoge.png");
+	//g_pMesh->Initialize("test8.yfm", "hoge.png");
+	g_pMesh->Initialize("test_9.yfm", "hoge.png");
 	//g_pMesh->Initialize("cube.yfm", "hoge.png");
 
 	//g_pMesh->Initialize("•`‰æƒeƒXƒg/test_draw.yfm", "hoge.png");
