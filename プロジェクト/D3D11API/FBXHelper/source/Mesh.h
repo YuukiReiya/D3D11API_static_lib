@@ -6,6 +6,8 @@
 */
 #pragma once
 #include <vector>
+#include <fbxsdk/scene/geometry/fbxlayer.h>
+#include <map>
 #include "OriginalFormatMath.h"
 
 namespace Utility {
@@ -29,21 +31,43 @@ namespace Utility {
 		std::vector<Math::FLOAT4>vertices;
 
 		/*!
-			@var	uv
-			@brief	UVを格納する可変長配列
-		*/
-		std::vector<Math::FLOAT2>uv;
-
-		/*!
 			@var	vertexIndices
 			@brief	頂点インデックス
 		*/
 		std::vector<int>vertexIndices;
 
 		/*!
-			@var	uvIndices
-			@brief	UVインデックス
+			@struct		UV
+			@brief		UV + UVset名
 		*/
-		std::vector<int>uvIndices;
+		struct UV
+		{
+			/*!
+				@var	uvSetName
+				@brief	UVset名
+			*/
+			std::string uvSetName;
+
+			/*!
+				@var	uv
+				@brief	UV座標
+			*/
+			Math::FLOAT2 uv;
+		};
+
+		/*!
+			@var		uv
+			@key		uvset名
+			@value		UV(UV + UVset名)の可変長配列
+			@brief		UVset名をキーにしたUVの可変長配列
+		*/
+		std::map<std::string, std::vector<UV>>uv;
+
+
+		/*!
+			@var	uvSetNamesList
+			@brief	メッシュが保持しているUVset名のリスト
+		*/
+		std::vector<std::string>uvSetNamesList;
 	};
 }

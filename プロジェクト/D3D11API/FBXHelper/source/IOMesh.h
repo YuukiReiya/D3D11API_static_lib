@@ -28,8 +28,10 @@ namespace Utility{
 			@param[in]	ファイルのディレクトリ
 			@param[in]	ファイル名(※拡張子除く)
 			@param[in]	メッシュ情報
+			@TODO		出力形式の見直しと関数分けを行う...
 		*/
 		static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
+
 	private:
 		/*!
 			@brief	コンストラクタ削除

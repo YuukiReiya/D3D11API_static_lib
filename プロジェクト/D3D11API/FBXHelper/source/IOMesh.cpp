@@ -7,12 +7,26 @@
 */
 #include "Common.h"
 #include "IOMesh.h"
-
+#include "WinConsoleExpansion.h"
+#include <filesystem>
 /*!
 	@brief	usingディレクティブ
 	@using	std
 */
 using namespace std;
+
+/*!
+	@brief	usingディレクティブ
+	@using	ConsoleExpansion
+*/
+using namespace ConsoleExpansion;
+
+/*!
+	@brief	エイリアス宣言
+	@using	ConsoleExpansion::WinConsoleExpansion
+	@var	wic
+*/
+using wic = ConsoleExpansion::WinConsoleExpansion;
 
 /*!
 	@fn			Delete
@@ -53,6 +67,28 @@ void Utility::IOMesh::Delete(std::string directoryPath, std::string fileName)
 void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Utility::Mesh mesh)
 {
 	string path = directoryPath + fileName + c_Delimiter.data() + c_Extension.data();
+	
+	try
+	{
+		if (!filesystem::exists(directoryPath)) {
+			wic::SetColor(Red);
+			cout << "Directory not found" << endl;
+			wic::SetColor(White);
+			if (!filesystem::create_directory(directoryPath))throw runtime_error("Failed to create directory");
+			cout << "Created a directory!" << endl;
+		}
+	}
+	catch (exception& error)
+	{
+		wic::SetColor(Red);
+		cout << error.what() << endl;
+		cout << "This program has failed." << endl;
+		cout << "this program exit here!" << endl;
+		wic::SetColor(White);
+		system("pause");
+		exit(NULL);
+	}
+	
 	ofstream ofs;
 	ofs.open(path, ios::out);
 
@@ -78,7 +114,8 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 	//ofs << "//uv" << endl;
 	for (auto it : mesh.uv)
 	{
-		ofs << "{" << it.x << c_Space << it.y << "}";// << endl;
+		for (auto item : it.second)
+			ofs << "{" << item.uv.x << c_Space << item.uv.y << "}";// << endl;
 	}
 
 }

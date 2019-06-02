@@ -163,23 +163,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="source\AbstractMesh.h" />
-    <ClInclude Include="source\AbstractVertex.h" />
     <ClInclude Include="source\Common.h" />
     <ClInclude Include="source\WinConsoleExpansion.h" />
-    <ClInclude Include="source\FBXUtility.h" />
+    <ClInclude Include="source\FBXConverter.h" />
     <ClInclude Include="source\IOMesh.h" />
     <ClInclude Include="source\Mesh.h" />
     <ClInclude Include="source\OriginalFormatMath.h" />
     <ClInclude Include="source\targetver.h" />
-    <ClInclude Include="source\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Common.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="source\FBXUtility.cpp" />
+    <ClCompile Include="source\FBXConverter.cpp" />
     <ClCompile Include="source\IOMesh.cpp" />
     <ClCompile Include="source\Mesh.cpp" />
     <ClCompile Include="source\WinConsoleExpansion.cpp" />

@@ -25,9 +25,12 @@ using namespace Utility;
 Mesh::Mesh()
 {
 	vertices.clear();
-	uv.clear();
 	vertexIndices.clear();
-	uvIndices.clear();
+	for (auto&hash : uvSetNamesList)
+	{
+		uv[hash].clear();
+	}
+	uvSetNamesList.clear();
 }
 
 /*!
