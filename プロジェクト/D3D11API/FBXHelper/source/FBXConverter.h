@@ -53,9 +53,18 @@ namespace Converter {
 		/*!
 			@fn		Triangulate
 			@brief	シーン内のモデルの三角ポリゴン化。
+			@note	try catchをいれた単純なラッパー
 			@return	true:成功 false:失敗
 		*/
 		static bool Triangulate();
+
+		/*!
+			@fn		SplitMeshesPerMaterial
+			@brief	シーン内のモデルをマテリアル単位に分割
+			@note	try catchをいれた単純なラッパー	
+			@return	true:成功 false:失敗
+		*/
+		static bool SplitMeshesPerMaterial();
 
 		/*!
 			@fn			SetupImporter

@@ -15,9 +15,9 @@ int main()
 
 	//	読み込みファイル
 	//std::string fbxPath = "SD_unitychan_humanoid.fbx";
-	std::string fbxPath = "ao_twinte_chan.fbx"; 
+	//std::string fbxPath = "ao_twinte_chan.fbx"; 
 	//std::string fbxPath = "Kouhai_chan.fbx";
-	//std::string fbxPath = "JNT_00100_anathema_H.fbx";
+	std::string fbxPath = "JNT_00100_anathema_H.fbx";
 	//std::string fbxPath = "Pikachu.fbx";
 
 	//	書き出しファイル

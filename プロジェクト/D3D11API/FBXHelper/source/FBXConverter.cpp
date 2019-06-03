@@ -141,25 +141,46 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 	try
 	{
 		//	インポーター
-		if (!SetupImporter(fbxPath)) { throw "fbx importer"; }
+		if (!SetupImporter(fbxPath)) { throw "Could not read \"" + fbxPath + "\""; }
 
 		//	シーン
-		if (!SetupScene(fbxPath)) { throw "fbx scene"; }
-
-		//	三角化
-		if (!Triangulate()) { throw "trianglate"; }
+		if (!SetupScene(fbxPath)) { throw "Could not output \"" + fbxPath + "\" to the scene"; }
 
 		//	インポーターの破棄
 		TeardownImporter();
 
 	}
-	catch (std::string&error)
+	catch (std::string& error)
 	{
-		cout << "Failed to setup \"" << error << "\"" << endl;
+		wic::SetColor(Red);
+		cout << error << endl;
+		wic::SetColor(White);
 		cout << "this program exit here!" << endl;
 		system("pause");
 		exit(NULL);
 	}
+
+	//	三角化
+	if (!Triangulate()) { 
+		wic::SetColor(Red);
+		cout << "Failed to triangulate this scene." << endl;
+		wic::SetColor(White);
+		cout << "this program exit here!" << endl;
+		system("pause");
+		exit(NULL);
+	}
+
+	//	メッシュの分割
+	if (!SplitMeshesPerMaterial()) { 
+		wic::SetColor(Red);
+		cout << "Failed to split mesh" << endl;
+		wic::SetColor(White);
+		cout << "this program exit here!" << endl;
+		system("pause");
+		exit(NULL);
+
+	}
+
 
 	//	メッシュデータの出力
 	auto meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
@@ -204,34 +225,73 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 /*!
 	@fn		Triangulate
 	@brief	シーン内のモデルの三角ポリゴン化。
+	@note	try catchをいれた単純なラッパー
 	@return	true:成功 false:失敗
 */
 bool Converter::FBXConverter::Triangulate()
 {
 	fbxsdk::FbxGeometryConverter converter(*m_pManager.get());
 
-	try
-	{
-		if (!converter.Triangulate(*m_pScene.get(), true)) {
-			throw;
-		}
+//	try
+//	{
+//		if (!converter.Triangulate(*m_pScene.get(), true)) {
+//			throw runtime_error("Failed to triangulate this scene.");
+//		}
+//
+//		//	メッシュから不要なポリゴンを削除する
+//		converter.RemoveBadPolygonsFromMeshes(*m_pScene.get());
+//	}
+//	catch (exception&error)
+//	{
+//#pragma region 例外処理
+//		wic::SetColor(Red);
+//		std::cout << error.what() << endl;
+//		wic::SetColor(White);
+//#if defined DEBUG||_DEBUG
+//		std::system("pause");
+//		std::exit(EXIT_FAILURE);
+//#endif
+//#pragma endregion
+//		return false;
+//	}
+//
+//	return true;
+	return converter.Triangulate(*m_pScene.get(), true);
+}
 
-		//	メッシュから不要なポリゴンを削除する
-		converter.RemoveBadPolygonsFromMeshes(*m_pScene.get());
-	}
-	catch (...)
-	{
-#pragma region 例外処理
-#if defined DEBUG||_DEBUG
-		std::cout << "Failed to triangulate this scene." << endl;
-		std::system("pause");
-		std::exit(EXIT_FAILURE);
-#endif
-#pragma endregion
-		return false;
-	}
+/*!
+	@fn		SplitMeshesPerMaterial
+	@brief	シーン内のモデルをマテリアル単位に分割
+	@note	try catchをいれた単純なラッパー
+	@return	true:成功 false:失敗
+*/
+bool Converter::FBXConverter::SplitMeshesPerMaterial()
+{
+	fbxsdk::FbxGeometryConverter converter(*m_pManager.get());
 
-	return true;
+//	try
+//	{
+//		if (converter.SplitMeshesPerMaterial(*m_pScene.get(), true)) {
+//			throw runtime_error("Failed to split mesh");
+//		}
+//	}
+//	catch (const std::exception& error)
+//	{
+//#pragma region 例外処理
+//		wic::SetColor(Red);
+//		std::cout << error.what() << endl;
+//		wic::SetColor(White);
+//#if defined DEBUG||_DEBUG
+//		std::system("pause");
+//		std::exit(EXIT_FAILURE);
+//#endif
+//#pragma endregion
+//		return false;
+//
+//	}
+//	return true;
+
+	return converter.SplitMeshesPerMaterial(*m_pScene.get(), true);
 }
 
 /*!
@@ -241,28 +301,34 @@ bool Converter::FBXConverter::Triangulate()
 */
 bool Converter::FBXConverter::SetupImporter(std::string fbxPath)
 {
-	try
-	{
-		if (!(*m_pImporter.get())->Initialize(
-			fbxPath.c_str(),
-			-1,
-			(*m_pManager.get())->GetIOSettings()
-		)) {
-			throw fbxPath;
-		}
-	}
-	catch (string&str)
-	{
-#pragma region 例外処理
-#if defined DEBUG||_DEBUG
-		std::cout << "Could not read \"" << str << "\"" << endl;
-		std::system("pause");
-		std::exit(EXIT_FAILURE);
-#endif
-#pragma endregion
-		return false;
-	}
-	return true;
+//	try
+//	{
+//		if (!(*m_pImporter.get())->Initialize(
+//			fbxPath.c_str(),
+//			-1,
+//			(*m_pManager.get())->GetIOSettings()
+//		)) {
+//			throw fbxPath;
+//		}
+//	}
+//	catch (string&str)
+//	{
+//#pragma region 例外処理
+//#if defined DEBUG||_DEBUG
+//		std::cout << "Could not read \"" << str << "\"" << endl;
+//		std::system("pause");
+//		std::exit(EXIT_FAILURE);
+//#endif
+//#pragma endregion
+//		return false;
+//	}
+//	return true;
+
+	return (*m_pImporter.get())->Initialize(
+		fbxPath.c_str(),
+		-1,
+		(*m_pManager.get())->GetIOSettings()
+	);
 }
 
 /*!
@@ -286,26 +352,27 @@ void Converter::FBXConverter::TeardownImporter()
 */
 bool Converter::FBXConverter::SetupScene(std::string fbxPath)
 {
-	try
-	{
-		if (!(*m_pImporter.get())->Import(
-			*m_pScene.get()
-		)) {
-			throw fbxPath;
-		}
-	}
-	catch (string&str)
-	{
-#pragma region 例外処理
-#if defined DEBUG||_DEBUG
-		std::cout << "Could not output \"" << str << "\" to the scene" << endl;
-		std::system("pause");
-		std::exit(EXIT_FAILURE);
-#endif
-#pragma endregion
-		return false;
-	}
-	return true;
+//	try
+//	{
+//		if (!(*m_pImporter.get())->Import(
+//			*m_pScene.get()
+//		)) {
+//			throw fbxPath;
+//		}
+//	}
+//	catch (string&str)
+//	{
+//#pragma region 例外処理
+//#if defined DEBUG||_DEBUG
+//		std::cout << "Could not output \"" << str << "\" to the scene" << endl;
+//		std::system("pause");
+//		std::exit(EXIT_FAILURE);
+//#endif
+//#pragma endregion
+//		return false;
+//	}
+//	return true;
+	return (*m_pImporter.get())->Import(*m_pScene.get());
 }
 
 /*!
@@ -510,6 +577,8 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 	};
 
 	//	インデックスでソートした重複のある全データ
+	wic::SetColor(Green);
+	cout << "Index sort vertices:";
 	vector<Vertex>indexSortVertices;
 	for (auto hash : mesh->uvSetNamesList)
 	{
@@ -524,9 +593,13 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 			);
 		}
 	}
+	wic::SetColor(White);
+	cout << indexSortVertices.size() << endl;
 
 	//	重複のない一意な頂点情報(頂点 + UV)
 	vector<Vertex>uniqueVertices;
+	wic::SetColor(Green);
+	cout << "Unique vertices:";
 	for (auto hash : mesh->uvSetNamesList)
 	{
 		for (size_t i = 0; i < mesh->vertexIndices.size(); i++)
@@ -554,6 +627,8 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 			uniqueVertices.push_back(findItem);
 		}
 	}
+	wic::SetColor(White);
+	cout << uniqueVertices.size() << endl;
 
 	//	メッシュ情報を再構成するため初期化
 	mesh->vertexIndices.clear();
@@ -603,16 +678,17 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 				}
 				);
 
-				if (it == uniqueVertices.end())throw;
+				if (it == uniqueVertices.end())throw runtime_error("could not find a unique vertex");
 				
 				//	イテレータをインデックス(配列の添え字)に変換
 				auto index = distance(uniqueVertices.begin(), it);
 				mesh->vertexIndices.push_back(index);
 			}
-			catch (...)
+			catch (exception&error)
 			{
 				wic::SetColor(Red);
 				cout << "Error" << endl;
+				cout << error.what() << endl;
 				wic::SetColor(Purple);
 				cout << "Failed to reconfigure index." << endl;
 				wic::SetColor(Red);
