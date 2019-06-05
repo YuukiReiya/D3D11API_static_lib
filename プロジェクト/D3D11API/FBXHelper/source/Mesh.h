@@ -7,7 +7,8 @@
 #pragma once
 #include <vector>
 #include <fbxsdk/scene/geometry/fbxlayer.h>
-#include <map>
+//#include <map>
+#include <unordered_map>
 #include "OriginalFormatMath.h"
 
 namespace Utility {
@@ -61,8 +62,8 @@ namespace Utility {
 			@value		UV(UV + UVset名)の可変長配列
 			@brief		UVset名をキーにしたUVの可変長配列
 		*/
-		std::map<std::string, std::vector<UV>>uv;
-
+		//std::map<std::string, std::vector<UV>>uv;
+		std::unordered_map<std::string, std::vector<UV>>uv;
 
 		/*!
 			@var	uvSetNamesList
