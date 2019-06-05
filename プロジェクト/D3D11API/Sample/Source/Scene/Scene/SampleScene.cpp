@@ -35,7 +35,7 @@ using namespace API;
 	@brief	メッシュ
 */
 shared_ptr<Mesh>g_pMesh;
-shared_ptr<Mesh>g_pMesh1;
+
 /*!
 	@var	g_pShader
 	@brief	シェーダー
@@ -58,7 +58,6 @@ void SampleScene::Initialize()
 	cout << "sample init" << endl;
 
 	g_pMesh = make_shared<Mesh>();
-	g_pMesh1 = make_shared<Mesh>();
 	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
 
 
@@ -68,7 +67,7 @@ void SampleScene::Initialize()
 	//g_pMesh->Initialize("test4.yfm","TEX_00100_anathema_H_D.png");
 	//g_pMesh->Initialize("test.yfm","pm0025_00_BodyA1.png");
 	//g_pMesh->Initialize("test7.yfm", "hoge.png");
-	//g_pMesh->Initialize("test8.yfm", "hoge.png");
+	g_pMesh->Initialize("test8.yfm", "hoge.png");
 	//g_pMesh->Initialize("test99-2.yfm", "hoge.png");
 	//g_pMesh->Initialize("cube.yfm", "hoge.png");
 
@@ -76,18 +75,19 @@ void SampleScene::Initialize()
 	//g_pMesh->Initialize("abc.yfm");
 
 	g_pMesh->transform.SetPosition({ -1, 0, 0 });
-	g_pMesh1->transform.SetPosition({ 1, 0, 0 });
 
 	g_pMeshShader->Setup();
 	g_pMesh->SetupShader(g_pMeshShader.get());
-	g_pMesh1->SetupShader(g_pMeshShader.get());
+
+#pragma region 後輩ちゃん
+#ifdef use_multiple1
 
 	for (size_t i = 0; i < 14; i++)
 	{
 		Mesh ptr;
 		ptr.Initialize("後輩ちゃん/test99-" + to_string(i) + ".yfm");
 		vMesh.push_back(ptr);
-	}
+}
 	for (auto& it : vMesh)
 	{
 		it.SetupShader(g_pMeshShader.get());
@@ -107,6 +107,11 @@ void SampleScene::Initialize()
 	vMesh[11].CreateTexture("後輩ちゃん/clothes.png");
 	vMesh[12].CreateTexture("後輩ちゃん/clothes.png");
 	vMesh[13].CreateTexture("後輩ちゃん/facial.png");
+
+#endif // use_multiple1
+#pragma endregion
+
+
 }
 
 /*!
@@ -121,7 +126,7 @@ void SampleScene::Finalize()
 	}
 	vMesh.clear();
 }
-
+#define	UseMeshTrans
 /*!
 	@fn		Update
 	@brief	更新処理
@@ -155,6 +160,42 @@ void SampleScene::Update()
 	//}
 	//g_pMesh->transform.SetPosition(pos);
 
+#pragma region メッシュ
+#ifdef UseMeshTrans
+	auto& m = g_pMesh->transform.m_Matrix;
+	
+#pragma region x,y,z
+	static float x =0, y=0, z=0;
+
+	if (Keyboard::GetButton(Keyboard::c_Left)) {
+		x -= val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Right)) {
+		x += val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Up)) {
+		y += val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Down)) {
+		y -= val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Back)) {
+		z -= val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Delete)) {
+		z += val;
+	}
+	g_pMesh->transform.Rotate(x, y, z);
+#pragma endregion
+
+#endif // UseMeshTrans
+
+
+#pragma endregion
+
+
+#pragma region カメラ操作
+#if defined UseCameraAction
 	auto& camera = Camera::GetInstance();
 	auto eye = camera.GetEyePt();
 	auto look = camera.GetLookAtPt();
@@ -213,10 +254,12 @@ void SampleScene::Update()
 		look.z += val;
 	}
 
-	//system("cls");
 	cout << "eye:" << eye.x << "," << eye.y << "," << eye.z << endl;
 	cout << "look:" << look.x << "," << look.y << "," << look.z << endl;
 	camera.SetViewMatrix(eye,look);
+#endif // defined UseCameraAction
+
+#pragma endregion
 
 	
 }
@@ -227,10 +270,15 @@ void SampleScene::Update()
 */
 void SampleScene::Render()
 {
+#pragma region 後輩ちゃん
+#ifdef use_multiple1
 	for (auto& it : vMesh)
 	{
 		it.Render();
 	}
-	//g_pMesh->Render();
+#endif
+#pragma endregion
+
+	g_pMesh->Render();
 	//g_pMesh1->Render();
 }
