@@ -52,6 +52,14 @@ using namespace std;
 Mesh::Mesh() :m_IndexCount(0) {}
 
 /*!
+	@brief	ムーブコンストラクタ
+*/
+API::Mesh::Mesh(const Mesh & inst)
+{
+	*this = inst;
+}
+
+/*!
 	@brief	デストラクタ
 	@detail	開放処理の呼び出し
 */

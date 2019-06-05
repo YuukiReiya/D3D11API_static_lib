@@ -29,6 +29,11 @@ namespace API{
 		explicit Mesh();
 
 		/*!
+			@brief	ムーブコンストラクタ
+		*/
+		Mesh(const Mesh&inst);
+
+		/*!
 			@brief	デストラクタ	
 		*/
 		~Mesh();
