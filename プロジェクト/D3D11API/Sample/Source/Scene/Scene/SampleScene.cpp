@@ -48,7 +48,7 @@ shared_ptr<D3D11::Graphic::AbstractShader>g_pMeshShader;
 SampleScene::SampleScene()
 {
 }
-
+std::vector<API::Mesh>vMesh;
 /*!
 	@fn		Initialize
 	@brief	‰Šú‰»ˆ—
@@ -61,6 +61,7 @@ void SampleScene::Initialize()
 	g_pMesh1 = make_shared<Mesh>();
 	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
 
+
 	//g_pMesh->Initialize("mesh1.yfm");
 	//g_pMesh->Initialize("test.yfm","TEX_00100_anathema_H_D.png");
 	//g_pMesh->Initialize("test3.yfm", "hoge.png");
@@ -68,7 +69,7 @@ void SampleScene::Initialize()
 	//g_pMesh->Initialize("test.yfm","pm0025_00_BodyA1.png");
 	//g_pMesh->Initialize("test7.yfm", "hoge.png");
 	//g_pMesh->Initialize("test8.yfm", "hoge.png");
-	g_pMesh->Initialize("test_9.yfm", "hoge.png");
+	//g_pMesh->Initialize("test99-2.yfm", "hoge.png");
 	//g_pMesh->Initialize("cube.yfm", "hoge.png");
 
 	//g_pMesh->Initialize("•`‰æƒeƒXƒg/test_draw.yfm", "hoge.png");
@@ -80,6 +81,32 @@ void SampleScene::Initialize()
 	g_pMeshShader->Setup();
 	g_pMesh->SetupShader(g_pMeshShader.get());
 	g_pMesh1->SetupShader(g_pMeshShader.get());
+
+	for (size_t i = 0; i < 14; i++)
+	{
+		Mesh ptr;
+		ptr.Initialize("Œã”y‚¿‚á‚ñ/test99-" + to_string(i) + ".yfm");
+		vMesh.push_back(ptr);
+	}
+	for (auto& it : vMesh)
+	{
+		it.SetupShader(g_pMeshShader.get());
+	}
+
+	vMesh[0].CreateTexture("Œã”y‚¿‚á‚ñ/skin.png");
+	vMesh[1].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
+	vMesh[2].CreateTexture("Œã”y‚¿‚á‚ñ/eye.png");
+	vMesh[3].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
+	vMesh[4].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
+	vMesh[5].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
+	vMesh[6].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
+	vMesh[7].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
+	vMesh[8].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
+	vMesh[9].CreateTexture("Œã”y‚¿‚á‚ñ/hair.png");
+	vMesh[10].CreateTexture("Œã”y‚¿‚á‚ñ/eye.png");
+	vMesh[11].CreateTexture("Œã”y‚¿‚á‚ñ/clothes.png");
+	vMesh[12].CreateTexture("Œã”y‚¿‚á‚ñ/clothes.png");
+	vMesh[13].CreateTexture("Œã”y‚¿‚á‚ñ/facial.png");
 }
 
 /*!
@@ -89,6 +116,10 @@ void SampleScene::Initialize()
 void SampleScene::Finalize()
 {
 	cout << "sample destroy:" << endl;
+	for (auto&it : vMesh) {
+		it.Finalize();
+	}
+	vMesh.clear();
 }
 
 /*!
@@ -196,6 +227,10 @@ void SampleScene::Update()
 */
 void SampleScene::Render()
 {
-	g_pMesh->Render();
+	for (auto& it : vMesh)
+	{
+		it.Render();
+	}
+	//g_pMesh->Render();
 	//g_pMesh1->Render();
 }

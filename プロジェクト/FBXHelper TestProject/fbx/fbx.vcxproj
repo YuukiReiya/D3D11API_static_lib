@@ -107,7 +107,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;FBXHelper.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\yuuki\Documents\D3D11API\プロジェクト\D3D11API/lib/$(Configuration)\FbxHelper;C:\Users\yuuki\Documents\D3D11API\プロジェクト\D3D11API\lib\fbxsdk\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\yuuki\Documents\D3D11API\プロジェクト\D3D11API/lib/$(Configuration)\FbxHelper;C:\Users\yuuki\Documents\D3D11API\プロジェクト\D3D11API\lib\fbxsdk\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

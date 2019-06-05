@@ -13,6 +13,10 @@
 #include <fstream>
 #include <algorithm>
 #include <Windows.h>
+
+#include "FbxMaterial.h"
+Material*g_pMat;
+
 /*!
 	@brief	usingディレクティブ
 	@using	std
@@ -65,6 +69,23 @@ shared_ptr<fbxsdk::FbxScene*>		FBXConverter::m_pScene		= nullptr;
 	@detail	スマートポインタでアドレス管理
 */
 shared_ptr<fbxsdk::FbxImporter*>	FBXConverter::m_pImporter	= nullptr;
+
+/*!
+	@fn			ConvertRelativePathToFileName
+	@brief		相対パスをファイル名に変換
+	@param[in]	相対パス
+	@return		変換後のファイル名
+*/
+static string ConvertRelativePathToFileName(string relativePath)
+{
+	string fileName = "";
+	auto offset = relativePath.rfind("\\");
+	if (offset == string::npos) {
+		offset = relativePath.rfind("/");
+	}
+	fileName = relativePath.substr(offset + 1);
+	return fileName;
+}
 
 /*!
 	@brief	コンストラクタ
@@ -137,88 +158,124 @@ void Converter::FBXConverter::Teardown()
 */
 void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 {
-	//	FBXSDKのセットアップ
+
+	cout << "----Display dialog----" << endl;
+
+	//	変数
+	int meshCount, matCount;
+	meshCount = matCount = -1;
+
+	//	セットアップ
 	try
 	{
+		//	色指定
+		wic::SetColor(Green);
+
 		//	インポーター
-		if (!SetupImporter(fbxPath)) { throw "Could not read \"" + fbxPath + "\""; }
+		if (!SetupImporter(fbxPath)) { throw runtime_error("Could not read \"" + fbxPath + "\"."); }
+		cout << "SetupImporter success" << endl;
 
 		//	シーン
-		if (!SetupScene(fbxPath)) { throw "Could not output \"" + fbxPath + "\" to the scene"; }
+		if (!SetupScene(fbxPath)) { throw runtime_error("Could not output \"" + fbxPath + "\" to the scene."); }
+		cout << "SetupScene success" << endl;
 
 		//	インポーターの破棄
 		TeardownImporter();
 
+		//	三角化
+		if (!Triangulate()) { throw runtime_error("Failed to triangulate this scene."); }
+		cout << "Triangulate success" << endl;
+
+		//	メッシュの分割
+		if (!SplitMeshesPerMaterial()) { throw runtime_error("Failed to split mesh"); }
+
+		//	メッシュの総数
+		meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
+
+		//	マテリアル総数
+		matCount = (*m_pScene.get())->GetSrcObjectCount<FbxSurfaceMaterial>();
+
+		//	TODO:マテリアルが無いものも存在
+		//	メッシュ数 == マテリアル数が成り立たなければ分割に失敗している
+	//	if (meshCount != matCount) { throw runtime_error("Mesh number does not match material number"); }
 	}
-	catch (std::string& error)
+	catch (std::exception& error)
 	{
 		wic::SetColor(Red);
-		cout << error << endl;
+		cout << error.what() << endl;
 		wic::SetColor(White);
 		cout << "this program exit here!" << endl;
 		system("pause");
 		exit(NULL);
 	}
-
-	//	三角化
-	if (!Triangulate()) { 
-		wic::SetColor(Red);
-		cout << "Failed to triangulate this scene." << endl;
-		wic::SetColor(White);
-		cout << "this program exit here!" << endl;
-		system("pause");
-		exit(NULL);
-	}
-
-	//	メッシュの分割
-	if (!SplitMeshesPerMaterial()) { 
-		wic::SetColor(Red);
-		cout << "Failed to split mesh" << endl;
-		wic::SetColor(White);
-		cout << "this program exit here!" << endl;
-		system("pause");
-		exit(NULL);
-
-	}
-
-
-	//	メッシュデータの出力
-	auto meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
-	wic::SetColor(Green);
-	cout << "Mesh count:";
+	
 	wic::SetColor(White);
-	cout << meshCount << endl;
-	for (int i = 0; i < meshCount; ++i)
+	cout << "Mesh count:" << meshCount << endl;
+	cout << "Material count:" << matCount << endl;
+
+	//	
+	try
 	{
-		auto pMesh = (*m_pScene.get())->GetSrcObject<FbxMesh>(i);
-		cout << endl;
-		wic::SetColor(Green);
-		cout << "Mesh name:";
-		wic::SetColor(White);
-		cout << pMesh->GetName() << endl;
+		//	メッシュ
+		for (int i = 0; i < meshCount; ++i)
+		{
+			wic::SetColor(White);
+			cout << "----------Mesh:" << i << "----------" << endl;
+			auto pMesh = (*m_pScene.get())->GetSrcObject<FbxMesh>(i);
+			wic::SetColor(Purple);
+			cout << "Mesh name:";
+			wic::SetColor(White);
+			cout << pMesh->GetName() << endl;
 
-		//	構成ポリゴン数
-		auto polygonCount = pMesh->GetPolygonCount();
-		cout << "mesh polygon count = " << polygonCount << endl;
+			//	構成ポリゴン数
+			auto polygonCount = pMesh->GetPolygonCount();
+			wic::SetColor(Cyan);
+			cout << "Mesh polygon count:";
+			wic::SetColor(White);
+			cout<< polygonCount << endl;
 
-		//	構成しているポリゴンがなければ処理しない
-		if (polygonCount <= 0) { continue; }
+			//	構成しているポリゴンがなければ処理しない
+			if (polygonCount <= 0) { continue; }
 
-		//	出力データ
-		Utility::Mesh oMesh;
+			//	出力データ
+			Utility::Mesh oMesh;
 
-		//	メッシュ情報を格納
-		LoadToStore(pMesh, &oMesh);
+			//	メッシュ情報を格納
+			LoadToStore(pMesh, &oMesh);
 
-		//	外部ファイル出力
-		auto oName = meshCount == 1 ? outName : outName + "-" + to_string(i);
-		Utility::IOMesh::Output(c_OutputDirectory.data(), oName, oMesh);
-		//Utility::IOMesh::Output("", oName, oMesh);
+			//	外部ファイル出力
+			auto oName = meshCount == 1 ? outName : outName + "-" + to_string(i);
+			Utility::IOMesh::Output(c_OutputDirectory.data(), oName, oMesh);
 
-		wic::SetColor(Green);
-		cout << "CreateMesh success!" << endl;
-		wic::SetColor(White);
+			wic::SetColor(Green);
+			cout << "CreateMesh success!" << endl;
+			wic::SetColor(White);
+			cout << "--------------------------" << endl;
+
+		}
+
+		//	マテリアル
+		for (int i = 0; i < matCount; ++i)
+		{
+			wic::SetColor(White);
+			cout << "----------Material:" << i << "----------" << endl;
+			auto pMat = (*m_pScene.get())->GetSrcObject<FbxSurfaceMaterial>(i);
+			wic::SetColor(Purple);
+			cout << "Material name:";
+			wic::SetColor(White);
+			cout << pMat->GetName() << endl;
+			SetupTextures(pMat);
+			wic::SetColor(White);
+			cout << "------------------------------" << endl;
+		}
 	}
+	catch (const std::exception&)
+	{
+
+	}
+
+
+	cout << "Completed this program." << endl;
 	cout << "Quit the program." << endl;
 }
 
@@ -231,31 +288,6 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 bool Converter::FBXConverter::Triangulate()
 {
 	fbxsdk::FbxGeometryConverter converter(*m_pManager.get());
-
-//	try
-//	{
-//		if (!converter.Triangulate(*m_pScene.get(), true)) {
-//			throw runtime_error("Failed to triangulate this scene.");
-//		}
-//
-//		//	メッシュから不要なポリゴンを削除する
-//		converter.RemoveBadPolygonsFromMeshes(*m_pScene.get());
-//	}
-//	catch (exception&error)
-//	{
-//#pragma region 例外処理
-//		wic::SetColor(Red);
-//		std::cout << error.what() << endl;
-//		wic::SetColor(White);
-//#if defined DEBUG||_DEBUG
-//		std::system("pause");
-//		std::exit(EXIT_FAILURE);
-//#endif
-//#pragma endregion
-//		return false;
-//	}
-//
-//	return true;
 	return converter.Triangulate(*m_pScene.get(), true);
 }
 
@@ -268,29 +300,6 @@ bool Converter::FBXConverter::Triangulate()
 bool Converter::FBXConverter::SplitMeshesPerMaterial()
 {
 	fbxsdk::FbxGeometryConverter converter(*m_pManager.get());
-
-//	try
-//	{
-//		if (converter.SplitMeshesPerMaterial(*m_pScene.get(), true)) {
-//			throw runtime_error("Failed to split mesh");
-//		}
-//	}
-//	catch (const std::exception& error)
-//	{
-//#pragma region 例外処理
-//		wic::SetColor(Red);
-//		std::cout << error.what() << endl;
-//		wic::SetColor(White);
-//#if defined DEBUG||_DEBUG
-//		std::system("pause");
-//		std::exit(EXIT_FAILURE);
-//#endif
-//#pragma endregion
-//		return false;
-//
-//	}
-//	return true;
-
 	return converter.SplitMeshesPerMaterial(*m_pScene.get(), true);
 }
 
@@ -301,29 +310,6 @@ bool Converter::FBXConverter::SplitMeshesPerMaterial()
 */
 bool Converter::FBXConverter::SetupImporter(std::string fbxPath)
 {
-//	try
-//	{
-//		if (!(*m_pImporter.get())->Initialize(
-//			fbxPath.c_str(),
-//			-1,
-//			(*m_pManager.get())->GetIOSettings()
-//		)) {
-//			throw fbxPath;
-//		}
-//	}
-//	catch (string&str)
-//	{
-//#pragma region 例外処理
-//#if defined DEBUG||_DEBUG
-//		std::cout << "Could not read \"" << str << "\"" << endl;
-//		std::system("pause");
-//		std::exit(EXIT_FAILURE);
-//#endif
-//#pragma endregion
-//		return false;
-//	}
-//	return true;
-
 	return (*m_pImporter.get())->Initialize(
 		fbxPath.c_str(),
 		-1,
@@ -352,26 +338,6 @@ void Converter::FBXConverter::TeardownImporter()
 */
 bool Converter::FBXConverter::SetupScene(std::string fbxPath)
 {
-//	try
-//	{
-//		if (!(*m_pImporter.get())->Import(
-//			*m_pScene.get()
-//		)) {
-//			throw fbxPath;
-//		}
-//	}
-//	catch (string&str)
-//	{
-//#pragma region 例外処理
-//#if defined DEBUG||_DEBUG
-//		std::cout << "Could not output \"" << str << "\" to the scene" << endl;
-//		std::system("pause");
-//		std::exit(EXIT_FAILURE);
-//#endif
-//#pragma endregion
-//		return false;
-//	}
-//	return true;
 	return (*m_pImporter.get())->Import(*m_pScene.get());
 }
 
@@ -388,14 +354,20 @@ void Converter::FBXConverter::LoadToStore(fbxsdk::FbxMesh * from, Utility::Mesh 
 		//	頂点インデックス
 		SetupVertexIndices(from, to);
 		if (to->vertexIndices.empty())throw"SetupVertexIndices";
+		wic::SetColor(Green);
+		cout << "SetupVertexIndices success" << endl;
 
 		//	頂点
 		SetupVertices(from, to);
 		if (to->vertices.empty())throw"SetupVertices";
+		wic::SetColor(Green);
+		cout << "SetupVertices success" << endl;
 
 		//	UV
 		SetupUV(from, to);
 		if (to->uv.empty())throw"SetupUV";
+		wic::SetColor(Green);
+		cout << "SetupUV success" << endl;
 
 		//	頂点の整合化
 		AlignVerticesToUV(to);
@@ -406,6 +378,175 @@ void Converter::FBXConverter::LoadToStore(fbxsdk::FbxMesh * from, Utility::Mesh 
 		cout << "Failed to \"" << error << "\"" << endl;
 		wic::SetColor(White);
 	}
+}
+
+
+void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxSurfaceMaterial * material)
+{
+
+}
+
+void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
+{
+	//	メッシュのルートノード取得
+	auto node = from->GetNode();
+	if (node == 0) { return; }
+
+	//	マテリアル数
+	auto matCount = node->GetMaterialCount();
+	if (matCount == 0) { return; }
+
+	//	マテリアル情報を取得
+	for (int i = 0; i < matCount; i++)
+	{
+		auto material = node->GetMaterial(i);
+		if (material == 0) { continue; }
+
+#pragma region ダウンキャスト
+		//	ここの設計はFBXSDKに合わせている
+
+		FbxSurfaceLambert*lambert=nullptr;
+		FbxSurfacePhong* phong = nullptr;
+
+		//	lambert
+		if (material->GetClassId().Is(FbxSurfaceLambert::ClassId)) {
+			lambert = (FbxSurfaceLambert*)material;
+		}
+
+		//	phong
+		if (material->GetClassId().Is(FbxSurfacePhong::ClassId)) {
+			phong = (FbxSurfacePhong*)material;
+		}
+
+		auto castMat = material->GetClassId().Is(FbxSurfacePhong::ClassId) ?
+			(FbxSurfacePhong*)material :
+			material->GetClassId().Is(FbxSurfaceLambert::ClassId) ?
+			(FbxSurfaceLambert*)material : nullptr;
+		if (castMat == nullptr) {
+			cout << "やばいバグ" << endl;
+			system("pause");
+			exit(NULL);
+		}
+#pragma endregion
+		//	アンビエント
+		g_pMat->ambient =
+		{
+			(float)castMat->Ambient.Get()[0],
+			(float)castMat->Ambient.Get()[1],
+			(float)castMat->Ambient.Get()[2]
+		};
+
+		//	ディフューズ
+		g_pMat->diffuse =
+		{
+			(float)castMat->Diffuse.Get()[0],
+			(float)castMat->Diffuse.Get()[1],
+			(float)castMat->Diffuse.Get()[2],
+		};
+
+		//	エミッシブ
+		g_pMat->emissive =
+		{
+			(float)castMat->Emissive.Get()[0],
+			(float)castMat->Emissive.Get()[1],
+			(float)castMat->Emissive.Get()[2],
+		};
+
+		//	バンプマップ
+		g_pMat->bumpMap =
+		{
+			(float)castMat->Bump.Get()[0],
+			(float)castMat->Bump.Get()[1],
+			(float)castMat->Bump.Get()[2],
+		};
+
+		//	透過度
+		g_pMat->transparent = static_cast<float>(castMat->TransparencyFactor.Get());
+
+		//	マテリアルが"Phong"なら
+		if (castMat->GetClassId().Is(FbxSurfacePhong::ClassId)) {
+
+			//	スペキュラー
+			Math::FLOAT4 sp =
+			{
+				(float)phong->Specular.Get()[0],
+				(float)phong->Specular.Get()[1],
+				(float)phong->Specular.Get()[2],
+			};
+			g_pMat->specular = { &sp };
+
+			//	光沢
+			float sh = (float)phong->Shininess.Get();
+			g_pMat->shiniess = { &sh };
+
+			//	反射
+			float refl = (float)phong->ReflectionFactor.Get();
+			g_pMat->reflection = { &refl };
+		}
+
+	}
+}
+
+/*!
+	@note	そのマテリアルに使用しているテクスチャデータのセットアップ
+	
+*/
+void Converter::FBXConverter::SetupTextures(fbxsdk::FbxSurfaceMaterial * material)
+{
+	//	ディフューズ
+	auto prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+
+	//	複数のテクスチャをブレンドしたもの(レイヤーテクスチャ)
+	auto layerTexCount = prop.GetSrcObjectCount<FbxLayeredTexture>();
+	for (int i = 0; i < layerTexCount; ++i)
+	{
+		auto layeredTexture = prop.GetSrcObject<FbxLayeredTexture>(i);
+		wic::SetColor(Purple);
+		SetupLayerTextures(&prop, layeredTexture);
+	}
+
+	//	単一のもの
+	auto texCount = prop.GetSrcObjectCount<FbxFileTexture>();
+	for (int i = 0; i < texCount; i++)
+	{
+		auto tex = prop.GetSrcObject<FbxFileTexture>(i);
+		wic::SetColor(Purple);
+		if (!tex) { continue; }
+		cout << "Texture " << i << ":";
+		SetupTexture(tex);
+	}
+
+	//TODO: これが成り立つのが"layerTexCount = texCount = 0"の時のみ
+	//		分かりにくいので"layerTexCount == 0 && texCount == 0"がいいかも...
+	//NOTE:	ここに入るのは".tga"などテクスチャ読み込みに失敗したもの
+	if (layerTexCount == texCount)
+	{
+		
+	}
+	
+}
+
+void Converter::FBXConverter::SetupLayerTextures(fbxsdk::FbxProperty * prop, fbxsdk::FbxLayeredTexture * layerdTexture)
+{
+	auto texCount = layerdTexture->GetSrcObjectCount<FbxFileTexture>();
+	for (int i = 0; i < texCount; ++i)
+	{
+		auto texture = prop->GetSrcObject<FbxFileTexture>(i);
+		wic::SetColor(Purple);
+		if (!texture) { continue; }
+		cout << "Layered Texture " << i << ":";
+		SetupTexture(texture);
+	}
+}
+
+void Converter::FBXConverter::SetupTexture(fbxsdk::FbxFileTexture * texture)
+{
+	//TODO:マテリアル内のテクスチャ情報取得処理
+
+	//FbxMaterialConverter
+	//	ファイル名の表示
+	wic::SetColor(White);
+	cout << ConvertRelativePathToFileName(texture->GetRelativeFileName()) << endl;
 }
 
 /*!
@@ -432,7 +573,7 @@ void Converter::FBXConverter::SetupVertexIndices(fbxsdk::FbxMesh * from, Utility
 		}
 	}
 
-	wic::SetColor(Green);
+	wic::SetColor(Cyan);
 	cout << "Mesh vertex index size:";
 	wic::SetColor(White);
 	cout << to->vertexIndices.size() << endl;
@@ -465,7 +606,7 @@ void Converter::FBXConverter::SetupVertices(fbxsdk::FbxMesh * from, Utility::Mes
 		);
 		++index;
 	}
-	wic::SetColor(Green);
+	wic::SetColor(Cyan);
 	cout << "Mesh vertex size:";
 	wic::SetColor(White);
 	cout << to->vertices.size() << endl;
@@ -484,7 +625,7 @@ void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh * from, Utility::Mesh * to
 	FbxStringList uvSetNames;
 	from->GetUVSetNames(uvSetNames);
 
-	wic::SetColor(Green);
+	wic::SetColor(Cyan);
 	cout << "UV set names count:";
 	wic::SetColor(White);
 	cout << uvSetNames.GetCount() << endl;
@@ -504,7 +645,7 @@ void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh * from, Utility::Mesh * to
 		const string c_UVSetName = uvSetNames.GetStringAt(index);
 		to->uvSetNamesList.push_back(c_UVSetName);
 
-		wic::SetColor(Green);
+		wic::SetColor(Purple);
 		cout << endl << c_UVSetName << endl;
 		wic::SetColor(White);
 
@@ -577,7 +718,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 	};
 
 	//	インデックスでソートした重複のある全データ
-	wic::SetColor(Green);
+	wic::SetColor(Cyan);
 	cout << "Index sort vertices:";
 	vector<Vertex>indexSortVertices;
 	for (auto hash : mesh->uvSetNamesList)
@@ -598,7 +739,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 
 	//	重複のない一意な頂点情報(頂点 + UV)
 	vector<Vertex>uniqueVertices;
-	wic::SetColor(Green);
+	wic::SetColor(Cyan);
 	cout << "Unique vertices:";
 	for (auto hash : mesh->uvSetNamesList)
 	{
@@ -689,9 +830,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 				wic::SetColor(Red);
 				cout << "Error" << endl;
 				cout << error.what() << endl;
-				wic::SetColor(Purple);
 				cout << "Failed to reconfigure index." << endl;
-				wic::SetColor(Red);
 				cout << "uv set name:";
 				wic::SetColor(White);
 				cout << hash << endl;
@@ -699,7 +838,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 				cout << "index number:";
 				wic::SetColor(White);
 				cout << i << endl;
-				wic::SetColor(Purple);
+				wic::SetColor(Red);
 				cout << "iterator not found";
 				wic::SetColor(White);
 				continue;
@@ -709,22 +848,22 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 
 	//	コンソール出力
 	cout << endl;
-	wic::SetColor(Yellow);
+	wic::SetColor(Cyan);
 	cout << "mesh vertex size:";
 	wic::SetColor(White);
 	cout << mesh->vertices.size() << endl;
-	wic::SetColor(Yellow);
+	wic::SetColor(Cyan);
 	cout << "mesh index size:";
 	wic::SetColor(White);
 	cout << mesh->vertexIndices.size() << endl;
-	wic::SetColor(Yellow);
+	wic::SetColor(Cyan);
 	cout << "mesh uv size" << endl;
 	const auto c_UVSetNamesCount = mesh->uvSetNamesList.size();
 
 	for (size_t i = 0; i < c_UVSetNamesCount; i++)
 	{
 		auto it = mesh->uv[mesh->uvSetNamesList[i]][i];
-		wic::SetColor(Yellow);
+		wic::SetColor(Cyan);
 		cout << it.uvSetName << ":";
 		wic::SetColor(White);
 		cout << mesh->uv[mesh->uvSetNamesList[i]].size() << endl;

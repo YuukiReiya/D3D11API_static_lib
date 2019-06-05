@@ -12,6 +12,8 @@
 #include <fbxsdk/scene/geometry/fbxlayer.h>
 #include <fbxsdk/core/fbxmanager.h>
 #include <fbxsdk/fileio/fbximporter.h>
+#include <fbxsdk/scene/shading/fbxlayeredtexture.h>
+#include <fbxsdk/scene/shading/fbxfiletexture.h>
 namespace Converter {
 	class FBXConverter
 	{
@@ -94,6 +96,15 @@ namespace Converter {
 			@param[in]	äiî[êÊÉÅÉbÉVÉÖ
 		*/
 		static void LoadToStore(fbxsdk::FbxMesh*from, Utility::Mesh*to);
+
+		static void SetupMaterial(fbxsdk::FbxSurfaceMaterial*material);
+		static void SetupMaterial(fbxsdk::FbxMesh* from);
+
+		static void SetupTextures(fbxsdk::FbxSurfaceMaterial * material);
+
+		static void SetupLayerTextures(fbxsdk::FbxProperty*prop, fbxsdk::FbxLayeredTexture*layerdTexture);
+
+		static void SetupTexture(fbxsdk::FbxFileTexture*texture);
 
 		/*!
 			@fn			SetupVertexIndices
