@@ -49,7 +49,9 @@ using namespace std;
 /*!
 	@brief	コンストラクタ
 */
-Mesh::Mesh() :m_IndexCount(0) {}
+Mesh::Mesh() :m_IndexCount(0) {
+	transform = std::make_shared<Transform>();
+}
 
 /*!
 	@brief	ムーブコンストラクタ
@@ -365,7 +367,7 @@ HRESULT API::Mesh::SetupConstantBuffer()
 		XMMATRIX w, v, p;
 
 		//	world
-		w = XMMatrixTranspose(transform.GetMatrix());
+		w = XMMatrixTranspose(transform->GetMatrix());
 
 		//	view
 		v = XMMatrixTranspose(Camera::GetInstance().GetViewMatrix());

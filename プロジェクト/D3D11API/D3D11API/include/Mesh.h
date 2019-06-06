@@ -120,7 +120,7 @@ namespace API{
 			@var	transform
 			@brief	トランスフォーム
 		*/
-		Transform transform;
+		std::shared_ptr<Transform> transform;
 
 		/*!
 			@var	color
