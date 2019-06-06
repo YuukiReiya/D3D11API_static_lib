@@ -24,9 +24,6 @@
     <ClInclude Include="include\Direct3D11.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="include\ITexture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="include\MemoryLeaks.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -46,9 +43,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="include\Texture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TextureAtlas.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="include\WICTextureLoader.h">
@@ -128,9 +122,6 @@
     <ClCompile Include="include\Direct3D11.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="include\ITexture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="include\ShaderManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -138,9 +129,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="include\Texture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="include\TextureAtlas.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="include\WICTextureLoader.cpp">

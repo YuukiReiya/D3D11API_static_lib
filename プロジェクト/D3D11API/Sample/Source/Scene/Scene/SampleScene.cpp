@@ -74,7 +74,7 @@ void SampleScene::Initialize()
 	//g_pMesh->Initialize("描画テスト/test_draw.yfm", "hoge.png");
 	//g_pMesh->Initialize("abc.yfm");
 
-	g_pMesh->transform.SetPosition({ -1, 0, 0 });
+	g_pMesh->transform->SetPosition({ -1, 0, 0 });
 
 	g_pMeshShader->Setup();
 	g_pMesh->SetupShader(g_pMeshShader.get());
@@ -127,6 +127,7 @@ void SampleScene::Finalize()
 	vMesh.clear();
 }
 #define	UseMeshTrans
+bool isa;
 /*!
 	@fn		Update
 	@brief	更新処理
@@ -185,11 +186,17 @@ void SampleScene::Update()
 	if (Keyboard::GetButton(Keyboard::c_Delete)) {
 		z += val;
 	}
-	t.Rotate(x, y, z);
+	DirectX::XMVECTOR vec = { x,y,z,1 };
+	t->Rotate(vec);
 #pragma endregion
 
 #pragma region 移動
-	auto pos = t.GetPosition();
+	auto pos = g_pMesh->transform->GetPosition();
+	auto temp = pos;
+	if (Keyboard::GetButton('g')) {
+		cout << "pos:" << pos.x << "," << pos.y << "," << pos.z << endl;
+	}
+
 	if (Keyboard::GetButton('a')) {
 		pos.x -= val;
 	}
@@ -208,7 +215,17 @@ void SampleScene::Update()
 	if (Keyboard::GetButton('r')) {
 		pos.z += val;
 	}
-	t.SetPosition(pos);
+
+	if (Keyboard::GetButton('g')) {
+		cout << "pos:" << pos.x << "," << pos.y << "," << pos.z << endl;
+	}
+	if (temp.x != pos.x || temp.y != pos.y || temp.z != pos.z) {
+		isa = true;
+		g_pMesh->transform->SetPosition(pos);
+	}
+	else { 
+		isa = false; 
+	}
 #pragma endregion
 
 
@@ -302,6 +319,11 @@ void SampleScene::Render()
 	}
 #endif
 #pragma endregion
+
+	if (isa) {
+
+		cout << "okad" << endl;
+	}
 
 	g_pMesh->Render();
 	//g_pMesh1->Render();

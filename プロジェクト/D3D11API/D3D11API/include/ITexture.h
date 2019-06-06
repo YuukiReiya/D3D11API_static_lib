@@ -10,7 +10,6 @@
 #include <DirectXMath.h>
 #include <wrl/client.h>
 #include <string>
-#include "Color.h"
 
 /*!
 	@namespace	API

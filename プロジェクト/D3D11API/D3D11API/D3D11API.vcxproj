@@ -163,7 +163,6 @@
     <ClInclude Include="include\Direct3D11.h" />
     <ClInclude Include="include\GamePad.h" />
     <ClInclude Include="include\MatrixConstantBuffer.h" />
-    <ClInclude Include="include\ITexture.h" />
     <ClInclude Include="include\Keyboard.h" />
     <ClInclude Include="include\MemoryLeaks.h" />
     <ClInclude Include="include\Mesh.h" />
@@ -182,7 +181,6 @@
     <ClInclude Include="include\StructShaderBase.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="include\Texture.h" />
-    <ClInclude Include="include\TextureAtlas.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Wave.h" />
     <ClInclude Include="include\WICTextureLoader.h" />
@@ -197,7 +195,6 @@
     <ClCompile Include="include\Debug.cpp" />
     <ClCompile Include="include\Direct3D11.cpp" />
     <ClCompile Include="include\GamePad.cpp" />
-    <ClCompile Include="include\ITexture.cpp" />
     <ClCompile Include="include\Keyboard.cpp" />
     <ClCompile Include="include\Mesh.cpp" />
     <ClCompile Include="include\MeshReadHelper.cpp" />
@@ -210,7 +207,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="include\Texture.cpp" />
-    <ClCompile Include="include\TextureAtlas.cpp" />
     <ClCompile Include="include\Transform.cpp" />
     <ClCompile Include="include\Wave.cpp" />
     <ClCompile Include="include\WICTextureLoader.cpp" />

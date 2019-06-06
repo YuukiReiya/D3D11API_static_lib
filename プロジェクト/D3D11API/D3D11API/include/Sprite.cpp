@@ -783,12 +783,12 @@ void API::Sprite::SetupConstantBuffer()
 	cb.m_ViewMatrix			= view;
 	cb.m_ProjectionMatrix	= proj;
 	cb.m_DivNum = DirectX::XMFLOAT2(
-		static_cast<float>(ptex->GetDivNum().x),
-		static_cast<float>(ptex->GetDivNum().y));
+		static_cast<float>(ptex->GetDivCount().x),
+		static_cast<float>(ptex->GetDivCount().y));
 	cb.m_Index = DirectX::XMFLOAT2(
-		static_cast<float>(ptex->GetActiveDiv().x),
-		static_cast<float>(ptex->GetActiveDiv().y));
-	cb.m_Color				= ptex->m_Color.GetRGBA();
+		static_cast<float>(ptex->GetAtlasOffset().x),
+		static_cast<float>(ptex->GetAtlasOffset().y));
+	cb.m_Color				= ptex->color.GetRGBA();
 
 	//	ÉÅÉÇÉäÉRÉsÅ[
 	memcpy_s(pMapData.pData, pMapData.RowPitch, (void*)(&cb), sizeof(cb));
