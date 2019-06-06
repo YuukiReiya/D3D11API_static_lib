@@ -84,9 +84,12 @@ public:
 		@detail		インライン関数
 		@param[in]	セットするTransformのポインタ
 		@param[in]	設定する角度(ベクトル)
+		@note		各(x,y,z)軸回転
 	*/
 	static inline void SetRotation(Transform* transform, DirectX::XMVECTOR angle) {
+		auto pos = transform->GetPosition();
 		DirectX::XMStoreFloat4x4(&transform->m_Matrix, DirectX::XMMatrixRotationRollPitchYawFromVector(angle));
+		transform->SetPosition(pos);
 	}
 
 	/*!
@@ -94,6 +97,7 @@ public:
 		@brief		回転値のセッター
 		@detail		インライン関数
 		@param[in]	設定する角度(ベクトル)
+		@note		各(x,y,z)軸回転
 	*/
 	inline void SetRotation(DirectX::XMVECTOR angle) {
 		SetRotation(this, angle);
@@ -110,7 +114,9 @@ public:
 		@note		軸回転ではなく軸方向に回転することに注意!!
 	*/
 	static inline void SetRotation(Transform*transform, float roll, float pitch, float yaw) {
+		auto pos = transform->GetPosition();
 		DirectX::XMStoreFloat4x4(&transform->m_Matrix, DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll));
+		transform->SetPosition(pos);
 	}
 
 	/*!
@@ -160,6 +166,10 @@ public:
 			 関数ポインタを使った関数エイリアスだと静的関数のみしか対応していないのと、関数のオーバーロードに対応していない
 	*/
 	//static inline void(*const Rotate)(Transform*, float,float,float) = SetRotation;
+	//inline void Rotate(float roll, float pitch, float yaw) {
+	//	void(Transform::*RotateF3)(float, float, float) = &Transform::SetRotation;
+	//	(this->*RotateF3)(roll, pitch, yaw);
+	//}
 	//static inline void(*const Rotate)(Transform*, DirectX::XMFLOAT3) = SetRotation;
 
 	/*!	
