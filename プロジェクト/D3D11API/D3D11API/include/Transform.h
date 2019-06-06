@@ -160,6 +160,7 @@ public:
 			 関数ポインタを使った関数エイリアスだと静的関数のみしか対応していないのと、関数のオーバーロードに対応していない
 	*/
 	//static inline void(*const Rotate)(Transform*, float,float,float) = SetRotation;
+	//static inline void(*const Rotate)(Transform*, DirectX::XMFLOAT3) = SetRotation;
 
 	/*!	
 		HACK:上記の問題を解決するためのオーバーロード(one-liners)

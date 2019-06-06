@@ -162,9 +162,9 @@ void SampleScene::Update()
 
 #pragma region ƒƒbƒVƒ…
 #ifdef UseMeshTrans
-	auto& m = g_pMesh->transform.m_Matrix;
-	
-#pragma region x,y,z
+	auto& t = g_pMesh->transform;
+#pragma region ‰ñ“]
+
 	static float x =0, y=0, z=0;
 
 	if (Keyboard::GetButton(Keyboard::c_Left)) {
@@ -185,8 +185,32 @@ void SampleScene::Update()
 	if (Keyboard::GetButton(Keyboard::c_Delete)) {
 		z += val;
 	}
-	g_pMesh->transform.Rotate(x, y, z);
+	t.Rotate(x, y, z);
 #pragma endregion
+
+#pragma region ˆÚ“®
+	auto pos = t.GetPosition();
+	if (Keyboard::GetButton('a')) {
+		pos.x -= val;
+	}
+	if (Keyboard::GetButton('d')) {
+		pos.x += val;
+	}
+	if (Keyboard::GetButton('w')) {
+		pos.y += val;
+	}
+	if (Keyboard::GetButton('s')) {
+		pos.y -= val;
+	}
+	if (Keyboard::GetButton('q')) {
+		pos.z -= val;
+	}
+	if (Keyboard::GetButton('r')) {
+		pos.z += val;
+	}
+	t.SetPosition(pos);
+#pragma endregion
+
 
 #endif // UseMeshTrans
 
