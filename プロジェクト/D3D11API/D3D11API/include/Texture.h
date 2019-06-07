@@ -110,7 +110,7 @@ namespace API {
 
 		/*!
 			@fn		GetShaderResourceView
-			@brief	シェーダーリソースビューのゲッター
+			@brief	シェーダーリソースビューの取得
 			@return	メンバのシェーダーリソースビューのアドレス
 		*/
 		inline ID3D11ShaderResourceView**GetShaderResourceView() { return m_pShaderResourceView.GetAddressOf(); }

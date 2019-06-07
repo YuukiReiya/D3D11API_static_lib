@@ -15,6 +15,7 @@
 #include "AbstractShader.h"
 #include "Transform.h"
 #include "Color.h"
+#include "Material.h"
 
 /*! APIの名前空間に含める */
 namespace API{
@@ -79,27 +80,11 @@ namespace API{
 			SetupShader(this, shader);
 		}
 
-		/*!
-			@fn			CreateTexture
-			@brief		テクスチャデータの作成
-			@detail		SRVの作成
-			@param[in]	バインドするメッシュ
-			@param[in]	読み込むテクスチャのパス
-			@return		S_OK:成功 E_FAIL:失敗
-
-			@TODO		関数で用意するか専用のFactorクラスを設けるかは使用感次第
-		*/
-		static HRESULT CreateTexture(Mesh* mesh, std::string path);
-
-		/*!
-			@fn			CreateTexture
-			@brief		テクスチャデータの作成
-			@detail		SRVの作成(インライン版)
-			@param[in]	読み込むテクスチャのパス
-			@return		S_OK:成功 E_FAIL:失敗
-		*/
-		inline HRESULT CreateTexture(std::string path) {
-			return CreateTexture(this, path);
+		static inline void SetupMaterial(Mesh*mesh, Material*material) {
+			mesh->m_pMaterial = material->GetSharedPtr();
+		}
+		inline void SetupMaterial(Material*material) {
+			SetupMaterial(this, material);
 		}
 
 		/*!	
@@ -128,14 +113,6 @@ namespace API{
 		*/
 		Color color;
 	private:
-		/*!
-			@fn			CreateSamplerState
-			@brief		サンプラーステートの作成
-			@param[in]	バインドするメッシュ
-			@return		S_OK:成功 E_FAIL:失敗
-		*/
-		static HRESULT CreateSamplerState(Mesh*mesh);
-
 		/*!
 			@fn		SetupTopology
 			@brief	トポロジーのセットアップ
@@ -239,13 +216,15 @@ namespace API{
 			@brief	サンプラーステート
 			@detail	ComPtr
 		*/
-		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
+		//Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
 
 		/*!
 			@var	m_pSRV
 			@brief	シェーダーリソースビュー
 			@detail	ComPtr
 		*/
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
+		//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
+
+		std::weak_ptr<Material*>m_pMaterial;
 	};
 }

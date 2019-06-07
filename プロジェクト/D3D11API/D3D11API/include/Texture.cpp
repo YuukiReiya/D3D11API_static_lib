@@ -58,8 +58,8 @@ HRESULT API::Texture::Initialize(std::string filePath, FilteringMode fMode, Tile
 {
 	try
 	{
-		if (!SetupShaderResourceView(filePath)) { throw std::runtime_error(""); }
-		if (!SetupSamplerState(fMode, tMode)) { throw std::runtime_error(""); }
+		if (FAILED(SetupShaderResourceView(filePath))) { throw std::runtime_error("SetupShaderResourceView"); }
+		if (FAILED(SetupSamplerState(fMode, tMode))) { throw std::runtime_error("SetupSamplerState"); }
 	}
 	catch (const std::exception&e)
 	{

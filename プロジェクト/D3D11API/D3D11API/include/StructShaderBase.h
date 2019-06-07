@@ -62,14 +62,9 @@ namespace D3D11 {
 //
 //			以下で宣言している"mat"をコメントアウト等で消せば"mat"未定義動作が実行される。
 //------------------------------------------------------------------------------------
-#define mat
-#if defined mat
 			DirectX::XMMATRIX m_WorldMatrix;		/*!< ワールド */
 			DirectX::XMMATRIX m_ProjectionMatrix;	/*!< 射影行列 */
 			DirectX::XMMATRIX m_ViewMatrix;			/*!< ビュー行列 */
-#else
-			DirectX::XMMATRIX m_WVP;
-#endif
 		};
 #pragma pack(pop)
 	};

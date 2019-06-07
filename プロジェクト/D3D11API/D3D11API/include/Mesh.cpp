@@ -84,10 +84,10 @@ HRESULT Mesh::Initialize(std::string path)
 		auto rd = Helper::MeshReadHelper::Read(path);
 
 		//	サンプラー
-		if (FAILED(CreateSamplerState(this))) {
+		/*if (FAILED(CreateSamplerState(this))) {
 			string error = "\"" + path + "\" (mesh sampler) is not create!";
 			throw error;
-		}
+		}*/
 
 		//	頂点バッファ作成
 		if (FAILED(CreateVertexBuffer(this, rd.vertices))) {
@@ -123,17 +123,18 @@ HRESULT API::Mesh::Initialize(std::string meshPath, std::string texPath)
 	hr = Initialize(meshPath);
 	
 	//	SRV
-	hr = CreateTexture(texPath);
-	if (FAILED(hr)) {
-		string error = "\"" + texPath + "\" (mesh shader resource view) is not create!";
-		ErrorLog(error);
-		return E_FAIL;
-	}
+	//hr = CreateTexture(texPath);
 
-	if (FAILED(hr)) {
-		//	メッシュの初期化に失敗
-		return E_FAIL;
-	}
+	//if (FAILED(hr)) {
+	//	string error = "\"" + texPath + "\" (mesh shader resource view) is not create!";
+	//	ErrorLog(error);
+	//	return E_FAIL;
+	//}
+
+	//if (FAILED(hr)) {
+	//	//	メッシュの初期化に失敗
+	//	return E_FAIL;
+	//}
 
 	return S_OK;
 }
@@ -158,44 +159,11 @@ void API::Mesh::Finalize()
 	m_pVertexBuffer.Reset();
 
 	//	サンプラーステート開放
-	m_pSamplerState.Reset();
+	//m_pSamplerState.Reset();
 
 	//	SRV開放
-	m_pSRV.Reset();
-}
-
-/*!
-	@fn			CreateTexture
-	@brief		テクスチャデータの作成
-	@detail		SRVの作成(インライン版)
-	@param[in]	読み込むテクスチャのパス
-	@return		S_OK:成功 E_FAIL:失敗
-*/
-HRESULT API::Mesh::CreateTexture(Mesh* mesh, std::string path)
-{		
-	//	テクスチャの開放
-	mesh->m_pSRV.Reset();
-
-	//	テクスチャ読み込み
-	std::wstring cast = To_WString(path);
-
-	Microsoft::WRL::ComPtr<ID3D11Resource> pResource = nullptr;
-	HRESULT hr;
-	hr = CreateWICTextureFromFile(
-		Direct3D11::GetInstance().GetDevice(),
-		cast.data(),
-		pResource.GetAddressOf(),
-		mesh->m_pSRV.GetAddressOf()
-	);
-
-	// ローカル変数のメモリ開放
-	if (pResource.Get() != nullptr) {
-		pResource.Reset();
-	}
-	if (FAILED(hr)) {
-		ErrorLog("srv");
-	};
-	return S_OK;
+	//m_pSRV.Reset();
+	m_pMaterial.reset();
 }
 
 /*!
@@ -228,28 +196,6 @@ void Mesh::Render()
 
 	//	描画命令
 	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_IndexCount, 0, 0);
-}
-
-/*!
-	@fn			CreateSamplerState
-	@brief		サンプラーステートの作成
-	@param[in]	バインドするメッシュ
-	@return		S_OK:成功 E_FAIL:失敗
-*/
-HRESULT API::Mesh::CreateSamplerState(Mesh* mesh)
-{
-	//	サンプラー
-	D3D11_SAMPLER_DESC sd;
-	SecureZeroMemory(&sd, sizeof(sd));
-	sd.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sd.AddressU = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP;
-	sd.AddressV = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP;
-	sd.AddressW = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP;
-
-	return Direct3D11::GetInstance().GetDevice()->CreateSamplerState(
-		&sd,
-		mesh->m_pSamplerState.GetAddressOf()
-	);
 }
 
 /*!
@@ -486,18 +432,21 @@ void API::Mesh::SetupBindShader()
 */
 void API::Mesh::SetupTexture()
 {
+	auto material = m_pMaterial.lock();
+
+
 	//	サンプラー
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
 		0,
 		1,
-		m_pSamplerState.GetAddressOf()
+		(*material)->GetSamplerState()
 	);
 
 	//	SRV
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
 		0,
 		1,
-		m_pSRV.GetAddressOf()
+		(*material)->GetShaderResourceView()
 	);
 }
 
