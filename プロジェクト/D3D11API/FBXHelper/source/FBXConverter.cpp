@@ -188,6 +188,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 		//	メッシュの分割
 		if (!SplitMeshesPerMaterial()) { throw runtime_error("Failed to split mesh"); }
+		cout << "SplitMeshesPerMaterial success" << endl;
 
 		//	メッシュの総数
 		meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
@@ -862,9 +863,8 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 
 	for (size_t i = 0; i < c_UVSetNamesCount; i++)
 	{
-		auto it = mesh->uv[mesh->uvSetNamesList[i]][i];
 		wic::SetColor(Cyan);
-		cout << it.uvSetName << ":";
+		cout << mesh->uvSetNamesList[i] << ":";
 		wic::SetColor(White);
 		cout << mesh->uv[mesh->uvSetNamesList[i]].size() << endl;
 	}
