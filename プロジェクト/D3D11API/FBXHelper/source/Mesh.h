@@ -7,7 +7,6 @@
 #pragma once
 #include <vector>
 #include <fbxsdk/scene/geometry/fbxlayer.h>
-//#include <map>
 #include <unordered_map>
 #include "OriginalFormatMath.h"
 
@@ -39,7 +38,7 @@ namespace Utility {
 
 		/*!
 			@struct		UV
-			@brief		UV + UVset名
+			@brief		UVset名 + テクスチャ座標
 		*/
 		struct UV
 		{
@@ -51,7 +50,7 @@ namespace Utility {
 
 			/*!
 				@var	uv
-				@brief	UV座標
+				@brief	テクスチャ座標
 			*/
 			Math::FLOAT2 uv;
 		};
@@ -59,10 +58,9 @@ namespace Utility {
 		/*!
 			@var		uv
 			@key		uvset名
-			@value		UV(UV + UVset名)の可変長配列
-			@brief		UVset名をキーにしたUVの可変長配列
+			@value		UV(UVset名 + テクスチャ座標)の可変長配列
+			@brief		UVset名をキーにしたテクスチャ座標の可変長配列
 		*/
-		//std::map<std::string, std::vector<UV>>uv;
 		std::unordered_map<std::string, std::vector<UV>>uv;
 
 		/*!
