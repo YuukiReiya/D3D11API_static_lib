@@ -12,7 +12,6 @@
 #include <locale>
 #include <memory>
 
-
 #include <Direct3D11.h>
 /*!
 	@var	g_pMain
@@ -33,10 +32,9 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, INT)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif // DEBUG||_DEBUG
 
-#ifdef _UNICODE
 	// 文字コード設定
+	//TODO:"To_WString"でローカル(国)に依存する
 	setlocale(LC_ALL, "JPN");
-#endif // _UNICODE
 
 	g_pMain = std::make_unique<Main>();
 
