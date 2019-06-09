@@ -43,12 +43,20 @@ shared_ptr<Mesh>g_pMesh;
 shared_ptr<D3D11::Graphic::AbstractShader>g_pMeshShader;
 
 /*!
+	@var	g_pMaterial
+	@brief	ƒ}ƒeƒŠƒAƒ‹
+*/
+shared_ptr<API::Material>g_pMaterial;
+
+/*!
 	@brief	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 */
 SampleScene::SampleScene()
 {
 }
 std::vector<API::Mesh>vMesh;
+std::vector<std::shared_ptr<API::Material>>vMaterial;
+
 /*!
 	@fn		Initialize
 	@brief	‰Šú‰»ˆ—
@@ -59,7 +67,7 @@ void SampleScene::Initialize()
 
 	g_pMesh = make_shared<Mesh>();
 	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
-
+	g_pMaterial = make_shared<Material>();
 
 	//g_pMesh->Initialize("mesh1.yfm");
 	//g_pMesh->Initialize("test.yfm","TEX_00100_anathema_H_D.png");
@@ -67,50 +75,87 @@ void SampleScene::Initialize()
 	//g_pMesh->Initialize("test4.yfm","TEX_00100_anathema_H_D.png");
 	//g_pMesh->Initialize("test.yfm","pm0025_00_BodyA1.png");
 	//g_pMesh->Initialize("test7.yfm", "hoge.png");
-	g_pMesh->Initialize("test8.yfm", "hoge.png");
+	//g_pMaterial->SetupTexture("hoge.png");
+	//g_pMesh->Initialize("test8.yfm");
+	//g_pMesh->SetupMaterial(g_pMaterial.get());
 	//g_pMesh->Initialize("test99-2.yfm", "hoge.png");
 	//g_pMesh->Initialize("cube.yfm", "hoge.png");
 
 	//g_pMesh->Initialize("•`‰æƒeƒXƒg/test_draw.yfm", "hoge.png");
 	//g_pMesh->Initialize("abc.yfm");
 
-	g_pMesh->transform->SetPosition({ -1, 0, 0 });
 
 	g_pMeshShader->Setup();
 	g_pMesh->SetupShader(g_pMeshShader.get());
 
-#pragma region Œã”y‚¿‚á‚ñ
-#ifdef use_multiple1
+#pragma region ƒsƒJƒ`ƒ…ƒE
+	//std::string texPathes[4] = { "pm0025_00_BodyA1.png","pm0025_00_BodyB1.png","pm0025_00_Eye1.png","pm0025_00_Mouth1.png", };
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	Mesh mesh;
+	//	shared_ptr<Material> mat = make_shared<Material>();
+	//	mesh.Initialize("ƒ|ƒPƒ‚ƒ“/pokemon-" + to_string(i) + ".yfm");
+	//	mat->SetupTexture("ƒ|ƒPƒ‚ƒ“/" + texPathes[i]);
+	//	vMesh.push_back(mesh);
+	//	vMaterial.push_back(mat);
+	//	vMesh[i].SetupMaterial(vMaterial[i].get());
+	//}
+#pragma endregion
 
+#pragma region Œã”y‚¿‚á‚ñ
+
+	string texPath[14] =
+	{
+		"Œã”y‚¿‚á‚ñ/skin.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/eye.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/hair.png",
+		"Œã”y‚¿‚á‚ñ/eye.png",
+		"Œã”y‚¿‚á‚ñ/clothes.png",
+		"Œã”y‚¿‚á‚ñ/clothes.png",
+		"Œã”y‚¿‚á‚ñ/facial.png",
+	};
 	for (size_t i = 0; i < 14; i++)
 	{
 		Mesh ptr;
+		std::shared_ptr<Material>mat = make_shared<Material>();
 		ptr.Initialize("Œã”y‚¿‚á‚ñ/test99-" + to_string(i) + ".yfm");
+		mat->SetupTexture(texPath[i]);
 		vMesh.push_back(ptr);
-}
+		vMaterial.push_back(mat);
+		vMesh[i].SetupMaterial(vMaterial[i].get());
+	}
 	for (auto& it : vMesh)
 	{
 		it.SetupShader(g_pMeshShader.get());
 	}
 
-	vMesh[0].CreateTexture("Œã”y‚¿‚á‚ñ/skin.png");
-	vMesh[1].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
-	vMesh[2].CreateTexture("Œã”y‚¿‚á‚ñ/eye.png");
-	vMesh[3].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
-	vMesh[4].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
-	vMesh[5].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
-	vMesh[6].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
-	vMesh[7].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
-	vMesh[8].CreateTexture("Œã”y‚¿‚á‚ñ/face.png");
-	vMesh[9].CreateTexture("Œã”y‚¿‚á‚ñ/hair.png");
-	vMesh[10].CreateTexture("Œã”y‚¿‚á‚ñ/eye.png");
-	vMesh[11].CreateTexture("Œã”y‚¿‚á‚ñ/clothes.png");
-	vMesh[12].CreateTexture("Œã”y‚¿‚á‚ñ/clothes.png");
-	vMesh[13].CreateTexture("Œã”y‚¿‚á‚ñ/facial.png");
-
-#endif // use_multiple1
 #pragma endregion
 
+#pragma region SD-Unity
+	//string texPath = "ƒ†ƒjƒeƒB‚¿‚á‚ñ/utc_all2.png";
+	//shared_ptr<Material>mat = make_shared<Material>();
+	//mat->SetupTexture(texPath);
+	//vMaterial.push_back(mat);
+	//for (int i = 0; i < 12; ++i)
+	//{
+	//	Mesh ptr;
+	//	ptr.Initialize("ƒ†ƒjƒeƒB‚¿‚á‚ñ/sd-unity-" + to_string(i) + ".yfm");
+	//	vMesh.push_back(ptr);
+	//	vMesh[i].SetupMaterial(vMaterial[0].get());
+	//}
+#pragma endregion
+
+
+	if (!vMesh.empty()) {
+		for (auto&it : vMesh) { it.SetupShader(g_pMeshShader.get()); }
+	}
 
 }
 
@@ -126,43 +171,16 @@ void SampleScene::Finalize()
 	}
 	vMesh.clear();
 }
-#define	UseMeshTrans
-bool isa;
+
 /*!
 	@fn		Update
 	@brief	XVˆ—
 */
 void SampleScene::Update()
 {
-	//if (Keyboard::GetButtonDown('Y')) {
-	//	cout << "set next scene" << endl;
-	//	SceneRoot::GetInstance().SetupNextScene(new TransitionTestScene());
-	//}
 	auto val = 0.1f;
 
-	//auto pos = g_pMesh->transform.GetPosition();
-	//if (Keyboard::GetButton('a')) {
-	//	pos.x -= val;
-	//}
-	//if (Keyboard::GetButton('d')) {
-	//	pos.x += val;
-	//}
-	//if (Keyboard::GetButton('w')) {
-	//	pos.y += val;
-	//}
-	//if (Keyboard::GetButton('s')) {
-	//	pos.y -= val;
-	//}
-	//if (Keyboard::GetButton('q')) {
-	//	pos.z -= val;
-	//}
-	//if (Keyboard::GetButton('e')) {
-	//	pos.z += val;
-	//}
-	//g_pMesh->transform.SetPosition(pos);
-
 #pragma region ƒƒbƒVƒ…
-#ifdef UseMeshTrans
 	auto& t = g_pMesh->transform;
 #pragma region ‰ñ“]
 
@@ -186,16 +204,12 @@ void SampleScene::Update()
 	if (Keyboard::GetButton(Keyboard::c_Delete)) {
 		z += val;
 	}
-	DirectX::XMVECTOR vec = { x,y,z,1 };
-	t->Rotate(vec);
+	t->Rotate(DirectX::XMFLOAT3{ x,y,z });
+	if (!vMesh.empty()) { for (auto it : vMesh) { it.transform->Rotate(x, y, z); } }
 #pragma endregion
 
 #pragma region ˆÚ“®
 	auto pos = g_pMesh->transform->GetPosition();
-	auto temp = pos;
-	if (Keyboard::GetButton('g')) {
-		cout << "pos:" << pos.x << "," << pos.y << "," << pos.z << endl;
-	}
 
 	if (Keyboard::GetButton('a')) {
 		pos.x -= val;
@@ -216,24 +230,32 @@ void SampleScene::Update()
 		pos.z += val;
 	}
 
-	if (Keyboard::GetButton('g')) {
-		cout << "pos:" << pos.x << "," << pos.y << "," << pos.z << endl;
-	}
-	if (temp.x != pos.x || temp.y != pos.y || temp.z != pos.z) {
-		isa = true;
-		g_pMesh->transform->SetPosition(pos);
-	}
-	else { 
-		isa = false; 
+	if (!vMesh.empty()) {
+		for (auto it : vMesh) {
+			auto pos = it.transform->GetPosition();
+			if (Keyboard::GetButton('a')) {
+				pos.x -= val;
+			}
+			if (Keyboard::GetButton('d')) {
+				pos.x += val;
+			}
+			if (Keyboard::GetButton('w')) {
+				pos.y += val;
+			}
+			if (Keyboard::GetButton('s')) {
+				pos.y -= val;
+			}
+			if (Keyboard::GetButton('q')) {
+				pos.z -= val;
+			}
+			if (Keyboard::GetButton('e')) {
+				pos.z += val;
+			}
+			it.transform->SetPosition(pos);
+		}
 	}
 #pragma endregion
-
-
-#endif // UseMeshTrans
-
-
 #pragma endregion
-
 
 #pragma region ƒJƒƒ‰‘€ì
 #if defined UseCameraAction
@@ -320,11 +342,24 @@ void SampleScene::Render()
 #endif
 #pragma endregion
 
-	if (isa) {
 
-		cout << "okad" << endl;
+
+	if (!vMesh.empty())
+	{
+		for (auto it : vMesh) { it.Render(); }
+#pragma region Unity-Chan
+		//vMesh[1].Render();
+		//vMesh[2].Render();
+#pragma endregion
+#pragma region ƒsƒJƒ`ƒ…ƒE
+		//vMesh[0].Render();	//	“·‘Ì
+		//vMesh[1].Render();		//	
+		//vMesh[2].Render();
+		//vMesh[3].Render();
+		//for (int i = 0; i < 1;++i) { vMesh[i].Render(); }
+#pragma endregion
 	}
 
-	g_pMesh->Render();
+	//g_pMesh->Render();
 	//g_pMesh1->Render();
 }
