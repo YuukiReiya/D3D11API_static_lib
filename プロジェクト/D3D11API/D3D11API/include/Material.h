@@ -23,7 +23,7 @@ namespace API {
 		/*!
 			@brief	ムーブコンストラクタ
 		*/
-		Material(const Material&ref) { *this = ref; }
+		Material(const Material&ref) { *this = ref; m_pTexture = ref.m_pTexture; }
 
 		/*!
 			@brief	デストラクタ

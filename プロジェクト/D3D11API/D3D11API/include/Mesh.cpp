@@ -433,7 +433,11 @@ void API::Mesh::SetupBindShader()
 void API::Mesh::SetupTexture()
 {
 	auto material = m_pMaterial.lock();
-
+	if (!material) {
+		std::string error = "failed weak reference";
+		ErrorLog(error);
+		return;
+	}
 
 	//	ƒTƒ“ƒvƒ‰[
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(

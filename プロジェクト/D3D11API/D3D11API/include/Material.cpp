@@ -18,8 +18,8 @@ using namespace API;
 */
 Material::Material()
 {
-	m_pShared = std::make_shared<Material*>(this);
 	m_pTexture = std::make_shared<Texture>();
+	m_pShared = std::make_shared<Material*>(this);
 }
 
 /*!
