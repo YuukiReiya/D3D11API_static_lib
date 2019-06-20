@@ -313,7 +313,7 @@ HRESULT API::Mesh::SetupConstantBuffer()
 		XMMATRIX w, v, p;
 
 		//	world
-		w = XMMatrixTranspose(transform->GetMatrix());
+		w = XMMatrixTranspose(transform->GetWorldMatrix());
 
 		//	view
 		v = XMMatrixTranspose(Camera::GetInstance().GetViewMatrix());

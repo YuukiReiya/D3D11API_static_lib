@@ -21,10 +21,13 @@ using namespace std;
 
 /*!
 	@brief	コンストラクタ
+	@detail	各行列に単位行列を代入し、初期化
 */
 Transform::Transform()
+	:m_ScalingMatrix(c_IdentityMatrix)
+	,m_RotationMatrix(c_IdentityMatrix)
+	,m_TranslationMatrix(c_IdentityMatrix)
 {
-	Initialize();
 }
 
 /*!

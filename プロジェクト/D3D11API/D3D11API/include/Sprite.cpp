@@ -731,7 +731,7 @@ void API::Sprite::SetupConstantBuffer()
 	//	*
 	//	DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 
-	DirectX::XMMATRIX world = transform->GetMatrix();
+	DirectX::XMMATRIX world = transform->GetWorldMatrix();
 
 	//	ƒrƒ…[s—ñ
 	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
