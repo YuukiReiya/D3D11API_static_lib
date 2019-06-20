@@ -14,14 +14,17 @@ int main()
 #endif // DEBUG||_DEBUG
 
 	//	読み込みファイル
-	std::string fbxPath = "SD_unitychan_humanoid.fbx";
+	//std::string fbxPath = "SD_unitychan_humanoid.fbx";
 	//std::string fbxPath = "ao_twinte_chan.fbx"; 
 	//std::string fbxPath = "Kouhai_chan.fbx";
 	//std::string fbxPath = "JNT_00100_anathema_H.fbx";
 	//std::string fbxPath = "Pikachu.fbx";
+	std::string fbxPath = "humanoid.fbx";
+
 
 	//	書き出しファイル
-	std::string yfmPath = "sd-unity";
+	//std::string yfmPath = "sd-unity";
+	std::string yfmPath = "humanoid";
 
 	//	コンバート
 	Converter::FBXConverter::Setup();
