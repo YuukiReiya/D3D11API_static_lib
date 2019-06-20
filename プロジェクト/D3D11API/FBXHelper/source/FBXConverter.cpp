@@ -354,29 +354,32 @@ void Converter::FBXConverter::LoadToStore(fbxsdk::FbxMesh * from, Utility::Mesh 
 	{
 		//	頂点インデックス
 		SetupVertexIndices(from, to);
-		if (to->vertexIndices.empty())throw"SetupVertexIndices";
+		if (to->vertexIndices.empty())throw runtime_error("SetupVertexIndices");
 		wic::SetColor(Green);
 		cout << "SetupVertexIndices success" << endl;
 
 		//	頂点
 		SetupVertices(from, to);
-		if (to->vertices.empty())throw"SetupVertices";
+		if (to->vertices.empty())throw runtime_error("SetupVertices");
 		wic::SetColor(Green);
 		cout << "SetupVertices success" << endl;
 
 		//	UV
 		SetupUV(from, to);
-		if (to->uv.empty())throw"SetupUV";
+		if (to->uv.empty()) {
+			wic::SetColor(Purple);
+			cout << "UV is Nothing!" << endl;
+		}
 		wic::SetColor(Green);
 		cout << "SetupUV success" << endl;
 
 		//	頂点の整合化
 		AlignVerticesToUV(to);
 	}
-	catch (const string&error)
+	catch (exception&error)
 	{
 		wic::SetColor(Red);
-		cout << "Failed to \"" << error << "\"" << endl;
+		cout << "Failed to \"" << error.what() << "\"" << endl;
 		wic::SetColor(White);
 	}
 }
