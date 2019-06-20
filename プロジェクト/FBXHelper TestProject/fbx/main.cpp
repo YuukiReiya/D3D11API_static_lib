@@ -25,6 +25,7 @@ int main()
 	//	書き出しファイル
 	//std::string yfmPath = "sd-unity";
 	std::string yfmPath = "humanoid";
+	//std::string yfmPath = "twin";
 
 	//	コンバート
 	Converter::FBXConverter::Setup();

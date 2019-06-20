@@ -103,40 +103,49 @@ void SampleScene::Initialize()
 #pragma endregion
 
 #pragma region Œã”y‚¿‚á‚ñ
+//
+//	string texPath[14] =
+//	{
+//		"Œã”y‚¿‚á‚ñ/skin.png",
+//		"Œã”y‚¿‚á‚ñ/face.png",
+//		"Œã”y‚¿‚á‚ñ/eye.png",
+//		"Œã”y‚¿‚á‚ñ/face.png",
+//		"Œã”y‚¿‚á‚ñ/face.png",
+//		"Œã”y‚¿‚á‚ñ/face.png",
+//		"Œã”y‚¿‚á‚ñ/face.png",
+//		"Œã”y‚¿‚á‚ñ/face.png",
+//		"Œã”y‚¿‚á‚ñ/face.png",
+//		"Œã”y‚¿‚á‚ñ/hair.png",
+//		"Œã”y‚¿‚á‚ñ/eye.png",
+//		"Œã”y‚¿‚á‚ñ/clothes.png",
+//		"Œã”y‚¿‚á‚ñ/clothes.png",
+//		"Œã”y‚¿‚á‚ñ/facial.png",
+//	};
+//	for (size_t i = 0; i < 14; i++)
+//	{
+//		Mesh ptr;
+//		std::shared_ptr<Material>mat = make_shared<Material>();
+//		ptr.Initialize("Œã”y‚¿‚á‚ñ/test99-" + to_string(i) + ".yfm");
+//		mat->SetupTexture(texPath[i]);
+//		vMesh.push_back(ptr);
+//		vMaterial.push_back(mat);
+//		vMesh[i].SetupMaterial(vMaterial[i].get());
+//	}
+//	for (auto& it : vMesh)
+//	{
+//		it.SetupShader(g_pMeshShader.get());
+//	}
+//
+//#pragma endregion
 
-	string texPath[14] =
-	{
-		"Œã”y‚¿‚á‚ñ/skin.png",
-		"Œã”y‚¿‚á‚ñ/face.png",
-		"Œã”y‚¿‚á‚ñ/eye.png",
-		"Œã”y‚¿‚á‚ñ/face.png",
-		"Œã”y‚¿‚á‚ñ/face.png",
-		"Œã”y‚¿‚á‚ñ/face.png",
-		"Œã”y‚¿‚á‚ñ/face.png",
-		"Œã”y‚¿‚á‚ñ/face.png",
-		"Œã”y‚¿‚á‚ñ/face.png",
-		"Œã”y‚¿‚á‚ñ/hair.png",
-		"Œã”y‚¿‚á‚ñ/eye.png",
-		"Œã”y‚¿‚á‚ñ/clothes.png",
-		"Œã”y‚¿‚á‚ñ/clothes.png",
-		"Œã”y‚¿‚á‚ñ/facial.png",
-	};
-	for (size_t i = 0; i < 14; i++)
-	{
-		Mesh ptr;
-		std::shared_ptr<Material>mat = make_shared<Material>();
-		ptr.Initialize("Œã”y‚¿‚á‚ñ/test99-" + to_string(i) + ".yfm");
-		mat->SetupTexture(texPath[i]);
-		vMesh.push_back(ptr);
-		vMaterial.push_back(mat);
-		vMesh[i].SetupMaterial(vMaterial[i].get());
-	}
-	for (auto& it : vMesh)
-	{
-		it.SetupShader(g_pMeshShader.get());
-	}
+#pragma region Sample-Humanoid
 
+	g_pMesh->Initialize("humanoid.yfm");
+	g_pMesh->SetupMaterial(g_pMaterial.get());
+	g_pMesh->SetupShader(g_pMeshShader.get());
+	g_pMesh->transform->SetScale({ 0.01f });
 #pragma endregion
+
 
 #pragma region SD-Unity
 	//string texPath = "ƒ†ƒjƒeƒB‚¿‚á‚ñ/utc_all2.png";
@@ -184,7 +193,7 @@ void SampleScene::Update()
 	auto& t = g_pMesh->transform;
 #pragma region ‰ñ“]
 
-	static float x =0, y=0, z=0;
+	static float x = 0, y = 0, z = 0;
 
 	if (Keyboard::GetButton(Keyboard::c_Left)) {
 		x -= val;
@@ -204,7 +213,8 @@ void SampleScene::Update()
 	if (Keyboard::GetButton(Keyboard::c_Delete)) {
 		z += val;
 	}
-	t->Rotate(DirectX::XMFLOAT3{ x,y,z });
+	t->Rotate(x,y,z);
+
 	if (!vMesh.empty()) { for (auto it : vMesh) { it.transform->Rotate(x, y, z); } }
 #pragma endregion
 
@@ -226,9 +236,10 @@ void SampleScene::Update()
 	if (Keyboard::GetButton('q')) {
 		pos.z -= val;
 	}
-	if (Keyboard::GetButton('r')) {
+	if (Keyboard::GetButton('e')) {
 		pos.z += val;
 	}
+	g_pMesh->transform->SetPosition(pos);
 
 	if (!vMesh.empty()) {
 		for (auto it : vMesh) {
@@ -255,6 +266,22 @@ void SampleScene::Update()
 		}
 	}
 #pragma endregion
+
+#pragma region Šgk
+	static auto scale = t->GetScale();
+	if (Keyboard::GetButton('Z')) {
+		scale.x -= val * 0.01f;
+		scale.y -= val * 0.01f;
+		scale.z -= val * 0.01f;
+	}
+	if (Keyboard::GetButton('X')) {
+		scale.x += val * 0.01f;
+		scale.y += val * 0.01f;
+		scale.z += val * 0.01f;
+	}
+	t->SetScale(scale);
+#pragma endregion
+
 #pragma endregion
 
 #pragma region ƒJƒƒ‰‘€ì
@@ -360,6 +387,6 @@ void SampleScene::Render()
 #pragma endregion
 	}
 
-	//g_pMesh->Render();
+	g_pMesh->Render();
 	//g_pMesh1->Render();
 }
