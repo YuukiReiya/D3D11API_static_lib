@@ -366,10 +366,7 @@ void Converter::FBXConverter::LoadToStore(fbxsdk::FbxMesh * from, Utility::Mesh 
 
 		//	UV
 		SetupUV(from, to);
-		if (to->uv.empty()) {
-			wic::SetColor(Purple);
-			cout << "UV is Nothing!" << endl;
-		}
+		if (to->uv.empty())throw runtime_error("SetupUV");
 		wic::SetColor(Green);
 		cout << "SetupUV success" << endl;
 
