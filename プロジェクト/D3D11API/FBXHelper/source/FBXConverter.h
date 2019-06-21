@@ -1,9 +1,9 @@
-/*
+/*!
 	@file	FBXConverter.h
 	@date	2019/04/19
-	@author	”Ôê —G‹P
-	@brief	FBX_SDK‚ÌManager,Scene‚ğˆµ‚¤ƒwƒ‹ƒp[ƒNƒ‰ƒX
-	@detail	ƒVƒ“ƒOƒ‹ƒgƒ“
+	@author	ç•ªå ´ å®¥è¼
+	@brief	FBX_SDKã®Manager,Sceneã‚’æ‰±ã†ãƒ˜ãƒ«ãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
+	@detail	ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³
 */
 #pragma once
 #include "Mesh.h"
@@ -19,81 +19,81 @@ namespace Converter {
 	{
 	private:
 		/*!
-			@brief	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+			@brief	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		*/
 		FBXConverter();
 
 		/*!
-			@brief	ƒfƒXƒgƒ‰ƒNƒ^
+			@brief	ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		*/
 		~FBXConverter();
 
 	public:
 		/*!
 			@fn		Setup
-			@brief	‰Šú‰»B
-			@detail	ƒƒ“ƒo‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‰»‚Æ‰Šú‰»
+			@brief	åˆæœŸåŒ–ã€‚
+			@detail	ãƒ¡ãƒ³ãƒã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã¨åˆæœŸåŒ–
 		*/
 		static void Setup();
 
 		/*!
 			@fn		Teardown
-			@brief	”jŠüˆ—B
+			@brief	ç ´æ£„å‡¦ç†ã€‚
 		*/
 		static void Teardown();
 
 		/*!
 			@fn			Execute
-			@brief		Àsˆ—
-			@detail		FBX‚ğ“Ç‚İ‚İŠO•”ƒtƒ@ƒCƒ‹‚É‘‚«o‚·B
-			@param[in]	FBX‚ÌƒpƒX
-			@param[in]	o—Íæ‚Ìƒtƒ@ƒCƒ‹ƒpƒX
+			@brief		å®Ÿè¡Œå‡¦ç†
+			@detail		FBXã‚’èª­ã¿è¾¼ã¿å¤–éƒ¨ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãå‡ºã™ã€‚
+			@param[in]	FBXã®ãƒ‘ã‚¹
+			@param[in]	å‡ºåŠ›å…ˆã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
 		*/
 		static void Execute(std::string fbxPath,std::string outName);
 
 	private:
 		/*!
 			@fn		Triangulate
-			@brief	ƒV[ƒ““à‚Ìƒ‚ƒfƒ‹‚ÌOŠpƒ|ƒŠƒSƒ“‰»B
-			@note	try catch‚ğ‚¢‚ê‚½’Pƒ‚Èƒ‰ƒbƒp[
-			@return	true:¬Œ÷ false:¸”s
+			@brief	ã‚·ãƒ¼ãƒ³å†…ã®ãƒ¢ãƒ‡ãƒ«ã®ä¸‰è§’ãƒãƒªã‚´ãƒ³åŒ–ã€‚
+			@note	try catchã‚’ã„ã‚ŒãŸå˜ç´”ãªãƒ©ãƒƒãƒ‘ãƒ¼
+			@return	true:æˆåŠŸ false:å¤±æ•—
 		*/
 		static bool Triangulate();
 
 		/*!
 			@fn		SplitMeshesPerMaterial
-			@brief	ƒV[ƒ““à‚Ìƒ‚ƒfƒ‹‚ğƒ}ƒeƒŠƒAƒ‹’PˆÊ‚É•ªŠ„
-			@note	try catch‚ğ‚¢‚ê‚½’Pƒ‚Èƒ‰ƒbƒp[	
-			@return	true:¬Œ÷ false:¸”s
+			@brief	ã‚·ãƒ¼ãƒ³å†…ã®ãƒ¢ãƒ‡ãƒ«ã‚’ãƒãƒ†ãƒªã‚¢ãƒ«å˜ä½ã«åˆ†å‰²
+			@note	try catchã‚’ã„ã‚ŒãŸå˜ç´”ãªãƒ©ãƒƒãƒ‘ãƒ¼	
+			@return	true:æˆåŠŸ false:å¤±æ•—
 		*/
 		static bool SplitMeshesPerMaterial();
 
 		/*!
 			@fn			SetupImporter
-			@brief		fbxƒtƒ@ƒCƒ‹‚ğƒCƒ“ƒ|[ƒ^[‚É“Ç‚İ‚ŞB
-			@param[in]	“Ç‚İ‚Ş.fbxƒtƒ@ƒCƒ‹‚ÌƒpƒX
+			@brief		fbxãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã«èª­ã¿è¾¼ã‚€ã€‚
+			@param[in]	èª­ã¿è¾¼ã‚€.fbxãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
 		*/
 		static bool SetupImporter(std::string fbxPath);
 
 		/*!
 			@fn		TeardownImporter
-			@brief	ƒCƒ“ƒ|[ƒ^[‚Ì”jŠüˆ—B
+			@brief	ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã®ç ´æ£„å‡¦ç†ã€‚
 		*/
 		static void TeardownImporter();
 
 		/*!
 			@fn			SetupScene
-			@brief		ƒCƒ“ƒ|[ƒ^[‚É“Ç‚İ‚ñ‚¾ƒf[ƒ^‚ğƒV[ƒ“‚ÉƒCƒ“ƒ|[ƒgB
-			@detail		“Ç‚İ‚İŒã‚ÉƒCƒ“ƒ|[ƒ^[‚Í”jŠü‚µ‚Ä‚¢‚éB
-			@param[in]	“Ç‚İ‚Ş.fbxƒtƒ@ƒCƒ‹‚ÌƒpƒX
+			@brief		ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã«èª­ã¿è¾¼ã‚“ã ãƒ‡ãƒ¼ã‚¿ã‚’ã‚·ãƒ¼ãƒ³ã«ã‚¤ãƒ³ãƒãƒ¼ãƒˆã€‚
+			@detail		èª­ã¿è¾¼ã¿å¾Œã«ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã¯ç ´æ£„ã—ã¦ã„ã‚‹ã€‚
+			@param[in]	èª­ã¿è¾¼ã‚€.fbxãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
 		*/
 		static bool SetupScene(std::string fbxPath);
 
 		/*!
 			@fn			LoadToStore
-			@brief		fbx‚Ìƒf[ƒ^‚ğŠi”[
-			@param[in]	’ŠoŒ³‚Ìƒf[ƒ^
-			@param[in]	Ši”[æƒƒbƒVƒ…
+			@brief		fbxã®ãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´
+			@param[in]	æŠ½å‡ºå…ƒã®ãƒ‡ãƒ¼ã‚¿
+			@param[in]	æ ¼ç´å…ˆãƒ¡ãƒƒã‚·ãƒ¥
 		*/
 		static void LoadToStore(fbxsdk::FbxMesh*from, Utility::Mesh*to);
 
@@ -108,68 +108,68 @@ namespace Converter {
 
 		/*!
 			@fn			SetupVertexIndices
-			@brief		’¸“_ƒCƒ“ƒfƒbƒNƒX‚ÌƒZƒbƒgƒAƒbƒv
-			@param[in]	QÆŒ³‚ÌfbxƒƒbƒVƒ…
-			@param[in]	ƒoƒCƒ“ƒhæ‚ÌƒƒbƒVƒ…
+			@brief		é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+			@param[in]	å‚ç…§å…ƒã®fbxãƒ¡ãƒƒã‚·ãƒ¥
+			@param[in]	ãƒã‚¤ãƒ³ãƒ‰å…ˆã®ãƒ¡ãƒƒã‚·ãƒ¥
 		*/
 		static void SetupVertexIndices(fbxsdk::FbxMesh* from, Utility::Mesh*to);
 
 		/*!
 			@fn			SetupVertices
-			@brief		’¸“_‚ÌƒZƒbƒgƒAƒbƒv
-			@param[in]	QÆŒ³‚ÌfbxƒƒbƒVƒ…
-			@param[in]	ƒoƒCƒ“ƒhæ‚ÌƒƒbƒVƒ…
+			@brief		é ‚ç‚¹ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+			@param[in]	å‚ç…§å…ƒã®fbxãƒ¡ãƒƒã‚·ãƒ¥
+			@param[in]	ãƒã‚¤ãƒ³ãƒ‰å…ˆã®ãƒ¡ãƒƒã‚·ãƒ¥
 		*/
 		static void SetupVertices(fbxsdk::FbxMesh*from, Utility::Mesh*to);
 
 		/*!
 			@fn			SetupUV
-			@brief		UV‚ÌƒZƒbƒgƒAƒbƒv
-			@detail		’¸“_ƒCƒ“ƒfƒbƒNƒX‚É‘Î‰‚µ‚½UV‚ªŠi”[‚³‚ê‚éB
-			@param[in]	QÆŒ³‚ÌfbxƒƒbƒVƒ…
-			@param[in]	ƒoƒCƒ“ƒhæ‚ÌƒƒbƒVƒ…
+			@brief		UVã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+			@detail		é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«å¯¾å¿œã—ãŸUVãŒæ ¼ç´ã•ã‚Œã‚‹ã€‚
+			@param[in]	å‚ç…§å…ƒã®fbxãƒ¡ãƒƒã‚·ãƒ¥
+			@param[in]	ãƒã‚¤ãƒ³ãƒ‰å…ˆã®ãƒ¡ãƒƒã‚·ãƒ¥
 		*/
 		static void SetupUV(fbxsdk::FbxMesh* from, Utility::Mesh*to);
 
 		/*!
 			@fn			AlignVerticesToUV
-			@brief		’¸“_‚ğUV‚É‘µ‚¦‚éB
-			@detail		–‘O‚É‘¼‚Ìî•ñ‚ğ‚»‚ë‚¦‚Ä‚¨‚­•K—v‚ª‚ ‚é
-			@param[in]	‘ÎÛ‚ÌƒƒbƒVƒ…
+			@brief		é ‚ç‚¹ã‚’UVã«æƒãˆã‚‹ã€‚
+			@detail		äº‹å‰ã«ä»–ã®æƒ…å ±ã‚’ãã‚ãˆã¦ãŠãå¿…è¦ãŒã‚ã‚‹
+			@param[in]	å¯¾è±¡ã®ãƒ¡ãƒƒã‚·ãƒ¥
 		*/
 		static void AlignVerticesToUV(Utility::Mesh*mesh);
 
 		/*!
 			@var	m_pManager
-			@brief	FbxManager‚Ìƒ|ƒCƒ“ƒ^
-			@detail	ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÅƒAƒhƒŒƒXŠÇ—
+			@brief	FbxManagerã®ãƒã‚¤ãƒ³ã‚¿
+			@detail	ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ç®¡ç†
 		*/
 		static std::shared_ptr<fbxsdk::FbxManager*>		m_pManager;
 
 		/*!
 			@var	m_pIOsetting
-			@brief	FbxIOSettings‚Ìƒ|ƒCƒ“ƒ^
-			@detail	ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÅƒAƒhƒŒƒXŠÇ—
+			@brief	FbxIOSettingsã®ãƒã‚¤ãƒ³ã‚¿
+			@detail	ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ç®¡ç†
 		*/
 		static std::shared_ptr<fbxsdk::FbxIOSettings*>	m_pIOsetting;
 
 		/*!
 			@var	m_pScene
-			@brief	FbxScene‚Ìƒ|ƒCƒ“ƒ^
-			@detail	ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÅƒAƒhƒŒƒXŠÇ—
+			@brief	FbxSceneã®ãƒã‚¤ãƒ³ã‚¿
+			@detail	ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ç®¡ç†
 		*/
 		static std::shared_ptr<fbxsdk::FbxScene*>		m_pScene;
 
 		/*!
 			@var	m_pImporter
-			@brief	FbxImporter‚Ìƒ|ƒCƒ“ƒ^
-			@detail	ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÅƒAƒhƒŒƒXŠÇ—
+			@brief	FbxImporterã®ãƒã‚¤ãƒ³ã‚¿
+			@detail	ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ç®¡ç†
 		*/
 		static std::shared_ptr<fbxsdk::FbxImporter*>	m_pImporter;
 
 		/*!
 			@var	c_OutputDirectory
-			@brief	ŠO•”ƒtƒ@ƒCƒ‹‚Ìå—ÍæƒfƒBƒŒƒNƒgƒŠ
+			@brief	å¤–éƒ¨ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¸»åŠ›å…ˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
 		*/
 		static constexpr std::string_view c_OutputDirectory = "Output/";
 

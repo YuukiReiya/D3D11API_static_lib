@@ -18,25 +18,25 @@
 Material*g_pMat;
 
 /*!
-	@brief	usingƒfƒBƒŒƒNƒeƒBƒu
+	@brief	usingãƒ‡ã‚£ãƒ¬ã‚¯ãƒ†ã‚£ãƒ–
 	@using	std
 */
 using namespace std;
 
 /*!
-	@brief	usingƒfƒBƒŒƒNƒeƒBƒu
+	@brief	usingãƒ‡ã‚£ãƒ¬ã‚¯ãƒ†ã‚£ãƒ–
 	@using	Converter
 */
 using namespace Converter;
 
 /*!
-	@brief	usingƒfƒBƒŒƒNƒeƒBƒu
+	@brief	usingãƒ‡ã‚£ãƒ¬ã‚¯ãƒ†ã‚£ãƒ–
 	@using	ConsoleExpansion
 */
 using namespace ConsoleExpansion;
 
 /*!
-	@brief		•Ê–¼’è‹`
+	@brief		åˆ¥åå®šç¾©
 	@typedef	wic
 	@value		ConsoleExpansion::WinConsoleExpansion
 */
@@ -44,37 +44,37 @@ typedef ConsoleExpansion::WinConsoleExpansion wic;
 
 /*!
 	@var	m_pManager
-	@brief	FbxManager‚Ìƒ|ƒCƒ“ƒ^
-	@detail	ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÅƒAƒhƒŒƒXŠÇ—
+	@brief	FbxManagerã®ãƒã‚¤ãƒ³ã‚¿
+	@detail	ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ç®¡ç†
 */
 shared_ptr<fbxsdk::FbxManager*>		FBXConverter::m_pManager	= nullptr;
 
 /*!
 	@var	m_pIOsetting
-	@brief	FbxIOSettings‚Ìƒ|ƒCƒ“ƒ^
-	@detail	ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÅƒAƒhƒŒƒXŠÇ—
+	@brief	FbxIOSettingsã®ãƒã‚¤ãƒ³ã‚¿
+	@detail	ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ç®¡ç†
 */
 shared_ptr<fbxsdk::FbxIOSettings*>	FBXConverter::m_pIOsetting	= nullptr;
 
 /*!
 	@var	m_pScene
-	@brief	FbxScene‚Ìƒ|ƒCƒ“ƒ^
-	@detail	ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÅƒAƒhƒŒƒXŠÇ—
+	@brief	FbxSceneã®ãƒã‚¤ãƒ³ã‚¿
+	@detail	ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ç®¡ç†
 */
 shared_ptr<fbxsdk::FbxScene*>		FBXConverter::m_pScene		= nullptr;
 
 /*!
 	@var	m_pImporter
-	@brief	FbxImporter‚Ìƒ|ƒCƒ“ƒ^
-	@detail	ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÅƒAƒhƒŒƒXŠÇ—
+	@brief	FbxImporterã®ãƒã‚¤ãƒ³ã‚¿
+	@detail	ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ç®¡ç†
 */
 shared_ptr<fbxsdk::FbxImporter*>	FBXConverter::m_pImporter	= nullptr;
 
 /*!
 	@fn			ConvertRelativePathToFileName
-	@brief		‘Š‘ÎƒpƒX‚ğƒtƒ@ƒCƒ‹–¼‚É•ÏŠ·
-	@param[in]	‘Š‘ÎƒpƒX
-	@return		•ÏŠ·Œã‚Ìƒtƒ@ƒCƒ‹–¼
+	@brief		ç›¸å¯¾ãƒ‘ã‚¹ã‚’ãƒ•ã‚¡ã‚¤ãƒ«åã«å¤‰æ›
+	@param[in]	ç›¸å¯¾ãƒ‘ã‚¹
+	@return		å¤‰æ›å¾Œã®ãƒ•ã‚¡ã‚¤ãƒ«å
 */
 static string ConvertRelativePathToFileName(string relativePath)
 {
@@ -88,7 +88,7 @@ static string ConvertRelativePathToFileName(string relativePath)
 }
 
 /*!
-	@brief	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	@brief	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 */
 Converter::FBXConverter::FBXConverter()
 {
@@ -96,7 +96,7 @@ Converter::FBXConverter::FBXConverter()
 }
 
 /*!
-	@brief	ƒfƒXƒgƒ‰ƒNƒ^
+	@brief	ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 */
 Converter::FBXConverter::~FBXConverter()
 {
@@ -105,12 +105,12 @@ Converter::FBXConverter::~FBXConverter()
 
 /*!
 	@fn		Setup
-	@brief	‰Šú‰»
-	@detail	ƒƒ“ƒo‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‰»‚Æ‰Šú‰»
+	@brief	åˆæœŸåŒ–
+	@detail	ãƒ¡ãƒ³ãƒã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã¨åˆæœŸåŒ–
 */
 void FBXConverter::Setup()
 {
-	//	ƒƒ“ƒo”jŠü
+	//	ãƒ¡ãƒ³ãƒç ´æ£„
 	Teardown();
 
 	m_pManager		= make_shared<fbxsdk::FbxManager*>();
@@ -128,7 +128,7 @@ void FBXConverter::Setup()
 
 /*!
 	@fn		Teardown
-	@brief	”jŠüˆ—B
+	@brief	ç ´æ£„å‡¦ç†ã€‚
 */
 void Converter::FBXConverter::Teardown()
 {
@@ -151,53 +151,58 @@ void Converter::FBXConverter::Teardown()
 
 /*!
 	@fn			Execute
-	@brief		Àsˆ—
-	@detail		FBX‚ğ“Ç‚İ‚İŠO•”ƒtƒ@ƒCƒ‹‚É‘‚«o‚·B
-	@param[in]	FBX‚ÌƒpƒX
-	@param[in]	o—Íæ‚Ìƒtƒ@ƒCƒ‹ƒpƒX
+	@brief		å®Ÿè¡Œå‡¦ç†
+	@detail		FBXã‚’èª­ã¿è¾¼ã¿å¤–éƒ¨ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãå‡ºã™ã€‚
+	@param[in]	FBXã®ãƒ‘ã‚¹
+	@param[in]	å‡ºåŠ›å…ˆã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
 */
 void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 {
 
 	cout << "----Display dialog----" << endl;
 
-	//	•Ï”
+#pragma region static
+
+#pragma endregion
+
+
+	//	å¤‰æ•°
 	int meshCount, matCount;
 	meshCount = matCount = -1;
 
-	//	ƒZƒbƒgƒAƒbƒv
+	//	ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
 	try
 	{
-		//	Fw’è
+		//	è‰²æŒ‡å®š
 		wic::SetColor(Green);
 
-		//	ƒCƒ“ƒ|[ƒ^[
+		//	ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼
 		if (!SetupImporter(fbxPath)) { throw runtime_error("Could not read \"" + fbxPath + "\"."); }
 		cout << "SetupImporter success" << endl;
 
-		//	ƒV[ƒ“
+		//	ã‚·ãƒ¼ãƒ³
 		if (!SetupScene(fbxPath)) { throw runtime_error("Could not output \"" + fbxPath + "\" to the scene."); }
 		cout << "SetupScene success" << endl;
 
-		//	ƒCƒ“ƒ|[ƒ^[‚Ì”jŠü
+		//	ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã®ç ´æ£„
 		TeardownImporter();
 
-		//	OŠp‰»
+		//	ä¸‰è§’åŒ–
 		if (!Triangulate()) { throw runtime_error("Failed to triangulate this scene."); }
 		cout << "Triangulate success" << endl;
 
-		//	ƒƒbƒVƒ…‚Ì•ªŠ„
+		//	ãƒ¡ãƒƒã‚·ãƒ¥ã®åˆ†å‰²
 		if (!SplitMeshesPerMaterial()) { throw runtime_error("Failed to split mesh"); }
 		cout << "SplitMeshesPerMaterial success" << endl;
 
-		//	ƒƒbƒVƒ…‚Ì‘”
+		//	ãƒ¡ãƒƒã‚·ãƒ¥ã®ç·æ•°
 		meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
 
-		//	ƒ}ƒeƒŠƒAƒ‹‘”
+		//	ãƒãƒ†ãƒªã‚¢ãƒ«ç·æ•°
 		matCount = (*m_pScene.get())->GetSrcObjectCount<FbxSurfaceMaterial>();
 
-		//	TODO:ƒ}ƒeƒŠƒAƒ‹‚ª–³‚¢‚à‚Ì‚à‘¶İ
-		//	ƒƒbƒVƒ…” == ƒ}ƒeƒŠƒAƒ‹”‚ª¬‚è—§‚½‚È‚¯‚ê‚Î•ªŠ„‚É¸”s‚µ‚Ä‚¢‚é
+		//	TODO:ãƒãƒ†ãƒªã‚¢ãƒ«ãŒç„¡ã„ã‚‚ã®ã‚‚å­˜åœ¨
+		//	ãƒ¡ãƒƒã‚·ãƒ¥æ•° == ãƒãƒ†ãƒªã‚¢ãƒ«æ•°ãŒæˆã‚Šç«‹ãŸãªã‘ã‚Œã°åˆ†å‰²ã«å¤±æ•—ã—ã¦ã„ã‚‹
 	//	if (meshCount != matCount) { throw runtime_error("Mesh number does not match material number"); }
 	}
 	catch (std::exception& error)
@@ -217,7 +222,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 	//	
 	try
 	{
-		//	ƒƒbƒVƒ…
+		//	ãƒ¡ãƒƒã‚·ãƒ¥
 		for (int i = 0; i < meshCount; ++i)
 		{
 			wic::SetColor(White);
@@ -228,23 +233,23 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			wic::SetColor(White);
 			cout << pMesh->GetName() << endl;
 
-			//	\¬ƒ|ƒŠƒSƒ“”
+			//	æ§‹æˆãƒãƒªã‚´ãƒ³æ•°
 			auto polygonCount = pMesh->GetPolygonCount();
 			wic::SetColor(Cyan);
 			cout << "Mesh polygon count:";
 			wic::SetColor(White);
 			cout<< polygonCount << endl;
 
-			//	\¬‚µ‚Ä‚¢‚éƒ|ƒŠƒSƒ“‚ª‚È‚¯‚ê‚Îˆ—‚µ‚È‚¢
+			//	æ§‹æˆã—ã¦ã„ã‚‹ãƒãƒªã‚´ãƒ³ãŒãªã‘ã‚Œã°å‡¦ç†ã—ãªã„
 			if (polygonCount <= 0) { continue; }
 
-			//	o—Íƒf[ƒ^
+			//	å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿
 			Utility::Mesh oMesh;
 
-			//	ƒƒbƒVƒ…î•ñ‚ğŠi”[
+			//	ãƒ¡ãƒƒã‚·ãƒ¥æƒ…å ±ã‚’æ ¼ç´
 			LoadToStore(pMesh, &oMesh);
 
-			//	ŠO•”ƒtƒ@ƒCƒ‹o—Í
+			//	å¤–éƒ¨ãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›
 			auto oName = meshCount == 1 ? outName : outName + "-" + to_string(i);
 			Utility::IOMesh::Output(c_OutputDirectory.data(), oName, oMesh);
 
@@ -255,7 +260,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 		}
 
-		//	ƒ}ƒeƒŠƒAƒ‹
+		//	ãƒãƒ†ãƒªã‚¢ãƒ«
 		for (int i = 0; i < matCount; ++i)
 		{
 			wic::SetColor(White);
@@ -282,9 +287,9 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 /*!
 	@fn		Triangulate
-	@brief	ƒV[ƒ““à‚Ìƒ‚ƒfƒ‹‚ÌOŠpƒ|ƒŠƒSƒ“‰»B
-	@note	try catch‚ğ‚¢‚ê‚½’Pƒ‚Èƒ‰ƒbƒp[
-	@return	true:¬Œ÷ false:¸”s
+	@brief	ã‚·ãƒ¼ãƒ³å†…ã®ãƒ¢ãƒ‡ãƒ«ã®ä¸‰è§’ãƒãƒªã‚´ãƒ³åŒ–ã€‚
+	@note	try catchã‚’ã„ã‚ŒãŸå˜ç´”ãªãƒ©ãƒƒãƒ‘ãƒ¼
+	@return	true:æˆåŠŸ false:å¤±æ•—
 */
 bool Converter::FBXConverter::Triangulate()
 {
@@ -294,9 +299,9 @@ bool Converter::FBXConverter::Triangulate()
 
 /*!
 	@fn		SplitMeshesPerMaterial
-	@brief	ƒV[ƒ““à‚Ìƒ‚ƒfƒ‹‚ğƒ}ƒeƒŠƒAƒ‹’PˆÊ‚É•ªŠ„
-	@note	try catch‚ğ‚¢‚ê‚½’Pƒ‚Èƒ‰ƒbƒp[
-	@return	true:¬Œ÷ false:¸”s
+	@brief	ã‚·ãƒ¼ãƒ³å†…ã®ãƒ¢ãƒ‡ãƒ«ã‚’ãƒãƒ†ãƒªã‚¢ãƒ«å˜ä½ã«åˆ†å‰²
+	@note	try catchã‚’ã„ã‚ŒãŸå˜ç´”ãªãƒ©ãƒƒãƒ‘ãƒ¼
+	@return	true:æˆåŠŸ false:å¤±æ•—
 */
 bool Converter::FBXConverter::SplitMeshesPerMaterial()
 {
@@ -306,8 +311,8 @@ bool Converter::FBXConverter::SplitMeshesPerMaterial()
 
 /*!
 	@fn			SetupImporter
-	@brief		fbxƒtƒ@ƒCƒ‹‚ğƒCƒ“ƒ|[ƒ^[‚É“Ç‚İ‚ŞB
-	@param[in]	“Ç‚İ‚Ş.fbxƒtƒ@ƒCƒ‹‚ÌƒpƒX
+	@brief		fbxãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã«èª­ã¿è¾¼ã‚€ã€‚
+	@param[in]	èª­ã¿è¾¼ã‚€.fbxãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
 */
 bool Converter::FBXConverter::SetupImporter(std::string fbxPath)
 {
@@ -320,7 +325,7 @@ bool Converter::FBXConverter::SetupImporter(std::string fbxPath)
 
 /*!
 	@fn		TeardownImporter
-	@brief	ƒCƒ“ƒ|[ƒ^[‚Ì”jŠüˆ—B
+	@brief	ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã®ç ´æ£„å‡¦ç†ã€‚
 */
 void Converter::FBXConverter::TeardownImporter()
 {
@@ -333,9 +338,9 @@ void Converter::FBXConverter::TeardownImporter()
 
 /*!
 	@fn			SetupScene
-	@brief		ƒCƒ“ƒ|[ƒ^[‚É“Ç‚İ‚ñ‚¾ƒf[ƒ^‚ğƒV[ƒ“‚ÉƒCƒ“ƒ|[ƒgB
-	@detail		“Ç‚İ‚İŒã‚ÉƒCƒ“ƒ|[ƒ^[‚Í”jŠü‚µ‚Ä‚¢‚éB
-	@param[in]	“Ç‚İ‚Ş.fbxƒtƒ@ƒCƒ‹‚ÌƒpƒX
+	@brief		ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã«èª­ã¿è¾¼ã‚“ã ãƒ‡ãƒ¼ã‚¿ã‚’ã‚·ãƒ¼ãƒ³ã«ã‚¤ãƒ³ãƒãƒ¼ãƒˆã€‚
+	@detail		èª­ã¿è¾¼ã¿å¾Œã«ã‚¤ãƒ³ãƒãƒ¼ã‚¿ãƒ¼ã¯ç ´æ£„ã—ã¦ã„ã‚‹ã€‚
+	@param[in]	èª­ã¿è¾¼ã‚€.fbxãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
 */
 bool Converter::FBXConverter::SetupScene(std::string fbxPath)
 {
@@ -344,21 +349,21 @@ bool Converter::FBXConverter::SetupScene(std::string fbxPath)
 
 /*!
 	@fn			LoadToStore
-	@brief		fbx‚Ìƒf[ƒ^‚ğŠi”[
-	@param[in]	’ŠoŒ³‚Ìƒf[ƒ^
-	@param[in]	Ši”[æƒƒbƒVƒ…
+	@brief		fbxã®ãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´
+	@param[in]	æŠ½å‡ºå…ƒã®ãƒ‡ãƒ¼ã‚¿
+	@param[in]	æ ¼ç´å…ˆãƒ¡ãƒƒã‚·ãƒ¥
 */
 void Converter::FBXConverter::LoadToStore(fbxsdk::FbxMesh * from, Utility::Mesh * to)
 {
 	try
 	{
-		//	’¸“_ƒCƒ“ƒfƒbƒNƒX
+		//	é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 		SetupVertexIndices(from, to);
 		if (to->vertexIndices.empty())throw runtime_error("SetupVertexIndices");
 		wic::SetColor(Green);
 		cout << "SetupVertexIndices success" << endl;
 
-		//	’¸“_
+		//	é ‚ç‚¹
 		SetupVertices(from, to);
 		if (to->vertices.empty())throw runtime_error("SetupVertices");
 		wic::SetColor(Green);
@@ -370,7 +375,7 @@ void Converter::FBXConverter::LoadToStore(fbxsdk::FbxMesh * from, Utility::Mesh 
 		wic::SetColor(Green);
 		cout << "SetupUV success" << endl;
 
-		//	’¸“_‚Ì®‡‰»
+		//	é ‚ç‚¹ã®æ•´åˆåŒ–
 		AlignVerticesToUV(to);
 	}
 	catch (exception&error)
@@ -389,22 +394,22 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxSurfaceMaterial * materia
 
 void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 {
-	//	ƒƒbƒVƒ…‚Ìƒ‹[ƒgƒm[ƒhæ“¾
+	//	ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰å–å¾—
 	auto node = from->GetNode();
 	if (node == 0) { return; }
 
-	//	ƒ}ƒeƒŠƒAƒ‹”
+	//	ãƒãƒ†ãƒªã‚¢ãƒ«æ•°
 	auto matCount = node->GetMaterialCount();
 	if (matCount == 0) { return; }
 
-	//	ƒ}ƒeƒŠƒAƒ‹î•ñ‚ğæ“¾
+	//	ãƒãƒ†ãƒªã‚¢ãƒ«æƒ…å ±ã‚’å–å¾—
 	for (int i = 0; i < matCount; i++)
 	{
 		auto material = node->GetMaterial(i);
 		if (material == 0) { continue; }
 
-#pragma region ƒ_ƒEƒ“ƒLƒƒƒXƒg
-		//	‚±‚±‚ÌİŒv‚ÍFBXSDK‚É‡‚í‚¹‚Ä‚¢‚é
+#pragma region //ãƒ€ã‚¦ãƒ³ã‚­ãƒ£ã‚¹ãƒˆ
+		//	ã“ã“ã®è¨­è¨ˆã¯FBXSDKã«åˆã‚ã›ã¦ã„ã‚‹
 
 		FbxSurfaceLambert*lambert=nullptr;
 		FbxSurfacePhong* phong = nullptr;
@@ -424,12 +429,12 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 			material->GetClassId().Is(FbxSurfaceLambert::ClassId) ?
 			(FbxSurfaceLambert*)material : nullptr;
 		if (castMat == nullptr) {
-			cout << "‚â‚Î‚¢ƒoƒO" << endl;
+			cout << "ã‚„ã°ã„ãƒã‚°" << endl;
 			system("pause");
 			exit(NULL);
 		}
 #pragma endregion
-		//	ƒAƒ“ƒrƒGƒ“ƒg
+		//	ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆ
 		g_pMat->ambient =
 		{
 			(float)castMat->Ambient.Get()[0],
@@ -437,7 +442,7 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 			(float)castMat->Ambient.Get()[2]
 		};
 
-		//	ƒfƒBƒtƒ…[ƒY
+		//	ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚º
 		g_pMat->diffuse =
 		{
 			(float)castMat->Diffuse.Get()[0],
@@ -445,7 +450,7 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 			(float)castMat->Diffuse.Get()[2],
 		};
 
-		//	ƒGƒ~ƒbƒVƒu
+		//	ã‚¨ãƒŸãƒƒã‚·ãƒ–
 		g_pMat->emissive =
 		{
 			(float)castMat->Emissive.Get()[0],
@@ -453,7 +458,7 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 			(float)castMat->Emissive.Get()[2],
 		};
 
-		//	ƒoƒ“ƒvƒ}ƒbƒv
+		//	ãƒãƒ³ãƒ—ãƒãƒƒãƒ—
 		g_pMat->bumpMap =
 		{
 			(float)castMat->Bump.Get()[0],
@@ -461,13 +466,13 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 			(float)castMat->Bump.Get()[2],
 		};
 
-		//	“§‰ß“x
+		//	é€éåº¦
 		g_pMat->transparent = static_cast<float>(castMat->TransparencyFactor.Get());
 
-		//	ƒ}ƒeƒŠƒAƒ‹‚ª"Phong"‚È‚ç
+		//	ãƒãƒ†ãƒªã‚¢ãƒ«ãŒ"Phong"ãªã‚‰
 		if (castMat->GetClassId().Is(FbxSurfacePhong::ClassId)) {
 
-			//	ƒXƒyƒLƒ…ƒ‰[
+			//	ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼
 			Math::FLOAT4 sp =
 			{
 				(float)phong->Specular.Get()[0],
@@ -476,11 +481,11 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 			};
 			g_pMat->specular = { &sp };
 
-			//	Œõ‘ò
+			//	å…‰æ²¢
 			float sh = (float)phong->Shininess.Get();
 			g_pMat->shiniess = { &sh };
 
-			//	”½Ë
+			//	åå°„
 			float refl = (float)phong->ReflectionFactor.Get();
 			g_pMat->reflection = { &refl };
 		}
@@ -489,15 +494,15 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 }
 
 /*!
-	@note	‚»‚Ìƒ}ƒeƒŠƒAƒ‹‚Ég—p‚µ‚Ä‚¢‚éƒeƒNƒXƒ`ƒƒƒf[ƒ^‚ÌƒZƒbƒgƒAƒbƒv
+	@note	ãã®ãƒãƒ†ãƒªã‚¢ãƒ«ã«ä½¿ç”¨ã—ã¦ã„ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
 	
 */
 void Converter::FBXConverter::SetupTextures(fbxsdk::FbxSurfaceMaterial * material)
 {
-	//	ƒfƒBƒtƒ…[ƒY
+	//	ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚º
 	auto prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
 
-	//	•¡”‚ÌƒeƒNƒXƒ`ƒƒ‚ğƒuƒŒƒ“ƒh‚µ‚½‚à‚Ì(ƒŒƒCƒ„[ƒeƒNƒXƒ`ƒƒ)
+	//	è¤‡æ•°ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒ–ãƒ¬ãƒ³ãƒ‰ã—ãŸã‚‚ã®(ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£)
 	auto layerTexCount = prop.GetSrcObjectCount<FbxLayeredTexture>();
 	for (int i = 0; i < layerTexCount; ++i)
 	{
@@ -506,7 +511,7 @@ void Converter::FBXConverter::SetupTextures(fbxsdk::FbxSurfaceMaterial * materia
 		SetupLayerTextures(&prop, layeredTexture);
 	}
 
-	//	’Pˆê‚Ì‚à‚Ì
+	//	å˜ä¸€ã®ã‚‚ã®
 	auto texCount = prop.GetSrcObjectCount<FbxFileTexture>();
 	for (int i = 0; i < texCount; i++)
 	{
@@ -517,9 +522,9 @@ void Converter::FBXConverter::SetupTextures(fbxsdk::FbxSurfaceMaterial * materia
 		SetupTexture(tex);
 	}
 
-	//TODO: ‚±‚ê‚ª¬‚è—§‚Â‚Ì‚ª"layerTexCount = texCount = 0"‚Ì‚Ì‚İ
-	//		•ª‚©‚è‚É‚­‚¢‚Ì‚Å"layerTexCount == 0 && texCount == 0"‚ª‚¢‚¢‚©‚à...
-	//NOTE:	‚±‚±‚É“ü‚é‚Ì‚Í".tga"‚È‚ÇƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ‚É¸”s‚µ‚½‚à‚Ì
+	//TODO: ã“ã‚ŒãŒæˆã‚Šç«‹ã¤ã®ãŒ"layerTexCount = texCount = 0"ã®æ™‚ã®ã¿
+	//		åˆ†ã‹ã‚Šã«ãã„ã®ã§"layerTexCount == 0 && texCount == 0"ãŒã„ã„ã‹ã‚‚...
+	//NOTE:	ã“ã“ã«å…¥ã‚‹ã®ã¯".tga"ãªã©ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ãŸã‚‚ã®
 	if (layerTexCount == texCount)
 	{
 		
@@ -542,27 +547,27 @@ void Converter::FBXConverter::SetupLayerTextures(fbxsdk::FbxProperty * prop, fbx
 
 void Converter::FBXConverter::SetupTexture(fbxsdk::FbxFileTexture * texture)
 {
-	//TODO:ƒ}ƒeƒŠƒAƒ‹“à‚ÌƒeƒNƒXƒ`ƒƒî•ñæ“¾ˆ—
+	//TODO:ãƒãƒ†ãƒªã‚¢ãƒ«å†…ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£æƒ…å ±å–å¾—å‡¦ç†
 
 	//FbxMaterialConverter
-	//	ƒtƒ@ƒCƒ‹–¼‚Ì•\¦
+	//	ãƒ•ã‚¡ã‚¤ãƒ«åã®è¡¨ç¤º
 	wic::SetColor(White);
 	cout << ConvertRelativePathToFileName(texture->GetRelativeFileName()) << endl;
 }
 
 /*!
 	@fn			SetupVertexIndices
-	@brief		’¸“_ƒCƒ“ƒfƒbƒNƒX‚ÌƒZƒbƒgƒAƒbƒv
-	@param[in]	QÆŒ³‚ÌConverterƒƒbƒVƒ…
-	@param[in]	ƒoƒCƒ“ƒhæ‚ÌƒƒbƒVƒ…
+	@brief		é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+	@param[in]	å‚ç…§å…ƒã®Converterãƒ¡ãƒƒã‚·ãƒ¥
+	@param[in]	ãƒã‚¤ãƒ³ãƒ‰å…ˆã®ãƒ¡ãƒƒã‚·ãƒ¥
 */
 void Converter::FBXConverter::SetupVertexIndices(fbxsdk::FbxMesh * from, Utility::Mesh * to)
 {
-	//	ƒ|ƒŠƒSƒ“”
+	//	ãƒãƒªã‚´ãƒ³æ•°
 	auto polygonCount = from->GetPolygonCount();
 	for (int i = 0; i < polygonCount; ++i)
 	{
-		//	ƒ|ƒŠƒSƒ“‚ğ\¬‚·‚é’¸“_”(¦OŠp‰»‚µ‚Ä‚¢‚ê‚Î"3"‚É‚È‚é)
+		//	ãƒãƒªã‚´ãƒ³ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹æ•°(â€»ä¸‰è§’åŒ–ã—ã¦ã„ã‚Œã°"3"ã«ãªã‚‹)
 		auto polygonVertexCount = from->GetPolygonSize(i);
 		for (int j = 0; j < polygonVertexCount; ++j)
 		{
@@ -582,16 +587,16 @@ void Converter::FBXConverter::SetupVertexIndices(fbxsdk::FbxMesh * from, Utility
 
 /*!
 	@fn			SetupVertices
-	@brief		’¸“_‚ÌƒZƒbƒgƒAƒbƒv
-	@param[in]	QÆŒ³‚ÌfbxƒƒbƒVƒ…
-	@param[in]	ƒoƒCƒ“ƒhæ‚ÌƒƒbƒVƒ…
+	@brief		é ‚ç‚¹ã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+	@param[in]	å‚ç…§å…ƒã®fbxãƒ¡ãƒƒã‚·ãƒ¥
+	@param[in]	ãƒã‚¤ãƒ³ãƒ‰å…ˆã®ãƒ¡ãƒƒã‚·ãƒ¥
 */
 void Converter::FBXConverter::SetupVertices(fbxsdk::FbxMesh * from, Utility::Mesh * to)
 {
-	//	’¸“_”
+	//	é ‚ç‚¹æ•°
 	auto vertexCount = from->GetControlPointsCount();
 
-	//	’¸“_”z—ñ‚Ìæ“ªƒ|ƒCƒ“ƒ^
+	//	é ‚ç‚¹é…åˆ—ã®å…ˆé ­ãƒã‚¤ãƒ³ã‚¿
 	FbxVector4* vertices = from->GetControlPoints();
 
 	int index = 0;
@@ -615,14 +620,14 @@ void Converter::FBXConverter::SetupVertices(fbxsdk::FbxMesh * from, Utility::Mes
 
 /*!
 	@fn			SetupUV
-	@brief		UV‚ÌƒZƒbƒgƒAƒbƒv
-	@detail		’¸“_ƒCƒ“ƒfƒbƒNƒX‚É‘Î‰‚µ‚½UV‚ªŠi”[‚³‚ê‚éB
-	@param[in]	QÆŒ³‚ÌfbxƒƒbƒVƒ…
-	@param[in]	ƒoƒCƒ“ƒhæ‚ÌƒƒbƒVƒ…
+	@brief		UVã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+	@detail		é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«å¯¾å¿œã—ãŸUVãŒæ ¼ç´ã•ã‚Œã‚‹ã€‚
+	@param[in]	å‚ç…§å…ƒã®fbxãƒ¡ãƒƒã‚·ãƒ¥
+	@param[in]	ãƒã‚¤ãƒ³ãƒ‰å…ˆã®ãƒ¡ãƒƒã‚·ãƒ¥
 */
 void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh * from, Utility::Mesh * to)
 {
-	//	UVƒZƒbƒg”
+	//	UVã‚»ãƒƒãƒˆæ•°
 	FbxStringList uvSetNames;
 	from->GetUVSetNames(uvSetNames);
 
@@ -642,7 +647,7 @@ void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh * from, Utility::Mesh * to
 	int index = 0;
 	while (index < uvSetCount)
 	{
-		//	UVSetName‚ğ•Û‘¶
+		//	UVSetNameã‚’ä¿å­˜
 		const string c_UVSetName = uvSetNames.GetStringAt(index);
 		to->uvSetNamesList.push_back(c_UVSetName);
 
@@ -653,7 +658,7 @@ void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh * from, Utility::Mesh * to
 		FbxArray<FbxVector2>uvsets;
 		from->GetPolygonVertexUVs(c_UVSetName.c_str(), uvsets);
 
-		//	UVSetName‚É‘Î‰‚µ‚½UV‚ÌŠi”[
+		//	UVSetNameã«å¯¾å¿œã—ãŸUVã®æ ¼ç´
 		for (int i = 0; i < uvsets.Size(); ++i)
 		{
 			to->uv[c_UVSetName].push_back(
@@ -682,21 +687,21 @@ void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh * from, Utility::Mesh * to
 
 /*!
 	@fn			AlignVerticesToUV
-	@brief		’¸“_‚ğUV‚É‘µ‚¦‚éB
-	@detail		–‘O‚É‘¼‚Ìî•ñ‚ğ‚»‚ë‚¦‚Ä‚¨‚­•K—v‚ª‚ ‚é
-	@param[in]	‘ÎÛ‚ÌƒƒbƒVƒ…
+	@brief		é ‚ç‚¹ã‚’UVã«æƒãˆã‚‹ã€‚
+	@detail		äº‹å‰ã«ä»–ã®æƒ…å ±ã‚’ãã‚ãˆã¦ãŠãå¿…è¦ãŒã‚ã‚‹
+	@param[in]	å¯¾è±¡ã®ãƒ¡ãƒƒã‚·ãƒ¥
 */
 void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 {
 	/*!
 		@struct	Vertex
-		@brief	’¸“_‚ÆUV‚ğ•R‚Ã‚¯‚³‚¹‚é‚½‚ß‚Ìˆê\‘¢‘Ì
+		@brief	é ‚ç‚¹ã¨UVã‚’ç´ã¥ã‘ã•ã›ã‚‹ãŸã‚ã®ä¸€æ™‚æ§‹é€ ä½“
 	*/
 	struct Vertex
 	{
 		/*!
 			@var	v
-			@brief	’¸“_
+			@brief	é ‚ç‚¹
 		*/
 		Math::FLOAT4 v;
 
@@ -712,13 +717,13 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 
 		/*!
 			@var	uvsetName
-			@brief	ŠÖ˜A•t‚¯‚éuvset‚Ì–¼‘O
+			@brief	é–¢é€£ä»˜ã‘ã‚‹uvsetã®åå‰
 		*/
 		string uvsetName;
 
 	};
 
-	//	ƒCƒ“ƒfƒbƒNƒX‚Åƒ\[ƒg‚µ‚½d•¡‚Ì‚ ‚é‘Sƒf[ƒ^
+	//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã§ã‚½ãƒ¼ãƒˆã—ãŸé‡è¤‡ã®ã‚ã‚‹å…¨ãƒ‡ãƒ¼ã‚¿
 	wic::SetColor(Cyan);
 	cout << "Index sort vertices:";
 	vector<Vertex>indexSortVertices;
@@ -738,7 +743,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 	wic::SetColor(White);
 	cout << indexSortVertices.size() << endl;
 
-	//	d•¡‚Ì‚È‚¢ˆêˆÓ‚È’¸“_î•ñ(’¸“_ + UV)
+	//	é‡è¤‡ã®ãªã„ä¸€æ„ãªé ‚ç‚¹æƒ…å ±(é ‚ç‚¹ + UV)
 	vector<Vertex>uniqueVertices;
 	wic::SetColor(Cyan);
 	cout << "Unique vertices:";
@@ -747,7 +752,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 		for (size_t i = 0; i < mesh->vertexIndices.size(); i++)
 		{
 
-			//	uvset–¼‚Íl—¶‚µ‚È‚­‚Ä‚à‚æ‚¢‚Ì‚Å–¢İ’è
+			//	uvsetåã¯è€ƒæ…®ã—ãªãã¦ã‚‚ã‚ˆã„ã®ã§æœªè¨­å®š
 			Vertex findItem =
 			{
 				{mesh->vertices[mesh->vertexIndices[i]]},
@@ -755,7 +760,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 				{hash}
 			};
 
-			//	’¸“_‚ÆUVî•ñ‚ªˆê’v‚·‚éƒCƒeƒŒ[ƒ^‚ğæ“¾
+			//	é ‚ç‚¹ã¨UVæƒ…å ±ãŒä¸€è‡´ã™ã‚‹ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’å–å¾—
 			auto it = find_if(
 				uniqueVertices.begin(),
 				uniqueVertices.end(),
@@ -765,33 +770,33 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 			);
 			if (it != uniqueVertices.end()) { continue; }
 
-			//	"’¸“_ + UV"‚Ìî•ñ‚ğ•Û‘¶ 
+			//	"é ‚ç‚¹ + UV"ã®æƒ…å ±ã‚’ä¿å­˜ 
 			uniqueVertices.push_back(findItem);
 		}
 	}
 	wic::SetColor(White);
 	cout << uniqueVertices.size() << endl;
 
-	//	ƒƒbƒVƒ…î•ñ‚ğÄ\¬‚·‚é‚½‚ß‰Šú‰»
+	//	ãƒ¡ãƒƒã‚·ãƒ¥æƒ…å ±ã‚’å†æ§‹æˆã™ã‚‹ãŸã‚åˆæœŸåŒ–
 	mesh->vertexIndices.clear();
 	mesh->vertices.clear();
 	mesh->uv.clear();
 
-	//	’¸“_î•ñ(À•W + UV)Ši”[
+	//	é ‚ç‚¹æƒ…å ±(åº§æ¨™ + UV)æ ¼ç´
 	for (auto hash : mesh->uvSetNamesList)
 	{
 		for (size_t i = 0; i < uniqueVertices.size(); i++)
 		{
-			//	i”Ô–Ú‚ÌƒCƒ“ƒfƒbƒNƒX‚ªQÆ‚·‚é’¸“_î•ñ
+			//	iç•ªç›®ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãŒå‚ç…§ã™ã‚‹é ‚ç‚¹æƒ…å ±
 			auto vertex = uniqueVertices[i];
 
-			//	’¸“_
+			//	é ‚ç‚¹
 			mesh->vertices.push_back(vertex.v);
 
-			//	uvset–¼‚É‡‚í‚¹‚Äİ’è
+			//	uvsetåã«åˆã‚ã›ã¦è¨­å®š
 			if (hash != vertex.uvsetName) { continue; }
 
-			//	VertexŒ^‚ğUVŒ^‚ÉƒLƒƒƒXƒg‚µ‚Ä‰Â•Ï’·”z—ñ‚É‹l‚ß‚é
+			//	Vertexå‹ã‚’UVå‹ã«ã‚­ãƒ£ã‚¹ãƒˆã—ã¦å¯å¤‰é•·é…åˆ—ã«è©°ã‚ã‚‹
 			Utility::Mesh::UV uv=
 			{
 				{vertex.uvsetName},
@@ -801,17 +806,17 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 		}
 	}
 
-	//	ƒCƒ“ƒfƒbƒNƒX‚ÌÄ\¬
+	//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®å†æ§‹æˆ
 	for (auto hash : mesh->uvSetNamesList)
 	{
 		for (size_t i = 0; i < indexSortVertices.size(); ++i)
 		{
-			//	i”Ô–Ú‚Ì’¸“_î•ñ
+			//	iç•ªç›®ã®é ‚ç‚¹æƒ…å ±
 			Vertex findItem = indexSortVertices[i];
 
 			try
 			{
-				//	’T‚µ‚Ä‚¢‚é’¸“_‚Ìî•ñ‚ªŠi”[‚³‚ê‚Ä‚¢‚éƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
+				//	æ¢ã—ã¦ã„ã‚‹é ‚ç‚¹ã®æƒ…å ±ãŒæ ¼ç´ã•ã‚Œã¦ã„ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—
 				auto it = find_if(
 					uniqueVertices.begin(),
 					uniqueVertices.end(),
@@ -822,7 +827,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 
 				if (it == uniqueVertices.end())throw runtime_error("could not find a unique vertex");
 				
-				//	ƒCƒeƒŒ[ƒ^‚ğƒCƒ“ƒfƒbƒNƒX(”z—ñ‚Ì“Y‚¦š)‚É•ÏŠ·
+				//	ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹(é…åˆ—ã®æ·»ãˆå­—)ã«å¤‰æ›
 				auto index = distance(uniqueVertices.begin(), it);
 				mesh->vertexIndices.push_back(index);
 			}
@@ -847,7 +852,7 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 		}
 	}
 
-	//	ƒRƒ“ƒ\[ƒ‹o—Í
+	//	ã‚³ãƒ³ã‚½ãƒ¼ãƒ«å‡ºåŠ›
 	cout << endl;
 	wic::SetColor(Cyan);
 	cout << "mesh vertex size:";
