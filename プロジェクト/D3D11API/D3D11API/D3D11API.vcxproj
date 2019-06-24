@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationMesh.h" />
     <ClInclude Include="include\AbstractRender.h" />
     <ClInclude Include="include\AbstractShader.h" />
     <ClInclude Include="include\AudioMaster.h" />
@@ -189,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\AbstractShader.cpp" />
+    <ClCompile Include="include\AnimationMesh.cpp" />
     <ClCompile Include="include\AudioMaster.cpp" />
     <ClCompile Include="include\Camera.cpp" />
     <ClCompile Include="include\Color.cpp" />

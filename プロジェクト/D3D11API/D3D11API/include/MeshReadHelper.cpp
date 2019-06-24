@@ -183,3 +183,105 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 
 	return ret;
 }
+
+MeshReadHelper::AnimReadBuffer D3D11::Helper::MeshReadHelper::ReadAnim(std::string path)
+{
+	ifstream ifs(path);
+	if (ifs.fail()) {
+		string error = "Failed to read \"" + path + "\" file.";
+		ErrorLog(error);
+		return AnimReadBuffer();
+	}
+
+	AnimReadBuffer ret;
+	string buf;
+	string t = "}";
+
+	getline(ifs, buf);
+	//インデックス
+	while (true)
+	{
+		auto a = buf.find(" ");
+		if (a == string::npos) { break; }
+		auto b = buf.substr(0, a);
+
+		ret.indices.push_back(stoi(b));
+
+		buf = buf.substr(a + 1);
+	}
+
+	//uv
+	getline(ifs, buf);
+
+	//	一時保存用のバッファ(UV未考慮)
+	auto uvbuffer = buf;
+
+	//	UVのダミー
+	getline(ifs, buf);
+
+	//	アニメーションの数
+	ret.animCount = stoi(buf);
+
+	//	アニメーションの格納
+	unsigned int animIndex = 0;
+
+	for (size_t animIndex = 0; animIndex < ret.animCount; animIndex++)
+	{
+		//	1行読み取り
+		getline(ifs, buf);
+		if (buf.empty())break;
+		
+		//	フレーム数
+		ret.frameCount[animIndex] = stoi(buf);
+
+		getline(ifs, buf);
+
+		while (true)
+		{
+			auto a = buf.find(t);
+			if (a == string::npos) { break; }
+
+			//	{1 1 1
+			auto b = buf.substr(0, a);
+
+			auto c = b.find("{");
+			if (c != string::npos) {
+				b = b.substr(c + 1);
+			}
+			//	1 1 1
+			{
+				Graphic::MeshVertex tmp;
+
+				//	x
+				auto d = b.find(" ");
+				auto e = b.substr(0, d);
+
+				b = b.substr(d + 1);
+
+				//	y
+				auto f = b.find(" ");
+				auto g = b.substr(0, f + 1);
+
+				b = b.substr(f + 1);
+
+				//	z
+				tmp.position =
+				{
+					stof(e),
+					stof(g),
+					stof(b),
+				};
+				ret.vertices[animIndex].push_back(
+					tmp
+				);
+
+			}
+
+			buf = buf.substr(a + 1);
+		}
+		Graphic::MeshVertex tmp;
+
+	}
+
+	return ret;
+}

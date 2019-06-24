@@ -13,6 +13,8 @@
 #include "MeshVertex.h"
 
 
+#include <unordered_map>
+
 namespace D3D11 {
 	namespace Helper {
 		class MeshReadHelper
@@ -37,8 +39,16 @@ namespace D3D11 {
 				*/
 				std::vector<uint32_t>indices;
 			};
-			static ReadBuffer Read(std::string path);
 
+			struct AnimReadBuffer {
+				unsigned int animCount;
+				std::unordered_map<unsigned int, unsigned int>frameCount;
+				std::unordered_map<unsigned int, std::vector<Graphic::MeshVertex>>vertices;
+				std::vector<uint32_t>indices;
+			};
+
+			static ReadBuffer Read(std::string path);
+			static AnimReadBuffer ReadAnim(std::string path);
 		private:
 			MeshReadHelper() = delete;
 			~MeshReadHelper() = delete;

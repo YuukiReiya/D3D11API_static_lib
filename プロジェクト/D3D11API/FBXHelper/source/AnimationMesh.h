@@ -22,8 +22,7 @@ namespace Utility {
 
 	struct AnimationMesh {
 		AnimationMesh() :animCount(0) {}
-		~AnimationMesh() {};
-
+		~AnimationMesh() {}
 
 		std::vector<unsigned int>indices;
 		std::vector<Math::FLOAT2> uvPosition;
