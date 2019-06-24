@@ -1,8 +1,8 @@
 /*!
 	@file	Window.cpp
 	@date	2019/03/06
-	@author	ç•ªå ´ å®¥è¼
-	@brief	WindowsAPIã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ç”Ÿæˆ
+	@author	”Ôê —G‹P
+	@brief	WindowsAPI‚ÌƒEƒBƒ“ƒhƒE¶¬
 	@detail	http://kaitei.net/winapi/window-procedures/
 */
 #include <memory>
@@ -12,33 +12,33 @@
 #include "MyGame.h"
 
 /*!
-	@brief	usingãƒ‡ã‚£ãƒ¬ã‚¯ãƒ†ã‚£ãƒ–
+	@brief	usingƒfƒBƒŒƒNƒeƒBƒu
 	@using	API
 */
 using namespace API;
 
 /*!
 	@var	g_pWindow
-	@brief	å¤‰æ•°ã®ã®å‚ç…§(ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç”Ÿæˆã¯è¡Œã‚ãªã„)
+	@brief	•Ï”‚Ì‚ÌQÆ(ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì¶¬‚Ís‚í‚È‚¢)
 */
 Window*	g_pWindow = nullptr;
 
 /*!
-	@brief	ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
-	@detail	ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°WndProcã®ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
+	@brief	ƒvƒƒgƒ^ƒCƒvéŒ¾
+	@detail	ƒR[ƒ‹ƒoƒbƒNŠÖ”WndProc‚Ìƒvƒƒgƒ^ƒCƒvéŒ¾
 */
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 /*!
-	@brief	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-	@detail	ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°WndProcã®ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰
+	@brief	ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+	@detail	ƒR[ƒ‹ƒoƒbƒNŠÖ”WndProc‚ÌƒI[ƒo[ƒ‰ƒCƒh
 */
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	return g_pWindow->MsgProc(hWnd, msg, wParam, lParam);
 }
 
 /*!
-	@brief	ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	@brief	ƒfƒXƒgƒ‰ƒNƒ^
 */
 Window::~Window()
 {
@@ -46,14 +46,14 @@ Window::~Window()
 }
 
 /*!
-	@fn			ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-	@brief		ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã®ä¸­èº«
-	@detail		win32ã®WndProcã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¦ã„ã‚‹
-	@param[in]	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ©
-	@param[in]	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®æŒ‡å®š
-	@param[in]	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è¿½åŠ 
-	@param[in]	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è¿½åŠ 
-	@return		ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	@fn			ƒƒbƒZ[ƒWƒvƒƒV[ƒWƒƒ
+	@brief		ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ‚Ì’†g
+	@detail		win32‚ÌWndProc‚ğƒI[ƒo[ƒ‰ƒCƒh‚µ‚Ä‚¢‚é
+	@param[in]	ƒEƒBƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‰
+	@param[in]	ƒƒbƒZ[ƒW‚Ìw’è
+	@param[in]	ƒƒbƒZ[ƒW‚Ì’Ç‰Á
+	@param[in]	ƒƒbƒZ[ƒW‚Ì’Ç‰Á
+	@return		ƒƒbƒZ[ƒW
 */
 LRESULT Window::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -61,40 +61,40 @@ LRESULT Window::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		switch ((char)wParam)
 		{
-		// Escã‚­ãƒ¼ã‚’æŠ¼ã•ã‚ŒãŸã‚‰
+		// EscƒL[‚ğ‰Ÿ‚³‚ê‚½‚ç
 		case VK_ESCAPE:
 			PostQuitMessage(0);
 			break;
 		}
 		break;
-		// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒç ´æ£„ã•ã‚ŒãŸã¨ã
+		// ƒEƒBƒ“ƒhƒE‚ª”jŠü‚³‚ê‚½‚Æ‚«
 	case WM_DESTROY:
-		PostQuitMessage(0);	// WM_QUITãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚­ãƒ¥ãƒ¼ã«é€ã‚‹
+		PostQuitMessage(0);	// WM_QUITƒƒbƒZ[ƒW‚ğƒƒbƒZ[ƒWƒLƒ…[‚É‘—‚é
 		break;
 	}
-	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†ã‚’è¡Œã†
+	// ƒfƒtƒHƒ‹ƒg‚ÌƒƒbƒZ[ƒWˆ—‚ğs‚¤
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 /*!
 	@fn			Create
-	@brief		åˆæœŸåŒ–
-	@detail		win32ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ä½œæˆ
-	@param[in]	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ©ã®å‚ç…§
-	@param[in]	ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ©
-	@param[in]	ç”Ÿæˆä½ç½®x
-	@param[in]	ç”Ÿæˆä½ç½®y
-	@param[in]	æ¨ªå¹…
-	@param[in]	ç¸¦å¹…
-	@param[in]	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®åå‰
-	@return		true:æˆåŠŸ false:å¤±æ•—
+	@brief		‰Šú‰»
+	@detail		win32‚ÌƒEƒBƒ“ƒhƒEì¬
+	@param[in]	ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‰‚ÌQÆ
+	@param[in]	ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‰
+	@param[in]	¶¬ˆÊ’ux
+	@param[in]	¶¬ˆÊ’uy
+	@param[in]	‰¡•
+	@param[in]	c•
+	@param[in]	ƒEƒBƒ“ƒhƒE‚Ì–¼‘O
+	@return		true:¬Œ÷ false:¸”s
 */
 bool Window::Create(HWND* hWnd, HINSTANCE hInstance, int x, int y, int width, int height, std::string name)
 {
-	//	è‡ªèº«ã‚’ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã«é–¢é€£ã•ã›ã‚‹
+	//	©g‚ğƒƒbƒZ[ƒWƒvƒƒV[ƒWƒƒ‚ÉŠÖ˜A‚³‚¹‚é
 	g_pWindow = this;
 
-	//	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®å®šç¾©
+	//	ƒEƒBƒ“ƒhƒE‚Ì’è‹`
 	WNDCLASSEX wc;
 	ZeroMemory(&wc, sizeof(wc));
 	wc.cbSize = sizeof(wc);
@@ -105,7 +105,7 @@ bool Window::Create(HWND* hWnd, HINSTANCE hInstance, int x, int y, int width, in
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(LTGRAY_BRUSH);
 
-	//	æ–‡å­—ã‚³ãƒ¼ãƒ‰å¤‰æ›
+	//	•¶šƒR[ƒh•ÏŠ·
 	auto cast = To_TString(name);
 	const auto windowName = const_cast<LPTSTR>(cast.c_str());
 
@@ -113,7 +113,7 @@ bool Window::Create(HWND* hWnd, HINSTANCE hInstance, int x, int y, int width, in
 	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 	RegisterClassEx(&wc);
 
-	//	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½œæˆ
+	//	ƒEƒBƒ“ƒhƒE‚Ìì¬
 	*hWnd = CreateWindow(windowName, windowName, WS_OVERLAPPEDWINDOW,
 		0, 0, width, height, 0, 0, hInstance, 0);
 	if (!*hWnd)
@@ -121,7 +121,7 @@ bool Window::Create(HWND* hWnd, HINSTANCE hInstance, int x, int y, int width, in
 		return false;
 	}
 
-	//	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®è¡¨ç¤º
+	//	ƒEƒBƒ“ƒhƒE‚Ì•\¦
 	ShowWindow(*hWnd, SW_SHOW);
 	UpdateWindow(*hWnd);
 
