@@ -1,8 +1,9 @@
 /*!
 	@file	Window.h
 	@date	2019/03/06
-	@author	”Ôê —G‹P
-	@brief	WindowsAPI‚ÌƒEƒBƒ“ƒhƒE¶¬
+	@author	ç•ªå ´ å®¥è¼
+	@brief	WindowsAPIã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ç”Ÿæˆ
+	@detail	http://kaitei.net/winapi/window-procedures/
 */
 #pragma once
 #pragma comment(lib,"winmm.lib")
@@ -10,46 +11,46 @@
 #include <Windows.h>
 #include <string>
 
-/*! APIŠÖ˜A‚Ì–¼‘O‹óŠÔ‚ÉŠÜ‚ß‚é */
+/*! APIé–¢é€£ã®åå‰ç©ºé–“ã«å«ã‚ã‚‹ */
 namespace API {
 	
 	class Window
 	{
 	public:
 		/*!
-			@brief	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+			@brief	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		*/
 		Window() = default;
 
 		/*!
-			@brief	ƒfƒXƒgƒ‰ƒNƒ^
+			@brief	ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		*/
 		~Window();
 
 		/*!
 			@fn			MsgProc
-			@brief		ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ‚Ì’†g
-			@detail		win32‚ÌWndProc‚ğƒI[ƒo[ƒ‰ƒCƒh‚µ‚Ä‚¢‚é
-			@param[in]	ƒEƒBƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‰
-			@param[in]	ƒƒbƒZ[ƒW‚Ìw’è
-			@param[in]	ƒƒbƒZ[ƒW‚Ì’Ç‰Á
-			@param[in]	ƒƒbƒZ[ƒW‚Ì’Ç‰Á
-			@return		ƒƒbƒZ[ƒW
+			@brief		ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã®ä¸­èº«
+			@detail		win32ã®WndProcã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¦ã„ã‚‹
+			@param[in]	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ©
+			@param[in]	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®æŒ‡å®š
+			@param[in]	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è¿½åŠ 
+			@param[in]	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è¿½åŠ 
+			@return		ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 		*/
 		LRESULT MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 		/*!
 			@fn			Create
-			@brief		‰Šú‰»
-			@detail		win32‚ÌƒEƒBƒ“ƒhƒEì¬
-			@param[in]	ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‰‚ÌQÆ
-			@param[in]	ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‰
-			@param[in]	¶¬ˆÊ’ux
-			@param[in]	¶¬ˆÊ’uy
-			@param[in]	‰¡•
-			@param[in]	c•
-			@param[in]	ƒEƒBƒ“ƒhƒE‚Ì–¼‘O
-			@return		true:¬Œ÷ false:¸”s
+			@brief		åˆæœŸåŒ–
+			@detail		win32ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ä½œæˆ
+			@param[in]	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ©ã®å‚ç…§
+			@param[in]	ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ©
+			@param[in]	ç”Ÿæˆä½ç½®x
+			@param[in]	ç”Ÿæˆä½ç½®y
+			@param[in]	æ¨ªå¹…
+			@param[in]	ç¸¦å¹…
+			@param[in]	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®åå‰
+			@return		true:æˆåŠŸ false:å¤±æ•—
 		*/
 		bool Create(HWND* hWnd, HINSTANCE hInstance, int x, int y, int width, int height, std::string name);
 
