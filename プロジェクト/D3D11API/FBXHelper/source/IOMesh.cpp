@@ -112,9 +112,54 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 	}
 	ofs << endl;
 
+	//	アニメーション数
+	//テスト:1
+	ofs << 1 << endl;
+
 	//頂点
 	for (auto it : mesh.vertices)
 	{
 		ofs << "{" << it.x << c_Space << it.y << c_Space << it.z << "}";// << endl;
+	}
+}
+
+void Utility::IOMesh::Output(AnimationMesh data)
+{
+	string path = string("test") + c_Delimiter.data() + c_Extension.data();
+
+	ofstream ofs;
+	ofs.open(path, ios::out);
+
+
+	const string_view c_Space = " ";
+
+	//頂点インデックス
+	for (auto it : data.indices) {
+		ofs << it << c_Space;
+	}
+	ofs << endl;
+
+	//UV
+	for (auto it : data.uvPosition) {
+		ofs << "{" << it.x << c_Space << it.y << "}";// << endl;
+	}
+
+	//	アニメーション数
+	ofs << data.animCount << endl;
+
+	//	アニメーション情報
+	for (size_t i = 0; i < data.animCount; ++i) {
+
+		//	フレーム数
+		ofs << data.info[i].fps << endl;
+
+		//	頂点
+		for (auto it : data.info[i].vertices) {
+			ofs << it.first << ":" << endl;
+			for (auto v : it.second) {
+			ofs << "{" << v.x << c_Space << v.y << c_Space << v.z << "}";// << endl;
+			}
+			ofs << endl;
+		}
 	}
 }

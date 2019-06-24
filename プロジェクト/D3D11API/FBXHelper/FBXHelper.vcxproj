@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="source\AnimationMesh.h" />
     <ClInclude Include="source\Common.h" />
     <ClInclude Include="source\FbxMaterial.h" />
     <ClInclude Include="source\WinConsoleExpansion.h" />

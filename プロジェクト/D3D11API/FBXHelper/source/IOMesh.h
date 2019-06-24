@@ -10,6 +10,7 @@
 #include <string_view>
 #include <iostream>
 #include "Mesh.h"
+#include "AnimationMesh.h"
 namespace Utility{
 	class IOMesh
 	{
@@ -31,6 +32,9 @@ namespace Utility{
 			@TODO		出力形式の見直しと関数分けを行う...
 		*/
 		static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
+
+		//テスト
+		static void Output(AnimationMesh data);
 
 	private:
 		/*!
