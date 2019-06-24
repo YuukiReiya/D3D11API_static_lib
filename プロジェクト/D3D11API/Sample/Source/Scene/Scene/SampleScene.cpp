@@ -140,7 +140,8 @@ void SampleScene::Initialize()
 
 #pragma region Sample-Humanoid
 
-	g_pMesh->Initialize("humanoid.yfm");
+	//g_pMesh->Initialize("humanoid.yfm");
+	g_pMesh->Initialize("anim.yfm");
 	g_pMesh->SetupMaterial(g_pMaterial.get());
 	g_pMesh->SetupShader(g_pMeshShader.get());
 	g_pMesh->transform->SetScale({ 0.01f });
