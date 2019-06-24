@@ -149,6 +149,8 @@ void Converter::FBXConverter::Teardown()
 	}
 }
 
+//#define STATIC_MESH
+
 /*!
 	@fn			Execute
 	@brief		実行処理
@@ -161,10 +163,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 	cout << "----Display dialog----" << endl;
 
-#pragma region static
-
-#pragma endregion
-
+#pragma region 静的メッシュ
+#ifdef STATIC_MESH
 
 	//	変数
 	int meshCount, matCount;
@@ -214,6 +214,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		system("pause");
 		exit(NULL);
 	}
+
 	
 	wic::SetColor(White);
 	cout << "Mesh count:" << meshCount << endl;
@@ -279,6 +280,127 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 	{
 
 	}
+#endif // STATIC_MESH
+#pragma endregion
+
+#pragma region アニメーションメッシュ
+#ifndef STATIC_MESH
+
+	Utility::Mesh* oMesh = new Utility::Mesh;
+
+	try
+	{
+		//	色指定
+		wic::SetColor(Green);
+
+		//	インポーター
+		if (!SetupImporter(fbxPath)) { throw runtime_error("Could not read \"" + fbxPath + "\"."); }
+		cout << "SetupImporter success" << endl;
+
+		//	シーン
+		if (!SetupScene(fbxPath)) { throw runtime_error("Could not output \"" + fbxPath + "\" to the scene."); }
+		cout << "SetupScene success" << endl;
+
+		//	インポーターの破棄
+		TeardownImporter();
+
+		//	三角化
+		if (!Triangulate()) { throw runtime_error("Failed to triangulate this scene."); }
+		cout << "Triangulate success" << endl;
+
+		//	メッシュの分割
+		if (!SplitMeshesPerMaterial()) { throw runtime_error("Failed to split mesh"); }
+		cout << "SplitMeshesPerMaterial success" << endl;
+
+		//	メッシュの総数
+		int meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
+
+		//	単一仮定
+		//auto pMesh = (*m_pScene.get())->GetSrcObject<FbxMesh>(0);
+		auto pMesh = (*m_pScene.get())->GetSrcObject<fbxsdk::FbxMesh>(0);
+		auto pNode = pMesh->GetNode();
+		//pNode->EvaluateGlobalTransform
+
+
+		//	アニメーション
+		FbxArray<FbxString*>animNameArray;
+		(*m_pScene)->FillAnimStackNameArray(animNameArray);
+
+		cout << "anim list" << endl;
+		for (int i = 0; i < animNameArray.GetCount();++i) {
+			auto it = animNameArray.GetAt(i);
+			cout << it << endl;
+		}
+
+
+		auto setAnimData = animNameArray[0];
+		//	抽出アニメーション情報
+		auto animStack = (*m_pScene)->FindMember<FbxAnimStack>(setAnimData->Buffer());
+		//	アニメーションの設定
+		(*m_pScene)->SetCurrentAnimationStack(animStack);
+
+		auto info = (*m_pScene)->GetTakeInfo(*setAnimData);
+		auto start = info->mLocalTimeSpan.GetStart();
+		auto stop = info->mLocalTimeSpan.GetStop();
+		FbxTime frameTime,timeCount;
+		frameTime.SetTime(0, 0, 0, 1, 0, (*m_pScene)->GetGlobalSettings().GetTimeMode());
+		timeCount = start;
+
+		FbxMatrix globalPos = pNode->EvaluateGlobalTransform(timeCount);
+		auto t0 = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+		auto r0 = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+		auto s0 = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+		auto geometryOffset = FbxAMatrix(t0, r0, s0);
+
+		FbxMatrix *clusterDeformation = new FbxMatrix[pMesh->GetControlPointsCount()];
+		memset(clusterDeformation, 0, sizeof(FbxMatrix) * pMesh->GetControlPointsCount());
+
+		auto skinDeformer = (FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin);
+		int bornCount = skinDeformer->GetClusterCount();
+
+		for (int i = 0; i < bornCount; ++i) {
+			auto born = skinDeformer->GetCluster(i);
+
+			FbxMatrix vertexTransformMatrix, clusterGlobalCurrentPosition, clusterRelativeInitPosition, clusterRelativeCurrentPositionInverse;
+			FbxAMatrix referenceGlobalInitPosition, clusterGlobalInitPosition;
+
+			born->GetTransformMatrix(referenceGlobalInitPosition);
+			referenceGlobalInitPosition *= geometryOffset;
+			born->GetTransformLinkMatrix(clusterGlobalInitPosition);
+			clusterGlobalCurrentPosition = born->GetLink()->EvaluateGlobalTransform(timeCount);
+			clusterRelativeInitPosition = clusterGlobalInitPosition.Inverse()*referenceGlobalInitPosition;
+			clusterRelativeCurrentPositionInverse = globalPos.Inverse()*clusterGlobalCurrentPosition;
+			vertexTransformMatrix = clusterRelativeCurrentPositionInverse * clusterRelativeInitPosition;
+		
+			for (int j = 0; j < born->GetControlPointIndicesCount(); ++j) {
+				auto index = born->GetControlPointIndices()[j];
+				auto weight = born->GetControlPointWeights()[j];
+				auto influence = vertexTransformMatrix * weight;
+				clusterDeformation[index] += influence;
+			}
+		}
+
+		//	頂点変換
+		for (int i = 0; i < pMesh->GetControlPointsCount(); ++i)
+		{
+			auto v = clusterDeformation[i].MultNormalize(pMesh->GetControlPointAt(i));
+
+			//	格納処理
+			oMesh->vertices[i].x = v[0];
+			oMesh->vertices[i].y = v[1];
+			oMesh->vertices[i].z = v[2];
+		}
+
+
+		cout << "start:" << start.Get() << endl;
+		cout << "stop:" << stop.Get() << endl;
+		cout << "ft:" << frameTime.Get() << endl;
+
+	}
+	catch(...){}
+
+#endif
+#pragma endregion
 
 
 	cout << "Completed this program." << endl;
