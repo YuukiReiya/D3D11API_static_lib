@@ -93,14 +93,7 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 	ofs.open(path, ios::out);
 
 	//	書き込み
-
-	//頂点
 	const string c_Space = " ";
-	for (auto it : mesh.vertices)
-	{
-		ofs << "{" << it.x << c_Space << it.y << c_Space << it.z << "}";// << endl;
-	}
-	ofs << endl;
 
 	//	頂点インデックス
 	//ofs << "//i" << endl;
@@ -117,5 +110,11 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 		for (auto item : it.second)
 			ofs << "{" << item.uv.x << c_Space << item.uv.y << "}";// << endl;
 	}
+	ofs << endl;
 
+	//頂点
+	for (auto it : mesh.vertices)
+	{
+		ofs << "{" << it.x << c_Space << it.y << c_Space << it.z << "}";// << endl;
+	}
 }

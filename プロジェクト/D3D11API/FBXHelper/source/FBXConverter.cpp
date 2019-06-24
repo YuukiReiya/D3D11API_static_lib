@@ -407,7 +407,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				);
 			}
 		}
-		Utility::IOMesh::Output("Animation", "anim",*animMesh);
+		Utility::IOMesh::Output("Animation/", "anim",*animMesh);
 
 		cout << "animMesh v " << animMesh->vertices.size() << endl;
 		cout << "animMesh vi " << animMesh->vertexIndices.size() << endl;

@@ -25,50 +25,7 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 
 	ReadBuffer ret;
 	string buf;
-
-	//	バッファに文字列獲得
-	getline(ifs, buf);
 	string t = "}";
-
-	//	{1 1 1}{2 2 2}
-
-	//頂点
-	while (true)
-	{
-		auto a = buf.find(t);
-		if (a == string::npos) { break; }
-
-		//	{1 1 1
-		auto b = buf.substr(0, a);
-
-		auto c = b.find("{");
-		if (c != string::npos) {
-			b = b.substr(c + 1);
-		}
-		//	1 1 1
-		{
-			Graphic::MeshVertex tmp;
-			//	x
-			auto d = b.find(" ");
-			auto e = b.substr(0, d);
-			
-			tmp.position.x = stof(e);
-			b = b.substr(d + 1);
-
-			//	y
-			auto f = b.find(" ");
-			auto g = b.substr(0, f + 1);
-
-			tmp.position.y = stof(g);
-			b = b.substr(f + 1);
-
-			//	z
-			tmp.position.z = stof(b);
-			ret.vertices.push_back(tmp);
-		}
-
-		buf = buf.substr(a + 1);
-	}
 
 	getline(ifs, buf);
 	//インデックス
@@ -85,7 +42,7 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 
 	//uv
 	getline(ifs, buf);
-	for(auto& it:ret.vertices)
+	while (true)
 	{
 		auto a = buf.find(t);
 		if (a == string::npos) { break; }
@@ -99,6 +56,9 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 			b = b.substr(c + 1);
 		}
 
+		//	保存用の一時バッファ
+		Graphic::MeshVertex tmp;
+
 		//	x
 		auto d = b.find(" ");
 		auto e = b.substr(0, d);
@@ -106,14 +66,120 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 		b = b.substr(d + 1);
 
 		//	y
-
-
-		it.uv =
+		tmp.uv =
 		{
 			stof(e),
 			stof(b)
 		};
+
+		ret.vertices.push_back(tmp);
+		//it.uv =
+		//{
+		//	stof(e),
+		//	stof(b)
+		//};
+
 		buf = buf.substr(a + 1);
 	}
+
+	//	バッファに文字列獲得
+	getline(ifs, buf);
+
+
+	//	{1 1 1}{2 2 2}
+
+	if (!ret.vertices.empty()) {
+
+		//頂点
+		int index = 0;
+		while (true)
+		{
+			auto a = buf.find(t);
+			if (a == string::npos) { break; }
+
+			//	{1 1 1
+			auto b = buf.substr(0, a);
+
+			auto c = b.find("{");
+			if (c != string::npos) {
+				b = b.substr(c + 1);
+			}
+			//	1 1 1
+			{
+				//Graphic::MeshVertex& tmp = ret.vertices[index++];
+				//	x
+				auto d = b.find(" ");
+				auto e = b.substr(0, d);
+
+				//tmp.position.x = stof(e);
+				ret.vertices[index].position.x = stof(e);
+
+				b = b.substr(d + 1);
+
+				//	y
+				auto f = b.find(" ");
+				auto g = b.substr(0, f + 1);
+
+				//tmp.position.y = stof(g);
+				ret.vertices[index].position.x = stof(g);
+
+				b = b.substr(f + 1);
+
+				//	z
+				//tmp.position.z = stof(b);
+				ret.vertices[index].position.x = stof(b);
+				//ret.vertices.push_back(tmp);
+				index++;
+			}
+
+			buf = buf.substr(a + 1);
+		}
+	}
+	else {
+		//頂点
+		while (true)
+		{
+			auto a = buf.find(t);
+			if (a == string::npos) { break; }
+
+			Graphic::MeshVertex tmp;
+
+			//	{1 1 1
+			auto b = buf.substr(0, a);
+
+			auto c = b.find("{");
+			if (c != string::npos) {
+				b = b.substr(c + 1);
+			}
+			//	1 1 1
+			{
+				//Graphic::MeshVertex& tmp = ret.vertices[index++];
+				//	x
+				auto d = b.find(" ");
+				auto e = b.substr(0, d);
+
+				tmp.position.x = stof(e);
+
+				b = b.substr(d + 1);
+
+				//	y
+				auto f = b.find(" ");
+				auto g = b.substr(0, f + 1);
+
+				tmp.position.y = stof(g);
+				//ret.vertices[index].position.x = stof(g);
+
+				b = b.substr(f + 1);
+
+				//	z
+				tmp.position.z = stof(b);
+				//ret.vertices[index].position.x = stof(b);
+				ret.vertices.push_back(tmp);
+			}
+
+			buf = buf.substr(a + 1);
+		}
+	}
+
 	return ret;
 }
