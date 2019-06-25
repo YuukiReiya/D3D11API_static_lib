@@ -17,6 +17,7 @@
 #include <Mesh.h>
 #include <Hoge.h>
 #include <Camera.h>
+#include <../AnimationMesh.h>
 
 /*!
 	@brief	usingディレクティブ
@@ -35,7 +36,7 @@ using namespace API;
 	@brief	メッシュ
 */
 shared_ptr<Mesh>g_pMesh;
-
+shared_ptr<AnimationMesh>g_pAnimMesh;
 /*!
 	@var	g_pShader
 	@brief	シェーダー
@@ -136,7 +137,7 @@ void SampleScene::Initialize()
 //		it.SetupShader(g_pMeshShader.get());
 //	}
 //
-//#pragma endregion
+#pragma endregion
 
 #pragma region Sample-Humanoid
 
@@ -145,6 +146,10 @@ void SampleScene::Initialize()
 	g_pMesh->SetupMaterial(g_pMaterial.get());
 	g_pMesh->SetupShader(g_pMeshShader.get());
 	g_pMesh->transform->SetScale({ 0.01f });
+
+	g_pAnimMesh = make_shared<AnimationMesh>();
+	g_pAnimMesh->Init("test.yfm");
+
 #pragma endregion
 
 
@@ -388,6 +393,7 @@ void SampleScene::Render()
 #pragma endregion
 	}
 
-	g_pMesh->Render();
+	//g_pMesh->Render();
+	g_pAnimMesh->Render();
 	//g_pMesh1->Render();
 }

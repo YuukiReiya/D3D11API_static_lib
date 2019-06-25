@@ -211,10 +211,10 @@ MeshReadHelper::AnimReadBuffer D3D11::Helper::MeshReadHelper::ReadAnim(std::stri
 	}
 
 	//uv
-	getline(ifs, buf);
+	//getline(ifs, buf);
 
 	//	一時保存用のバッファ(UV未考慮)
-	auto uvbuffer = buf;
+	//auto uvbuffer = buf;
 
 	//	UVのダミー
 	getline(ifs, buf);
@@ -230,57 +230,84 @@ MeshReadHelper::AnimReadBuffer D3D11::Helper::MeshReadHelper::ReadAnim(std::stri
 		//	1行読み取り
 		getline(ifs, buf);
 		if (buf.empty())break;
-		
+
 		//	フレーム数
 		ret.frameCount[animIndex] = stoi(buf);
 
-		getline(ifs, buf);
-
-		while (true)
+		//	フレーム数分ループ
+		for (size_t count = 0; count < ret.frameCount[animIndex]; ++count)
 		{
-			auto a = buf.find(t);
-			if (a == string::npos) { break; }
+			//	番号
+			getline(ifs, buf);
+			if (buf.empty()) { break; }
+			auto offset = buf.find(":");
+			buf = buf.substr(0, offset);
 
-			//	{1 1 1
-			auto b = buf.substr(0, a);
+			const int frameNo = stoi(buf);
+			//	頂点が格納されているバッファに更新
+			getline(ifs, buf);
 
-			auto c = b.find("{");
-			if (c != string::npos) {
-				b = b.substr(c + 1);
-			}
-			//	1 1 1
+			//	頂点
+			while (true)
 			{
-				Graphic::MeshVertex tmp;
+				auto a = buf.find(t);
+				if (a == string::npos) {
+					break;
+				}
 
-				//	x
-				auto d = b.find(" ");
-				auto e = b.substr(0, d);
+				//	{1 1 1
+				auto b = buf.substr(0, a);
 
-				b = b.substr(d + 1);
-
-				//	y
-				auto f = b.find(" ");
-				auto g = b.substr(0, f + 1);
-
-				b = b.substr(f + 1);
-
-				//	z
-				tmp.position =
+				auto c = b.find("{");
+				if (c != string::npos) {
+					b = b.substr(c + 1);
+				}
+				//	1 1 1
 				{
-					stof(e),
-					stof(g),
-					stof(b),
-				};
-				ret.vertices[animIndex].push_back(
-					tmp
-				);
+					Graphic::MeshVertex tmp;
 
+					//	x
+					auto d = b.find(" ");
+					auto e = b.substr(0, d);
+
+					b = b.substr(d + 1);
+
+					//	y
+					auto f = b.find(" ");
+					auto g = b.substr(0, f + 1);
+
+					b = b.substr(f + 1);
+
+					//	z
+					tmp.position =
+					{
+						stof(e),
+						stof(g),
+						stof(b),
+					};
+
+					ret.vertices[animIndex].v[frameNo].push_back(tmp);
+
+					//ret.vertices[animIndex].push_back(
+					//	{
+					//		frameNo,
+					//	tmp
+					//	}
+					//);
+
+				}
+
+				buf = buf.substr(a + 1);
 			}
-
-			buf = buf.substr(a + 1);
 		}
-		Graphic::MeshVertex tmp;
 
+
+		//	フレーム番号
+		//auto dummyPos = buf.find(":");
+		//buf = buf.substr(0, dummyPos);
+
+		//	頂点読み取り
+		//getline(ifs, buf);
 	}
 
 	return ret;

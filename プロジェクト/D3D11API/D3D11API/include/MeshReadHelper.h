@@ -42,8 +42,16 @@ namespace D3D11 {
 
 			struct AnimReadBuffer {
 				unsigned int animCount;
+				//n番目のアニメーションのフレーム数
 				std::unordered_map<unsigned int, unsigned int>frameCount;
-				std::unordered_map<unsigned int, std::vector<Graphic::MeshVertex>>vertices;
+
+				struct AnimVertexBuffer
+				{
+					std::unordered_map<unsigned int,std::vector<Graphic::MeshVertex>> v;
+				};
+
+				//n番目のアニメーションの頂点
+				std::unordered_map<unsigned int, AnimVertexBuffer>vertices;
 				std::vector<uint32_t>indices;
 			};
 
