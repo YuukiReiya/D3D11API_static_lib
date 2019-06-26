@@ -106,48 +106,15 @@ HRESULT API::AnimationMesh::Init(std::string path)
 	auto device = Direct3D11::GetInstance().GetDevice();
 	auto context = Direct3D11::GetInstance().GetImmediateContext();
 
-	//auto mesh = Helper::MeshReadHelper::ReadAnim(path);
-	Helper::MeshReadHelper::AnimReadBuffer animbuf;
-	auto mesh = animbuf;
+	auto mesh = Helper::MeshReadHelper::ReadAnim(path);
 	m_IndexCount = mesh.indices.size();
-	m_VertexCount = mesh.vertices[0].v[0].size();
-#pragma region 動作テスト
+	m_VertexCount = mesh.vertices[0][0].size();
 
-	mesh.animCount = 1;
-	mesh.frameCount[0] = 0;
-
-	m_VertexCount = 4;
-	m_pVertex = new VERTEX[m_VertexCount];
-
-	//斜め向きの四角形
-	DirectX::XMFLOAT3 vs[] = {
-		{ -0.1, 0.1,0 } ,	//左上
-		{  0.1, 0.1,0 }  ,	//右上
-		{  0.1,-0.1,0 } ,	//右下
-		{ -0.1,-0.1,0 },	//左下
-	};
-	for (auto item : vs) {
-		mesh.vertices[0].v[0].push_back(item);
+	for (int i = 0; i < mesh.animCount; ++i) {
+		for (int j = 0; j < mesh.frameCount[i]; ++j) {
+			m_VertexList[i][j] = mesh.vertices[i][j];
+		}
 	}
-
-	mesh.indices.clear();
-	size_t is[] = {
-		0,1,2,0,0,3,2,0
-	};
-	for (auto item : is) { mesh.indices.push_back(item); }
-
-	m_IndexCount = mesh.indices.size();
-	transform.SetScale(0.1f);
-	/*m_pVertex = new VERTEX[m_VertexCount];
-	for (int i = 0; i < m_VertexCount; ++i) {
-		m_pVertex[i].pos = mesh.vertices[0].v[0][i].position;
-	}*/
-	for (int i = 0; i < GetArraySize(vs); ++i) {
-		m_pVertex[i].pos = vs[i];
-	}
-#pragma endregion
-
-
 	
 #pragma region 頂点生成
 	D3D11_BUFFER_DESC vBD;
@@ -161,17 +128,12 @@ HRESULT API::AnimationMesh::Init(std::string path)
 	D3D11_SUBRESOURCE_DATA sd;
 	//sd.pSysMem = mesh.vertices[0].v[0].data();
 
-	std::vector<Graphic::MeshVertex>hoge;
-	for (auto it : vs) {
-		hoge.push_back(it);
-	}
-	sd.pSysMem = hoge.data();
-	hr = device->CreateBuffer(&vBD, &sd, m_pVertexBuffer.GetAddressOf());
-	//hr = device->CreateBuffer(&vBD, 0, m_pVertexBuffer.GetAddressOf());
+	sd.pSysMem = m_VertexList[0][0].data();
+	//hr = device->CreateBuffer(&vBD, &sd, m_pVertexBuffer.GetAddressOf());
+	hr = device->CreateBuffer(&vBD, 0, m_pVertexBuffer.GetAddressOf());
 	if (FAILED(hr)) {
 		return E_FAIL;
 	}
-	//m_pVertex = new VERTEX[m_VertexCount];
 #pragma endregion
 
 #pragma region 頂点インデックス
@@ -224,19 +186,19 @@ void API::AnimationMesh::Render()
 
 	//	頂点の受け渡し(斜めに線)
 	//頂点バッファの書き換えに成功していれば斜めに赤い線が描画されているはず
-	DirectX::XMFLOAT3 vs[] = {
-	{  0.1, 0.1,0 }  ,	//右上
-	{ -0.1, 0.1,0 } ,	//左上
-	{  0.1,-0.1,0 } ,	//右下
-	{ -0.1,-0.1,0 },	//左下
-	};
-	std::vector<Graphic::MeshVertex>hoge;
-	for (auto it : vs) {
-		hoge.push_back(it);
-	}
-	context->Map(m_pVertexBuffer.Get(),0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(hoge.data()), sizeof(VERTEX) * m_VertexCount);
-	context->Unmap(m_pVertexBuffer.Get(), 0);
+	//DirectX::XMFLOAT3 vs[] = {
+	//{  0.1, 0.1,0 }  ,	//右上
+	//{ -0.1, 0.1,0 } ,	//左上
+	//{  0.1,-0.1,0 } ,	//右下
+	//{ -0.1,-0.1,0 },	//左下
+	//};
+	//std::vector<Graphic::MeshVertex>hoge;
+	//for (auto it : vs) {
+	//	hoge.push_back(it);
+	//}
+	//context->Map(m_pVertexBuffer.Get(),0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
+	//memcpy_s(pdata.pData, pdata.RowPitch, (void*)(hoge.data()), sizeof(VERTEX) * m_VertexCount);
+	//context->Unmap(m_pVertexBuffer.Get(), 0);
 
 	//	描画
 	context->DrawIndexed(m_IndexCount, 0, 0);

@@ -6,6 +6,7 @@
 #include "include/MeshVertex.h"
 #include <wrl/client.h>
 #include "include/Transform.h"
+#include <unordered_map>
 
 namespace API {
 #pragma region í∏ì_ç\ë¢ëÃ
@@ -19,7 +20,7 @@ namespace API {
 	{
 	public:
 		AnimationMesh() {}
-		~AnimationMesh() { delete[]m_pVertex; };
+		~AnimationMesh() { m_VertexList.clear(); };
 
 		HRESULT Init(std::string path);
 		void Render()override;
@@ -38,7 +39,8 @@ namespace API {
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
 		uint32_t m_IndexCount;
 		uint32_t m_VertexCount;
-		VERTEX* m_pVertex;
+
+		std::unordered_map<size_t, std::unordered_map<size_t, std::vector<D3D11::Graphic::MeshVertex>>>m_VertexList;
 	};
 
 }

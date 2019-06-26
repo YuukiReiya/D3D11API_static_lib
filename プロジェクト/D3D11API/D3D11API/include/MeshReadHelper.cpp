@@ -286,7 +286,7 @@ MeshReadHelper::AnimReadBuffer D3D11::Helper::MeshReadHelper::ReadAnim(std::stri
 						stof(b),
 					};
 
-					ret.vertices[animIndex].v[frameNo].push_back(tmp);
+					ret.vertices[animIndex][frameNo].push_back(tmp);
 
 					//ret.vertices[animIndex].push_back(
 					//	{
