@@ -200,8 +200,8 @@ void SampleScene::Update()
 
 #pragma region ƒƒbƒVƒ…
 #ifndef UseCameraAction
-	auto& t = g_pMesh->transform;
-	//auto& t = g_pAnimMesh->transform;
+	//auto& t = g_pMesh->transform;
+	auto& t = g_pAnimMesh->transform;
 #pragma region ‰ñ“]
 
 	static float x = 0, y = 0, z = 0;
@@ -370,7 +370,7 @@ void SampleScene::Update()
 	if (Keyboard::GetButtonDown('N')) {
 		animMesh->AddAnimIndex();
 	}
-	if (Keyboard::GetButtonDown('M')) {
+	if (Keyboard::GetButton('M')) {
 		animMesh->AddFrameIndex();
 	}
 
