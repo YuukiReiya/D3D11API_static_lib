@@ -113,9 +113,6 @@ namespace API{
 		*/
 		Color color;
 	private:
-		//	フレンド宣言を用いた簡易テストケースの作成
-		//※リファインで修正する(あくまで動作テストが確認できるまで)
-		friend class AnimationMesh;
 		/*!
 			@fn		SetupTopology
 			@brief	トポロジーのセットアップ
