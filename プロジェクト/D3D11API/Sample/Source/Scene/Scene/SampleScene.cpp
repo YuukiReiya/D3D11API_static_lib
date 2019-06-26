@@ -148,7 +148,10 @@ void SampleScene::Initialize()
 	g_pMesh->transform->SetScale({ 0.01f });
 
 	g_pAnimMesh = make_shared<AnimationMesh>();
-	g_pAnimMesh->Init("test.yfm");
+	if (FAILED(g_pAnimMesh->Init("test.yfm"))) {
+		ErrorLog("this");
+	}
+
 
 #pragma endregion
 
@@ -186,7 +189,7 @@ void SampleScene::Finalize()
 	}
 	vMesh.clear();
 }
-
+#define UseCameraAction
 /*!
 	@fn		Update
 	@brief	更新処理
@@ -196,6 +199,7 @@ void SampleScene::Update()
 	auto val = 0.1f;
 
 #pragma region メッシュ
+#ifndef UseCameraAction
 	auto& t = g_pMesh->transform;
 #pragma region 回転
 
@@ -288,6 +292,7 @@ void SampleScene::Update()
 	t->SetScale(scale);
 #pragma endregion
 
+#endif // !UseCameraAction
 #pragma endregion
 
 #pragma region カメラ操作

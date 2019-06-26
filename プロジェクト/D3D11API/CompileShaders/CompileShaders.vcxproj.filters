@@ -17,5 +17,6 @@
   <ItemGroup>
     <FxCompile Include="..\cso\ps_test.psh" />
     <FxCompile Include="..\cso\vs_test.vsh" />
+    <FxCompile Include="..\Sample\shader.hlsl" />
   </ItemGroup>
 </Project>
