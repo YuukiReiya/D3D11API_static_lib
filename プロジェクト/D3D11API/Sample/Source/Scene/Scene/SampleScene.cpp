@@ -151,7 +151,7 @@ void SampleScene::Initialize()
 	if (FAILED(g_pAnimMesh->Init("test.yfm"))) {
 		ErrorLog("this");
 	}
-
+	g_pAnimMesh->transform->SetScale({ 0.01f });
 
 #pragma endregion
 
@@ -189,7 +189,7 @@ void SampleScene::Finalize()
 	}
 	vMesh.clear();
 }
-#define UseCameraAction
+//#define UseCameraAction
 /*!
 	@fn		Update
 	@brief	更新処理
@@ -201,6 +201,7 @@ void SampleScene::Update()
 #pragma region メッシュ
 #ifndef UseCameraAction
 	auto& t = g_pMesh->transform;
+	//auto& t = g_pAnimMesh->transform;
 #pragma region 回転
 
 	static float x = 0, y = 0, z = 0;
@@ -229,7 +230,7 @@ void SampleScene::Update()
 #pragma endregion
 
 #pragma region 移動
-	auto pos = g_pMesh->transform->GetPosition();
+	auto pos = t->GetPosition();
 
 	if (Keyboard::GetButton('a')) {
 		pos.x -= val;
@@ -249,7 +250,7 @@ void SampleScene::Update()
 	if (Keyboard::GetButton('e')) {
 		pos.z += val;
 	}
-	g_pMesh->transform->SetPosition(pos);
+	t->SetPosition(pos);
 
 	if (!vMesh.empty()) {
 		for (auto it : vMesh) {
@@ -363,6 +364,17 @@ void SampleScene::Update()
 #pragma endregion
 
 	
+#pragma region アニメーション
+	auto& animMesh = g_pAnimMesh;
+
+	if (Keyboard::GetButtonDown('N')) {
+		animMesh->AddAnimIndex();
+	}
+	if (Keyboard::GetButtonDown('M')) {
+		animMesh->AddFrameIndex();
+	}
+
+#pragma endregion
 }
 
 /*!

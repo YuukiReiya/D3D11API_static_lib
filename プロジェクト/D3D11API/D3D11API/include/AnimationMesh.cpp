@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "MyGame.h"
 #include "MeshReadHelper.h"
-
+#include "MeshShader.h"
 
 #pragma region シェーダー
 #include <d3dcompiler.h>
@@ -96,13 +96,13 @@ HRESULT AnimMeshShader::DynamicSetup()
 
 HRESULT API::AnimationMesh::Init(std::string path)
 {
-	m_pShader = std::make_shared<AnimMeshShader>();
-	if (FAILED(m_pShader->DynamicSetup())) {
+	m_pShader = std::make_shared<MeshShader>();
+	if (FAILED(m_pShader->Setup())) {
 		return E_FAIL;
 	}
 
 	HRESULT hr;
-
+	
 	auto device = Direct3D11::GetInstance().GetDevice();
 	auto context = Direct3D11::GetInstance().GetImmediateContext();
 
@@ -117,90 +117,335 @@ HRESULT API::AnimationMesh::Init(std::string path)
 	}
 	
 #pragma region 頂点生成
-	D3D11_BUFFER_DESC vBD;
-	vBD.ByteWidth = sizeof(VERTEX) * m_VertexCount;
-	vBD.Usage = D3D11_USAGE_DYNAMIC;
-	vBD.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vBD.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vBD.MiscFlags = 0;
-	vBD.StructureByteStride = 0;
-	//	サブリソースの仕様
-	D3D11_SUBRESOURCE_DATA sd;
-	//sd.pSysMem = mesh.vertices[0].v[0].data();
+	//D3D11_BUFFER_DESC vBD;
+	//vBD.ByteWidth = sizeof(VERTEX) * m_VertexCount;
+	//vBD.Usage = D3D11_USAGE_DYNAMIC;
+	//vBD.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//vBD.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//vBD.MiscFlags = 0;
+	//vBD.StructureByteStride = 0;
+	////	サブリソースの仕様
+	//D3D11_SUBRESOURCE_DATA sd;
+	////sd.pSysMem = mesh.vertices[0].v[0].data();
 
-	sd.pSysMem = m_VertexList[0][0].data();
+	//sd.pSysMem = m_VertexList[0][0].data();
 	//hr = device->CreateBuffer(&vBD, &sd, m_pVertexBuffer.GetAddressOf());
-	hr = device->CreateBuffer(&vBD, 0, m_pVertexBuffer.GetAddressOf());
-	if (FAILED(hr)) {
-		return E_FAIL;
+	////hr = device->CreateBuffer(&vBD, 0, m_pVertexBuffer.GetAddressOf());
+	//if (FAILED(hr)) {
+	//	return E_FAIL;
+	//}
+
+	if (FAILED(CreateVertexBuffer(m_VertexList[0][0]))) {
+		ErrorLog("anim vertex");
 	}
+
 #pragma endregion
 
 #pragma region 頂点インデックス
-	D3D11_BUFFER_DESC iBD;
-	iBD.ByteWidth = sizeof(m_IndexCount) * m_IndexCount;
-	iBD.Usage = D3D11_USAGE_DEFAULT;
-	iBD.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	iBD.CPUAccessFlags = 0;
-	iBD.MiscFlags = 0;
-	iBD.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA iData;
-	iData.pSysMem = mesh.indices.data();//頂点インデックス配列
-	hr = device->CreateBuffer(&iBD, &iData, m_pIndexBuffer.GetAddressOf());
-	if (FAILED(hr)) {
-		return E_FAIL;
+	//D3D11_BUFFER_DESC iBD;
+	//iBD.ByteWidth = sizeof(m_IndexCount) * m_IndexCount;
+	//iBD.Usage = D3D11_USAGE_DEFAULT;
+	//iBD.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	//iBD.CPUAccessFlags = 0;
+	//iBD.MiscFlags = 0;
+	//iBD.StructureByteStride = 0;
+	//D3D11_SUBRESOURCE_DATA iData;
+	//iData.pSysMem = mesh.indices.data();//頂点インデックス配列
+	//hr = device->CreateBuffer(&iBD, &iData, m_pIndexBuffer.GetAddressOf());
+	//if (FAILED(hr)) {
+	//	return E_FAIL;
+	//}
+
+	if (FAILED(CreateIndexBuffer(mesh.indices))) {
+		ErrorLog("anim index");
 	}
 #pragma endregion
 
 #pragma region 設定
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	context->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	context->IASetInputLayout(*m_pShader->GetInputLayout());
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->VSSetConstantBuffers(0, 1, m_pShader->GetConstantBuffer());
-	context->PSSetConstantBuffers(0, 1, m_pShader->GetConstantBuffer());
-	context->VSSetShader(*m_pShader->GetVertexShader(), NULL, 0);
-	context->PSSetShader(*m_pShader->GetPixelShader(), NULL, 0);
-
+	//UINT stride = sizeof(VERTEX);
+	//UINT offset = 0;
+	//context->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+	//context->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	//context->IASetInputLayout(*m_pShader->GetInputLayout());
+	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//context->VSSetConstantBuffers(0, 1, m_pShader->GetConstantBuffer());
+	//context->PSSetConstantBuffers(0, 1, m_pShader->GetConstantBuffer());
+	//context->VSSetShader(*m_pShader->GetVertexShader(), NULL, 0);
+	//context->PSSetShader(*m_pShader->GetPixelShader(), NULL, 0);
 #pragma endregion
 	return S_OK;
 }
 
 void API::AnimationMesh::Render()
 {
-	auto&camera = API::Camera::GetInstance();
-	auto context = Direct3D11::GetInstance().GetImmediateContext();
+	//	トポロジー
+	SetupTopology();
 
-	D3D11_MAPPED_SUBRESOURCE pdata;
-	MeshConstantBuffer cb;
-	//	コンスタントバッファの受け渡し
-	cb.m.world = transform.GetTranslationMatrix();
-	cb.m.view = camera.GetViewMatrix();
-	cb.m.proj = camera.GetProjMatrix();
-	cb.color = { 0,0,0,0 };
-	context->Map(*m_pShader->GetConstantBuffer(),0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
-	context->Unmap(*m_pShader->GetConstantBuffer(), 0);
+	//	コンスタントバッファ
+	SetupConstantBuffer();
 
-	//	頂点の受け渡し(斜めに線)
-	//頂点バッファの書き換えに成功していれば斜めに赤い線が描画されているはず
-	//DirectX::XMFLOAT3 vs[] = {
-	//{  0.1, 0.1,0 }  ,	//右上
-	//{ -0.1, 0.1,0 } ,	//左上
-	//{  0.1,-0.1,0 } ,	//右下
-	//{ -0.1,-0.1,0 },	//左下
-	//};
-	//std::vector<Graphic::MeshVertex>hoge;
-	//for (auto it : vs) {
-	//	hoge.push_back(it);
-	//}
-	//context->Map(m_pVertexBuffer.Get(),0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
-	//memcpy_s(pdata.pData, pdata.RowPitch, (void*)(hoge.data()), sizeof(VERTEX) * m_VertexCount);
-	//context->Unmap(m_pVertexBuffer.Get(), 0);
+	//	シェーダーのバインド
+	SetupBindShader();
 
-	//	描画
-	context->DrawIndexed(m_IndexCount, 0, 0);
+	//	頂点レイアウトのセットアップ
+	SetupInputLayout();
+
+	//	頂点バッファのセットアップ
+	SetupVertexBuffer();
+
+	//	インデックスバッファのセットアップ
+	SetupIndexBuffer();
+
+	//	テクスチャ
+	SetupTexture();
+
+	//	描画命令
+	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_IndexCount, 0, 0);
+
+
+}
+
+HRESULT API::AnimationMesh::CreateVertexBuffer(std::vector<MeshVertex> verttices)
+{
+	//	バッファの仕様
+	D3D11_BUFFER_DESC bd;
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(MeshVertex) * verttices.size();
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+	bd.MiscFlags = NULL;
+
+	//	サブリソースの仕様
+	D3D11_SUBRESOURCE_DATA sd;
+	sd.pSysMem = verttices.data();
+
+	//	頂点バッファ作成
+	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&sd,
+		m_pVertexBuffer.GetAddressOf()
+	);
+}
+
+HRESULT API::AnimationMesh::CreateIndexBuffer(std::vector<uint32_t> indices)
+{
+	//	頂点数保持
+	m_IndexCount = indices.size();
+
+	//	バッファの仕様
+	D3D11_BUFFER_DESC bd;
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(uint32_t)*indices.size();
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = NULL;
+
+	//	サブリソースの仕様	
+	D3D11_SUBRESOURCE_DATA sd;
+	SecureZeroMemory(&sd, sizeof(sd));
+	sd.pSysMem = indices.data();
+
+	//	インデックスバッファ作成
+	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&sd,
+		m_pIndexBuffer.GetAddressOf()
+	);
+}
+
+void API::AnimationMesh::SetupTopology()
+{
+	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void API::AnimationMesh::SetupInputLayout()
+{
+	try
+	{
+		//	shader
+		if (!m_pShader) {
+			throw "this setup bind shader is out of reference";
+		}
+		if (!*m_pShader->GetInputLayout()) {
+			throw "this shader is inputlayout has an invalid value";
+		}
+		Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
+			*m_pShader->GetInputLayout()
+		);
+	}
+	catch (const std::string error)
+	{
+		ErrorLog(error);
+		return;
+	}
+}
+
+void API::AnimationMesh::SetupIndexBuffer()
+{
+	static constexpr uint32_t indexBufferOffset = 0;
+	Direct3D11::GetInstance().GetImmediateContext()->IASetIndexBuffer(
+		m_pIndexBuffer.Get(),
+		DXGI_FORMAT_R32_UINT,
+		indexBufferOffset
+	);
+
+}
+
+void API::AnimationMesh::SetupVertexBuffer()
+{
+	uint32_t stride = sizeof(MeshVertex);
+	static constexpr uint32_t vertexBufferOffset = 0;
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+		0,
+		1,
+		m_pVertexBuffer.GetAddressOf(),
+		&stride,
+		&vertexBufferOffset
+	);
+
+}
+
+HRESULT API::AnimationMesh::SetupConstantBuffer()
+{
+	try
+	{
+		//	shader
+		if (!m_pShader) {
+			throw "this setup bind shader is out of reference";
+		}
+		if (!*m_pShader->GetConstantBuffer()) {
+			throw "this shader is constant buffer has an invalid value";
+		}
+
+		HRESULT hr;
+		DirectX::XMMATRIX w, v, p;
+
+		//	world
+		w = XMMatrixTranspose(transform->GetWorldMatrix());
+
+		//	view
+		v = XMMatrixTranspose(Camera::GetInstance().GetViewMatrix());
+
+		//	proj
+		p = XMMatrixTranspose(Camera::GetInstance().GetProjMatrix());
+
+		//	cbuffer
+		D3D11_MAPPED_SUBRESOURCE mapped;
+		MeshConstantBuffer value;
+
+		hr = Direct3D11::GetInstance().GetImmediateContext()->Map(
+			*m_pShader->GetConstantBuffer(),
+			NULL,
+			D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
+			NULL,
+			&mapped
+		);
+		if (FAILED(hr))
+		{
+			Direct3D11::GetInstance().GetImmediateContext()->Unmap(
+				*m_pShader->GetConstantBuffer(),
+				NULL
+			);
+			throw "Failed to map constant buffer for this shader";
+		}
+
+		//	データの格納
+		value.m.world = w;
+		value.m.view = v;
+		value.m.proj = p;
+		value.color = {1,0,0,1};
+
+		//	メモリコピー
+		memcpy_s(mapped.pData, mapped.RowPitch, (void*)(&value), sizeof(value));
+
+		//	アクセス許可終了
+		Direct3D11::GetInstance().GetImmediateContext()->Unmap(
+			*m_pShader->GetConstantBuffer(),
+			NULL
+		);
+
+		//==================================================
+		//	頂点バッファの書き換え
+		auto context = Direct3D11::GetInstance().GetImmediateContext();
+		hr = context->Map(m_pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+		if (FAILED(hr)) {
+			ErrorLog("anim map failed");
+		}
+		std::vector<MeshVertex>vVertList = m_VertexList[animIndex.x][animIndex.y];
+		memcpy_s(
+			mapped.pData,
+			mapped.RowPitch,
+			(void*)(vVertList.data()),
+			sizeof(Graphic::MeshVertex) * m_VertexCount
+		);
+		context->Unmap(m_pVertexBuffer.Get(), 0);
+		//==================================================
+
+
+		//	コンスタントバッファをシェーダーに登録
+
+		//	頂点シェーダー
+		Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
+			0,
+			1,
+			m_pShader->GetConstantBuffer()
+		);
+
+		//	ピクセルシェーダー
+		Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
+			0,
+			1,
+			m_pShader->GetConstantBuffer()
+		);
+
+	}
+	catch (const std::string error)
+	{
+		ErrorLog(error);
+		return E_FAIL;
+	}
+
+
+	return S_OK;
+}
+
+void API::AnimationMesh::SetupBindShader()
+{
+	try
+	{
+		if (!m_pShader) {
+			throw "this setup bind shader is out of reference";
+		}
+		if (!*m_pShader->GetVertexShader()) {
+			throw "this shader is vertex shader has an invalid value";
+		}
+		if (!*m_pShader->GetPixelShader()) {
+			throw "this shader is pixel shader has an invalid value";
+		}
+
+		//	頂点シェーダー
+		Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
+			*m_pShader->GetVertexShader(),
+			NULL,
+			0
+		);
+
+		//	ピクセルシェーダー
+		Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
+			*m_pShader->GetPixelShader(),
+			NULL,
+			0
+		);
+	}
+	catch (const std::string error)
+	{
+		ErrorLog(error);
+		return;
+	}
+
+}
+
+void API::AnimationMesh::SetupTexture()
+{
 }
 
