@@ -13,7 +13,8 @@
 #include <fstream>
 #include <algorithm>
 #include <Windows.h>
-
+#include <DirectXMath.h>
+using namespace DirectX;
 #include "FbxMaterial.h"
 Material*g_pMat;
 
@@ -373,10 +374,43 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			clusterRelativeCurrentPositionInverse = globalPos.Inverse()*clusterGlobalCurrentPosition;
 			vertexTransformMatrix = clusterRelativeCurrentPositionInverse * clusterRelativeInitPosition;
 		
+#pragma region 省略
+
+			FbxAMatrix rgip;
+			born->GetTransformMatrix(rgip);
+			rgip *= geometryOffset;
+
+			FbxAMatrix cgip;
+			born->GetTransformLinkMatrix(cgip);
+
+			FbxMatrix cgcp;
+			cgcp = born->GetLink()->EvaluateGlobalTransform(timeCount);
+
+			FbxMatrix crip;
+			crip = cgip.Inverse() * rgip;
+
+			FbxMatrix crcpi;
+			crcpi = globalPos.Inverse() * cgcp;
+
+			FbxMatrix vtm;
+			vtm = crcpi * crip;
+#pragma endregion
+
+
+
+			//	ボーンの持つ頂点インデックス分
 			for (int j = 0; j < born->GetControlPointIndicesCount(); ++j) {
+
+				//ボーンの"j"番目の頂点インデックス
 				auto index = born->GetControlPointIndices()[j];
+
+				//ボーンの"j"番目の重み
 				auto weight = born->GetControlPointWeights()[j];
+
+				//影響度 = 頂点変換行列 * 重み
 				auto influence = vertexTransformMatrix * weight;
+
+				//影響度の保持
 				clusterDeformation[index] += influence;
 			}
 		}
@@ -386,6 +420,31 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		for (int i = 0; i < pMesh->GetControlPointsCount(); ++i)
 		{
 			auto v = clusterDeformation[i].MultNormalize(pMesh->GetControlPointAt(i));
+#pragma region メモ
+			auto m44 = clusterDeformation[i];
+			DirectX::XMMATRIX mat = {
+				(float)m44[0][0],(float)m44[0][1],(float)m44[0][2],(float)m44[0][3],
+				(float)m44[1][0],(float)m44[1][1],(float)m44[1][2],(float)m44[1][3],
+				(float)m44[2][0],(float)m44[2][1],(float)m44[2][2],(float)m44[2][3],
+				(float)m44[3][0],(float)m44[3][1],(float)m44[3][2],(float)m44[3][3],
+			};
+			auto vMesh = pMesh->GetControlPointAt(i);
+			DirectX::XMVECTOR vec = {
+				vMesh[0],vMesh[1],vMesh[2],vMesh[3],
+			};
+
+			//	Norm
+			auto a = DirectX::XMVector4Normalize(mat.r[0]);
+			auto b = XMVector4Normalize(mat.r[1]);
+			auto c = XMVector4Normalize(mat.r[2]);
+			auto d = XMVector4Normalize(mat.r[3]);
+
+
+			//XMVECTOR b = {
+			//	m44[0][0],m44[1][0],m44[2][0],m44[3][0]
+			//};
+			//auto c = XMVector4Normalize(b);
+#pragma endregion
 
 			//	格納処理
 			animMesh->vertices[i].x = (float)v[0];

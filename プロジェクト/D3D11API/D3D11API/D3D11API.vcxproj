@@ -176,6 +176,7 @@
     <ClInclude Include="include\MyGame.h" />
     <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\Singleton.h" />
+    <ClInclude Include="include\SkeltonAnimationMesh.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\SpriteShader.h" />
     <ClInclude Include="include\stdafx.h" />
