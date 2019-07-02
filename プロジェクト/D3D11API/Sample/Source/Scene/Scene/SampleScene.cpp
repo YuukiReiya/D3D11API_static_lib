@@ -17,6 +17,7 @@
 #include <Mesh.h>
 #include <Hoge.h>
 #include <Camera.h>
+#include <SkeltonAnimationMesh.h>
 
 /*!
 	@brief	usingディレクティブ
@@ -29,13 +30,13 @@ using namespace std;
 	@using	API
 */
 using namespace API;
-
+using namespace Anim;
 /*!
 	@var	g_pMesh
 	@brief	メッシュ
 */
 shared_ptr<Mesh>g_pMesh;
-
+shared_ptr<Anim::SkeltonAnimationMesh>g_pSAnimMesh;
 /*!
 	@var	g_pShader
 	@brief	シェーダー
@@ -103,7 +104,7 @@ void SampleScene::Initialize()
 #pragma endregion
 
 #pragma region 後輩ちゃん
-//
+
 //	string texPath[14] =
 //	{
 //		"後輩ちゃん/skin.png",
@@ -137,14 +138,19 @@ void SampleScene::Initialize()
 //	}
 //
 //#pragma endregion
+#pragma endregion
 
 #pragma region Sample-Humanoid
 
-	//g_pMesh->Initialize("humanoid.yfm");
-	g_pMesh->Initialize("anim.yfm");
+	//g_pMesh->Initialize("anim.yfm");
+	g_pMesh->Initialize("twin.yfm"); 
 	g_pMesh->SetupMaterial(g_pMaterial.get());
 	g_pMesh->SetupShader(g_pMeshShader.get());
-	g_pMesh->transform->SetScale({ 0.01f });
+	//g_pMesh->transform->SetScale({ 0.01f });
+
+	g_pSAnimMesh = make_shared<SkeltonAnimationMesh>();
+	g_pSAnimMesh->Init();
+	g_pSAnimMesh->transform->SetScale({ 0.01f });
 #pragma endregion
 
 
@@ -283,6 +289,12 @@ void SampleScene::Update()
 	t->SetScale(scale);
 #pragma endregion
 
+	if (Keyboard::GetButtonDown(Keyboard::c_Back)) {
+		
+		auto lpos = g_pMesh->transform->GetPosition();
+		auto lscale = g_pMesh->transform->GetScale();
+
+	}
 #pragma endregion
 
 #pragma region カメラ操作
@@ -389,5 +401,6 @@ void SampleScene::Render()
 	}
 
 	g_pMesh->Render();
+	//g_pSAnimMesh->Render();
 	//g_pMesh1->Render();
 }

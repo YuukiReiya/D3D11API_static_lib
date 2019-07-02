@@ -174,6 +174,7 @@
     <ClInclude Include="include\MeshShader.h" />
     <ClInclude Include="include\MeshVertex.h" />
     <ClInclude Include="include\MyGame.h" />
+    <ClInclude Include="include\ps_AnimMesh.h" />
     <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\Singleton.h" />
     <ClInclude Include="include\SkeltonAnimationMesh.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\Transform.h" />
+    <ClInclude Include="include\vs_AnimMesh.h" />
     <ClInclude Include="include\Wave.h" />
     <ClInclude Include="include\WICTextureLoader.h" />
     <ClInclude Include="include\Window.h" />
@@ -203,6 +205,7 @@
     <ClCompile Include="include\MeshReadHelper.cpp" />
     <ClCompile Include="include\MeshShader.cpp" />
     <ClCompile Include="include\ShaderManager.cpp" />
+    <ClCompile Include="include\SkeltonAnimationMesh.cpp" />
     <ClCompile Include="include\Sprite.cpp" />
     <ClCompile Include="include\SpriteShader.cpp" />
     <ClCompile Include="include\stdafx.cpp">
