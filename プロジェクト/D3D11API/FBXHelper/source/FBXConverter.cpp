@@ -328,6 +328,12 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		FbxArray<FbxString*>animNameArray;
 		(*m_pScene)->FillAnimStackNameArray(animNameArray);
 
+		if (animNameArray.GetCount() == 0) {
+			wic::SetColor(Red);
+			cout << "Failed to read animation!" << endl;
+			return;
+		}
+
 		cout << "anim list" << endl;
 		for (int i = 0; i < animNameArray.GetCount();++i) {
 			auto it = animNameArray.GetAt(i);
