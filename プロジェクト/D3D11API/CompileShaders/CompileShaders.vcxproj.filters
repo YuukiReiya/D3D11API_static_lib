@@ -17,5 +17,7 @@
   <ItemGroup>
     <FxCompile Include="..\cso\ps_test.psh" />
     <FxCompile Include="..\cso\vs_test.vsh" />
+    <FxCompile Include="..\cso\ps_AnimMesh.psh" />
+    <FxCompile Include="..\cso\vs_AnimMesh.vsh" />
   </ItemGroup>
 </Project>

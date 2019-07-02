@@ -17,6 +17,7 @@
 #include <Mesh.h>
 #include <Hoge.h>
 #include <Camera.h>
+#include <SkeltonAnimationMesh.h>
 
 /*!
 	@brief	usingディレクティブ
@@ -29,13 +30,12 @@ using namespace std;
 	@using	API
 */
 using namespace API;
-
+using namespace Anim;
 /*!
 	@var	g_pMesh
 	@brief	メッシュ
 */
 shared_ptr<Mesh>g_pMesh;
-
 
 using VMesh = vector<shared_ptr<Mesh>>;
 VMesh g_vpMesh;
@@ -43,6 +43,7 @@ using VMaterial = vector<shared_ptr<Material>>;
 VMaterial vMat;
 
 
+shared_ptr<Anim::SkeltonAnimationMesh>g_pSAnimMesh;
 /*!
 	@var	g_pShader
 	@brief	シェーダー
@@ -106,7 +107,6 @@ void SampleScene::Initialize()
 	for (auto&it : g_vpMesh) { it->SetupShader(g_pMeshShader.get()); }
 	g_pMaterial->SetupTexture("hoge.png");
 	g_pMeshShader->Setup();
-
 #pragma region Sample-Humanoid
 	//g_pMesh->Initialize("humanoid.yfm");
 	//g_pMesh->Initialize("humanoid.yfm");
@@ -206,6 +206,12 @@ void SampleScene::Update()
 		system("pause");
 	}
 
+	if (Keyboard::GetButtonDown(Keyboard::c_Back)) {
+		
+		auto lpos = g_pMesh->transform->GetPosition();
+		auto lscale = g_pMesh->transform->GetScale();
+
+	}
 #pragma endregion
 
 #pragma region カメラ操作
