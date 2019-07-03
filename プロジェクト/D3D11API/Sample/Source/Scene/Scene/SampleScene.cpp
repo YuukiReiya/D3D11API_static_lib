@@ -141,10 +141,10 @@ void SampleScene::Initialize()
 #pragma region Sample-Humanoid
 
 	//g_pMesh->Initialize("humanoid.yfm");
-	g_pMesh->Initialize("anim.yfm");
+	g_pMesh->Initialize("twin.yfm");
 	g_pMesh->SetupMaterial(g_pMaterial.get());
 	g_pMesh->SetupShader(g_pMeshShader.get());
-	g_pMesh->transform->SetScale({ 0.01f });
+	//g_pMesh->transform->SetScale({ 0.01f });
 #pragma endregion
 
 
@@ -282,6 +282,11 @@ void SampleScene::Update()
 	}
 	t->SetScale(scale);
 #pragma endregion
+	if (Keyboard::GetButton(Keyboard::c_Back)) {
+		auto cp = Camera::GetInstance().GetEyePt();
+		auto cl = Camera::GetInstance().GetLookAtPt();
+		system("pause");
+	}
 
 #pragma endregion
 
