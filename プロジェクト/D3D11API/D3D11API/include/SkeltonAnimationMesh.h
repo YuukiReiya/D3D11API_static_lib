@@ -48,7 +48,7 @@ namespace API {
 		{
 		public:
 			SkeltonAnimationMesh() {};
-			~SkeltonAnimationMesh() {};
+			~SkeltonAnimationMesh() { Destroy(); };
 
 			HRESULT Init();
 			void Destroy();
