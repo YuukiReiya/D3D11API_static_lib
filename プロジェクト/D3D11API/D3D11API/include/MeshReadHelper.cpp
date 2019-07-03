@@ -25,7 +25,6 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 
 	ReadBuffer ret;
 	string buf;
-	string t = "}";
 
 	getline(ifs, buf);
 	//インデックス
@@ -40,6 +39,7 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 		buf = buf.substr(a + 1);
 	}
 
+	string t = "}";
 	//uv
 	getline(ifs, buf);
 	while (true)
@@ -121,13 +121,13 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 				auto g = b.substr(0, f + 1);
 
 				//tmp.position.y = stof(g);
-				ret.vertices[index].position.x = stof(g);
+				ret.vertices[index].position.y = stof(g);
 
 				b = b.substr(f + 1);
 
 				//	z
 				//tmp.position.z = stof(b);
-				ret.vertices[index].position.x = stof(b);
+				ret.vertices[index].position.z = stof(b);
 				//ret.vertices.push_back(tmp);
 				index++;
 			}
