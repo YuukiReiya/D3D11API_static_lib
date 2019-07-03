@@ -75,6 +75,8 @@ void SampleScene::Initialize()
 	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
 	g_pMaterial = make_shared<Material>();
 
+#pragma region 後輩ちゃん
+#if 0
 	//複数メッシュ
 	string texPath[14] =
 	{
@@ -105,6 +107,9 @@ void SampleScene::Initialize()
 		g_vpMesh.push_back(inst);
 	}
 	for (auto&it : g_vpMesh) { it->SetupShader(g_pMeshShader.get()); }
+#endif
+#pragma endregion
+
 	g_pMaterial->SetupTexture("hoge.png");
 	g_pMeshShader->Setup();
 #pragma region Sample-Humanoid
@@ -114,6 +119,14 @@ void SampleScene::Initialize()
 	g_pMesh->SetupMaterial(g_pMaterial.get());
 	g_pMesh->SetupShader(g_pMeshShader.get());
 #pragma endregion
+
+#pragma region スキニング
+
+	g_pSAnimMesh = make_shared<SkeltonAnimationMesh>();
+	g_pSAnimMesh->Init();
+
+#pragma endregion
+
 
 }
 
@@ -290,5 +303,7 @@ void SampleScene::Render()
 {
 	//for (auto it : g_vpMesh) { it->Render(); }
 
-	g_pMesh->Render();
+	//g_pMesh->Render();
+
+	g_pSAnimMesh->Render();
 }
