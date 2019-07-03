@@ -36,6 +36,13 @@ using namespace API;
 */
 shared_ptr<Mesh>g_pMesh;
 
+
+using VMesh = vector<shared_ptr<Mesh>>;
+VMesh g_vpMesh;
+using VMaterial = vector<shared_ptr<Material>>;
+VMaterial vMat;
+
+
 /*!
 	@var	g_pShader
 	@brief	ƒVƒF[ƒ_[
@@ -54,8 +61,6 @@ shared_ptr<API::Material>g_pMaterial;
 SampleScene::SampleScene()
 {
 }
-std::vector<API::Mesh>vMesh;
-std::vector<std::shared_ptr<API::Material>>vMaterial;
 
 /*!
 	@fn		Initialize
@@ -69,103 +74,46 @@ void SampleScene::Initialize()
 	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
 	g_pMaterial = make_shared<Material>();
 
-	//g_pMesh->Initialize("mesh1.yfm");
-	//g_pMesh->Initialize("test.yfm","TEX_00100_anathema_H_D.png");
-	//g_pMesh->Initialize("test3.yfm", "hoge.png");
-	//g_pMesh->Initialize("test4.yfm","TEX_00100_anathema_H_D.png");
-	//g_pMesh->Initialize("test.yfm","pm0025_00_BodyA1.png");
-	//g_pMesh->Initialize("test7.yfm", "hoge.png");
-	//g_pMaterial->SetupTexture("hoge.png");
-	//g_pMesh->Initialize("test8.yfm");
-	//g_pMesh->SetupMaterial(g_pMaterial.get());
-	//g_pMesh->Initialize("test99-2.yfm", "hoge.png");
-	//g_pMesh->Initialize("cube.yfm", "hoge.png");
+	//•¡”ƒƒbƒVƒ…
+	string texPath[14] =
+	{
+		"Œã”y‚¿‚á‚ñ/skin.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/eye.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/face.png",
+		"Œã”y‚¿‚á‚ñ/hair.png",
+		"Œã”y‚¿‚á‚ñ/eye.png",
+		"Œã”y‚¿‚á‚ñ/clothes.png",
+		"Œã”y‚¿‚á‚ñ/clothes.png",
+		"Œã”y‚¿‚á‚ñ/facial.png",
+	};
+	for (int i = 0; i < 14; ++i) {
 
-	//g_pMesh->Initialize("•`‰æƒeƒXƒg/test_draw.yfm", "hoge.png");
-	//g_pMesh->Initialize("abc.yfm");
+		auto mat = make_shared<Material>();
+		mat->SetupTexture(texPath[i]);
+		vMat.push_back(mat);
 
-
+		auto inst = make_shared<Mesh>();
+		inst->Initialize("Œã”y‚¿‚á‚ñ/test00-" + to_string(i) + ".yfm");
+		inst->SetupMaterial(mat.get());
+		g_vpMesh.push_back(inst);
+	}
+	for (auto&it : g_vpMesh) { it->SetupShader(g_pMeshShader.get()); }
+	g_pMaterial->SetupTexture("hoge.png");
 	g_pMeshShader->Setup();
-	g_pMesh->SetupShader(g_pMeshShader.get());
-
-#pragma region ƒsƒJƒ`ƒ…ƒE
-	//std::string texPathes[4] = { "pm0025_00_BodyA1.png","pm0025_00_BodyB1.png","pm0025_00_Eye1.png","pm0025_00_Mouth1.png", };
-	//for (int i = 0; i < 4; ++i)
-	//{
-	//	Mesh mesh;
-	//	shared_ptr<Material> mat = make_shared<Material>();
-	//	mesh.Initialize("ƒ|ƒPƒ‚ƒ“/pokemon-" + to_string(i) + ".yfm");
-	//	mat->SetupTexture("ƒ|ƒPƒ‚ƒ“/" + texPathes[i]);
-	//	vMesh.push_back(mesh);
-	//	vMaterial.push_back(mat);
-	//	vMesh[i].SetupMaterial(vMaterial[i].get());
-	//}
-#pragma endregion
-
-#pragma region Œã”y‚¿‚á‚ñ
-//
-//	string texPath[14] =
-//	{
-//		"Œã”y‚¿‚á‚ñ/skin.png",
-//		"Œã”y‚¿‚á‚ñ/face.png",
-//		"Œã”y‚¿‚á‚ñ/eye.png",
-//		"Œã”y‚¿‚á‚ñ/face.png",
-//		"Œã”y‚¿‚á‚ñ/face.png",
-//		"Œã”y‚¿‚á‚ñ/face.png",
-//		"Œã”y‚¿‚á‚ñ/face.png",
-//		"Œã”y‚¿‚á‚ñ/face.png",
-//		"Œã”y‚¿‚á‚ñ/face.png",
-//		"Œã”y‚¿‚á‚ñ/hair.png",
-//		"Œã”y‚¿‚á‚ñ/eye.png",
-//		"Œã”y‚¿‚á‚ñ/clothes.png",
-//		"Œã”y‚¿‚á‚ñ/clothes.png",
-//		"Œã”y‚¿‚á‚ñ/facial.png",
-//	};
-//	for (size_t i = 0; i < 14; i++)
-//	{
-//		Mesh ptr;
-//		std::shared_ptr<Material>mat = make_shared<Material>();
-//		ptr.Initialize("Œã”y‚¿‚á‚ñ/test99-" + to_string(i) + ".yfm");
-//		mat->SetupTexture(texPath[i]);
-//		vMesh.push_back(ptr);
-//		vMaterial.push_back(mat);
-//		vMesh[i].SetupMaterial(vMaterial[i].get());
-//	}
-//	for (auto& it : vMesh)
-//	{
-//		it.SetupShader(g_pMeshShader.get());
-//	}
-//
-//#pragma endregion
 
 #pragma region Sample-Humanoid
-
+	//g_pMesh->Initialize("humanoid.yfm");
 	//g_pMesh->Initialize("humanoid.yfm");
 	g_pMesh->Initialize("twin.yfm");
 	g_pMesh->SetupMaterial(g_pMaterial.get());
 	g_pMesh->SetupShader(g_pMeshShader.get());
-	//g_pMesh->transform->SetScale({ 0.01f });
 #pragma endregion
-
-
-#pragma region SD-Unity
-	//string texPath = "ƒ†ƒjƒeƒB‚¿‚á‚ñ/utc_all2.png";
-	//shared_ptr<Material>mat = make_shared<Material>();
-	//mat->SetupTexture(texPath);
-	//vMaterial.push_back(mat);
-	//for (int i = 0; i < 12; ++i)
-	//{
-	//	Mesh ptr;
-	//	ptr.Initialize("ƒ†ƒjƒeƒB‚¿‚á‚ñ/sd-unity-" + to_string(i) + ".yfm");
-	//	vMesh.push_back(ptr);
-	//	vMesh[i].SetupMaterial(vMaterial[0].get());
-	//}
-#pragma endregion
-
-
-	if (!vMesh.empty()) {
-		for (auto&it : vMesh) { it.SetupShader(g_pMeshShader.get()); }
-	}
 
 }
 
@@ -176,10 +124,6 @@ void SampleScene::Initialize()
 void SampleScene::Finalize()
 {
 	cout << "sample destroy:" << endl;
-	for (auto&it : vMesh) {
-		it.Finalize();
-	}
-	vMesh.clear();
 }
 
 /*!
@@ -194,29 +138,27 @@ void SampleScene::Update()
 	auto& t = g_pMesh->transform;
 #pragma region ‰ñ“]
 
-	static float x = 0, y = 0, z = 0;
+	//static float x = 0, y = 0, z = 0;
 
-	if (Keyboard::GetButton(Keyboard::c_Left)) {
-		x -= val;
-	}
-	if (Keyboard::GetButton(Keyboard::c_Right)) {
-		x += val;
-	}
-	if (Keyboard::GetButton(Keyboard::c_Up)) {
-		y += val;
-	}
-	if (Keyboard::GetButton(Keyboard::c_Down)) {
-		y -= val;
-	}
-	if (Keyboard::GetButton(Keyboard::c_Back)) {
-		z -= val;
-	}
-	if (Keyboard::GetButton(Keyboard::c_Delete)) {
-		z += val;
-	}
-	t->Rotate(x,y,z);
-
-	if (!vMesh.empty()) { for (auto it : vMesh) { it.transform->Rotate(x, y, z); } }
+	//if (Keyboard::GetButton(Keyboard::c_Left)) {
+	//	x -= val;
+	//}
+	//if (Keyboard::GetButton(Keyboard::c_Right)) {
+	//	x += val;
+	//}
+	//if (Keyboard::GetButton(Keyboard::c_Up)) {
+	//	y += val;
+	//}
+	//if (Keyboard::GetButton(Keyboard::c_Down)) {
+	//	y -= val;
+	//}
+	//if (Keyboard::GetButton(Keyboard::c_Back)) {
+	//	z -= val;
+	//}
+	//if (Keyboard::GetButton(Keyboard::c_Delete)) {
+	//	z += val;
+	//}
+	//t->Rotate(x,y,z);
 #pragma endregion
 
 #pragma region ˆÚ“®
@@ -242,30 +184,6 @@ void SampleScene::Update()
 	}
 	g_pMesh->transform->SetPosition(pos);
 
-	if (!vMesh.empty()) {
-		for (auto it : vMesh) {
-			auto pos = it.transform->GetPosition();
-			if (Keyboard::GetButton('a')) {
-				pos.x -= val;
-			}
-			if (Keyboard::GetButton('d')) {
-				pos.x += val;
-			}
-			if (Keyboard::GetButton('w')) {
-				pos.y += val;
-			}
-			if (Keyboard::GetButton('s')) {
-				pos.y -= val;
-			}
-			if (Keyboard::GetButton('q')) {
-				pos.z -= val;
-			}
-			if (Keyboard::GetButton('e')) {
-				pos.z += val;
-			}
-			it.transform->SetPosition(pos);
-		}
-	}
 #pragma endregion
 
 #pragma region Šgk
@@ -356,8 +274,6 @@ void SampleScene::Update()
 #endif // defined UseCameraAction
 
 #pragma endregion
-
-	
 }
 
 /*!
@@ -366,33 +282,7 @@ void SampleScene::Update()
 */
 void SampleScene::Render()
 {
-#pragma region Œã”y‚¿‚á‚ñ
-#ifdef use_multiple1
-	for (auto& it : vMesh)
-	{
-		it.Render();
-	}
-#endif
-#pragma endregion
-
-
-
-	if (!vMesh.empty())
-	{
-		for (auto it : vMesh) { it.Render(); }
-#pragma region Unity-Chan
-		//vMesh[1].Render();
-		//vMesh[2].Render();
-#pragma endregion
-#pragma region ƒsƒJƒ`ƒ…ƒE
-		//vMesh[0].Render();	//	“·‘Ì
-		//vMesh[1].Render();		//	
-		//vMesh[2].Render();
-		//vMesh[3].Render();
-		//for (int i = 0; i < 1;++i) { vMesh[i].Render(); }
-#pragma endregion
-	}
+	//for (auto it : g_vpMesh) { it->Render(); }
 
 	g_pMesh->Render();
-	//g_pMesh1->Render();
 }
