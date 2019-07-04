@@ -18,20 +18,25 @@ using namespace DirectX;
 struct alignas(16) AnimConstantBuffer
 {
 	MatrixConstantBuffer m;
-	DirectX::XMMATRIX bornMat[12];
+	DirectX::XMMATRIX bornMat[12];//packoffsetか最後に持ってくるの安定か…
 };
 #pragma endregion
 
 #pragma region ボーン
 struct Bone
 {
-	unsigned int id;
-	Bone* child;
-	Bone* sibling;
-	XMFLOAT4X4 offsetMat;
-	XMFLOAT4X4 initMat;
-	XMFLOAT4X4 bornMat;
-	XMMATRIX* combMatPtr;
+	//	API
+	unsigned int id;		//	ボーンの番号(インデックスとして機能)
+	XMFLOAT4X4 offsetMat;	//	オフセット行列
+	XMMATRIX* combMatPtr;	//	影響度を直接管理する配列のポインタ(XMMATRIX*[]型)
+
+	//	Converter
+	Bone* child;			//	自身の子ボーン
+	Bone* sibling;			//	自身と同じ親を持つ兄弟ボーン
+	XMFLOAT4X4 initMat;		//	初期姿勢
+	XMFLOAT4X4 bornMat;		//	ボーン行列
+
+
 	Bone() :id(), child(), sibling(), combMatPtr() {
 		XMStoreFloat4x4(&initMat, XMMatrixIdentity());
 		XMStoreFloat4x4(&offsetMat, XMMatrixIdentity());
@@ -317,7 +322,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 	defBone[0] = XMMatrixIdentity();
 
 	static float ang = 0;
-	ang += 0.03f;
+	//ang += 0.03f;//コメントアウトで動かさない
 	//	適当に動かす
 	for (int i = 1; i < 7; ++i) {
 		defBone[i] = XMMatrixRotationY(XMConvertToRadians(sinf(ang) * 70.f));
