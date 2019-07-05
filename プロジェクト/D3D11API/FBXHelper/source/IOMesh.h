@@ -10,6 +10,7 @@
 #include <string_view>
 #include <iostream>
 #include "Mesh.h"
+#include "SkeltonMesh.h"
 namespace Utility{
 	class IOMesh
 	{
@@ -32,6 +33,8 @@ namespace Utility{
 		*/
 		static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
 
+
+		static void Output(std::string directoryPath, std::string fileName, FBX::Utility::SkeltonMesh mesh);
 	private:
 		/*!
 			@brief	コンストラクタ削除
