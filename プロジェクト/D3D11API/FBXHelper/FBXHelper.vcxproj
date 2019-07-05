@@ -165,6 +165,8 @@
   <ItemGroup>
     <ClInclude Include="source\Common.h" />
     <ClInclude Include="source\FbxMaterial.h" />
+    <ClInclude Include="source\SkeltonMesh.h" />
+    <ClInclude Include="source\Vertex.h" />
     <ClInclude Include="source\WinConsoleExpansion.h" />
     <ClInclude Include="source\FBXConverter.h" />
     <ClInclude Include="source\IOMesh.h" />
