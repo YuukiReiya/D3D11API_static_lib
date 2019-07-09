@@ -153,6 +153,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\cso\ps_AnimMesh60.h" />
+    <ClInclude Include="..\cso\vs_AnimMesh60.h" />
     <ClInclude Include="include\AbstractRender.h" />
     <ClInclude Include="include\AbstractShader.h" />
     <ClInclude Include="include\AudioMaster.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="include\ps_AnimMesh.h" />
     <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\Singleton.h" />
+    <ClInclude Include="include\SkeltonAnimationMesh.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\SpriteShader.h" />
     <ClInclude Include="include\stdafx.h" />

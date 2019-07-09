@@ -70,6 +70,9 @@ namespace D3D11 {
 				std::vector<Vertex> vertices;
 				std::vector<unsigned int>indices;
 
+				//	フレーム
+				unsigned int frame;
+
 				//	ボーン毎？
 				std::vector<DirectX::XMFLOAT4X4> initialMatrix;
 				std::vector<std::vector<DirectX::XMFLOAT4X4>> frameMatrix;

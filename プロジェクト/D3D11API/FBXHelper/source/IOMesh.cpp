@@ -171,12 +171,15 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, FB
 	}
 	ofs << endl;
 
-	//	4.重み
+	//	4."1頂点"が関連するボーン番号の最大数(一番関連ボーン数が多い頂点のボーン数)
+	ofs << mesh.maxBonesElementsCount << endl;
+
+	//	5.重み
 	for (auto v : mesh.vertices)
 	{
 		ofs << "{" << c_Space;
 		for (auto it : v.weight) {
-			ofs << it.second << c_Space;
+			ofs << it.first << ":" << it.second << c_Space;
 		}
 		ofs << "}";
 
@@ -185,7 +188,7 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, FB
 	}
 	ofs << endl;
 
-	//	5.初期姿勢
+	//	6.初期姿勢
 	for (auto it : mesh.initialMatrix)
 	{
 		ofs << "{"
@@ -197,10 +200,10 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, FB
 	}
 	ofs << endl;
 
-	//	6.フレーム数
+	//	7.フレーム数
 	ofs << mesh.frameMatrix.size() << endl;//	フレーム
 
-	//	7.フレーム時姿勢
+	//	8.フレーム時姿勢
 	for (size_t frame = 0; frame < mesh.frameMatrix.size(); ++frame)
 	{
 		for (auto it:mesh.frameMatrix[frame]) {
@@ -209,31 +212,9 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, FB
 				<< it.elemnts[0].x << c_Space << it.elemnts[0].y << c_Space << it.elemnts[0].z << c_Space << it.elemnts[0].w << c_Space
 				<< it.elemnts[1].x << c_Space << it.elemnts[1].y << c_Space << it.elemnts[1].z << c_Space << it.elemnts[1].w << c_Space
 				<< it.elemnts[2].x << c_Space << it.elemnts[2].y << c_Space << it.elemnts[2].z << c_Space << it.elemnts[2].w << c_Space
-				<< it.elemnts[3].x << c_Space << it.elemnts[3].y << c_Space << it.elemnts[3].z << c_Space << it.elemnts[3].w << c_Space
-				<< "}";
+				<< it.elemnts[3].x << c_Space << it.elemnts[3].y << c_Space << it.elemnts[3].z << c_Space << it.elemnts[3].w << "}";
 		}
 	}
 	ofs << endl;
 
-	//	"1頂点"が関連するボーン番号の最大数(一番関連ボーン数が多い頂点のボーン数)
-	ofs << mesh.maxBonesElementsCount << endl;
-
-	//	ボーンの番号
-	for (auto it : mesh.vertices)
-	{
-		//
-		ofs << "{";
-		for (size_t i = 0; i < mesh.maxBonesElementsCount; ++i)
-		{
-			string str;
-			if (it.indexOfBonesAffested.size() <= i) {
-				str = "0";//RootBoneを指定する必要がありそう
-			}
-			else {
-				str = to_string(it.indexOfBonesAffested[i]);
-			}
-			ofs << str << c_Space;
-		}
-		ofs << "}";
-	}
 }

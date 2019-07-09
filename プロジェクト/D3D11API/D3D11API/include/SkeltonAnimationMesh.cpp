@@ -4,8 +4,8 @@
 #include "Camera.h"
 #include "MatrixConstantBuffer.h"
 #include "MyGame.h"
-#include "vs_AnimMesh.h"
-#include "ps_AnimMesh.h"
+#include "../../cso/ps_AnimMesh60.h"
+#include "../../cso/vs_AnimMesh60.h"
 #include <DirectXMath.h>
 #include "MeshReadHelper.h"
 
@@ -18,7 +18,9 @@ using namespace DirectX;
 struct alignas(16) AnimConstantBuffer
 {
 	MatrixConstantBuffer m;
-	DirectX::XMMATRIX bornMat[12];//packoffsetか最後に持ってくるの安定か…
+	//DirectX::XMMATRIX bornMat[12];//packoffsetか最後に持ってくるの安定か…
+
+	DirectX::XMMATRIX bornMat[180];//packoffsetか最後に持ってくるの安定か…
 };
 #pragma endregion
 
@@ -34,13 +36,12 @@ struct Bone
 	Bone* child;			//	自身の子ボーン
 	Bone* sibling;			//	自身と同じ親を持つ兄弟ボーン
 	XMFLOAT4X4 initMat;		//	初期姿勢
-	XMFLOAT4X4 bornMat;		//	ボーン行列
+	std::vector<XMFLOAT4X4> frameMat;	//	フレーム行列
 
 
 	Bone() :id(), child(), sibling(), combMatPtr() {
 		XMStoreFloat4x4(&initMat, XMMatrixIdentity());
 		XMStoreFloat4x4(&offsetMat, XMMatrixIdentity());
-		XMStoreFloat4x4(&bornMat, XMMatrixIdentity());
 	}
 };
 #pragma endregion
@@ -140,47 +141,24 @@ HRESULT AnimShader::Setup()
 
 #define BONE
 #ifdef BONE
-Bone*g_Bones = new Bone[7];
+//Bone*g_Bones = new Bone[7];
+std::vector<Bone>g_Bones;
 
-static void CalcRelativeMat(Bone*bone, XMFLOAT4X4*offsetMat) {
-	if (bone->child) {
-		CalcRelativeMat(bone->child, &bone->offsetMat);
-	}
-	if (bone->sibling) {
-		CalcRelativeMat(bone->sibling, offsetMat);
-	}
-	if (offsetMat) {
-		XMMATRIX m = XMLoadFloat4x4(&bone->initMat);
-		m *= XMLoadFloat4x4(offsetMat);
-		XMStoreFloat4x4(&bone->initMat, m);
-	}
-}
-
-static void UpdateBone(Bone*bone, XMFLOAT4X4*worldMat) {
-	
-	XMMATRIX m = XMLoadFloat4x4(&bone->bornMat)*XMLoadFloat4x4(worldMat);
-	XMStoreFloat4x4(&bone->bornMat, m);
-
-	bone->combMatPtr[bone->id] = XMLoadFloat4x4(&bone->offsetMat)*XMLoadFloat4x4(&bone->bornMat);
-
-	if (bone->child) {
-		UpdateBone(bone->child, &bone->bornMat);
-	}
-
-	if (bone->sibling) {
-		UpdateBone(bone->sibling, worldMat);
-	}
-}
 #endif // BONE
 
 HRESULT API::Anim::SkeltonAnimationMesh::Init()
 {
-	auto data = Helper::MeshReadHelper::Read("twin.yfm");
+	//auto data = Helper::MeshReadHelper::Read("twin.yfm");
+	auto data = Helper::MeshReadHelper::ReadAnim("anim.yfm");
+
 
 	//	頂点
 	vector<AnimVertex>vv;
 #pragma region 頂点
 #ifdef BONE
+#if 0
+
+
 	AnimVertex vtx[] = {
 		{ DirectX::XMFLOAT3(-0.5000f, -2.2887f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{2, 0, 0, 0} },
 		{ DirectX::XMFLOAT3(-0.5000f, -1.2887f, 0.0f), DirectX::XMFLOAT3(0.50f, 0.50f, 0.00f), new int[4]{1, 2, 0, 0} },
@@ -205,15 +183,22 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 		data.vertices.push_back(it.position);
 	}
 #endif // 0
+#endif // BONE
 #pragma endregion
 	for (auto it : data.vertices) {
-		vv.push_back({it.position});
+
+		AnimVertex av;
+
+		av.position = it.position;
+		av.weights = it.weight;
+		vv.push_back(av);
 	}
 
 	//	頂点インデックス
 	vector<uint32_t>vi;
 #pragma region 頂点インデックス
 #ifdef BONE
+#if 0
 	uint32_t idx[39] = {
 		0, 1, 14,
 		1, 13, 14,
@@ -234,47 +219,38 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 		data.indices.push_back(it);
 	}
 #endif // 0
+#endif // BONE
 #pragma endregion
 	vi = data.indices;
 
 #pragma region ボーン情報
 #ifdef BONE
-	//	親子関係
-	g_Bones[0].child = &g_Bones[1];
-	g_Bones[1].child = &g_Bones[2];
-	g_Bones[3].child = &g_Bones[4];
-	g_Bones[5].child = &g_Bones[6];
-	g_Bones[1].sibling = &g_Bones[3];
-	g_Bones[3].sibling = &g_Bones[5];
+	const unsigned int c_BoneCount = data.initialMatrix.size();
+	const unsigned int c_AnimFrame = data.frame;
+	for (size_t i = 0; i < c_BoneCount; i++)
+	{
+		Bone bone;
 
-	//	初期姿勢
-	XMStoreFloat4x4(&g_Bones[0].initMat, XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
-	XMStoreFloat4x4(&g_Bones[1].initMat, XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
-	XMStoreFloat4x4(&g_Bones[2].initMat, XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
-	XMStoreFloat4x4(&g_Bones[3].initMat, XMMatrixRotationZ(XMConvertToRadians(150.0f)));
-	XMStoreFloat4x4(&g_Bones[4].initMat, XMMatrixRotationZ(XMConvertToRadians(150.0f)));
-	XMStoreFloat4x4(&g_Bones[5].initMat, XMMatrixRotationZ(XMConvertToRadians(30.0f)));
-	XMStoreFloat4x4(&g_Bones[6].initMat, XMMatrixRotationZ(XMConvertToRadians(30.0f)));
-	g_Bones[0].initMat._41 = 0, g_Bones[0].initMat._42 = 0;
-	g_Bones[1].initMat._41 = 0, g_Bones[1].initMat._42 = -1;
-	g_Bones[2].initMat._41 = 0, g_Bones[2].initMat._42 = -2;
-	g_Bones[3].initMat._41 = -0.683f, g_Bones[3].initMat._42 = 0.3943f;
-	g_Bones[4].initMat._41 = -1.549f, g_Bones[4].initMat._42 = 0.8943f;
-	g_Bones[5].initMat._41 = 0.683f, g_Bones[5].initMat._42 = 0.3943f;
-	g_Bones[6].initMat._41 = 1.549f, g_Bones[6].initMat._42 = 0.8943f;
+		bone.id = i;
 
-	//	オフセット行列行列
-	XMMATRIX* combMat = new XMMATRIX[7];
-	for (int i = 0; i < 7; ++i) {
-		g_Bones[i].id = i;
-		g_Bones[i].combMatPtr = combMat;
-		XMMATRIX m = DirectX::XMLoadFloat4x4(&g_Bones[i].initMat);
+		//	初期姿勢
+		bone.initMat = data.initialMatrix[i];
+
+		//	フレーム時姿勢
+		for (size_t f = 0; f < c_AnimFrame; f++)
+		{
+			bone.frameMat.push_back(data.frameMatrix[f][i]);
+		}
+
+		//	オフセット行列
+		XMMATRIX m = DirectX::XMLoadFloat4x4(&bone.initMat);
 		m = XMMatrixInverse(NULL, m);
-		XMStoreFloat4x4(&g_Bones[i].offsetMat, m);
-	}
+		XMStoreFloat4x4(&bone.offsetMat, m);
 
-	//	親から見た相対姿勢に変換
-	CalcRelativeMat(g_Bones, 0);
+
+		//	
+		g_Bones.push_back(bone);
+	}
 #endif
 #pragma endregion
 
@@ -303,7 +279,6 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 void API::Anim::SkeltonAnimationMesh::Destroy()
 {
 #ifdef BONE
-	delete[] g_Bones;
 
 #endif // BONE
 
@@ -318,25 +293,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 
 #pragma region ボーン
 #ifdef BONE
-	XMMATRIX defBone[7];
-	defBone[0] = XMMatrixIdentity();
 
-	static float ang = 0;
-	//ang += 0.03f;//コメントアウトで動かさない
-	//	適当に動かす
-	for (int i = 1; i < 7; ++i) {
-		defBone[i] = XMMatrixRotationY(XMConvertToRadians(sinf(ang) * 70.f));
-	}
-
-	//	親から見た姿勢を更新
-	for (int i = 0; i < 7; ++i) {
-		XMStoreFloat4x4(&g_Bones[i].bornMat, defBone[i] * XMLoadFloat4x4(&g_Bones[i].initMat));
-	}
-
-	//	姿勢をローカル変換
-	XMFLOAT4X4 global;
-	XMStoreFloat4x4(&global, XMMatrixRotationZ(ang * 0.1f));
-	UpdateBone(g_Bones, &global);
 
 #endif // BONE
 
@@ -382,22 +339,17 @@ void API::Anim::SkeltonAnimationMesh::Render()
 	cb.m.world = w;
 	cb.m.view = v;
 	cb.m.proj = p;
-	//cb.bornMat
+	//cb.frameMat
 
 #pragma region ボーンの計算？
 
-	for (int i = 0; i < 7; ++i) {
-		//	変換行列
-		cb.bornMat[i] = g_Bones[i].combMatPtr[i];
-
-		//	初期姿勢
-		//cb.bornMat[i] = XMMatrixIdentity();
-
-		//	ゼロ行列
-		//cb.bornMat[i] = XMMATRIX(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	const unsigned int c_BoneCount = g_Bones.size();
+	for (size_t i = 0; i < c_BoneCount; i++)
+	{
+		DirectX::XMMATRIX m = DirectX::XMLoadFloat4x4(&g_Bones[i].offsetMat) * DirectX::XMLoadFloat4x4(&g_Bones[i].frameMat[animIndex]);
+		cb.bornMat[i] = m;
 		
-		//※受け渡しを行わないと描画がおかしくなるし、
-		//　ゼロ行列を投げると描画されない
+		cb.bornMat[i] = DirectX::XMMatrixIdentity();
 	}
 
 #pragma endregion

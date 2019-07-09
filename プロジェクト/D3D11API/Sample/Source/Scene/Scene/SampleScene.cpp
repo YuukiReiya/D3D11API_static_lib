@@ -124,7 +124,7 @@ void SampleScene::Initialize()
 
 	g_pSAnimMesh = make_shared<SkeltonAnimationMesh>();
 	g_pSAnimMesh->Init();
-
+	g_pSAnimMesh->transform->SetScale({ 0.01f });
 #pragma endregion
 
 

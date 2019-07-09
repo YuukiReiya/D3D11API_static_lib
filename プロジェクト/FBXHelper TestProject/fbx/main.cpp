@@ -32,6 +32,6 @@ int main()
 	Converter::FBXConverter::Setup();
 	FBXConverter::Execute(fbxPath, yfmPath);
 	FBXConverter::Teardown();
-	system("pause");
+	//system("pause");
 	return 0;
 }

@@ -2,6 +2,7 @@
 #include <wrl/client.h>
 #include <memory>
 #include <vector>
+#include <unordered_map>
 #include "AbstractRender.h"
 #include "MeshVertex.h"
 #include "MeshShader.h"
@@ -17,26 +18,23 @@ namespace API {
 		struct alignas(16) AnimVertex
 			:D3D11::Graphic::BaseVertex
 		{
-			DirectX::XMFLOAT3 weight;
+			std::unordered_map<unsigned int,float> weights;
 			BYTE bornIndex[4];
 
 			//	コンストラクタ
 			AnimVertex()
 				:D3D11::Graphic::BaseVertex(),
-				weight({0,0,0}),
 				bornIndex()
 			{}
 			//	引数付きコンストラクタ
 			inline AnimVertex(DirectX::XMFLOAT3 pos)
 				: D3D11::Graphic::BaseVertex(pos),
-				weight({0,0,0}),
 				bornIndex()
 			{}
 
 			//	引数付きコンストラクタ
 			inline AnimVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 weight,int index[])
-				: D3D11::Graphic::BaseVertex(pos),
-				weight(weight)
+				: D3D11::Graphic::BaseVertex(pos)
 			{
 				for (int i = 0; i < 4; ++i) { bornIndex[i] = index[i]; }
 			}
@@ -55,6 +53,8 @@ namespace API {
 			void Render()override;
 			std::shared_ptr<Transform>transform;
 			Color color;
+
+			int animIndex = 0;
 		private:
 			std::shared_ptr<D3D11::Graphic::AbstractShader>m_pShader;
 
