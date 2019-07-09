@@ -14,12 +14,15 @@ namespace API {
 
 	namespace Anim {
 
+		static constexpr unsigned int c_AffectedBoneCount = 4;
+
 		//	頂点
 		struct alignas(16) AnimVertex
 			:D3D11::Graphic::BaseVertex
 		{
-			std::unordered_map<unsigned int,float> weights;
-			BYTE bornIndex[4];
+			//std::unordered_map<unsigned int,float> weights;
+			float weights[c_AffectedBoneCount];
+			BYTE bornIndex[c_AffectedBoneCount];
 
 			//	コンストラクタ
 			AnimVertex()

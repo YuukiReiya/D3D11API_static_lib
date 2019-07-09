@@ -190,7 +190,7 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 		AnimVertex av;
 
 		av.position = it.position;
-		av.weights = it.weight;
+		//av.weights = it.weight;
 		vv.push_back(av);
 	}
 
