@@ -129,6 +129,12 @@
     <ClInclude Include="..\cso\vs_AnimMesh60.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\cso\ps_SkinAnim.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cso\vs_SkinAnim.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\Camera.cpp">

@@ -154,7 +154,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\cso\ps_AnimMesh60.h" />
+    <ClInclude Include="..\cso\ps_SkinAnim.h" />
     <ClInclude Include="..\cso\vs_AnimMesh60.h" />
+    <ClInclude Include="..\cso\vs_SkinAnim.h" />
     <ClInclude Include="include\AbstractRender.h" />
     <ClInclude Include="include\AbstractShader.h" />
     <ClInclude Include="include\AudioMaster.h" />

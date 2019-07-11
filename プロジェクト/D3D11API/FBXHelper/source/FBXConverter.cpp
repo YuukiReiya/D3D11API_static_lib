@@ -458,11 +458,11 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				//	参照するインデックス
 				auto index = indices[j];
 
-				//	関連ボーン番号 格納
-				animMesh->vertices[index].indexOfBonesAffested.push_back(i);
-
 				//	重み
 				auto weight = weights[j];
+
+				//	関連ボーン番号 格納
+				animMesh->vertices[index].indexOfBonesAffested.push_back(i);
 
 				//	<Key,Value>:ボーン番号,重み
 				animMesh->vertices[index].weight[i] = static_cast<float>(weight);
@@ -482,6 +482,21 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 		}
 		animMesh->maxBonesElementsCount = maxBonesCount;
+
+		int q = 0;
+		for (auto it : animMesh->vertices) {
+
+			//if (it.weight.size() == 6) {
+
+			//	for (auto item : it.weight) {
+
+			//		cout << item.second << ",";
+			//	}
+
+			//	system("pause");
+			//}
+			q++;
+		}
 
 		//for (int i = 0; i < boneCount; ++i) {
 		//	auto born = skinDeformer->GetCluster(i);

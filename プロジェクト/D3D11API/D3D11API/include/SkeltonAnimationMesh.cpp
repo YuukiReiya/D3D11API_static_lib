@@ -4,8 +4,10 @@
 #include "Camera.h"
 #include "MatrixConstantBuffer.h"
 #include "MyGame.h"
-#include "../../cso/ps_AnimMesh60.h"
-#include "../../cso/vs_AnimMesh60.h"
+//#include "../../cso/ps_AnimMesh60.h"
+//#include "../../cso/vs_AnimMesh60.h"
+#include "../../cso/vs_SkinAnim.h"
+#include "../../cso/ps_SkinAnim.h"
 #include <DirectXMath.h>
 #include "MeshReadHelper.h"
 
@@ -20,13 +22,18 @@ struct alignas(16) AnimConstantBuffer
 	MatrixConstantBuffer m;
 	//DirectX::XMMATRIX bornMat[12];//packoffsetか最後に持ってくるの安定か…
 
-	DirectX::XMMATRIX bornMat[180];//packoffsetか最後に持ってくるの安定か…
+
+	//	18 = 1頂点に"影響を与えるボーン数" * ポリゴンを構成する頂点数(三角ポリゴンなので = 3)
+	//∴ 6(7) * 3 = 18(21)
+	//DirectX::XMMATRIX bornMat[18];//packoffsetか最後に持ってくるの安定か…
+	DirectX::XMMATRIX bornMat[60];//packoffsetか最後に持ってくるの安定か…
 };
 #pragma endregion
 
 #pragma region ボーン
 struct Bone
 {
+#if 0
 	//	API
 	unsigned int id;		//	ボーンの番号(インデックスとして機能)
 	XMFLOAT4X4 offsetMat;	//	オフセット行列
@@ -43,6 +50,17 @@ struct Bone
 		XMStoreFloat4x4(&initMat, XMMatrixIdentity());
 		XMStoreFloat4x4(&offsetMat, XMMatrixIdentity());
 	}
+#else
+	//	オフセット行列
+	XMMATRIX offsetMat;
+
+	//	初期姿勢
+	XMMATRIX initMat;
+
+	//	フレーム時姿勢(0フレーム)
+	XMMATRIX frameMat;
+#endif
+
 };
 #pragma endregion
 
@@ -70,7 +88,7 @@ HRESULT AnimShader::Setup()
 	D3D11_INPUT_ELEMENT_DESC desc[] = {
 			{ "POSITION",		0,DXGI_FORMAT_R32G32B32_FLOAT,	0,	0							,D3D11_INPUT_PER_VERTEX_DATA,0},
 			{ "BLENDWEIGHT",	0,DXGI_FORMAT_R32G32B32_FLOAT,  0,	D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-			{ "BLENDINDICES",	0,DXGI_FORMAT_R8_UINT,			0,	D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+		//	{ "BLENDINDICES",	0,DXGI_FORMAT_R8_UINT,			0,	D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 	};
 	
 	hr = device->CreateInputLayout(
@@ -149,7 +167,7 @@ std::vector<Bone>g_Bones;
 HRESULT API::Anim::SkeltonAnimationMesh::Init()
 {
 	//auto data = Helper::MeshReadHelper::Read("twin.yfm");
-	auto data = Helper::MeshReadHelper::ReadAnim("anim.yfm");
+	auto data = Helper::MeshReadHelper::ReadAnim("Anim/anim.yfm");
 
 
 	//	頂点
@@ -189,8 +207,23 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 
 		AnimVertex av;
 
+		//	座標
 		av.position = it.position;
-		//av.weights = it.weight;
+
+		//	重み
+		for (size_t i = 0; i < c_AffectedBoneCount; i++)
+		{
+			//	読み込みデータが存在しない
+			if (it.weight.size() <= i) {
+				av.weights[i] = 0.0f;
+				av.bornIndex[i] = 0;
+				continue;
+			}
+			auto index = it.indexOfBonesAffested[i];
+			av.bornIndex[i] = index;
+			av.weights[i] = it.weight[index];
+		}
+		
 		vv.push_back(av);
 	}
 
@@ -223,7 +256,7 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 #pragma endregion
 	vi = data.indices;
 
-#pragma region ボーン情報
+#pragma region ボーン情報初期化
 #ifdef BONE
 	const unsigned int c_BoneCount = data.initialMatrix.size();
 	const unsigned int c_AnimFrame = data.frame;
@@ -231,22 +264,24 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 	{
 		Bone bone;
 
-		bone.id = i;
 
 		//	初期姿勢
-		bone.initMat = data.initialMatrix[i];
-
+		//bone.initMat = data.initialMatrix[i];
+		bone.initMat = XMLoadFloat4x4(&data.initialMatrix[i]);
 		//	フレーム時姿勢
-		for (size_t f = 0; f < c_AnimFrame; f++)
+		/*for (size_t f = 0; f < c_AnimFrame; f++)
 		{
 			bone.frameMat.push_back(data.frameMatrix[f][i]);
-		}
 
-		//	オフセット行列
-		XMMATRIX m = DirectX::XMLoadFloat4x4(&bone.initMat);
-		m = XMMatrixInverse(NULL, m);
-		XMStoreFloat4x4(&bone.offsetMat, m);
+		}*/
+		//bone.frameMat = data.frameMatrix[0][i];
+		bone.frameMat = XMLoadFloat4x4(&data.frameMatrix[0][i]);
 
+		//	オフセット行列 = 初期姿勢の逆行列
+		//XMMATRIX m = DirectX::XMLoadFloat4x4(&bone.initMat);
+		//m = XMMatrixInverse(NULL, m);
+		//XMStoreFloat4x4(&bone.offsetMat, m);
+		bone.offsetMat = XMMatrixInverse(NULL, bone.initMat);
 
 		//	
 		g_Bones.push_back(bone);
@@ -344,19 +379,27 @@ void API::Anim::SkeltonAnimationMesh::Render()
 #pragma region ボーンの計算？
 
 	const unsigned int c_BoneCount = g_Bones.size();
-	for (size_t i = 0; i < c_BoneCount; i++)
+	//for (size_t i = 0; i < c_BoneCount; i++)
+	//{
+	//	DirectX::XMMATRIX m = DirectX::XMLoadFloat4x4(&g_Bones[i].offsetMat) * DirectX::XMLoadFloat4x4(&g_Bones[i].frameMat[animIndex]);
+	//	cb.bornMat[i] = m;
+	//	
+	//	cb.bornMat[i] = DirectX::XMMatrixIdentity();
+	//}
+
+	for (size_t i = 1; i < c_BoneCount; i++)
 	{
-		DirectX::XMMATRIX m = DirectX::XMLoadFloat4x4(&g_Bones[i].offsetMat) * DirectX::XMLoadFloat4x4(&g_Bones[i].frameMat[animIndex]);
-		cb.bornMat[i] = m;
-		
-		cb.bornMat[i] = DirectX::XMMatrixIdentity();
+		cb.bornMat[i] = g_Bones[i].offsetMat*g_Bones[i].frameMat;
+
+		cb.bornMat[i] = XMMatrixTranspose(cb.bornMat[i]);
+
+		cb.bornMat[i] = XMMatrixIdentity();
 	}
 
 #pragma endregion
 
 	//	メモリコピー
 	memcpy_s(mp.pData, mp.RowPitch, (void*)(&cb), sizeof(cb));
-
 	//	アクセス許可終了
 	Direct3D11::GetInstance().GetImmediateContext()->Unmap(
 		*m_pShader->GetConstantBuffer(),

@@ -14,7 +14,7 @@ namespace API {
 
 	namespace Anim {
 
-		static constexpr unsigned int c_AffectedBoneCount = 4;
+		static constexpr unsigned int c_AffectedBoneCount = 6;
 
 		//	’¸“_
 		struct alignas(16) AnimVertex
@@ -39,7 +39,7 @@ namespace API {
 			inline AnimVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 weight,int index[])
 				: D3D11::Graphic::BaseVertex(pos)
 			{
-				for (int i = 0; i < 4; ++i) { bornIndex[i] = index[i]; }
+				for (int i = 0; i < c_AffectedBoneCount; ++i) { bornIndex[i] = index[i]; }
 			}
 
 		};

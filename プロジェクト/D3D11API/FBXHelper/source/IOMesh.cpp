@@ -164,7 +164,7 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, FB
 	}
 	ofs << endl;
 
-	//	3.頂点
+	//	3.頂点座標
 	for (auto it : mesh.vertices) 
 	{
 		ofs << "{" << it.position.x << c_Space << it.position.y << c_Space << it.position.z << "}";
@@ -173,6 +173,8 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, FB
 
 	//	4."1頂点"が関連するボーン番号の最大数(一番関連ボーン数が多い頂点のボーン数)
 	ofs << mesh.maxBonesElementsCount << endl;
+
+	cout<<"max elem count = "<< mesh.maxBonesElementsCount << endl;
 
 	//	5.重み
 	for (auto v : mesh.vertices)
