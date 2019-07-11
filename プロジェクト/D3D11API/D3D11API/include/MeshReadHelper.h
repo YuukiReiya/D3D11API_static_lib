@@ -42,9 +42,10 @@ namespace D3D11 {
 
 			struct SkeltonMesh
 			{
-				SkeltonMesh() :vertices(), indices(0), maxBonesElementsCount(0) {};
+				SkeltonMesh() :vertices(), indices(0), maxBonesElementsCount(0), frame(0) {};
 				~SkeltonMesh() = default;
 
+				int frame;
 				struct Vertex
 				{
 				public:
