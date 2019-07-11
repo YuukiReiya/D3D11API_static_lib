@@ -28,15 +28,19 @@ struct Bone
 	unsigned int id;
 	Bone* child;
 	Bone* sibling;
-	XMFLOAT4X4 offsetMat;
-	XMFLOAT4X4 initMat;
-	XMFLOAT4X4 bornMat;
+	XMMATRIX offsetMat;
+	XMMATRIX initMat;
+	XMMATRIX bornMat;
 	XMMATRIX* combMatPtr;
-	Bone() :id(), child(), sibling(), combMatPtr() {
-		XMStoreFloat4x4(&initMat, XMMatrixIdentity());
-		XMStoreFloat4x4(&offsetMat, XMMatrixIdentity());
-		XMStoreFloat4x4(&bornMat, XMMatrixIdentity());
-	}
+	Bone() :
+		id(),
+		child(),
+		sibling(),
+		combMatPtr(),
+		initMat(XMMatrixIdentity()),
+		offsetMat(XMMatrixIdentity()),
+		bornMat(XMMatrixIdentity())
+	{}
 };
 #pragma endregion
 
@@ -137,7 +141,7 @@ HRESULT AnimShader::Setup()
 #ifdef BONE
 Bone*g_Bones = new Bone[7];
 
-static void CalcRelativeMat(Bone*bone, XMFLOAT4X4*offsetMat) {
+static void CalcRelativeMat(Bone*bone, XMMATRIX*offsetMat) {
 	if (bone->child) {
 		CalcRelativeMat(bone->child, &bone->offsetMat);
 	}
@@ -145,18 +149,14 @@ static void CalcRelativeMat(Bone*bone, XMFLOAT4X4*offsetMat) {
 		CalcRelativeMat(bone->sibling, offsetMat);
 	}
 	if (offsetMat) {
-		XMMATRIX m = XMLoadFloat4x4(&bone->initMat);
-		m *= XMLoadFloat4x4(offsetMat);
-		XMStoreFloat4x4(&bone->initMat, m);
+		bone->initMat *= *offsetMat;
 	}
 }
 
-static void UpdateBone(Bone*bone, XMFLOAT4X4*worldMat) {
+static void UpdateBone(Bone*bone, XMMATRIX*worldMat) {
 	
-	XMMATRIX m = XMLoadFloat4x4(&bone->bornMat)*XMLoadFloat4x4(worldMat);
-	XMStoreFloat4x4(&bone->bornMat, m);
-
-	bone->combMatPtr[bone->id] = XMLoadFloat4x4(&bone->offsetMat)*XMLoadFloat4x4(&bone->bornMat);
+	bone->bornMat *= *worldMat;
+	bone->combMatPtr[bone->id] = bone->offsetMat*bone->bornMat;
 
 	if (bone->child) {
 		UpdateBone(bone->child, &bone->bornMat);
@@ -243,29 +243,39 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 	g_Bones[3].sibling = &g_Bones[5];
 
 	//	初期姿勢
-	XMStoreFloat4x4(&g_Bones[0].initMat, XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
-	XMStoreFloat4x4(&g_Bones[1].initMat, XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
-	XMStoreFloat4x4(&g_Bones[2].initMat, XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
-	XMStoreFloat4x4(&g_Bones[3].initMat, XMMatrixRotationZ(XMConvertToRadians(150.0f)));
-	XMStoreFloat4x4(&g_Bones[4].initMat, XMMatrixRotationZ(XMConvertToRadians(150.0f)));
-	XMStoreFloat4x4(&g_Bones[5].initMat, XMMatrixRotationZ(XMConvertToRadians(30.0f)));
-	XMStoreFloat4x4(&g_Bones[6].initMat, XMMatrixRotationZ(XMConvertToRadians(30.0f)));
-	g_Bones[0].initMat._41 = 0, g_Bones[0].initMat._42 = 0;
-	g_Bones[1].initMat._41 = 0, g_Bones[1].initMat._42 = -1;
-	g_Bones[2].initMat._41 = 0, g_Bones[2].initMat._42 = -2;
-	g_Bones[3].initMat._41 = -0.683f, g_Bones[3].initMat._42 = 0.3943f;
-	g_Bones[4].initMat._41 = -1.549f, g_Bones[4].initMat._42 = 0.8943f;
-	g_Bones[5].initMat._41 = 0.683f, g_Bones[5].initMat._42 = 0.3943f;
-	g_Bones[6].initMat._41 = 1.549f, g_Bones[6].initMat._42 = 0.8943f;
+	g_Bones[0].initMat = XMMatrixRotationZ(XMConvertToRadians(-90.0f));
+	g_Bones[1].initMat = XMMatrixRotationZ(XMConvertToRadians(-90.0f));
+	g_Bones[2].initMat = XMMatrixRotationZ(XMConvertToRadians(-90.0f));
+	g_Bones[3].initMat = XMMatrixRotationZ(XMConvertToRadians(150.0f));
+	g_Bones[4].initMat = XMMatrixRotationZ(XMConvertToRadians(150.0f));
+	g_Bones[5].initMat = XMMatrixRotationZ(XMConvertToRadians(30.0f));
+	g_Bones[6].initMat = XMMatrixRotationZ(XMConvertToRadians(30.0f));
+
+	
+
+	g_Bones[0].initMat.r[3].m128_f32[0] = 0, g_Bones[0].initMat.r[3].m128_f32[1] = 0;
+	g_Bones[1].initMat.r[3].m128_f32[0] = 0, g_Bones[1].initMat.r[3].m128_f32[1] = -1;
+	g_Bones[2].initMat.r[3].m128_f32[0] = 0, g_Bones[2].initMat.r[3].m128_f32[1] = -2;
+	g_Bones[3].initMat.r[3].m128_f32[0] = -0.683f, g_Bones[3].initMat.r[3].m128_f32[1] = 0.3943f;
+	g_Bones[4].initMat.r[3].m128_f32[0] = -1.549f, g_Bones[4].initMat.r[3].m128_f32[1] = 0.8943f;
+	g_Bones[5].initMat.r[3].m128_f32[0] = 0.683f, g_Bones[5].initMat.r[3].m128_f32[1] = 0.3943f;
+	g_Bones[6].initMat.r[3].m128_f32[0] = 1.549f, g_Bones[6].initMat.r[3].m128_f32[1] = 0.8943f;
+
+
+	//g_Bones[0].initMat._41 = 0, g_Bones[0].initMat._42 = 0;
+	//g_Bones[1].initMat._41 = 0, g_Bones[1].initMat._42 = -1;
+	//g_Bones[2].initMat._41 = 0, g_Bones[2].initMat._42 = -2;
+	//g_Bones[3].initMat._41 = -0.683f, g_Bones[3].initMat._42 = 0.3943f;
+	//g_Bones[4].initMat._41 = -1.549f, g_Bones[4].initMat._42 = 0.8943f;
+	//g_Bones[5].initMat._41 = 0.683f, g_Bones[5].initMat._42 = 0.3943f;
+	//g_Bones[6].initMat._41 = 1.549f, g_Bones[6].initMat._42 = 0.8943f;
 
 	//	オフセット行列行列
 	XMMATRIX* combMat = new XMMATRIX[7];
 	for (int i = 0; i < 7; ++i) {
 		g_Bones[i].id = i;
 		g_Bones[i].combMatPtr = combMat;
-		XMMATRIX m = DirectX::XMLoadFloat4x4(&g_Bones[i].initMat);
-		m = XMMatrixInverse(NULL, m);
-		XMStoreFloat4x4(&g_Bones[i].offsetMat, m);
+		g_Bones[i].offsetMat= XMMatrixInverse(NULL, g_Bones[i].initMat);
 	}
 
 	//	親から見た相対姿勢に変換
@@ -325,12 +335,11 @@ void API::Anim::SkeltonAnimationMesh::Render()
 
 	//	親から見た姿勢を更新
 	for (int i = 0; i < 7; ++i) {
-		XMStoreFloat4x4(&g_Bones[i].bornMat, defBone[i] * XMLoadFloat4x4(&g_Bones[i].initMat));
+		g_Bones[i].bornMat = defBone[i] * g_Bones[i].initMat;
 	}
 
 	//	姿勢をローカル変換
-	XMFLOAT4X4 global;
-	XMStoreFloat4x4(&global, XMMatrixRotationZ(ang * 0.1f));
+	XMMATRIX global = XMMatrixRotationZ(ang * 0.1f);
 	UpdateBone(g_Bones, &global);
 
 #endif // BONE
