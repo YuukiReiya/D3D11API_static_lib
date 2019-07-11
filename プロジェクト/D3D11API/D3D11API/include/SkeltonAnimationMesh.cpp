@@ -175,31 +175,6 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 	//	頂点
 	vector<AnimVertex>vv;
 #pragma region 頂点
-#ifdef BONE
-	AnimVertex vtx[] = {
-		{ DirectX::XMFLOAT3(-0.5000f, -2.2887f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{2, 0, 0, 0} },
-		{ DirectX::XMFLOAT3(-0.5000f, -1.2887f, 0.0f), DirectX::XMFLOAT3(0.50f, 0.50f, 0.00f), new int[4]{1, 2, 0, 0} },
-		{ DirectX::XMFLOAT3(-0.5000f, -0.2887f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{0, 0, 0, 0} },
-		{ DirectX::XMFLOAT3(-1.3660f,  0.2113f, 0.0f), DirectX::XMFLOAT3(0.50f, 0.50f, 0.00f), new int[4]{3, 4, 0, 0} },
-		{ DirectX::XMFLOAT3(-2.2321f,  0.7113f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{4, 0, 0, 0} },
-		{ DirectX::XMFLOAT3(-1.7321f,  1.5774f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{4, 0, 0, 0} },
-		{ DirectX::XMFLOAT3(-0.8660f,  1.0774f, 0.0f), DirectX::XMFLOAT3(0.50f, 0.50f, 0.00f), new int[4]{3, 4, 0, 0} },
-		{ DirectX::XMFLOAT3(0.0000f,  0.5774f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{0, 0, 0, 0} },
-		{ DirectX::XMFLOAT3(0.8660f,  1.0774f, 0.0f), DirectX::XMFLOAT3(0.50f, 0.50f, 0.00f), new int[4]{5, 6, 0, 0} },
-		{ DirectX::XMFLOAT3(1.7321f,  1.5774f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{6, 0, 0, 0} },
-		{ DirectX::XMFLOAT3(2.2321f,  0.7113f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{6, 0, 0, 0} },
-		{ DirectX::XMFLOAT3(1.3660f,  0.2113f, 0.0f), DirectX::XMFLOAT3(0.50f, 0.50f, 0.00f), new int[4]{5, 6, 0, 0} },
-		{ DirectX::XMFLOAT3(0.5000f, -0.2887f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{0, 0, 0, 0} },
-		{ DirectX::XMFLOAT3(0.5000f, -1.2887f, 0.0f), DirectX::XMFLOAT3(0.50f, 0.50f, 0.00f), new int[4]{1, 2, 0, 0} },
-		{ DirectX::XMFLOAT3(0.5000f, -2.2887f, 0.0f), DirectX::XMFLOAT3(1.00f, 0.00f, 0.00f), new int[4]{2, 0, 0, 0} },
-	};
-
-	data.vertices.clear();
-	for (auto it:vtx)
-	{
-		data.vertices.push_back(it.position);
-	}
-#endif // 0
 #pragma endregion
 	for (auto it : data.vertices) {
 		vv.push_back({it.position});
@@ -208,79 +183,11 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 	//	頂点インデックス
 	vector<uint32_t>vi;
 #pragma region 頂点インデックス
-#ifdef BONE
-	uint32_t idx[39] = {
-		0, 1, 14,
-		1, 13, 14,
-		1, 2, 13,
-		2, 12, 13,
-		2, 7, 12,
-		2, 6, 7,
-		2, 3, 6,
-		3, 5, 6,
-		3, 4, 5,
-		7, 8, 12,
-		8, 11, 12,
-		8, 9, 11,
-		9, 10, 11,
-	};
-	data.indices.clear();
-	for (auto it : idx) {
-		data.indices.push_back(it);
-	}
-#endif // 0
 #pragma endregion
 	vi = data.indices;
 
 #pragma region ボーン情報
-#ifdef BONE
-	//	親子関係
-	g_Bones[0].child = &g_Bones[1];
-	g_Bones[1].child = &g_Bones[2];
-	g_Bones[3].child = &g_Bones[4];
-	g_Bones[5].child = &g_Bones[6];
-	g_Bones[1].sibling = &g_Bones[3];
-	g_Bones[3].sibling = &g_Bones[5];
-
 	//	初期姿勢
-	g_Bones[0].initMat = XMMatrixRotationZ(XMConvertToRadians(-90.0f));
-	g_Bones[1].initMat = XMMatrixRotationZ(XMConvertToRadians(-90.0f));
-	g_Bones[2].initMat = XMMatrixRotationZ(XMConvertToRadians(-90.0f));
-	g_Bones[3].initMat = XMMatrixRotationZ(XMConvertToRadians(150.0f));
-	g_Bones[4].initMat = XMMatrixRotationZ(XMConvertToRadians(150.0f));
-	g_Bones[5].initMat = XMMatrixRotationZ(XMConvertToRadians(30.0f));
-	g_Bones[6].initMat = XMMatrixRotationZ(XMConvertToRadians(30.0f));
-
-	
-
-	g_Bones[0].initMat.r[3].m128_f32[0] = 0, g_Bones[0].initMat.r[3].m128_f32[1] = 0;
-	g_Bones[1].initMat.r[3].m128_f32[0] = 0, g_Bones[1].initMat.r[3].m128_f32[1] = -1;
-	g_Bones[2].initMat.r[3].m128_f32[0] = 0, g_Bones[2].initMat.r[3].m128_f32[1] = -2;
-	g_Bones[3].initMat.r[3].m128_f32[0] = -0.683f, g_Bones[3].initMat.r[3].m128_f32[1] = 0.3943f;
-	g_Bones[4].initMat.r[3].m128_f32[0] = -1.549f, g_Bones[4].initMat.r[3].m128_f32[1] = 0.8943f;
-	g_Bones[5].initMat.r[3].m128_f32[0] = 0.683f, g_Bones[5].initMat.r[3].m128_f32[1] = 0.3943f;
-	g_Bones[6].initMat.r[3].m128_f32[0] = 1.549f, g_Bones[6].initMat.r[3].m128_f32[1] = 0.8943f;
-
-
-	//g_Bones[0].initMat._41 = 0, g_Bones[0].initMat._42 = 0;
-	//g_Bones[1].initMat._41 = 0, g_Bones[1].initMat._42 = -1;
-	//g_Bones[2].initMat._41 = 0, g_Bones[2].initMat._42 = -2;
-	//g_Bones[3].initMat._41 = -0.683f, g_Bones[3].initMat._42 = 0.3943f;
-	//g_Bones[4].initMat._41 = -1.549f, g_Bones[4].initMat._42 = 0.8943f;
-	//g_Bones[5].initMat._41 = 0.683f, g_Bones[5].initMat._42 = 0.3943f;
-	//g_Bones[6].initMat._41 = 1.549f, g_Bones[6].initMat._42 = 0.8943f;
-
-	//	オフセット行列行列
-	XMMATRIX* combMat = new XMMATRIX[7];
-	for (int i = 0; i < 7; ++i) {
-		g_Bones[i].id = i;
-		g_Bones[i].combMatPtr = combMat;
-		g_Bones[i].offsetMat= XMMatrixInverse(NULL, g_Bones[i].initMat);
-	}
-
-	//	親から見た相対姿勢に変換
-	CalcRelativeMat(g_Bones, 0);
-#endif
 #pragma endregion
 
 
@@ -386,7 +293,6 @@ void API::Anim::SkeltonAnimationMesh::Render()
 	cb.m.world = w;
 	cb.m.view = v;
 	cb.m.proj = p;
-	//cb.bornMat
 
 #pragma region ボーンの計算？
 
