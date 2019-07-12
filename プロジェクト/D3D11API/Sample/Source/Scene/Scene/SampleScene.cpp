@@ -148,34 +148,35 @@ void SampleScene::Update()
 	auto val = 0.1f;
 
 #pragma region ƒƒbƒVƒ…
-	auto& t = g_pMesh->transform;
+	//auto& t = g_pMesh->transform;
+	auto& t = g_pSAnimMesh->transform;
 #pragma region ‰ñ“]
 
-	//static float x = 0, y = 0, z = 0;
+	static float x = 0, y = 0, z = 0;
 
-	//if (Keyboard::GetButton(Keyboard::c_Left)) {
-	//	x -= val;
-	//}
-	//if (Keyboard::GetButton(Keyboard::c_Right)) {
-	//	x += val;
-	//}
-	//if (Keyboard::GetButton(Keyboard::c_Up)) {
-	//	y += val;
-	//}
-	//if (Keyboard::GetButton(Keyboard::c_Down)) {
-	//	y -= val;
-	//}
-	//if (Keyboard::GetButton(Keyboard::c_Back)) {
-	//	z -= val;
-	//}
-	//if (Keyboard::GetButton(Keyboard::c_Delete)) {
-	//	z += val;
-	//}
-	//t->Rotate(x,y,z);
+	if (Keyboard::GetButton(Keyboard::c_Left)) {
+		x -= val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Right)) {
+		x += val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Up)) {
+		y += val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Down)) {
+		y -= val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Back)) {
+		z -= val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Delete)) {
+		z += val;
+	}
+	t->Rotate(x,y,z);
 #pragma endregion
 
 #pragma region ˆÚ“®
-	auto pos = g_pMesh->transform->GetPosition();
+	auto pos = t->GetPosition();
 
 	if (Keyboard::GetButton('a')) {
 		pos.x -= val;
@@ -195,7 +196,7 @@ void SampleScene::Update()
 	if (Keyboard::GetButton('e')) {
 		pos.z += val;
 	}
-	g_pMesh->transform->SetPosition(pos);
+	t->SetPosition(pos);
 
 #pragma endregion
 
