@@ -6,7 +6,6 @@
 #include "MyGame.h"
 #include "MeshCompVS.h"
 #include "MeshCompPS.h"
-#include <DirectXMath.h>
 #include "MeshReadHelper.h"
 #include "MeshConstantBuffer.h"
 #include "MeshShader.h"
@@ -20,13 +19,52 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 {
 	auto data = Helper::MeshReadHelper::ReadAnim("Anim/anim.yfm");
 	
-	//	頂点
+#pragma region 読み込みデータのノーマライズ
+
+	//	頂点(初期姿勢)
 	for (auto it : data.vertices) {
 		MeshVertex v;
 		v.position = it.position;
 		m_Vertex.push_back(v);
 	}
 	//m_Vertex = data.vertices;
+
+	//	オフセット行列
+	for (auto it : data.initialMatrix)
+	{
+		XMMATRIX ofMat = XMMatrixInverse(0, XMLoadFloat4x4(&it));
+		m_OffsetMatrix.push_back(ofMat);
+	}
+
+	//	フレーム行列のスタック確保
+	m_FrameMatrix.resize(data.initialMatrix.size());
+	for (auto& it : m_FrameMatrix)
+	{
+		it.resize(30);
+	}
+
+	//	フレーム行列
+	for (int frame = 0; frame < data.frame; ++frame)
+	{
+		for (int bone = 0; bone < data.initialMatrix.size(); ++bone) {
+			XMMATRIX mat = XMLoadFloat4x4(&data.frameMatrix[frame][bone]);
+			m_FrameMatrix[bone][frame] = mat;
+		}
+	}
+	
+	//	重み & 関連ボーン番号
+	for (auto v : data.vertices) {
+
+		RelationInfo ri;
+		ri.boneNo = v.indexOfBonesAffested;
+		for (auto it : v.indexOfBonesAffested) {
+			ri.weight.push_back(v.weight[it]);
+		}
+		m_RI.push_back(ri);
+	}
+
+#pragma endregion
+
 
 	//	頂点バッファ
 	if (FAILED(CreateVertexBuffer(m_Vertex))) {
@@ -52,6 +90,7 @@ void API::Anim::SkeltonAnimationMesh::Destroy()
 {
 }
 
+#include "Keyboard.h"
 void API::Anim::SkeltonAnimationMesh::Render()
 {
 	HRESULT hr;
@@ -121,9 +160,45 @@ void API::Anim::SkeltonAnimationMesh::Render()
 	//	頂点の書き換え
 	//
 	{
+		//	確認用コード
+		//if (Keyboard::GetButtonDown('M')) {
+		//	m_Vertex[0].position = { 0,0,0 };
+		//	m_Vertex[1604].position = { 0,0,0 };
+		//}
 
 
+		//	ボーン行列を求める
+		//	BM = offsetMat * FrameMatrix
+		vector<XMMATRIX>boneMat;
+		for (int i = 0; i < m_FrameMatrix.size(); ++i)
+		{
+			XMMATRIX mat = m_OffsetMatrix[i] * m_FrameMatrix[i][0];
+			boneMat.push_back(mat);
+		}
 
+		//	頂点
+		for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
+		{
+			XMMATRIX compMat = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+			float lastWeight = 0;//	最後の重み
+			int size = m_RI[vCount].boneNo.size() - 1;
+			for (int i = 0; i < size; ++i)
+			{
+				float weight = m_RI[vCount].weight[i];
+				int index = m_RI[vCount].boneNo[i];
+				lastWeight += weight;
+				compMat += weight * boneMat[index];
+			}
+			compMat += boneMat[size] * (1.0f - lastWeight);
+
+			//compMat = XMMatrixTranspose(compMat);
+			m_Vertex[vCount].position = 
+			{
+				compMat.r[3].m128_f32[0],
+				compMat.r[3].m128_f32[1],
+				compMat.r[3].m128_f32[2],
+			};
+		}
 	}
 
 	memcpy_s(

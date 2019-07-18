@@ -9,6 +9,8 @@
 #include "Color.h"
 #include "StructShaderBase.h"
 #include "MeshVertex.h"
+#include <DirectXMath.h>
+
 
 namespace API {
 
@@ -39,6 +41,19 @@ namespace API {
 			template<class Vertex>
 			HRESULT CreateVertexBuffer(std::vector<Vertex>vertices);
 			HRESULT CreateIndexBuffer(std::vector<uint32_t>indices);
+
+			std::vector<DirectX::XMMATRIX>m_OffsetMatrix;
+
+			//	[ボーン][フレーム]
+			std::vector<std::vector<DirectX::XMMATRIX>>m_FrameMatrix;
+
+			struct RelationInfo
+			{
+				std::vector<uint32_t>boneNo;
+				std::vector<float>weight;
+			};
+			//[頂点番号]
+			std::vector<RelationInfo>m_RI;
 		};
 	}
 }
