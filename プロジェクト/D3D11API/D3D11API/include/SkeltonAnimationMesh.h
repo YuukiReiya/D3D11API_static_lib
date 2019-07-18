@@ -36,6 +36,7 @@ namespace API {
 
 			uint32_t m_IndexCount;
 
+			std::vector<D3D11::Graphic::MeshVertex>m_InitVertex;
 			std::vector<D3D11::Graphic::MeshVertex>m_Vertex;
 
 			template<class Vertex>

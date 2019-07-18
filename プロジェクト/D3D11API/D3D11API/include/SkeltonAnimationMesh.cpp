@@ -63,6 +63,9 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 		m_RI.push_back(ri);
 	}
 
+	//	初期頂点保存
+	m_InitVertex = m_Vertex;
+
 #pragma endregion
 
 
@@ -159,6 +162,8 @@ void API::Anim::SkeltonAnimationMesh::Render()
 	//
 	//	頂点の書き換え
 	//
+#define OVERWRITE_VERTEX
+#ifdef OVERWRITE_VERTEX
 	{
 		//	確認用コード
 		//if (Keyboard::GetButtonDown('M')) {
@@ -166,40 +171,126 @@ void API::Anim::SkeltonAnimationMesh::Render()
 		//	m_Vertex[1604].position = { 0,0,0 };
 		//}
 
+#pragma region アニメーション用コード
+#if 1
+		static int frame = 0;
+		static int animIndex = 0;
+		const int updateframe = 30;
+		frame++;
+		if (frame < updateframe) {
+			animIndex = animIndex < 30 - 1 ? ++animIndex : 0;
+			frame = 0;
+		}
+#else
+		static int animIndex = 0;
+#endif // 0
+#pragma endregion
 
 		//	ボーン行列を求める
 		//	BM = offsetMat * FrameMatrix
 		vector<XMMATRIX>boneMat;
 		for (int i = 0; i < m_FrameMatrix.size(); ++i)
 		{
-			XMMATRIX mat = m_OffsetMatrix[i] * m_FrameMatrix[i][0];
+			XMMATRIX mat = m_OffsetMatrix[i] * m_FrameMatrix[i][animIndex];
 			boneMat.push_back(mat);
 		}
 
 		//	頂点
+		//for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
+		//{
+		//	XMMATRIX compMat = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+		//	float lastWeight = 0;//	最後の重み
+		//	int size = m_RI[vCount].boneNo.size() - 1;
+		//	for (int i = 0; i < size; ++i)
+		//	{
+		//		float weight = m_RI[vCount].weight[i];
+		//		int index = m_RI[vCount].boneNo[i];
+		//		lastWeight += weight;
+		//		compMat += weight * boneMat[index];
+		//	}
+		//	compMat += boneMat[size] * (1.0f - lastWeight);
+
+#pragma region 初期姿勢座標
+#if 1
+		m_Vertex = m_InitVertex;
+#endif // 1
+#pragma endregion
+
+#pragma region v = Σ(V(n-1) * W(n-1) * FM(n-1)) + (V(n) * (1.0f - W(n)) * FB(n)) 
+#if 1
 		for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
 		{
-			XMMATRIX compMat = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-			float lastWeight = 0;//	最後の重み
-			int size = m_RI[vCount].boneNo.size() - 1;
-			for (int i = 0; i < size; ++i)
+			auto& v = m_Vertex[vCount];
+			auto loopCount = m_RI[vCount].boneNo.size() - 1;
+			XMVECTOR comb = {0,0,0,0};
+			float lastWeight = 0;
+			for (int i = 0; i < loopCount; ++i)
 			{
-				float weight = m_RI[vCount].weight[i];
-				int index = m_RI[vCount].boneNo[i];
+				auto boneIndex = m_RI[vCount].boneNo[i];
+				auto weight = m_RI[vCount].weight[i];
 				lastWeight += weight;
-				compMat += weight * boneMat[index];
+				XMVECTOR pos = {
+					v.position.x,
+					v.position.y,
+					v.position.z,
+					1
+				};
+				XMMATRIX m = boneMat[boneIndex] * weight;
+				m = XMMatrixTranspose(m);
+				comb += XMVector4Transform(pos, m);
 			}
-			compMat += boneMat[size] * (1.0f - lastWeight);
+			XMVECTOR lastPos = {
+				v.position.x,
+				v.position.y,
+				v.position.z,
+				1
+			};
+			XMMATRIX lastM = boneMat[m_RI[vCount].boneNo[loopCount]] * (1.0f - lastWeight);
+			lastM = XMMatrixTranspose(lastM);
+			comb += XMVector4Transform(lastPos, lastM);
 
-			//compMat = XMMatrixTranspose(compMat);
-			m_Vertex[vCount].position = 
-			{
-				compMat.r[3].m128_f32[0],
-				compMat.r[3].m128_f32[1],
-				compMat.r[3].m128_f32[2],
+
+			//	頂点
+			v.position = {
+				comb.m128_f32[0],
+				comb.m128_f32[1],
+				comb.m128_f32[2],
 			};
 		}
+#else
+#pragma endregion
+#pragma region v = Σ(V(n) * W(n) * FB(n))
+		for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
+		{
+			auto& v = m_Vertex[vCount];
+			auto loopCount = m_RI[vCount].boneNo.size();
+			XMVECTOR comb = { 0,0,0,0 };
+			for (int i = 0; i < loopCount; ++i)
+			{
+				auto boneIndex = m_RI[vCount].boneNo[i];
+				auto weight = m_RI[vCount].weight[i];
+				XMVECTOR pos = {
+					v.position.x,
+					v.position.y,
+					v.position.z,
+					1
+				};
+				XMMATRIX m = boneMat[boneIndex] * weight;
+				m = XMMatrixTranspose(m);
+				comb += XMVector4Transform(pos, m);
+			}
+
+			//	頂点
+			v.position = {
+				comb.m128_f32[0],
+				comb.m128_f32[1],
+				comb.m128_f32[2],
+			};
+		}
+#pragma endregion
+#endif 
 	}
+#endif
 
 	memcpy_s(
 		mp.pData,
@@ -226,6 +317,8 @@ void API::Anim::SkeltonAnimationMesh::Render()
 		m_pShader->GetConstantBuffer()
 	);
 
+
+#pragma endregion
 
 #pragma endregion
 
