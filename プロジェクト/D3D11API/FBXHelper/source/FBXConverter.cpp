@@ -321,7 +321,6 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		auto pNode = pMesh->GetNode();
 		//pNode->EvaluateGlobalTransform
 
-
 		//	アニメーション
 		FbxArray<FbxString*>animNameArray;
 		(*m_pScene)->FillAnimStackNameArray(animNameArray);
@@ -339,6 +338,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			auto it = animNameArray.GetAt(i);
 			cout << it << endl;
 		}
+		cout << "anim list count = " << animNameArray.Size() << endl;
 
 
 		auto setAnimData = animNameArray[0];
@@ -483,21 +483,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		}
 		animMesh->maxBonesElementsCount = maxBonesCount;
 
-		int q = 0;
-		for (auto it : animMesh->vertices) {
-
-			//if (it.weight.size() == 6) {
-
-			//	for (auto item : it.weight) {
-
-			//		cout << item.second << ",";
-			//	}
-
-			//	system("pause");
-			//}
-			q++;
-		}
-
+		{
 		//for (int i = 0; i < boneCount; ++i) {
 		//	auto born = skinDeformer->GetCluster(i);
 
@@ -519,7 +505,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		//		clusterDeformation[index] += influence;
 		//	}
 		//}
-		Utility::IOMesh::Output("Animation/", "anim",*animMesh);
+		}
+		Utility::IOMesh::Output("Animation/", "hand",*animMesh);
 
 		cout << "animMesh v " << animMesh->vertices.size() << endl;
 		cout << "animMesh vi " << animMesh->indices.size() << endl;
