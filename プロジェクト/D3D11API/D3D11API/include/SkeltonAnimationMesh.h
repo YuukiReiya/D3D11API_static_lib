@@ -14,39 +14,6 @@ namespace API {
 
 	namespace Anim {
 
-		//	頂点
-		struct alignas(16) AnimVertex
-			:D3D11::Graphic::BaseVertex
-		{
-			//	ボーン数
-			static constexpr int c_AbsBoneCount = 7;
-
-			//DirectX::XMFLOAT3 weight;
-			//BYTE bornIndex[c_AbsBoneCount];
-
-			////	コンストラクタ
-			//AnimVertex()
-			//	:D3D11::Graphic::BaseVertex(),
-			//	weight({0,0,0}),
-			//	bornIndex()
-			//{}
-			////	引数付きコンストラクタ
-			//inline AnimVertex(DirectX::XMFLOAT3 pos)
-			//	: D3D11::Graphic::BaseVertex(pos),
-			//	weight({0,0,0}),
-			//	bornIndex()
-			//{}
-
-			////	引数付きコンストラクタ
-			//inline AnimVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 weight,int index[])
-			//	: D3D11::Graphic::BaseVertex(pos),
-			//	weight(weight)
-			//{
-			//	for (int i = 0; i < 4; ++i) { bornIndex[i] = index[i]; }
-			//}
-
-		};
-
 		class SkeltonAnimationMesh
 			: public AbstractRender
 		{
@@ -65,15 +32,13 @@ namespace API {
 			Microsoft::WRL::ComPtr<ID3D11Buffer>m_pVertexBuffer;
 			Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
 
-			HRESULT CreateVertexBuffer(std::vector<AnimVertex>verttices);
-			HRESULT CreateVertexBuffer(std::vector<D3D11::Graphic::MeshVertex>verttices);
-			HRESULT CreateIndexBuffer(std::vector<uint32_t>indices);
-
-
-
 			uint32_t m_IndexCount;
+
+			std::vector<D3D11::Graphic::MeshVertex>m_Vertex;
+
+			template<class Vertex>
+			HRESULT CreateVertexBuffer(std::vector<Vertex>vertices);
+			HRESULT CreateIndexBuffer(std::vector<uint32_t>indices);
 		};
-
-
 	}
 }

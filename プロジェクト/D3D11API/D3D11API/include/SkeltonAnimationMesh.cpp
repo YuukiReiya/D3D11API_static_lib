@@ -16,165 +16,31 @@ using namespace D3D11::Graphic;
 using namespace std;
 using namespace DirectX;
 
-#pragma region 定数バッファ
-//struct alignas(16) AnimConstantBuffer
-//{
-//	MatrixConstantBuffer m;
-//	DirectX::XMMATRIX boneMat[60];
-//};
-#pragma endregion
-
-#pragma region ボーン
-//struct Bone
-//{
-//	unsigned int id;
-//	Bone* child;
-//	Bone* sibling;
-//	XMMATRIX offsetMat;
-//	XMMATRIX initMat;
-//	XMMATRIX boneMat;
-//	XMMATRIX* combMatPtr;
-//	Bone() :
-//		id(),
-//		child(),
-//		sibling(),
-//		combMatPtr(),
-//		initMat(XMMatrixIdentity()),
-//		offsetMat(XMMatrixIdentity()),
-//		boneMat(XMMatrixIdentity())
-//	{}
-//};
-#pragma endregion
-
-
-#pragma region シェーダーオブジェクト
-//class AnimShader
-//	: public AbstractShader
-//{
-//public:
-//	AnimShader():AbstractShader() {}
-//	~AnimShader() {}
-//
-//
-//	HRESULT Setup()override final;
-//	HRESULT DynamicSetup()override final { return E_FAIL; }
-//
-//private:
-//
-//};
-//HRESULT AnimShader::Setup()
-//{
-//	HRESULT hr;
-//	auto device = D3D11::Direct3D11::GetInstance().GetDevice();
-//#pragma region 頂点レイアウト
-//	D3D11_INPUT_ELEMENT_DESC desc[] = {
-//			{ "POSITION",		0,DXGI_FORMAT_R32G32B32_FLOAT,	0,	0							,D3D11_INPUT_PER_VERTEX_DATA,0},
-//			{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,   0,	D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-//			{ "COLOR",	 0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-//			//{ "BLENDWEIGHT",	0,DXGI_FORMAT_R32G32B32_FLOAT,  0,	D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-//			//{ "BLENDINDICES",	0,DXGI_FORMAT_R8_UINT,			0,	D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-//	};
-//	
-//	hr = device->CreateInputLayout(
-//		desc,
-//		GetArraySize(desc),
-//		g_vs_main,
-//		sizeof(g_vs_main),
-//		m_pVertexLayout.GetAddressOf()
-//	);
-//	if (FAILED(hr)) {
-//		ErrorLog("create inputlayout");
-//		return E_FAIL; 
-//	}
-//#pragma endregion
-
-#pragma region 頂点シェーダー
-	//hr = device->CreateVertexShader(
-	//	&g_vs_main,
-	//	sizeof(g_vs_main),
-	//	NULL,
-	//	m_pVertexShader.GetAddressOf()
-	//);
-	//if (FAILED(hr)) {
-	//	ErrorLog("create vs");
-	//	return E_FAIL; 
-	//}
-#pragma endregion
-
-#pragma region ピクセルシェーダー
-	//hr = device->CreatePixelShader(
-	//	&g_ps_main,
-	//	sizeof(g_ps_main),
-	//	NULL,
-	//	m_pPixelShader.GetAddressOf()
-	//);
-	//if (FAILED(hr)) {
-	//	ErrorLog("create ps");
-	//	return E_FAIL;
-	//}
-#pragma endregion
-
-#pragma region 定数バッファ
-//	D3D11_BUFFER_DESC cb;
-//	cb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
-//	//cb.ByteWidth = sizeof(AnimConstantBuffer);
-//	cb.ByteWidth = sizeof(MeshConstantBuffer);
-//	cb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-//	cb.MiscFlags = 0;
-//	cb.StructureByteStride = 0;
-//	cb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
-//	hr = device->CreateBuffer(
-//		&cb,
-//		NULL,
-//		m_pConstantBuffer.GetAddressOf()
-//	);
-//	if (FAILED(hr)) {
-//		ErrorLog("create cb");
-//		return E_FAIL;
-//	}
-//
-#pragma endregion
-//
-//
-//	return S_OK;
-//}
-//
-
-#pragma endregion
-
-//====================================================-
-static constexpr int c_BoneCount = 60;
-//Bone g_Bones[c_BoneCount];
-vector<D3D11::Graphic::MeshVertex>g_pVertex;
-//====================================================-
 HRESULT API::Anim::SkeltonAnimationMesh::Init()
 {
-	//auto data = Helper::MeshReadHelper::ReadAnim("Anim/anim.yfm");
-	auto data = Helper::MeshReadHelper::Read("twin.yfm");
-
+	auto data = Helper::MeshReadHelper::ReadAnim("Anim/anim.yfm");
+	
 	//	頂点
-	g_pVertex = data.vertices;
+	for (auto it : data.vertices) {
+		MeshVertex v;
+		v.position = it.position;
+		m_Vertex.push_back(v);
+	}
+	//m_Vertex = data.vertices;
 
-	//	重み
-	//g_pVertex = vv;
-
-	//	頂点インデックス
-	vector<uint32_t>vi;
-	vi = data.indices;
-
-	if (FAILED(CreateVertexBuffer(g_pVertex))) {
-		ErrorLog("falied to create vertex");
+	//	頂点バッファ
+	if (FAILED(CreateVertexBuffer(m_Vertex))) {
+		ErrorLog("create vertex");
 	}
 
-	if (FAILED(CreateIndexBuffer(vi))) {
-		ErrorLog("falied to create index");
+	//	インデックス
+	if (FAILED(CreateIndexBuffer(data.indices))) {
+		ErrorLog("create index");
 	}
 
 	//	シェーダー
 	m_pShader = make_shared<MeshShader>();
-	if (FAILED(m_pShader->Setup())) {
-		ErrorLog("falied to setup shader");
-	}
+	m_pShader->Setup();
 
 	//	トランスフォーム
 	transform = make_shared<Transform>();
@@ -188,16 +54,18 @@ void API::Anim::SkeltonAnimationMesh::Destroy()
 
 void API::Anim::SkeltonAnimationMesh::Render()
 {
+	HRESULT hr;
+
 #pragma region トポロジー
 	//
 	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 
-#pragma region 定数バッファ
-	HRESULT hr;
+#pragma region GPU送信
 	D3D11_MAPPED_SUBRESOURCE mp;
-	DirectX::XMMATRIX w, v, p;
+
 #pragma region WVP
+	DirectX::XMMATRIX w, v, p;
 	//	world
 	w = XMMatrixTranspose(transform->GetWorldMatrix());
 
@@ -208,8 +76,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 	p = DirectX::XMMatrixTranspose(Camera::GetInstance().GetProjMatrix());
 #pragma endregion
 
-#pragma region WVP_cpy
-	//AnimConstantBuffer cb;
+#pragma region 定数バッファ送信
 	MeshConstantBuffer cb;
 
 	hr = Direct3D11::GetInstance().GetImmediateContext()->Map(
@@ -231,7 +98,6 @@ void API::Anim::SkeltonAnimationMesh::Render()
 	cb.m.world = w;
 	cb.m.view = v;
 	cb.m.proj = p;
-#pragma endregion
 
 	//	メモリコピー
 	memcpy_s(mp.pData, mp.RowPitch, (void*)(&cb), sizeof(cb));
@@ -241,13 +107,14 @@ void API::Anim::SkeltonAnimationMesh::Render()
 		*m_pShader->GetConstantBuffer(),
 		NULL
 	);
+#pragma endregion
 
 #pragma region 頂点の書き換え
 
 	auto context = Direct3D11::GetInstance().GetImmediateContext();
 	hr = context->Map(m_pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mp);
 	if (FAILED(hr)) {
-		ErrorLog("anim map failed");
+		ErrorLog("vertex map failed");
 	}
 
 	//
@@ -259,12 +126,11 @@ void API::Anim::SkeltonAnimationMesh::Render()
 
 	}
 
-
 	memcpy_s(
 		mp.pData,
 		mp.RowPitch,
-		(void*)(g_pVertex.data()),
-		sizeof(Graphic::MeshVertex) * g_pVertex.size()
+		(void*)(m_Vertex.data()),
+		sizeof(Graphic::MeshVertex) * m_Vertex.size()
 	);
 	context->Unmap(m_pVertexBuffer.Get(), 0);
 
@@ -306,7 +172,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 #pragma endregion
 
 #pragma region 頂点バッファ
-	uint32_t stride = sizeof(AnimVertex);
+	uint32_t stride = sizeof(MeshVertex);
 	static constexpr uint32_t vertexBufferOffset = 0;
 	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
 		0,
@@ -332,23 +198,21 @@ void API::Anim::SkeltonAnimationMesh::Render()
 	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_IndexCount, 0, 0);
 }
 
-HRESULT API::Anim::SkeltonAnimationMesh::CreateVertexBuffer(std::vector<AnimVertex> verttices)
+
+template<class Vertex>
+HRESULT API::Anim::SkeltonAnimationMesh::CreateVertexBuffer(std::vector<Vertex> vertices)
 {
 	//	バッファの仕様
 	D3D11_BUFFER_DESC bd;
-
-	/*
-		頂点を動的に書き換える場合は "DYNAMIC"にすること！
-	*/
 	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.ByteWidth = sizeof(AnimVertex) * verttices.size();
+	bd.ByteWidth = sizeof(Vertex) * vertices.size();
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
 	bd.MiscFlags = NULL;
 
 	//	サブリソースの仕様
 	D3D11_SUBRESOURCE_DATA sd;
-	sd.pSysMem = verttices.data();
+	sd.pSysMem = vertices.data();
 
 	//	頂点バッファ作成
 	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
@@ -380,29 +244,5 @@ HRESULT API::Anim::SkeltonAnimationMesh::CreateIndexBuffer(std::vector<uint32_t>
 		&bd,
 		&sd,
 		m_pIndexBuffer.GetAddressOf()
-	);
-
-	return E_NOTIMPL;
-}
-
-HRESULT API::Anim::SkeltonAnimationMesh::CreateVertexBuffer(std::vector<MeshVertex>verttices)
-{
-	//	バッファの仕様
-	D3D11_BUFFER_DESC bd;
-	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.ByteWidth = sizeof(MeshVertex) * verttices.size();
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-	bd.MiscFlags = NULL;
-
-	//	サブリソースの仕様
-	D3D11_SUBRESOURCE_DATA sd;
-	sd.pSysMem = verttices.data();
-
-	//	頂点バッファ作成
-	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-		&bd,
-		&sd,
-		m_pVertexBuffer.GetAddressOf()
 	);
 }
