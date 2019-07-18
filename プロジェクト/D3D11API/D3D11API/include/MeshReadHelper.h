@@ -9,7 +9,7 @@
 #include <DirectXMath.h>
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <fstream>
 #include "MeshVertex.h"
 
@@ -64,7 +64,7 @@ namespace D3D11 {
 					std::vector<unsigned int>indexOfBonesAffested;
 
 					//	"indexOfBonesAffested"‚ğƒL[‚É‘Î‰‚·‚éd‚İ‚ğŠi”[
-					std::unordered_map<unsigned int, float>weight;
+					std::map<unsigned int, float>weight;
 				};
 
 

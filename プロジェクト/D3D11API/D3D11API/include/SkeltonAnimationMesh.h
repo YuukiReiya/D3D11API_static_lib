@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "Color.h"
 #include "StructShaderBase.h"
+#include "MeshVertex.h"
 
 namespace API {
 
@@ -17,29 +18,32 @@ namespace API {
 		struct alignas(16) AnimVertex
 			:D3D11::Graphic::BaseVertex
 		{
-			DirectX::XMFLOAT3 weight;
-			BYTE bornIndex[4];
+			//	ボーン数
+			static constexpr int c_AbsBoneCount = 7;
 
-			//	コンストラクタ
-			AnimVertex()
-				:D3D11::Graphic::BaseVertex(),
-				weight({0,0,0}),
-				bornIndex()
-			{}
-			//	引数付きコンストラクタ
-			inline AnimVertex(DirectX::XMFLOAT3 pos)
-				: D3D11::Graphic::BaseVertex(pos),
-				weight({0,0,0}),
-				bornIndex()
-			{}
+			//DirectX::XMFLOAT3 weight;
+			//BYTE bornIndex[c_AbsBoneCount];
 
-			//	引数付きコンストラクタ
-			inline AnimVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 weight,int index[])
-				: D3D11::Graphic::BaseVertex(pos),
-				weight(weight)
-			{
-				for (int i = 0; i < 4; ++i) { bornIndex[i] = index[i]; }
-			}
+			////	コンストラクタ
+			//AnimVertex()
+			//	:D3D11::Graphic::BaseVertex(),
+			//	weight({0,0,0}),
+			//	bornIndex()
+			//{}
+			////	引数付きコンストラクタ
+			//inline AnimVertex(DirectX::XMFLOAT3 pos)
+			//	: D3D11::Graphic::BaseVertex(pos),
+			//	weight({0,0,0}),
+			//	bornIndex()
+			//{}
+
+			////	引数付きコンストラクタ
+			//inline AnimVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 weight,int index[])
+			//	: D3D11::Graphic::BaseVertex(pos),
+			//	weight(weight)
+			//{
+			//	for (int i = 0; i < 4; ++i) { bornIndex[i] = index[i]; }
+			//}
 
 		};
 
@@ -62,7 +66,10 @@ namespace API {
 			Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
 
 			HRESULT CreateVertexBuffer(std::vector<AnimVertex>verttices);
+			HRESULT CreateVertexBuffer(std::vector<D3D11::Graphic::MeshVertex>verttices);
 			HRESULT CreateIndexBuffer(std::vector<uint32_t>indices);
+
+
 
 			uint32_t m_IndexCount;
 		};
