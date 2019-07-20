@@ -506,7 +506,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		//	}
 		//}
 		}
-		Utility::IOMesh::Output("Animation/", "hand",*animMesh);
+		Utility::IOMesh::Output("Animation/", outName,*animMesh);
 
 		cout << "animMesh v " << animMesh->vertices.size() << endl;
 		cout << "animMesh vi " << animMesh->indices.size() << endl;
