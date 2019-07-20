@@ -172,7 +172,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 		//}
 
 #pragma region アニメーション用コード
-#if 1
+#if 0
 		static int frame = 0;
 		static int animIndex = 0;
 		const int updateframe = 30;
@@ -257,7 +257,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 				comb.m128_f32[2],
 			};
 		}
-#else
+#elif 0
 #pragma endregion
 #pragma region v = Σ(V(n) * W(n) * FB(n))
 		for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
@@ -288,6 +288,38 @@ void API::Anim::SkeltonAnimationMesh::Render()
 			};
 		}
 #pragma endregion
+#else
+#pragma region comb:XMMATRIX
+		for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
+		{
+			auto& v = m_Vertex[vCount];
+			auto loopCount = m_RI[vCount].boneNo.size();
+			//XMMATRIX comb = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+			XMMATRIX comb = XMMatrixIdentity();
+			for (int i = 0; i < loopCount; ++i)
+			{
+				auto boneIndex = m_RI[vCount].boneNo[i];
+				auto weight = m_RI[vCount].weight[i];
+				comb += boneMat[boneIndex] * weight;
+			}
+			XMVECTOR pos = {
+				v.position.x,
+				v.position.y,
+				v.position.z,
+				1
+			};
+			comb = XMMatrixTranspose(comb);
+			pos = XMVector4Transform(pos, comb);
+
+			//	頂点
+			v.position = {
+				pos.m128_f32[0],
+				pos.m128_f32[1],
+				pos.m128_f32[2],
+			};
+		}
+#pragma endregion
+
 #endif 
 	}
 #endif
