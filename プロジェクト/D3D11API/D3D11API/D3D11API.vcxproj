@@ -175,10 +175,10 @@
     <ClInclude Include="include\MeshVertex.h" />
     <ClInclude Include="include\MyGame.h" />
     <ClInclude Include="include\ps_AnimMesh.h" />
-    <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\Singleton.h" />
     <ClInclude Include="include\Skeleton.h" />
     <ClInclude Include="include\SkeltonAnimationMesh.h" />
+    <ClInclude Include="include\SkinnedVertex.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\SpriteShader.h" />
     <ClInclude Include="include\stdafx.h" />
@@ -205,7 +205,6 @@
     <ClCompile Include="include\Mesh.cpp" />
     <ClCompile Include="include\MeshReadHelper.cpp" />
     <ClCompile Include="include\MeshShader.cpp" />
-    <ClCompile Include="include\ShaderManager.cpp" />
     <ClCompile Include="include\SkeltonAnimationMesh.cpp" />
     <ClCompile Include="include\Sprite.cpp" />
     <ClCompile Include="include\SpriteShader.cpp" />

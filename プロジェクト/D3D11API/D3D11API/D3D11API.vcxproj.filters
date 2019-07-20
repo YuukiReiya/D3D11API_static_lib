@@ -30,9 +30,6 @@
     <ClInclude Include="include\MyGame.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="include\ShaderManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="include\Singleton.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -126,6 +123,9 @@
     <ClInclude Include="include\Skeleton.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="include\SkinnedVertex.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\Camera.cpp">
@@ -135,9 +135,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="include\Direct3D11.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="include\ShaderManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="include\Sprite.cpp">
