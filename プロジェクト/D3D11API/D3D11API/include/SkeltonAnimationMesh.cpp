@@ -63,6 +63,19 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 		m_RI.push_back(ri);
 	}
 
+	for (int c = 0; c < m_RI.size(); ++c) {
+
+		float tWeight = 0;
+		int count = m_RI[c].boneNo.size();
+		for (int i = 0; i < count; ++i) {
+			tWeight += m_RI[c].weight[i];
+		}
+
+		if (tWeight != 1.0f) {
+			ErrorLog("this");
+		}
+	}
+
 	//	‰Šú’¸“_•Û‘¶
 	m_InitVertex = m_Vertex;
 
