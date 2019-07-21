@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="include\AbstractRender.h" />
     <ClInclude Include="include\AbstractShader.h" />
+    <ClInclude Include="include\AnimationClip.h" />
     <ClInclude Include="include\AudioMaster.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Color.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="include\ps_AnimMesh.h" />
     <ClInclude Include="include\Singleton.h" />
     <ClInclude Include="include\Skeleton.h" />
+    <ClInclude Include="include\SkeletonMesh.h" />
     <ClInclude Include="include\SkeltonAnimationMesh.h" />
     <ClInclude Include="include\SkinnedVertex.h" />
     <ClInclude Include="include\Sprite.h" />
