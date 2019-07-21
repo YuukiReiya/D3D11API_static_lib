@@ -118,3 +118,94 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 		ofs << "{" << it.x << c_Space << it.y << c_Space << it.z << "}";// << endl;
 	}
 }
+
+void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationClip clip)
+{
+	string path = fileName + c_Delimiter.data() + c_Extension.data();
+
+	ofstream ofs;
+	ofs.open(path, ios::out);
+
+	//	書き込み
+	const string c_Space = " ";
+
+	//	頂点インデックス
+	for (auto it : mesh.indices)
+	{
+		ofs << it << c_Space;
+	}
+	ofs << endl;
+
+	//	uv
+	for (auto it : mesh.vertices)
+	{
+			ofs << "{" << it.uv.x << c_Space << it.uv.y << "}";// << endl;
+	}
+	ofs << endl;
+
+	//頂点
+	for (auto it : mesh.vertices)
+	{
+		ofs << "{" << it.position.x << c_Space << it.position.y << c_Space << it.position.z << "}";// << endl;
+	}
+	ofs << endl;
+
+	//	重み
+	//for (auto it : mesh.vertices) 
+	//{
+	//	ofs << "{ "
+	//		<< static_cast<int>(it.joijntIndex[0]) << ":" << it.jointWeights[0] << c_Space 
+	//		<< static_cast<int>(it.joijntIndex[1]) << ":" << it.jointWeights[1] << c_Space
+	//		<< static_cast<int>(it.joijntIndex[2]) << ":" << it.jointWeights[2] << c_Space
+	//		<< "}";
+	//}
+	for (auto v : mesh.vertices)
+	{
+		ofs << "{" << c_Space;
+		for (size_t i = 0; i < v.jointsIndex.size(); i++)
+		{
+			ofs << static_cast<int>(v.jointsIndex[i]) << ":" << v.jointsWeight[i] << c_Space;
+		}
+		ofs << "}";
+		
+
+		//	書き出し
+		//	{ x y z }{...になるはず
+	}
+	ofs << endl;
+
+	//	初期姿勢(逆行列)
+	//for (size_t i = 0; i < mesh.skeleton.jointCount; i++)
+	for (size_t i = 0; i < mesh.skeleton.joints.size(); i++)
+	{
+		auto& m = mesh.skeleton.joints[i].invBindPose;
+		ofs << "{" <<
+			m._11 << c_Space << m._12 << c_Space << m._13 << c_Space <<
+			m._21 << c_Space << m._22 << c_Space << m._23 << c_Space <<
+			m._31 << c_Space << m._32 << c_Space << m._33 << c_Space <<
+			m._41 << c_Space << m._42 << c_Space << m._43 << c_Space <<
+			"}";
+	}
+
+	//	アニメフレーム
+	ofs << clip.frameCount << endl;
+
+	//	フレーム行列
+	//※1アニメ
+
+	for (size_t i = 0; i < clip.bonesMatrix.size(); i++)
+	{
+		auto frameCount = clip.frameCount;
+		for (size_t j = 0; j < frameCount; j++)
+		{
+			auto it = clip.bonesMatrix[i][j];
+			
+			ofs << "{"
+				<< it.r[0].m128_f32[0] << c_Space << it.r[0].m128_f32[1] << c_Space << it.r[0].m128_f32[2] << c_Space << it.r[0].m128_f32[3] << c_Space
+				<< it.r[1].m128_f32[0] << c_Space << it.r[1].m128_f32[1] << c_Space << it.r[1].m128_f32[2] << c_Space << it.r[1].m128_f32[3] << c_Space
+				<< it.r[2].m128_f32[0] << c_Space << it.r[2].m128_f32[1] << c_Space << it.r[2].m128_f32[2] << c_Space << it.r[2].m128_f32[3] << c_Space
+				<< it.r[3].m128_f32[0] << c_Space << it.r[3].m128_f32[1] << c_Space << it.r[3].m128_f32[2] << c_Space << it.r[3].m128_f32[3] << 
+				"}";
+		}
+	}
+}

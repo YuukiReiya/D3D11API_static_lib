@@ -10,6 +10,9 @@
 #include <string_view>
 #include <iostream>
 #include "Mesh.h"
+#include <SkeletonMesh.h>
+#include <AnimationClip.h>
+
 namespace Utility{
 	class IOMesh
 	{
@@ -32,6 +35,8 @@ namespace Utility{
 		*/
 		static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
 
+
+		static void Output(std::string fileName,SkeletonMesh mesh,AnimationClip clip);
 	private:
 		/*!
 			@brief	コンストラクタ削除
