@@ -385,7 +385,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			for (size_t f = 0; f < c_Frame; ++f) {
 				auto time = start + frameTime * f;
 				fbxMat = cluster->GetLink()->EvaluateGlobalTransform(time);
-				fbxMat = fbxMat.Transpose();
+				//fbxMat = fbxMat.Transpose();
 				DirectX::XMMATRIX m =
 				{
 					static_cast<float>(fbxMat.Get(0,0)),static_cast<float>(fbxMat.Get(0,1)),static_cast<float>(fbxMat.Get(0,2)),static_cast<float>(fbxMat.Get(0,3)),
