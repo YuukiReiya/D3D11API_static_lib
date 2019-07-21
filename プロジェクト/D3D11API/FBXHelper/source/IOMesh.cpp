@@ -188,6 +188,7 @@ void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationCl
 	}
 
 	//	アニメフレーム
+	ofs << endl;
 	ofs << clip.frameCount << endl;
 
 	//	フレーム行列
