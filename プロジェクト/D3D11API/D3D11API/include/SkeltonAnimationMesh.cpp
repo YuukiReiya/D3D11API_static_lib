@@ -206,8 +206,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 		vector<XMMATRIX>boneMat;
 		for (int i = 0; i < m_FrameMatrix.size(); ++i)
 		{
-			//XMMATRIX mat = m_OffsetMatrix[i] * m_FrameMatrix[i][animIndex];
-			XMMATRIX mat = m_OffsetMatrix[i] * XMMatrixInverse(0, m_OffsetMatrix[i]);
+			XMMATRIX mat = m_OffsetMatrix[i] * m_FrameMatrix[i][animIndex];
 			boneMat.push_back(mat);
 		}
 
@@ -289,7 +288,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 			};
 		}
 #pragma endregion
-#else
+#elif 0
 #pragma region comb:XMMATRIX
 		for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
 		{
@@ -307,8 +306,6 @@ void API::Anim::SkeltonAnimationMesh::Render()
 			}
 
 			comb += boneMat[loopCount] * (1.0f - lastWeight);
-
-
 			XMVECTOR pos = {
 				v.position.x,
 				v.position.y,
@@ -325,7 +322,58 @@ void API::Anim::SkeltonAnimationMesh::Render()
 			};
 		}
 #pragma endregion
+#elif 1
+#pragma region ゲームエンジンアーキテクチャ
+		//	変換後頂点 = Σ(Wi) * 初期頂点 * (オフセット行列 * フレーム行列)
 
+		//	Kj(スキニング行列)
+		vector<XMMATRIX>skinningMat;
+		skinningMat.resize(60);//	ボーン数/マジックナンバー
+		for (size_t i = 0; i < skinningMat.size(); i++)
+		{
+			skinningMat[i] = m_OffsetMatrix[i] * m_FrameMatrix[i][0];
+		}
+
+		//	Σ(Wi)
+		vector<float> weights;
+		weights.resize(m_Vertex.size());
+		for (size_t i = 0; i < m_Vertex.size(); i++)
+		{
+			auto jointCount = m_RI[i].boneNo.size();
+			for (size_t j = 0; j < jointCount; j++)
+			{
+				auto jointIndex = m_RI[i].boneNo[j];
+				auto jointWeight = m_RI[i].weight[j];
+				weights[i] += jointWeight;
+			}
+		}
+
+		for (size_t i = 0; i < m_Vertex.size(); i++)
+		{
+			XMMATRIX comb = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+			int jointCount = m_RI[i].boneNo.size();
+			for (size_t j = 0; j < jointCount; j++)
+			{
+				int jointIndex = m_RI[i].boneNo[j];
+				comb += skinningMat[jointIndex];
+			}
+			XMVECTOR pos = {
+				m_InitVertex[i].position.x,
+				m_InitVertex[i].position.y,
+				m_InitVertex[i].position.z,
+				1,
+			};
+			XMVECTOR vcm = weights[i] * pos;
+			vcm = XMVector4Transform(vcm, comb);
+
+			m_Vertex[i].position = {
+				vcm.m128_f32[0],
+				vcm.m128_f32[1],
+				vcm.m128_f32[2],
+			};
+		}
+
+#pragma endregion
 #endif 
 	}
 #endif
