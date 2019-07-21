@@ -18,7 +18,7 @@
 #include <Hoge.h>
 #include <Camera.h>
 #include <SkeltonAnimationMesh.h>
-
+#include <SkeletonMesh.h>
 /*!
 	@brief	usingディレクティブ
 	@using	std
@@ -121,6 +121,24 @@ void SampleScene::Initialize()
 #pragma endregion
 
 #pragma region スキニング
+	SkeletonMesh sk;
+	{
+		sk.skeleton.joints.resize(10);
+		for (size_t i = 0; i < 10; i++)
+		{
+			Joint joint;
+
+			joint.invBindPose = {
+				0.0f,0.0f,0.0f,
+				0.0f,0.0f,0.0f,
+				0.0f,0.0f,0.0f,
+				0.0f,0.0f,0.0f,
+			};
+
+			sk.skeleton.joints[i] = joint;
+		}
+	}
+
 
 	g_pSAnimMesh = make_shared<SkeltonAnimationMesh>();
 	g_pSAnimMesh->Init();
