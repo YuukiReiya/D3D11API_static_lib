@@ -307,8 +307,8 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 		buf = buf.substr(a + 1);
 	}
 
-	getline(ifs, buf);
-	ret.maxBonesElementsCount = stoi(buf);
+	//getline(ifs, buf);
+	//ret.maxBonesElementsCount = stoi(buf);
 	getline(ifs, buf);
 
 	//	重み
@@ -386,10 +386,15 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 		m._33 = GetMatrixElement(b);
 		m._34 = GetMatrixElement(b);
 		//	v[3]
-		m._41 = GetMatrixElement(b);
-		m._42 = GetMatrixElement(b);
-		m._43 = GetMatrixElement(b);
-		m._44 = GetMatrixElement(b);
+		//m._41 = GetMatrixElement(b);
+		//m._42 = GetMatrixElement(b);
+		//m._43 = GetMatrixElement(b);
+		//m._44 = GetMatrixElement(b);
+		m._41 = 0;
+		m._42 = 0;
+		m._43 = 0;
+		m._44 = 1;
+
 
 		//	格納
 		ret.initialMatrix.push_back(m);
@@ -398,7 +403,7 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 		buf = buf.substr(a + 1);
 	}
 
-	getline(ifs, buf);
+	//getline(ifs, buf);
 
 	//	アニメーションフレーム
 	const unsigned int c_frame = stoi(buf);
