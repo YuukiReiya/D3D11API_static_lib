@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(SolutionDir)/../D3D11API/lib/$(Configuration)\D3D11API;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)/../D3D11API/D3D11API/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/../D3D11API/lib/$(Configuration)\D3D11API;$(SolutionDir)/../D3D11API/lib/$(Configuration)\FBXHelper;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)/../D3D11API/FBXHelper/include;$(SolutionDir)/../D3D11API/D3D11API/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>$(SolutionDir)/../D3D11API/lib/$(Configuration)\D3D11API;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)/../D3D11API/D3D11API/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/../D3D11API/lib/$(Configuration)\D3D11API;$(SolutionDir)/../D3D11API/lib/$(Configuration)\FBXHelper;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)/../D3D11API/FBXHelper/include;$(SolutionDir)/../D3D11API/D3D11API/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
