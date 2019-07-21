@@ -17,8 +17,9 @@ using namespace DirectX;
 
 HRESULT API::Anim::SkeltonAnimationMesh::Init()
 {
-	auto data = Helper::MeshReadHelper::ReadAnim("Anim/anim.yfm");
-	
+	//auto data = Helper::MeshReadHelper::ReadAnim("Anim/anim.yfm");
+	auto data = Helper::MeshReadHelper::ReadAnim("Anim/humanoid.yfm");
+
 #pragma region 読み込みデータのノーマライズ
 
 	//	頂点(初期姿勢)
@@ -33,6 +34,7 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 	for (auto it : data.initialMatrix)
 	{
 		XMMATRIX ofMat = XMMatrixInverse(0, XMLoadFloat4x4(&it));
+		//XMMATRIX ofMat = XMLoadFloat4x4(&it);
 		m_OffsetMatrix.push_back(ofMat);
 	}
 
@@ -72,7 +74,7 @@ HRESULT API::Anim::SkeltonAnimationMesh::Init()
 		}
 
 		if (tWeight != 1.0f) {
-			ErrorLog("this");
+			//ErrorLog("this");
 		}
 	}
 
@@ -190,7 +192,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 		static int animIndex = 0;
 		const int updateframe = 30;
 		frame++;
-		if (frame < updateframe) {
+		if (frame > updateframe) {
 			animIndex = animIndex < 30 - 1 ? ++animIndex : 0;
 			frame = 0;
 		}
@@ -208,21 +210,6 @@ void API::Anim::SkeltonAnimationMesh::Render()
 			boneMat.push_back(mat);
 		}
 
-		//	頂点
-		//for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
-		//{
-		//	XMMATRIX compMat = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-		//	float lastWeight = 0;//	最後の重み
-		//	int size = m_RI[vCount].boneNo.size() - 1;
-		//	for (int i = 0; i < size; ++i)
-		//	{
-		//		float weight = m_RI[vCount].weight[i];
-		//		int index = m_RI[vCount].boneNo[i];
-		//		lastWeight += weight;
-		//		compMat += weight * boneMat[index];
-		//	}
-		//	compMat += boneMat[size] * (1.0f - lastWeight);
-
 #pragma region 初期姿勢座標
 #if 1
 		m_Vertex = m_InitVertex;
@@ -230,7 +217,7 @@ void API::Anim::SkeltonAnimationMesh::Render()
 #pragma endregion
 
 #pragma region v = Σ(V(n-1) * W(n-1) * FM(n-1)) + (V(n) * (1.0f - W(n)) * FB(n)) 
-#if 1
+#if 0
 		for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
 		{
 			auto& v = m_Vertex[vCount];
@@ -306,22 +293,27 @@ void API::Anim::SkeltonAnimationMesh::Render()
 		for (int vCount = 0; vCount < m_Vertex.size(); ++vCount)
 		{
 			auto& v = m_Vertex[vCount];
-			auto loopCount = m_RI[vCount].boneNo.size();
-			//XMMATRIX comb = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-			XMMATRIX comb = XMMatrixIdentity();
+			auto loopCount = m_RI[vCount].boneNo.size()-1;
+			XMMATRIX comb = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+			//XMMATRIX comb = XMMatrixIdentity();
+			float lastWeight = 0;
 			for (int i = 0; i < loopCount; ++i)
 			{
 				auto boneIndex = m_RI[vCount].boneNo[i];
 				auto weight = m_RI[vCount].weight[i];
+				lastWeight += weight;
 				comb += boneMat[boneIndex] * weight;
 			}
+
+			comb += boneMat[loopCount] * (1.0f - lastWeight);
+
+
 			XMVECTOR pos = {
 				v.position.x,
 				v.position.y,
 				v.position.z,
 				1
 			};
-			comb = XMMatrixTranspose(comb);
 			pos = XMVector4Transform(pos, comb);
 
 			//	頂点
