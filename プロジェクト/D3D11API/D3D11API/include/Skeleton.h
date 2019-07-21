@@ -9,14 +9,25 @@
 #pragma once
 #include <string>
 #include <DirectXMath.h>
-#include <memory>
-
+//#include <memory>
+#include <vector>
 /*!
 	@struct	Joint
 	@brief	ä÷êﬂ
 */
 struct Joint
 {
+	Joint() :invBindPose(
+		{
+			0,0,0,
+			0,0,0,
+			0,0,0,
+			0,0,0,
+		}
+	) ,
+	name("")
+	{}
+	~Joint(){}
 	DirectX::XMFLOAT4X3 invBindPose;
 	std::string name;
 	uint8_t parent;
@@ -30,6 +41,10 @@ struct Joint
 */
 struct Skeleton
 {
-	uint32_t jointCount;
-	std::shared_ptr<Joint>joints;
+	//Skeleton() :joints(nullptr) {}
+	//uint32_t jointCount;
+	////std::shared_ptr<Joint>joints;
+	//Joint* joints;
+
+	std::vector<Joint>joints;
 };
