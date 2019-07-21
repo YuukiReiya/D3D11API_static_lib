@@ -1,4 +1,6 @@
 #include "Common.h"
+#include <Skeleton.h>
+#include <SkeletonMesh.h>
 #include "FBXConverter.h"
 #include "WinConsoleExpansion.h"
 #include "IOMesh.h"
@@ -13,9 +15,6 @@
 #include <fstream>
 #include <algorithm>
 #include <Windows.h>
-
-#include "FbxMaterial.h"
-Material*g_pMat;
 
 /*!
 	@brief	usingディレクティブ
@@ -149,8 +148,6 @@ void Converter::FBXConverter::Teardown()
 	}
 }
 
-#define STATIC_MESH
-
 /*!
 	@fn			Execute
 	@brief		実行処理
@@ -163,131 +160,12 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 	cout << "----Display dialog----" << endl;
 
-#pragma region 静的メッシュ
-#ifdef STATIC_MESH
-
-	//	変数
-	int meshCount, matCount;
-	meshCount = matCount = -1;
-
-	//	セットアップ
-	try
-	{
-		//	色指定
-		wic::SetColor(Green);
-
-		//	インポーター
-		if (!SetupImporter(fbxPath)) { throw runtime_error("Could not read \"" + fbxPath + "\"."); }
-		cout << "SetupImporter success" << endl;
-
-		//	シーン
-		if (!SetupScene(fbxPath)) { throw runtime_error("Could not output \"" + fbxPath + "\" to the scene."); }
-		cout << "SetupScene success" << endl;
-
-		//	インポーターの破棄
-		TeardownImporter();
-
-		//	三角化
-		if (!Triangulate()) { throw runtime_error("Failed to triangulate this scene."); }
-		cout << "Triangulate success" << endl;
-
-		//	メッシュの分割
-		if (!SplitMeshesPerMaterial()) { throw runtime_error("Failed to split mesh"); }
-		cout << "SplitMeshesPerMaterial success" << endl;
-
-		//	メッシュの総数
-		meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
-
-		//	マテリアル総数
-		matCount = (*m_pScene.get())->GetSrcObjectCount<FbxSurfaceMaterial>();
-
-		//	TODO:マテリアルが無いものも存在
-		//	メッシュ数 == マテリアル数が成り立たなければ分割に失敗している
-	//	if (meshCount != matCount) { throw runtime_error("Mesh number does not match material number"); }
-	}
-	catch (std::exception& error)
-	{
-		wic::SetColor(Red);
-		cout << error.what() << endl;
-		wic::SetColor(White);
-		cout << "this program exit here!" << endl;
-		system("pause");
-		exit(NULL);
-	}
-
-	
-	wic::SetColor(White);
-	cout << "Mesh count:" << meshCount << endl;
-	cout << "Material count:" << matCount << endl;
-
-	//	
-	try
-	{
-		//	メッシュ
-		for (int i = 0; i < meshCount; ++i)
-		{
-			wic::SetColor(White);
-			cout << "----------Mesh:" << i << "----------" << endl;
-			auto pMesh = (*m_pScene.get())->GetSrcObject<FbxMesh>(i);
-			wic::SetColor(Purple);
-			cout << "Mesh name:";
-			wic::SetColor(White);
-			cout << pMesh->GetName() << endl;
-
-			//	構成ポリゴン数
-			auto polygonCount = pMesh->GetPolygonCount();
-			wic::SetColor(Cyan);
-			cout << "Mesh polygon count:";
-			wic::SetColor(White);
-			cout<< polygonCount << endl;
-
-			//	構成しているポリゴンがなければ処理しない
-			if (polygonCount <= 0) { continue; }
-
-			//	出力データ
-			Utility::Mesh oMesh;
-
-			//	メッシュ情報を格納
-			LoadToStore(pMesh, &oMesh);
-
-			//	外部ファイル出力
-			auto oName = meshCount == 1 ? outName : outName + "-" + to_string(i);
-			Utility::IOMesh::Output(c_OutputDirectory.data(), oName, oMesh);
-
-			wic::SetColor(Green);
-			cout << "CreateMesh success!" << endl;
-			wic::SetColor(White);
-			cout << "--------------------------" << endl;
-
-		}
-
-		//	マテリアル
-		for (int i = 0; i < matCount; ++i)
-		{
-			wic::SetColor(White);
-			cout << "----------Material:" << i << "----------" << endl;
-			auto pMat = (*m_pScene.get())->GetSrcObject<FbxSurfaceMaterial>(i);
-			wic::SetColor(Purple);
-			cout << "Material name:";
-			wic::SetColor(White);
-			cout << pMat->GetName() << endl;
-			SetupTextures(pMat);
-			wic::SetColor(White);
-			cout << "------------------------------" << endl;
-		}
-	}
-	catch (const std::exception&)
-	{
-
-	}
-#endif // STATIC_MESH
-#pragma endregion
-
 #pragma region アニメーションメッシュ
-//#ifndef STATIC_MESH
+	//	出力データ
+	//SkeletonMesh*outMesh = new SkeletonMesh;
 
-	Utility::Mesh* animMesh = new Utility::Mesh;
-
+	SkeletonMesh outMesh;
+	AnimationClip animClip;
 	try
 	{
 		Setup();
@@ -316,29 +194,36 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		//	メッシュの総数
 		int meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
 
+		//	メッシュが単体か複数か確認
+		if (meshCount == 1) {
+			cout << "メッシュが一つです" << endl;
+		}
+		else {
+			cout << "メッシュが複数です" << endl;
+		}
+
 		//	単一仮定
-		//auto pMesh = (*m_pScene.get())->GetSrcObject<FbxMesh>(0);
 		auto pMesh = (*m_pScene.get())->GetSrcObject<fbxsdk::FbxMesh>(0);
 		auto pNode = pMesh->GetNode();
-		//pNode->EvaluateGlobalTransform
-
 
 		//	アニメーション
 		FbxArray<FbxString*>animNameArray;
 		(*m_pScene)->FillAnimStackNameArray(animNameArray);
 
+		//	アニメーションの確認
 		if (animNameArray.GetCount() == 0) {
 			wic::SetColor(Red);
+			//	メッセージを吐いて処理を抜ける
 			cout << "Failed to read animation!" << endl;
 			return;
 		}
 
 		cout << "anim list" << endl;
-		for (int i = 0; i < animNameArray.GetCount();++i) {
+		for (int i = 0; i < animNameArray.GetCount(); ++i) {
 			auto it = animNameArray.GetAt(i);
 			cout << it << endl;
 		}
-
+		cout << "anim list count = " << animNameArray.Size() << endl;
 
 		auto setAnimData = animNameArray[0];
 		//	抽出アニメーション情報
@@ -349,83 +234,237 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		auto info = (*m_pScene)->GetTakeInfo(*setAnimData);
 		auto start = info->mLocalTimeSpan.GetStart();
 		auto stop = info->mLocalTimeSpan.GetStop();
-		FbxTime frameTime,timeCount;
+		FbxTime frameTime, timeCount;
 		frameTime.SetTime(0, 0, 0, 1, 0, (*m_pScene)->GetGlobalSettings().GetTimeMode());
 		timeCount = start;
 
-		FbxMatrix globalPos = pNode->EvaluateGlobalTransform(timeCount);
-		auto t0 = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
-		auto r0 = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
-		auto s0 = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
-		auto geometryOffset = FbxAMatrix(t0, r0, s0);
-
-		FbxMatrix *clusterDeformation = new FbxMatrix[pMesh->GetControlPointsCount()];
-		memset(clusterDeformation, 0, sizeof(FbxMatrix) * pMesh->GetControlPointsCount());
-
 		auto skinDeformer = (FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin);
-		int bornCount = skinDeformer->GetClusterCount();
+		int boneCount = skinDeformer->GetClusterCount();
+#pragma region ジョイントのメモリ確保
+		//outMesh->skeleton.jointCount = boneCount;
+		//outMesh->skeleton.joints = new Joint[outMesh->skeleton.jointCount];
 
-		for (int i = 0; i < bornCount; ++i) {
-			auto born = skinDeformer->GetCluster(i);
+		//outMesh.skeleton.jointCount = boneCount;
+		//outMesh.skeleton.joints = new Joint[outMesh.skeleton.jointCount];
 
-			FbxMatrix vertexTransformMatrix, clusterGlobalCurrentPosition, clusterRelativeInitPosition, clusterRelativeCurrentPositionInverse;
-			FbxAMatrix referenceGlobalInitPosition, clusterGlobalInitPosition;
+		outMesh.skeleton.joints.resize(boneCount);
+		animClip.bonesMatrix.resize(boneCount);
 
-			born->GetTransformMatrix(referenceGlobalInitPosition);
-			referenceGlobalInitPosition *= geometryOffset;
-			born->GetTransformLinkMatrix(clusterGlobalInitPosition);
-			clusterGlobalCurrentPosition = born->GetLink()->EvaluateGlobalTransform(timeCount);
-			clusterRelativeInitPosition = clusterGlobalInitPosition.Inverse()*referenceGlobalInitPosition;
-			clusterRelativeCurrentPositionInverse = globalPos.Inverse()*clusterGlobalCurrentPosition;
-			vertexTransformMatrix = clusterRelativeCurrentPositionInverse * clusterRelativeInitPosition;
-		
-			for (int j = 0; j < born->GetControlPointIndicesCount(); ++j) {
-				auto index = born->GetControlPointIndices()[j];
-				auto weight = born->GetControlPointWeights()[j];
-				auto influence = vertexTransformMatrix * weight;
-				clusterDeformation[index] += influence;
-			}
-		}
+#pragma endregion
 
-		//	頂点変換
-		animMesh->vertices.resize(pMesh->GetControlPointsCount());
-		for (int i = 0; i < pMesh->GetControlPointsCount(); ++i)
+		wic::SetColor(Purple);
+		cout << "BoneNum = " << boneCount << endl;
+
+
+		//	アニメーションのフレーム数
+		unsigned int c_Frame = static_cast<unsigned int>(stop.Get() / frameTime.Get());
+		//outMesh->frameMatrix.resize(c_Frame);
+		animClip.frameCount = c_Frame;
+#pragma region 頂点
+		//	頂点数
+		auto vertexCount = pMesh->GetControlPointsCount();
+
+		//	頂点配列の先頭ポインタ
+		FbxVector4* vertices = pMesh->GetControlPoints();
+		int vertexIndex = 0;
+		while (vertexIndex < vertexCount)
 		{
-			auto v = clusterDeformation[i].MultNormalize(pMesh->GetControlPointAt(i));
-
-			//	格納処理
-			animMesh->vertices[i].x = (float)v[0];
-			animMesh->vertices[i].y = (float)v[1];
-			animMesh->vertices[i].z = (float)v[2];
+			SkinnedVertex sv;
+			sv.position = {
+				(float)vertices[vertexIndex][0],
+				(float)vertices[vertexIndex][1],
+				(float)vertices[vertexIndex][2],
+			};
+			outMesh.vertices.push_back(sv);
+			++vertexIndex;
 		}
-		//	インデックス
+		cout << "頂点数 = " << vertexCount << endl;
+#pragma endregion
+
+#pragma region 頂点インデックス
+		//	ポリゴン数
 		auto polygonCount = pMesh->GetPolygonCount();
 		for (int i = 0; i < polygonCount; ++i)
 		{
 			//	ポリゴンを構成する頂点数(※三角化していれば"3"になる)
 			auto polygonVertexCount = pMesh->GetPolygonSize(i);
+			if (polygonVertexCount != 3) { cout << "ERROR:三角化出来ていません" << endl; }
 			for (int j = 0; j < polygonVertexCount; ++j)
 			{
-				animMesh->vertexIndices.push_back(
+				outMesh.indices.push_back(
 					{
-						pMesh->GetPolygonVertex(i,j)
+						static_cast<uint32_t>(pMesh->GetPolygonVertex(i,j))
 					}
 				);
 			}
 		}
-		Utility::IOMesh::Output("Animation/", "anim",*animMesh);
+		cout << "インデックス数 = " << outMesh.indices.size() << endl;
+#pragma endregion
 
-		cout << "animMesh v " << animMesh->vertices.size() << endl;
-		cout << "animMesh vi " << animMesh->vertexIndices.size() << endl;
 
-		//cout << "start:" << start.Get() << endl;
-		//cout << "stop:" << stop.Get() << endl;
-		//cout << "ft:" << frameTime.Get() << endl;
+
+		//	ボーン分
+		//	※事前に頂点,頂点インデックスを設定していないと、範囲外参照を起こす！
+		for (int i = 0; i < boneCount; ++i)
+		{
+			//	クラスタ取得
+			auto cluster = skinDeformer->GetCluster(i);
+
+			//	クラスタが影響を与える頂点インデックスの数
+			auto indicesCount = cluster->GetControlPointIndicesCount();
+
+			//	代入用の使いまわし型
+			FbxAMatrix fbxMat;
+
+#pragma region 初期姿勢
+			//	初期姿勢
+			cluster->GetTransformLinkMatrix(fbxMat);
+			//fbxMat = fbxMat.Transpose();
+			Joint* joint = new Joint;
+			joint->invBindPose.m[0][0] = static_cast<float>(fbxMat.Get(0, 0));
+			joint->invBindPose.m[0][1] = static_cast<float>(fbxMat.Get(0, 1));
+			joint->invBindPose.m[0][2] = static_cast<float>(fbxMat.Get(0, 2));
+			joint->invBindPose.m[0][3] = static_cast<float>(fbxMat.Get(0, 3));
+			joint->invBindPose.m[1][0] = static_cast<float>(fbxMat.Get(1, 0));
+			joint->invBindPose.m[1][1] = static_cast<float>(fbxMat.Get(1, 1));
+			joint->invBindPose.m[1][2] = static_cast<float>(fbxMat.Get(1, 2));
+			joint->invBindPose.m[1][3] = static_cast<float>(fbxMat.Get(1, 3));
+			joint->invBindPose.m[2][0] = static_cast<float>(fbxMat.Get(2, 0));
+			joint->invBindPose.m[2][1] = static_cast<float>(fbxMat.Get(2, 1));
+			joint->invBindPose.m[2][2] = static_cast<float>(fbxMat.Get(2, 2));
+			joint->invBindPose.m[2][3] = static_cast<float>(fbxMat.Get(2, 3));
+			joint->invBindPose.m[3][0] = static_cast<float>(fbxMat.Get(3, 0));
+			joint->invBindPose.m[3][1] = static_cast<float>(fbxMat.Get(3, 1));
+			joint->invBindPose.m[3][2] = static_cast<float>(fbxMat.Get(3, 2));
+			joint->invBindPose.m[3][3] = static_cast<float>(fbxMat.Get(3, 3));
+			outMesh.skeleton.joints[i] = *joint;
+			
+			//Joint* joint=new Joint;
+			//joint->invBindPose.m[0][0] = static_cast<float>(fbxMat.Get(0, 0));
+			//joint->invBindPose.m[1][0] = static_cast<float>(fbxMat.Get(1, 0));
+			//joint->invBindPose.m[2][0] = static_cast<float>(fbxMat.Get(2, 0));
+			//joint->invBindPose.m[3][0] = static_cast<float>(fbxMat.Get(3, 0));
+			//joint->invBindPose.m[0][1] = static_cast<float>(fbxMat.Get(0, 1));
+			//joint->invBindPose.m[1][1] = static_cast<float>(fbxMat.Get(1, 1));
+			//joint->invBindPose.m[2][1] = static_cast<float>(fbxMat.Get(2, 1));
+			//joint->invBindPose.m[3][1] = static_cast<float>(fbxMat.Get(3, 1));
+			//joint->invBindPose.m[0][2] = static_cast<float>(fbxMat.Get(0, 2));
+			//joint->invBindPose.m[1][2] = static_cast<float>(fbxMat.Get(1, 2));
+			//joint->invBindPose.m[2][2] = static_cast<float>(fbxMat.Get(2, 2));
+			//joint->invBindPose.m[3][2] = static_cast<float>(fbxMat.Get(3, 2));
+			//joint->invBindPose.m[0][3] = static_cast<float>(fbxMat.Get(0, 3));
+			//joint->invBindPose.m[1][3] = static_cast<float>(fbxMat.Get(1, 3));
+			//joint->invBindPose.m[2][3] = static_cast<float>(fbxMat.Get(2, 3));
+			//joint->invBindPose.m[3][3] = static_cast<float>(fbxMat.Get(3, 3));
+			//outMesh.skeleton.joints[i] = *joint;
+
+			//Joint joint;
+			//joint.invBindPose.m[0][0] = static_cast<float>(fbxMat.Get(0, 0));
+			//joint.invBindPose.m[1][0] = static_cast<float>(fbxMat.Get(1, 0));
+			//joint.invBindPose.m[2][0] = static_cast<float>(fbxMat.Get(2, 0));
+			//joint.invBindPose.m[3][0] = static_cast<float>(fbxMat.Get(3, 0));
+			//joint.invBindPose.m[0][1] = static_cast<float>(fbxMat.Get(0, 1));
+			//joint.invBindPose.m[1][1] = static_cast<float>(fbxMat.Get(1, 1));
+			//joint.invBindPose.m[2][1] = static_cast<float>(fbxMat.Get(2, 1));
+			//joint.invBindPose.m[3][1] = static_cast<float>(fbxMat.Get(3, 1));
+			//joint.invBindPose.m[0][2] = static_cast<float>(fbxMat.Get(0, 2));
+			//joint.invBindPose.m[1][2] = static_cast<float>(fbxMat.Get(1, 2));
+			//joint.invBindPose.m[2][2] = static_cast<float>(fbxMat.Get(2, 2));
+			//joint.invBindPose.m[3][2] = static_cast<float>(fbxMat.Get(3, 2));
+			//joint.invBindPose.m[0][3] = static_cast<float>(fbxMat.Get(0, 3));
+			//joint.invBindPose.m[1][3] = static_cast<float>(fbxMat.Get(1, 3));
+			//joint.invBindPose.m[2][3] = static_cast<float>(fbxMat.Get(2, 3));
+			//joint.invBindPose.m[3][3] = static_cast<float>(fbxMat.Get(3, 3));
+			
+			//outMesh.skeleton.joints.push_back(joint);
+			//outMesh.skeleton.joints[i] = joint;
+#pragma endregion
+
+#pragma region フレーム時姿勢
+			//	フレーム時姿勢
+			for (size_t f = 0; f < c_Frame; ++f) {
+				auto time = start + frameTime * f;
+				fbxMat = cluster->GetLink()->EvaluateGlobalTransform(time);
+				fbxMat = fbxMat.Transpose();
+				DirectX::XMMATRIX m =
+				{
+					static_cast<float>(fbxMat.Get(0,0)),static_cast<float>(fbxMat.Get(0,1)),static_cast<float>(fbxMat.Get(0,2)),static_cast<float>(fbxMat.Get(0,3)),
+					static_cast<float>(fbxMat.Get(1,0)),static_cast<float>(fbxMat.Get(1,1)),static_cast<float>(fbxMat.Get(1,2)),static_cast<float>(fbxMat.Get(1,3)),
+					static_cast<float>(fbxMat.Get(2,0)),static_cast<float>(fbxMat.Get(2,1)),static_cast<float>(fbxMat.Get(2,2)),static_cast<float>(fbxMat.Get(2,3)),
+					static_cast<float>(fbxMat.Get(3,0)),static_cast<float>(fbxMat.Get(3,1)),static_cast<float>(fbxMat.Get(3,2)),static_cast<float>(fbxMat.Get(3,3)),
+				};
+				animClip.bonesMatrix[i].push_back(m);
+			}
+#pragma endregion
+
+#pragma region 重み
+			//	影響を与えるインデックスの配列
+			auto indices = cluster->GetControlPointIndices();
+
+			//	影響度(重み)の配列
+			auto weights = cluster->GetControlPointWeights();
+
+			//	クラスタが影響を与える頂点分
+			for (int j = 0; j < indicesCount; ++j)
+			{
+				//	参照するインデックス
+				auto index = indices[j];
+
+				//	重み
+				auto weight = weights[j];
+
+				outMesh.vertices[index].jointsIndex.push_back(i);
+				outMesh.vertices[index].jointsWeight.push_back(weight);
+			}
+#pragma endregion
+		}
+#pragma region 重みの正規化
+		//for (auto& it : outMesh.vertices)
+		//{
+		//	//	総和
+		//	float totalWeight = 0;
+		//	for (auto weight : it.jointsWeight) {
+		//		totalWeight += weight;
+		//	}
+		//	if (totalWeight == 1) { continue; }
+		//	
+		//	//	係数
+		//	float coefficient = 1.0f / (totalWeight);
+
+		//	auto tes = coefficient * totalWeight;
+		//	float tm = 0.0f;
+		//	for (auto& weight : it.jointsWeight) {
+		//		weight *= coefficient;
+		//		tm += weight;
+		//	}
+		//	if (tm != 1.0f) {
+		//		cout << "Error:" << static_cast<float>(tm) << endl;
+		//	}
+		//}
+
+		//for (auto it : outMesh.vertices) {
+		//	float totalWeight = 0;
+		//	for (auto weight : it.jointsWeight) {
+		//		totalWeight += weight;
+		//	}
+		//	if (totalWeight != 1.0f) {
+		//		cout << "正規化失敗" << endl;
+		//	}
+		//}
+#pragma endregion
+
+		cout << "書き出し" << endl;
+
+		Utility::IOMesh::Output(outName, outMesh,animClip);
+
+		cout << "start:" << start.Get() << endl;
+		cout << "stop:" << stop.Get() << endl;
+		cout << "ft:" << frameTime.Get() << endl;
 
 	}
-	catch(...){}
+	catch (...) {}
 
-//#endif
+	//#endif
 #pragma endregion
 
 
@@ -534,7 +573,6 @@ void Converter::FBXConverter::LoadToStore(fbxsdk::FbxMesh * from, Utility::Mesh 
 	}
 }
 
-
 void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxSurfaceMaterial * material)
 {
 
@@ -582,61 +620,61 @@ void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
 			exit(NULL);
 		}
 #pragma endregion
-		//	アンビエント
-		g_pMat->ambient =
-		{
-			(float)castMat->Ambient.Get()[0],
-			(float)castMat->Ambient.Get()[1],
-			(float)castMat->Ambient.Get()[2]
-		};
+		////	アンビエント
+		//g_pMat->ambient =
+		//{
+		//	(float)castMat->Ambient.Get()[0],
+		//	(float)castMat->Ambient.Get()[1],
+		//	(float)castMat->Ambient.Get()[2]
+		//};
 
-		//	ディフューズ
-		g_pMat->diffuse =
-		{
-			(float)castMat->Diffuse.Get()[0],
-			(float)castMat->Diffuse.Get()[1],
-			(float)castMat->Diffuse.Get()[2],
-		};
+		////	ディフューズ
+		//g_pMat->diffuse =
+		//{
+		//	(float)castMat->Diffuse.Get()[0],
+		//	(float)castMat->Diffuse.Get()[1],
+		//	(float)castMat->Diffuse.Get()[2],
+		//};
 
-		//	エミッシブ
-		g_pMat->emissive =
-		{
-			(float)castMat->Emissive.Get()[0],
-			(float)castMat->Emissive.Get()[1],
-			(float)castMat->Emissive.Get()[2],
-		};
+		////	エミッシブ
+		//g_pMat->emissive =
+		//{
+		//	(float)castMat->Emissive.Get()[0],
+		//	(float)castMat->Emissive.Get()[1],
+		//	(float)castMat->Emissive.Get()[2],
+		//};
 
-		//	バンプマップ
-		g_pMat->bumpMap =
-		{
-			(float)castMat->Bump.Get()[0],
-			(float)castMat->Bump.Get()[1],
-			(float)castMat->Bump.Get()[2],
-		};
+		////	バンプマップ
+		//g_pMat->bumpMap =
+		//{
+		//	(float)castMat->Bump.Get()[0],
+		//	(float)castMat->Bump.Get()[1],
+		//	(float)castMat->Bump.Get()[2],
+		//};
 
-		//	透過度
-		g_pMat->transparent = static_cast<float>(castMat->TransparencyFactor.Get());
+		////	透過度
+		//g_pMat->transparent = static_cast<float>(castMat->TransparencyFactor.Get());
 
-		//	マテリアルが"Phong"なら
-		if (castMat->GetClassId().Is(FbxSurfacePhong::ClassId)) {
+		////	マテリアルが"Phong"なら
+		//if (castMat->GetClassId().Is(FbxSurfacePhong::ClassId)) {
 
-			//	スペキュラー
-			Math::FLOAT4 sp =
-			{
-				(float)phong->Specular.Get()[0],
-				(float)phong->Specular.Get()[1],
-				(float)phong->Specular.Get()[2],
-			};
-			g_pMat->specular = { &sp };
+		//	//	スペキュラー
+		//	Math::FLOAT4 sp =
+		//	{
+		//		(float)phong->Specular.Get()[0],
+		//		(float)phong->Specular.Get()[1],
+		//		(float)phong->Specular.Get()[2],
+		//	};
+		//	g_pMat->specular = { &sp };
 
-			//	光沢
-			float sh = (float)phong->Shininess.Get();
-			g_pMat->shiniess = { &sh };
+		//	//	光沢
+		//	float sh = (float)phong->Shininess.Get();
+		//	g_pMat->shiniess = { &sh };
 
-			//	反射
-			float refl = (float)phong->ReflectionFactor.Get();
-			g_pMat->reflection = { &refl };
-		}
+		//	//	反射
+		//	float refl = (float)phong->ReflectionFactor.Get();
+		//	g_pMat->reflection = { &refl };
+		//}
 
 	}
 }
