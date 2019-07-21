@@ -370,32 +370,56 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 		}
 
 
+		////	v[0]
+		//m._11 = GetMatrixElement(b);
+		//m._12 = GetMatrixElement(b);
+		//m._13 = GetMatrixElement(b);
+		//m._14 = GetMatrixElement(b);
+		////	v[1]
+		//m._21 = GetMatrixElement(b);
+		//m._22 = GetMatrixElement(b);
+		//m._23 = GetMatrixElement(b);
+		//m._24 = GetMatrixElement(b);
+		////	v[2]
+		//m._31 = GetMatrixElement(b);
+		//m._32 = GetMatrixElement(b);
+		//m._33 = GetMatrixElement(b);
+		//m._34 = GetMatrixElement(b);
+		////	v[3]
+		////m._41 = GetMatrixElement(b);
+		////m._42 = GetMatrixElement(b);
+		////m._43 = GetMatrixElement(b);
+		////m._44 = GetMatrixElement(b);
+		//m._41 = 0;
+		//m._42 = 0;
+		//m._43 = 0;
+		//m._44 = 1;
+
+		///////////////////////////////////
 		//	v[0]
 		m._11 = GetMatrixElement(b);
 		m._12 = GetMatrixElement(b);
 		m._13 = GetMatrixElement(b);
-		m._14 = GetMatrixElement(b);
+		m._14 = 0;
 		//	v[1]
 		m._21 = GetMatrixElement(b);
 		m._22 = GetMatrixElement(b);
 		m._23 = GetMatrixElement(b);
-		m._24 = GetMatrixElement(b);
+		m._24 = 0;
 		//	v[2]
 		m._31 = GetMatrixElement(b);
 		m._32 = GetMatrixElement(b);
 		m._33 = GetMatrixElement(b);
-		m._34 = GetMatrixElement(b);
+		m._34 = 0;
 		//	v[3]
-		//m._41 = GetMatrixElement(b);
-		//m._42 = GetMatrixElement(b);
-		//m._43 = GetMatrixElement(b);
-		//m._44 = GetMatrixElement(b);
-		m._41 = 0;
-		m._42 = 0;
-		m._43 = 0;
+		m._41 = GetMatrixElement(b);
+		m._42 = GetMatrixElement(b);
+		m._43 = GetMatrixElement(b);
 		m._44 = 1;
 
-
+		auto tmp = DirectX::XMLoadFloat4x4(&m);
+		tmp = DirectX::XMMatrixTranspose(tmp);
+		DirectX::XMStoreFloat4x4(&m, tmp);
 		//	格納
 		ret.initialMatrix.push_back(m);
 
@@ -403,7 +427,7 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 		buf = buf.substr(a + 1);
 	}
 
-	//getline(ifs, buf);
+	getline(ifs, buf);
 
 	//	アニメーションフレーム
 	const unsigned int c_frame = stoi(buf);
@@ -430,6 +454,7 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 			if (c != string::npos) {
 				b = b.substr(c + 1);
 			}
+			
 
 
 			//	v[0]
