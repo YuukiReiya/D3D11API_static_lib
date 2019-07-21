@@ -206,7 +206,8 @@ void API::Anim::SkeltonAnimationMesh::Render()
 		vector<XMMATRIX>boneMat;
 		for (int i = 0; i < m_FrameMatrix.size(); ++i)
 		{
-			XMMATRIX mat = m_OffsetMatrix[i] * m_FrameMatrix[i][animIndex];
+			//XMMATRIX mat = m_OffsetMatrix[i] * m_FrameMatrix[i][animIndex];
+			XMMATRIX mat = m_OffsetMatrix[i] * XMMatrixInverse(0, m_OffsetMatrix[i]);
 			boneMat.push_back(mat);
 		}
 
