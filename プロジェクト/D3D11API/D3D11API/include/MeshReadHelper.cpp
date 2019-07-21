@@ -479,6 +479,10 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 			m._44 = GetMatrixElement(b);
 
 			//	Ši”[
+			auto xmmat = DirectX::XMLoadFloat4x4(&m);
+			xmmat = DirectX::XMMatrixTranspose(xmmat);
+			DirectX::XMStoreFloat4x4(&m, xmmat);
+
 			tmp.push_back(m);
 
 			//	•¶š—ñXV
