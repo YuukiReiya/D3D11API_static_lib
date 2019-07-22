@@ -11,7 +11,7 @@
 #include <vector>
 #include <fstream>
 #include "MeshVertex.h"
-
+#include "FrameAnimationMesh.h"
 
 namespace D3D11 {
 	namespace Helper {
@@ -38,6 +38,7 @@ namespace D3D11 {
 				std::vector<uint32_t>indices;
 			};
 			static ReadBuffer Read(std::string path);
+			static D3D11::Graphic::FrameAnimationMesh ReadFrameAnim(std::string path);
 
 		private:
 			MeshReadHelper() = delete;

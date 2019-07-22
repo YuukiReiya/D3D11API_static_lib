@@ -1,12 +1,19 @@
 #include "stdafx.h"
 #include "MeshReadHelper.h"
 #include "MyGame.h"
+#include <DirectXMath.h>
 
 /*!
 	@brief	usingディレクティブ
 	@using	D3D11::Helper
 */
 using namespace D3D11::Helper;
+
+/*!
+	@brief	usingディレクティブ
+	@using	DirectX
+*/
+using namespace DirectX;
 
 /*!
 	@brief	usingディレクティブ
@@ -179,6 +186,76 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 
 			buf = buf.substr(a + 1);
 		}
+	}
+
+	return ret;
+}
+
+D3D11::Graphic::FrameAnimationMesh D3D11::Helper::MeshReadHelper::ReadFrameAnim(std::string path)
+{
+	ifstream ifs(path);
+	if (ifs.fail()) {
+		string error = "Failed to read \"" + path + "\" file.";
+		ErrorLog(error);
+		return D3D11::Graphic::FrameAnimationMesh();
+	}
+
+	D3D11::Graphic::FrameAnimationMesh ret;
+	string buf;
+	const string_view c_Space = " ";
+	const string_view c_Comma = ",";
+	const string_view c_Slash = "/";
+
+	//	頂点インデックス
+	getline(ifs, buf);
+	while (true)
+	{
+		auto spaceOffset = buf.find(" ");
+		if (spaceOffset == string::npos) { break; }
+		auto value = buf.substr(0, spaceOffset);
+		ret.indices.push_back(stoi(value));
+		buf = buf.substr(spaceOffset + 1);
+	}
+
+	//	UV
+	getline(ifs, buf);
+	if (!buf.empty()) {
+
+		//TODO:UVの読み込み処理
+	}
+
+	//	座標
+	while (getline(ifs, buf))
+	{
+		unsigned int animIndex = 0;
+		unsigned int frameIndex = 0;
+
+		//	
+		while (!buf.empty())
+		{
+			auto commaOffset = buf.find(c_Comma);
+			float x = stof(buf.substr(0, commaOffset));
+			buf = buf.substr(commaOffset + 1);
+			commaOffset = buf.find(c_Comma);
+			float y= stof(buf.substr(0, commaOffset));
+			buf = buf.substr(commaOffset + 1);
+			auto spaceOffset = buf.find(c_Space);
+			float z = stof(buf.substr(0, spaceOffset));
+			buf = buf.substr(spaceOffset + 1);
+
+			//	リストに追加
+			ret.vertices[animIndex][frameIndex].push_back({ x,y,z });
+			frameIndex++;
+
+
+			if (buf.find(c_Slash) == 0) {
+				animIndex++;
+				frameIndex = 0;
+				buf = buf.substr(1);
+			}
+		}
+
+
 	}
 
 	return ret;
