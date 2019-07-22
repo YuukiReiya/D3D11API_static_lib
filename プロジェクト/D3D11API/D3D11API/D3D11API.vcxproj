@@ -161,6 +161,7 @@
     <ClInclude Include="include\Color.h" />
     <ClInclude Include="include\Debug.h" />
     <ClInclude Include="include\Direct3D11.h" />
+    <ClInclude Include="include\FrameAnimationMesh.h" />
     <ClInclude Include="include\GamePad.h" />
     <ClInclude Include="include\GeometryFactor.h" />
     <ClInclude Include="include\Material.h" />

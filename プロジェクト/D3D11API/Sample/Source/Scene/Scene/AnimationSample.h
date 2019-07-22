@@ -1,7 +1,7 @@
 #pragma once
 #include "../Interface/IScene.h"
 #include <Transform.h>
-#include <Mesh.h>
+#include <AnimationMesh.h>
 
 class AnimationSample
 	:public IScene
@@ -35,7 +35,5 @@ public:
 	void IScene::Render();
 
 private:
-	std::shared_ptr<API::Mesh>m_pMesh;
-	std::shared_ptr<API::Material>m_pMaterial;
-	std::shared_ptr<D3D11::Graphic::AbstractShader>m_pShader;
+	std::shared_ptr<API::AnimationMesh>m_pMesh;
 };
