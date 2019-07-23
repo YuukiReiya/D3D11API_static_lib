@@ -162,9 +162,9 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 #pragma region アニメーションメッシュ
 	//	出力データ
-	SkeletonMesh*outMesh = new SkeletonMesh;
-
-	//SkeletonMesh outMesh;
+	//SkeletonMesh*outMesh = new SkeletonMesh;
+	
+	SkeletonMesh outMesh;
 	//AnimationClip animClip;
 	try
 	{
@@ -242,8 +242,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		auto skinDeformer = (FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin);
 		int boneCount = skinDeformer->GetClusterCount();
 #pragma region ジョイントのメモリ確保
-		outMesh.skeleton.joints.resize(boneCount);
-		animClip.bonesMatrix.resize(boneCount);
+		//outMesh.skeleton.joints.resize(boneCount);
+		//animClip.bonesMatrix.resize(boneCount);
 #pragma endregion
 
 		wic::SetColor(Purple);
@@ -252,7 +252,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 		//	アニメーションのフレーム数
 		const unsigned int c_Frame = static_cast<unsigned int>(stop.Get() / frameTime.Get());
-		animClip.frameCount = c_Frame;
+		//animClip.frameCount = c_Frame;
 #pragma region 頂点
 		//	頂点数
 		auto vertexCount = pMesh->GetControlPointsCount();
@@ -268,8 +268,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				(float)vertices[vertexIndex][1],
 				(float)vertices[vertexIndex][2],
 			};
-			outMesh->vertices.push_back(sv);
-			//outMesh.vertices.push_back(sv);
+			//outMesh->vertices.push_back(sv);
+			outMesh.vertices.push_back(sv);
 			++vertexIndex;
 		}
 		cout << "頂点数 = " << vertexCount << endl;
@@ -285,17 +285,17 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			if (polygonVertexCount != 3) { cout << "ERROR:三角化出来ていません" << endl; }
 			for (int j = 0; j < polygonVertexCount; ++j)
 			{
-				outMesh->indices.push_back(
-					{
-						static_cast<uint32_t>(pMesh->GetPolygonVertex(i,j))
-					}
-				);
-
-				//outMesh.indices.push_back(
+				//outMesh->indices.push_back(
 				//	{
 				//		static_cast<uint32_t>(pMesh->GetPolygonVertex(i,j))
 				//	}
 				//);
+
+				outMesh.indices.push_back(
+					{
+						static_cast<uint32_t>(pMesh->GetPolygonVertex(i,j))
+					}
+				);
 			}
 		}
 		cout << "インデックス数 = " << outMesh.indices.size() << endl;
@@ -355,6 +355,27 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			//	データ格納
 			for (size_t i = 0; i < pMesh->GetControlPointsCount(); i++)
 			{
+				auto v = compositeMatrix[i].MultNormalize(pMesh->GetControlPointAt(i));
+				
+				DirectX::XMVECTOR vec = {
+					pMesh->GetControlPointAt(i).mData[0],
+					pMesh->GetControlPointAt(i).mData[1],
+					pMesh->GetControlPointAt(i).mData[2],
+					1
+				};
+				auto&m = compositeMatrix[i];
+				DirectX::XMMATRIX mat = {
+					(float)m.Get(0,0),(float)m.Get(0,1),(float)m.Get(0,2),(float)m.Get(0,3),
+					(float)m.Get(1,0),(float)m.Get(1,1),(float)m.Get(1,2),(float)m.Get(1,3),
+					(float)m.Get(2,0),(float)m.Get(2,1),(float)m.Get(2,2),(float)m.Get(2,3),
+					(float)m.Get(3,0),(float)m.Get(3,1),(float)m.Get(3,2),(float)m.Get(3,3),
+				};
+				auto w = DirectX::XMVector4Transform(vec, mat);
+				
+				//
+				cout << endl;
+				cout << "FBX:x = " << (float)v[0] << ",y = " << (float)v[1] << ",z = " << (float)v[2] << endl;
+				cout << "D3D:x = " << (float)w.m128_f32[0] << ",y = " << (float)w.m128_f32[1] << ",z = " << (float)w.m128_f32[2] << endl;
 			}
 
 		}
@@ -367,7 +388,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		cout << "書き出し" << endl;
 
 		//Utility::IOMesh::Output(outName, outMesh,animClip);
-		Utility::IOMesh::Output(outName, *outMesh);
+		//Utility::IOMesh::Output(outName, *outMesh);
 
 		cout << "start:" << start.Get() << endl;
 		cout << "stop:" << stop.Get() << endl;

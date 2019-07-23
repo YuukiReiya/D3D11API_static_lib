@@ -35,7 +35,7 @@ namespace Utility{
 		*/
 		static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
 
-		static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
+		//static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
 
 		static void Output(std::string fileName,SkeletonMesh mesh,AnimationClip clip);
 	private:
