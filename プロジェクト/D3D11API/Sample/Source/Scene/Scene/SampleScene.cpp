@@ -84,16 +84,18 @@ void SampleScene::Initialize()
 	//Camera::GetInstance().SetViewMatrix({0,0,-2});
 #pragma region スプライト
 #if 1
-	g_pSpriteShader = make_shared<D3D11::Graphic::SpriteShader>();
+	g_pSpriteShader = make_shared<D3D11::Graphic::MeshShader>();
 	g_pSprite		= make_shared<Sprite>();
 	g_pTexture		= make_shared<Texture>();
 
 	try
 	{
+		if (FAILED(g_pSpriteShader->Setup())) { throw runtime_error("shader init"); }
+		g_pSprite->Initialize();
 		//if (FAILED(g_pTexture->Initialize("ncc.png"))) { throw runtime_error("tex init"); };
 		//g_pTexture->SetupSize({ 400,400 });
 		//if (FAILED(g_pSpriteShader->Setup())) { throw runtime_error("shader init"); }
-		if (FAILED(g_pSpriteShader->DynamicSetup())) { throw runtime_error("shader init"); }
+		//if (FAILED(g_pSpriteShader->DynamicSetup())) { throw runtime_error("shader init"); }
 		g_pSprite->SetupShader(g_pSpriteShader.get());
 		g_pSprite->SetupTexture(g_pTexture.get());
 	}
