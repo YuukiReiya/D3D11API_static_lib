@@ -622,15 +622,15 @@ void API::Sprite::SetupVertex()
 	}
 
 	// 頂点バッファセット
-	//uint32_t stride = sizeof(SpriteVertex);
-	//uint32_t offset = 0;
-	//Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
-	//	0,
-	//	1,
-	//	m_pVertexBuffer.GetAddressOf(),
-	//	&stride,
-	//	&offset
-	//);
+	uint32_t stride = sizeof(SpriteVertex);
+	uint32_t offset = 0;
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+		0,
+		1,
+		m_pVertexBuffer.GetAddressOf(),
+		&stride,
+		&offset
+	);
 }
 
 /*!
