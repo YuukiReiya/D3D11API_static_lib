@@ -165,7 +165,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 	//SkeletonMesh*outMesh = new SkeletonMesh;
 	
 	SkeletonMesh outMesh;
-	//AnimationClip animClip;
+	AnimationClip animClip;
 	try
 	{
 		Setup();
@@ -242,8 +242,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		auto skinDeformer = (FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin);
 		int boneCount = skinDeformer->GetClusterCount();
 #pragma region ジョイントのメモリ確保
-		//outMesh.skeleton.joints.resize(boneCount);
-		//animClip.bonesMatrix.resize(boneCount);
+		outMesh.skeleton.joints.resize(boneCount);
+		animClip.bonesMatrix.resize(boneCount);
 #pragma endregion
 
 		wic::SetColor(Purple);
@@ -312,6 +312,29 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			auto s0 = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
 			auto geometryOffset = FbxAMatrix(t0, r0, s0);
 
+			cout << "geometryOffset" << endl;
+			//cout << "T = " << t0.mData[0] << "," << t0.mData[1] << "," << t0.mData[2] << "," << t0.mData[3] << "," << endl;
+			//cout << "R = " << r0.mData[0] << "," << r0.mData[1] << "," << r0.mData[2] << "," << r0.mData[3] << "," << endl;
+			//cout << "S = " << s0.mData[0] << "," << s0.mData[1] << "," << s0.mData[2] << "," << s0.mData[3] << "," << endl;
+
+			if (t0.mData[0] != 0 || t0.mData[1] != 0 || t0.mData[2] != 0 || t0.mData[3] != 1)
+			{
+				cout << "T = " << t0.mData[0] << "," << t0.mData[1] << "," << t0.mData[2] << "," << t0.mData[3] << "," << endl;
+				system("pause");
+			}
+			if (r0.mData[0] != 0 || r0.mData[1] != 0 || r0.mData[2] != 0 || r0.mData[3] != 1)
+			{
+				cout << "R = " << r0.mData[0] << "," << r0.mData[1] << "," << r0.mData[2] << "," << r0.mData[3] << "," << endl;
+				system("pause");
+			}
+			if (s0.mData[0] != 1 || s0.mData[1] != 1 || s0.mData[2] != 1 || s0.mData[3] != 1)
+			{
+				cout << "S = " << s0.mData[0] << "," << s0.mData[1] << "," << s0.mData[2] << "," << s0.mData[3] << "," << endl;
+				system("pause");
+			}
+
+
+
 			FbxMatrix *compositeMatrix = new FbxMatrix[pMesh->GetControlPointsCount()];
 			memset(compositeMatrix, 0, sizeof(FbxMatrix) * pMesh->GetControlPointsCount());
 
@@ -350,6 +373,14 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 					compositeMatrix[index] += influence;
 				}
+
+				//	アニメーション格納(フレーム姿勢の変数に合成行列を代入)
+
+				for (int i = 0; boneCount; ++i) {
+					//outMesh.skeleton.joints[i].invBindPose
+					animClip.bonesMatrix[0][i]
+				}
+
 			}
 
 			//	データ格納
@@ -373,7 +404,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				auto w = DirectX::XMVector4Transform(vec, mat);
 				
 				//
-				cout << endl;
+				//cout << endl;
 				cout << "FBX:x = " << (float)v[0] << ",y = " << (float)v[1] << ",z = " << (float)v[2] << endl;
 				cout << "D3D:x = " << (float)w.m128_f32[0] << ",y = " << (float)w.m128_f32[1] << ",z = " << (float)w.m128_f32[2] << endl;
 			}
