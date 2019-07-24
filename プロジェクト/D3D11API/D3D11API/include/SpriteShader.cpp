@@ -4,6 +4,8 @@
 #include "MyGame.h"
 #include "Direct3D11.h"
 #include "Sprite.h"
+#include "SpriteCompVS.h"
+#include "SpriteCompPS.h"
 
 /*!
 	@brief	usingディレクティブ
@@ -46,32 +48,38 @@ D3D11::Graphic::SpriteShader::~SpriteShader()
 */
 HRESULT D3D11::Graphic::SpriteShader::Setup()
 {
-	//	パス
-	auto path = m_Directory + c_CSO.data();
-
-	//	csoバイナリ
-	CustomShaderBin bin(path);
-
 	//	ハンドラ
 	HRESULT hr;
 
+	//	デバイス
+	auto device = Direct3D11::GetInstance().GetDevice();
+
 	//	頂点シェーダー
-	hr = CreateVertexShader(&bin, &m_pVertexShader);
+	hr = device->CreateVertexShader(
+		&g_vs_main,
+		sizeof(g_vs_main),
+		NULL,
+		m_pVertexShader.GetAddressOf()
+	);
 	if (FAILED(hr)) {
 		ErrorLog("\"SpriteShader\" is failed create vertex shader");
 		return E_FAIL;
 	}
 
 	//	頂点レイアウト
-	hr = CreateInputLayout(&bin);
+	hr = CreateInputLayout();
 	if (FAILED(hr)) {
 		ErrorLog("\"SpriteShader\" input layout is not create!");
 		return E_FAIL;
 	}
 
-
 	//	ピクセルシェーダー
-	hr = CreatePixelShader(&bin, m_pPixelShader.GetAddressOf());
+	hr = device->CreatePixelShader(
+		&g_ps_main,
+		sizeof(g_ps_main),
+		NULL,
+		m_pPixelShader.GetAddressOf()
+	);
 	if (FAILED(hr)) {
 		ErrorLog("\"SpriteShader\" is failed create pixel shader");
 	}
@@ -84,22 +92,6 @@ HRESULT D3D11::Graphic::SpriteShader::Setup()
 		return E_FAIL;
 	}
 	return S_OK;
-}
-
-/*!
-	@fn			Setup
-	@brief		ファイルの階層を行い、プリコンパイル済みシェーダーファイルを利用したセットアップを行う
-	@detail		オーバーロード
-	@param[in]	ファイルの階層パス
-	@NOTE		シェーダーファイルの配置位置が人によって変わってしまうため、ディレクトリだけでも設定出来るようにする
-*/
-HRESULT D3D11::Graphic::SpriteShader::Setup(std::string & directory)
-{
-	//	ディレクトリ設定
-	SetupDirectory(directory);
-
-	//	プリコンパイル済みファイルを利用したセットアップ
-	return Setup();
 }
 
 /*!
@@ -241,15 +233,15 @@ HRESULT D3D11::Graphic::SpriteShader::CreateInputLayout(ID3DBlob*pBlob)
 /*!
 	@fn			CreateInputLayout
 	@brief		頂点レイアウトの作成
-	@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
 	@return		S_OK:成功 E_FAIL:失敗
 */
-HRESULT D3D11::Graphic::SpriteShader::CreateInputLayout(CustomShaderBin * bin)
+HRESULT D3D11::Graphic::SpriteShader::CreateInputLayout()
 {
-	// 頂点インプットレイアウト定義
-	D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
-	};
-	return AbstractShader::CreateInputLayout(bin, layout, m_pVertexLayout.GetAddressOf());
+	return Direct3D11::GetInstance().GetDevice()->CreateInputLayout(
+		c_InputLayout,
+		GetArraySize(c_InputLayout),
+		g_vs_main,
+		sizeof(g_vs_main),
+		m_pVertexLayout.GetAddressOf()
+	);
 }

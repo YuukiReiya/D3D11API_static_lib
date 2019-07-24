@@ -732,12 +732,15 @@ void API::Sprite::SetupConstantBuffer()
 	//	DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 
 	DirectX::XMMATRIX world = transform->GetWorldMatrix();
+	world = DirectX::XMMatrixTranspose(world);
 
 	//	ビュー行列
 	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
+	view = DirectX::XMMatrixTranspose(view);
 
 	//	プロジェクション行列
 	DirectX::XMMATRIX proj = Camera::GetInstance().GetProjMatrix();
+	proj = DirectX::XMMatrixTranspose(proj);
 
 	//	頂点シェーダー用のCバッファ登録
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(

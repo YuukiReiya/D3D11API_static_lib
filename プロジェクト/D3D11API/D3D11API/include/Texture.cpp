@@ -31,6 +31,8 @@ API::Texture::Texture() :
 	m_pSamplerState(nullptr),
 	m_pShaderResourceView(nullptr)
 {
+	m_DivCount = { 1,1 };
+	m_AtlasOffset = { 0,0 };
 	//	宣言時に生ポインタで宣言されたときの対策でクラスメンバにシェアード・ポインタを持たせる
 	m_pShared = std::make_shared<Texture*>(this);
 }

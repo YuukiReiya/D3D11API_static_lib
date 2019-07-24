@@ -10,7 +10,6 @@
 #include <memory>
 #include <wrl/client.h>
 #include <string>
-#include "CustomShaderBin.h"
 
 /*! Direct3D11関連 */
 namespace D3D11 {
@@ -136,23 +135,11 @@ namespace D3D11 {
 			/*!
 				@fn			CreateVertexShader
 				@brief		頂点シェーダーの作成
-				@detail		プリコンパイル済みシェーダーファイルを使用する
-				@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+				@param[in]	コンパイル済み頂点シェーダーのバイナリデータ
 				@param[in]	頂点シェーダー
 				@return		S_OK:成功 E_FAIL:失敗
 			*/
-			static HRESULT CreateVertexShader(CustomShaderBin* bin, ID3D11VertexShader**pVertexShader);
-
-			/*!
-				@fn			CreateInputLayout
-				@brief		頂点レイアウト作成
-				@detail		プリコンパイル済みシェーダーファイルを使用する
-				@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
-				@param[in]	頂点レイアウトの定義
-				@param[in]	頂点レイアウト
-				@return		S_OK:成功 E_FAIL:失敗
-			*/
-			static HRESULT CreateInputLayout(CustomShaderBin* bin, D3D11_INPUT_ELEMENT_DESC desc[], ID3D11InputLayout**pInputLayout);
+			static HRESULT CreateVertexShader(const void* pCompileShader, ID3D11VertexShader**pVertexShader);
 
 			/*!
 				@fn			CreatePixelShader
@@ -167,12 +154,12 @@ namespace D3D11 {
 			/*!
 				@fn			CreatePixelShader
 				@brief		ピクセルシェーダーの作成
-				@detail		プリコンパイル済みシェーダーファイルを使用する
-				@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
+				@param[in]	コンパイル済みピクセルシェーダーのバイナリデータ
 				@param[in]	ピクセルシェーダー
 				@return		S_OK:成功 E_FAIL:失敗
 			*/
-			static HRESULT CreatePixelShader(CustomShaderBin* bin, ID3D11PixelShader**pPixelShader);
+			static HRESULT CreatePixelShader(const BYTE pCompileShader[], ID3D11PixelShader**pPixelShader);
+
 		};
 	}
 }

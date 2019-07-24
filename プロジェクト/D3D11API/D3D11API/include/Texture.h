@@ -167,6 +167,12 @@ namespace API {
 		void SetupAtlas(DirectX::XMINT2 atlasOffset, unsigned int div_x = c_ConfiguredDevCount, unsigned int div_y = c_ConfiguredDevCount);
 
 		/*!
+			@fn		SetupSize
+			@brief	画像サイズの指定
+		*/
+		void SetupSize(const DirectX::XMINT2 size) { m_Size = size; }
+
+		/*!
 			@fn		GetDivNum
 			@brief	画像の分割数を取得
 		*/

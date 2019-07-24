@@ -18,7 +18,7 @@ namespace D3D11
 			/*!
 				@brief	コンストラクタ
 			*/
-			SpriteShader();
+			explicit SpriteShader();
 
 			/*!
 				@brief	デストラクタ
@@ -29,18 +29,8 @@ namespace D3D11
 				@fn		Setup
 				@brief	プリコンパイル済みシェーダーファイルを利用してセットアップを行う
 				@detail	オーバーライド
-				@TODO	読み込めない.csoファイルが存在し、動作が安定しない。
 			*/
 			HRESULT Setup()override final;
-
-			/*!
-				@fn			Setup
-				@brief		ファイルの階層を行い、プリコンパイル済みシェーダーファイルを利用したセットアップを行う
-				@detail		オーバーロード
-				@param[in]	ファイルの階層パス
-				@NOTE		シェーダーファイルの配置位置が人によって変わってしまうため、ディレクトリだけでも設定出来るようにする
-			*/
-			HRESULT Setup(std::string& directory);
 
 			/*!
 				@fn		DynamicSetup
@@ -81,13 +71,11 @@ namespace D3D11
 			HRESULT CreateInputLayout(ID3DBlob*pBlob);
 
 			/*!
-				@fn			CreateInputLayout	
+				@fn			CreateInputLayout
 				@brief		頂点レイアウトの作成
-				@param[in]	コンパイル済みシェーダーファイル(バイナリデータ)
 				@return		S_OK:成功 E_FAIL:失敗
 			*/
-			HRESULT CreateInputLayout(CustomShaderBin*bin);
-
+			HRESULT CreateInputLayout();
 
 			/*!
 				@var	m_Directory
@@ -99,37 +87,41 @@ namespace D3D11
 				@var	c_HLSL
 				@brief	HLSLのファイル名
 			*/
-			std::string_view c_HLSL			= "SpriteShader.hlsl";
-
-			/*!
-				@var	c_CSO
-				@brief	CSOのファイル名
-			*/
-			std::string_view c_CSO			= "SpriteShader.cso";
+			static constexpr std::string_view c_HLSL			= "SpriteShader.hlsl";
 
 			/*!
 				@var	c_VSEntryName
 				@brief	頂点シェーダーのエントリーポイントの名前
 			*/
-			std::string_view c_VSEntryName	= "VS";
+			static constexpr std::string_view c_VSEntryName	= "VS";
 			
 			/*!
 				@var	c_PSEntryName
 				@brief	ピクセルシェーダーのエントリーポイントの名前
 			*/
-			std::string_view c_PSEntryName	= "PS";
+			static constexpr std::string_view c_PSEntryName	= "PS";
 			
 			/*!
 				@var	c_VSProfile
 				@brief	頂点シェーダーのプロファイル
 			*/
-			std::string_view c_VSProfile	= "vs_5_0";
+			static constexpr std::string_view c_VSProfile	= "vs_5_0";
 
 			/*!
 				@var	c_PSProfile
 				@brief	ピクセルシェーダーのプロファイル
 			*/
-			std::string_view c_PSProfile	= "ps_5_0";
+			static constexpr std::string_view c_PSProfile	= "ps_5_0";
+
+			/*!
+				@var	c_InputLayout
+				@brief	インプットレイアウト
+			*/
+			static constexpr D3D11_INPUT_ELEMENT_DESC c_InputLayout[]=
+			{
+				{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+				{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			};
 		};
 	}
 }
