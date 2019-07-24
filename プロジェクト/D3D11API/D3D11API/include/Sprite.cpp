@@ -14,6 +14,7 @@
 #include "MemoryLeaks.h"
 #include "MyGame.h"
 #include "Debug.h"
+#include "MeshConstantBuffer.h"
 
 /*!
 	@brief	名前空間
@@ -56,71 +57,15 @@ Sprite::~Sprite()
 */
 HRESULT Sprite::Initialize()
 {
-	HRESULT hr;
-
-	/*!
-	※
-	SRC:ソース(これから描画するピクセルの色)
-	DEST:ディストネーション(レンダリングターゲットに描画されているピクセルの色)
-	
-	最終的な描画色は以下の「混合関数」によって決まる
-	
-		SRC × ブレンディング係数 ＋ DEST × ブレンディング係数
-	
-		SRCALPHA:	 SRC のα値
-		INVSRCALPHA: 1 - SRC のα値
-		DESTALPHA:	 DESTのα値
-	*/
-
-	// αブレンド
-	// αテスト設定
-	D3D11_BLEND_DESC bd;
-	SecureZeroMemory(&bd, sizeof(bd));
-
-	// ブレンドの有効・無効
-	bd.RenderTarget[0].BlendEnable		= true;
-
-	// ブレンディング係数の設定
-	bd.RenderTarget[0].SrcBlend			= D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
-	bd.RenderTarget[0].DestBlend		= D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-
-	//
-	bd.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_ONE;
-	bd.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-
-
-	// ブレンドオプション
-	bd.RenderTarget[0].BlendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	bd.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
-	bd.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
-	bd.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
-
-	//
-	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
-	bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-
-	// アンチエイリアス処理
-	//bd.AlphaToCoverageEnable = true;	// 切り取った部分に対するアンチエイリアス処理の有無
-	bd.IndependentBlendEnable = false;
-
-	// ブレンドステートの作成
-	hr = Direct3D11::GetInstance().GetDevice()->CreateBlendState(
-		&bd,
-		m_pBlendState.GetAddressOf()
-	);
-	if (FAILED(hr)) {
-		std::string error = "BlendState is not create!";
-		ErrorLog(error);
-		return E_FAIL;
+	//	頂点
+	if (FAILED(CreateVertexBuffer())) {
+		ErrorLog("vertex buffer");
 	}
 
-	// ブレンドステートの設定
-	Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
-		m_pBlendState.Get(),
-		NULL,
-		m_StencilMask
-	);
+	//	頂点インデックス
+	if (FAILED(CreateIndexBuffer())) {
+		ErrorLog("index buffer");
+	}
 
 	return S_OK;
 }
@@ -186,11 +131,29 @@ void API::Sprite::Render()
 	//	ブレンドステートのセット
 	SetupBlendState();
 
-	//	描画
-	Direct3D11::GetInstance().GetImmediateContext()->Draw(
-		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
-		NULL
+	// 頂点バッファセット
+	uint32_t stride = sizeof(SpriteVertex);
+	uint32_t offset = 0;
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+		0,
+		1,
+		m_pVertexBuffer.GetAddressOf(),
+		&stride,
+		&offset
 	);
+
+
+	//	描画
+	//Direct3D11::GetInstance().GetImmediateContext()->Draw(
+	//	4,		// 頂点数(板ポリゴンなので頂点数は4つ)
+	//	NULL
+	//);
+	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(
+		GetArraySize(c_Indices),
+		0,
+		0
+	);
+
 }
 
 /*!
@@ -641,7 +604,7 @@ void API::Sprite::SetupVertex()
 void API::Sprite::SetupTopology()
 {
 	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 	);
 }
 
@@ -732,15 +695,15 @@ void API::Sprite::SetupConstantBuffer()
 	//	DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 
 	DirectX::XMMATRIX world = transform->GetWorldMatrix();
-	world = DirectX::XMMatrixTranspose(world);
+	//world = DirectX::XMMatrixTranspose(world);
 
 	//	ビュー行列
 	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
-	view = DirectX::XMMatrixTranspose(view);
+	//view = DirectX::XMMatrixTranspose(view);
 
 	//	プロジェクション行列
 	DirectX::XMMATRIX proj = Camera::GetInstance().GetProjMatrix();
-	proj = DirectX::XMMatrixTranspose(proj);
+	//proj = DirectX::XMMatrixTranspose(proj);
 
 	//	頂点シェーダー用のCバッファ登録
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
@@ -776,22 +739,29 @@ void API::Sprite::SetupConstantBuffer()
 		return;
 	}
 
-	SpriteShaderBuffer cb;
+	//SpriteShaderBuffer cb;
+	MeshConstantBuffer cb;
+
 	SecureZeroMemory(&cb, sizeof(cb));
 
 	auto ptex = *m_pTexture.lock();
 
 	//	バッファに代入
-	cb.m_WorldMatrix		= world;
-	cb.m_ViewMatrix			= view;
-	cb.m_ProjectionMatrix	= proj;
-	cb.m_DivNum = DirectX::XMFLOAT2(
-		static_cast<float>(ptex->GetDivCount().x),
-		static_cast<float>(ptex->GetDivCount().y));
-	cb.m_Index = DirectX::XMFLOAT2(
-		static_cast<float>(ptex->GetAtlasOffset().x),
-		static_cast<float>(ptex->GetAtlasOffset().y));
-	cb.m_Color				= ptex->color.GetRGBA();
+	//cb.m_WorldMatrix		= world;
+	//cb.m_ViewMatrix			= view;
+	//cb.m_ProjectionMatrix	= proj;
+	cb.m.world = world;
+	cb.m.view = view;
+	cb.m.proj = proj;
+
+	//cb.m_DivNum = DirectX::XMFLOAT2(
+	//	static_cast<float>(ptex->GetDivCount().x),
+	//	static_cast<float>(ptex->GetDivCount().y));
+	//cb.m_Index = DirectX::XMFLOAT2(
+	//	static_cast<float>(ptex->GetAtlasOffset().x),
+	//	static_cast<float>(ptex->GetAtlasOffset().y));
+	//cb.m_Color				= ptex->color.GetRGBA();
+	cb.color = ptex->color.GetRGBA();
 
 	//	メモリコピー
 	memcpy_s(pMapData.pData, pMapData.RowPitch, (void*)(&cb), sizeof(cb));
@@ -830,5 +800,59 @@ void API::Sprite::SetupBlendState()
 		m_pBlendState.Get(),
 		NULL,
 		m_StencilMask
+	);
+}
+
+HRESULT API::Sprite::CreateIndexBuffer()
+{
+	//	バッファの仕様
+	D3D11_BUFFER_DESC bd;
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(uint8_t)*GetArraySize(c_Indices);
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = NULL;
+
+	//	サブリソースの仕様	
+	D3D11_SUBRESOURCE_DATA sd;
+	SecureZeroMemory(&sd, sizeof(sd));
+	sd.pSysMem = c_Indices;
+
+	//	インデックスバッファ作成
+	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&sd,
+		m_pIndexBuffer.GetAddressOf()
+	);
+}
+
+HRESULT API::Sprite::CreateVertexBuffer()
+{
+	//	バッファの仕様
+	D3D11_BUFFER_DESC bd;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(D3D11::Graphic::SpriteVertex) * GetArraySize(c_Vertices);
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = NULL;
+
+	//	サブリソースの仕様
+	D3D11_SUBRESOURCE_DATA sd;
+
+	
+	D3D11::Graphic::SpriteVertex verttices[] =
+	{
+		{c_Vertices[0],{0,0}},
+		{c_Vertices[1],{1,0}},
+		{c_Vertices[2],{1,1}},
+		{c_Vertices[3],{0,1}},
+	};
+	sd.pSysMem = verttices;
+
+	//	頂点バッファ作成
+	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&sd,
+		m_pVertexBuffer.GetAddressOf()
 	);
 }

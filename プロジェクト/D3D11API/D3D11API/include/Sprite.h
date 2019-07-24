@@ -16,6 +16,61 @@
 #include "AbstractShader.h"
 #include "Transform.h"
 
+/*! Direct3D11関連の名前空間 */
+namespace D3D11 {
+
+	/*! 描画関連の名前空間に含める */
+	namespace Graphic {
+
+		/****************************************/
+		/*		スプライトで扱う構造体			*/
+		/****************************************/
+
+		/*!
+			@brief	スプライトの頂点構造体
+		*/
+		struct SpriteVertex
+			:public BaseVertex
+		{
+			SpriteVertex(const DirectX::XMFLOAT3 pos, const DirectX::XMFLOAT2 uv) {
+				this->position = pos, m_UV = uv;
+			}
+			/*!
+				@var	m_UV
+				@brief	UV座標
+			*/
+			DirectX::XMFLOAT2 m_UV;
+		};
+
+#pragma pack(push,16)
+		/*!
+			@brief	スプライトのコンスタントバッファ構造体
+		*/
+		struct alignas(16) SpriteShaderBuffer
+			:BaseConstantBuffer
+		{
+			/*!
+				@var	m_DivNum
+				@brief	テクスチャの分割数
+			*/
+			DirectX::XMFLOAT2 m_DivNum;
+
+			/*!
+				@var	m_Index
+				@brief	分割したテクスチャの表示位置
+			*/
+			DirectX::XMFLOAT2 m_Index;
+
+			/*!
+				@var	m_Color
+				@brief	カラー
+			*/
+			DirectX::XMFLOAT4 m_Color;
+		};
+#pragma pack(pop)
+	}
+}
+
 /*! APIの名前空間に含める */
 namespace API{
 	/*!
@@ -260,61 +315,33 @@ namespace API{
 				@brief	スプライトで生成する画像のキャッシュ
 			*/
 			DirectX::XMINT2 m_Size;
+
+			/*!
+				@var	m_pIndexVertexBuffer
+				@brief	頂点バッファ
+			*/
+			Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
+
+			/*!
+				@fn			頂点生成
+				@brief		スプライトの頂点を生成する
+				@detail		頂点構造体を使って、情報を頂点バッファにバインド
+				@return		成功:S_OK 失敗:E_FAIL
+			*/
+			HRESULT CreateIndexBuffer();
+			HRESULT CreateVertexBuffer();
+
+
+			static constexpr DirectX::XMFLOAT3 c_Vertices[] = {
+				{-0.5f * 100,-0.5f * 100,1},//	左上
+				{ 0.5f * 100,-0.5f * 100,1},//	右上
+				{ 0.5f * 100, 0.5f * 100,1},//	右下
+				{-0.5f * 100, 0.5f * 100,1},//	左下
+			};
+			static constexpr uint8_t c_Indices[] = {
+				0,1,3,1,2,3
+			};
 	};
 
 }
 
-/*! Direct3D11関連の名前空間 */
-namespace D3D11 {
-
-	/*! 描画関連の名前空間に含める */
-	namespace Graphic {
-
-		/****************************************/
-		/*		スプライトで扱う構造体			*/
-		/****************************************/
-
-		/*!
-			@brief	スプライトの頂点構造体
-		*/
-		struct SpriteVertex
-			:public BaseVertex
-		{
-			SpriteVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT2 uv) {
-				pos = pos, m_UV = uv;
-			}
-			/*!
-				@var	m_UV
-				@brief	UV座標
-			*/
-			DirectX::XMFLOAT2 m_UV;
-		};
-
-#pragma pack(push,16)
-		/*!
-			@brief	スプライトのコンスタントバッファ構造体
-		*/
-		struct alignas(16) SpriteShaderBuffer
-			:BaseConstantBuffer
-		{
-			/*!
-				@var	m_DivNum
-				@brief	テクスチャの分割数
-			*/
-			DirectX::XMFLOAT2 m_DivNum;
-
-			/*!
-				@var	m_Index
-				@brief	分割したテクスチャの表示位置
-			*/
-			DirectX::XMFLOAT2 m_Index;
-
-			/*!
-				@var	m_Color
-				@brief	カラー
-			*/
-			DirectX::XMFLOAT4 m_Color;	
-		};
-#pragma pack(pop)
-	}
-}
