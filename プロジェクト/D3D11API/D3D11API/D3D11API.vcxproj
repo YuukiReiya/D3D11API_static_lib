@@ -158,7 +158,6 @@
     <ClInclude Include="include\AudioMaster.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Color.h" />
-    <ClInclude Include="include\CustomShaderBin.h" />
     <ClInclude Include="include\Debug.h" />
     <ClInclude Include="include\Direct3D11.h" />
     <ClInclude Include="include\GamePad.h" />
@@ -177,6 +176,8 @@
     <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\Singleton.h" />
     <ClInclude Include="include\Sprite.h" />
+    <ClInclude Include="include\SpriteCompPS.h" />
+    <ClInclude Include="include\SpriteCompVS.h" />
     <ClInclude Include="include\SpriteShader.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\StructShaderBase.h" />
@@ -192,7 +193,6 @@
     <ClCompile Include="include\AudioMaster.cpp" />
     <ClCompile Include="include\Camera.cpp" />
     <ClCompile Include="include\Color.cpp" />
-    <ClCompile Include="include\CustomShaderBin.cpp" />
     <ClCompile Include="include\Debug.cpp" />
     <ClCompile Include="include\Direct3D11.cpp" />
     <ClCompile Include="include\GamePad.cpp" />
