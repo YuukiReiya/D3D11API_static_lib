@@ -26,7 +26,7 @@ using namespace D3D11;
 //using namespace D3D11::Graphic;
 using namespace API;
 
-#if 0
+#if 1
 /*!
 	@brief	コンストラクタ
 */
@@ -67,21 +67,87 @@ HRESULT Sprite::Initialize()
 	//}
 #pragma endregion
 
-	float x, y;
+	/*float x, y;
 	x = 0.5f * 10;
-	y = 0.5f * 10;
+	y = 0.5f * 10;*/
 
 	//	頂点
-	Vertex vertices[] =
-	{
-		//	右上
-		{DirectX::XMFLOAT3( x,  y,0), DirectX::XMFLOAT2(1,0)},
-		//	右下
-		{DirectX::XMFLOAT3( x, -y,0), DirectX::XMFLOAT2(1,1)},
-		//	左下
-		{DirectX::XMFLOAT3(-x,  y,0), DirectX::XMFLOAT2(0,1)},
-		//	左上
-		{DirectX::XMFLOAT3(-x, -y,0), DirectX::XMFLOAT2(0,0)},
+	//Vertex vertices[] =
+	//{
+	//	//	右上
+	//	{DirectX::XMFLOAT3( x,  y,0), DirectX::XMFLOAT2(1,0)},
+	//	//	右下
+	//	{DirectX::XMFLOAT3( x, -y,0), DirectX::XMFLOAT2(1,1)},
+	//	//	左下
+	//	{DirectX::XMFLOAT3(-x,  y,0), DirectX::XMFLOAT2(0,1)},
+	//	//	左上
+	//	{DirectX::XMFLOAT3(-x, -y,0), DirectX::XMFLOAT2(0,0)},
+	//};
+	DirectX::XMFLOAT2 leftTop, rightBottom;			// 頂点座標
+	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;		// UV座標
+	leftTop.x = -0.5f * 10;//size.x / c_NormalizeSize;// 左
+	rightBottom.x = 0.5f * 10;// size.x / c_NormalizeSize;// 右
+	leftTop.y = 0.5f * 10;// size.y / c_NormalizeSize;// 上
+	rightBottom.y = -0.5f * 10;// size.y / c_NormalizeSize;// 下
+	uvLeftTop.x = uvLeftTop.y = 0;
+	uvRightBottom.x = uvRightBottom.y = 1;
+	SpriteVertex vertices[] = {
+		// 右上
+		{
+			// 頂点
+			DirectX::XMFLOAT3(
+				rightBottom.x,
+				leftTop.y,
+				0
+			),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvRightBottom.x,
+			uvLeftTop.y
+		),
+},
+		// 右下
+		{
+	// 頂点
+	DirectX::XMFLOAT3(
+		rightBottom.x,
+		rightBottom.y,
+		0
+	),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvRightBottom.x,
+			uvRightBottom.y
+		),
+},
+		// 左上
+		{
+		// 頂点
+		DirectX::XMFLOAT3(
+			leftTop.x,
+			leftTop.y,
+			0
+		),
+			// UV座標
+			DirectX::XMFLOAT2(
+				uvLeftTop.x,
+				uvLeftTop.y
+			),
+		},
+		// 左下
+		{
+			// 頂点
+			DirectX::XMFLOAT3(
+				leftTop.x,
+				rightBottom.y,
+				0
+			),
+				// UV座標
+				DirectX::XMFLOAT2(
+					uvLeftTop.x,
+					uvRightBottom.y
+				),
+		}
 	};
 	
 	//	バッファ
@@ -112,7 +178,48 @@ HRESULT Sprite::Initialize()
 		0, 1, m_pVertexBuffer.GetAddressOf(),
 		&stride, &offset
 	);
+	
+	//	定数バッファ
+	D3D11_BUFFER_DESC bd;
+	SecureZeroMemory(&bd, sizeof(bd));
+	bd.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(D3D11::Graphic::Sprite::ConstantBuffer);
+	bd.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+	hr = device->CreateBuffer(&bd, NULL, m_pConstantBuffer.GetAddressOf());
+	if (FAILED(hr)) { ErrorLog("failed to constantbuffer generation"); }
 
+	//頂点レイアウト
+	D3D11_INPUT_ELEMENT_DESC layout[] = {
+		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
+	hr = device->CreateInputLayout(
+		layout,
+		GetArraySize(layout),
+		g_vs_main,
+		sizeof(g_vs_main),
+		m_pInputLayout.GetAddressOf()
+	);
+	if (FAILED(hr)) { return E_FAIL; }
+
+	//頂点シェーダー
+	hr = device->CreateVertexShader(
+		&g_vs_main,
+		sizeof(g_vs_main),
+		NULL,
+		m_pVertexShader.GetAddressOf()
+	);
+	if (FAILED(hr)) { return E_FAIL; }
+
+	//ピクセルシェーダー
+	hr = device->CreatePixelShader(
+		&g_ps_main,
+		sizeof(g_ps_main),
+		NULL,
+		m_pPixelShader.GetAddressOf()
+	);
+	if (FAILED(hr)) { return E_FAIL; }
 
 	return S_OK;
 }
@@ -350,7 +457,7 @@ void API::Sprite::SetupBlendPreset(BlendPreset preset)
 */
 void API::Sprite::SetupTexture(Texture*  texture)
 {
-	m_pTexture = texture->GetSharedPtr();
+//	m_pTexture = texture->GetSharedPtr();
 }
 
 /*!
@@ -361,7 +468,7 @@ void API::Sprite::SetupTexture(Texture*  texture)
 */
 void API::Sprite::SetupShader(D3D11::Graphic::AbstractShader * shader)
 {
-	m_pShader = shader->GetSharedPtr();
+//	m_pShader = shader->GetSharedPtr();
 }
 
 /*!
@@ -619,7 +726,7 @@ void API::Sprite::SetupShader(D3D11::Graphic::AbstractShader * shader)
 void API::Sprite::SetupTopology()
 {
 	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+		D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
 	);
 }
 
@@ -629,10 +736,14 @@ void API::Sprite::SetupTopology()
 */
 void API::Sprite::SetupInputLayout()
 {	
-	auto shader = *m_pShader.lock();
 	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
-		*shader->GetInputLayout()
+		m_pInputLayout.Get()
 	);
+
+	//auto shader = *m_pShader.lock();
+	//Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
+	//	*shader->GetInputLayout()
+	//);
 
 }
 
@@ -642,21 +753,32 @@ void API::Sprite::SetupInputLayout()
 */
 void API::Sprite::SetupBindShader()
 {
-	auto shader = *m_pShader.lock();
-
-	//	頂点シェーダー
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
-		*shader->GetVertexShader(),
+		m_pVertexShader.Get(),
+		NULL,
+		NULL
+	);
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
+		m_pPixelShader.Get(),
 		NULL,
 		NULL
 	);
 
-	//	ピクセルシェーダー
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
-		*shader->GetPixelShader(),
-		NULL,
-		NULL
-	);
+	//auto shader = *m_pShader.lock();
+
+	////	頂点シェーダー
+	//Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
+	//	*shader->GetVertexShader(),
+	//	NULL,
+	//	NULL
+	//);
+
+	////	ピクセルシェーダー
+	//Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
+	//	*shader->GetPixelShader(),
+	//	NULL,
+	//	NULL
+	//);
 
 }
 
@@ -666,14 +788,14 @@ void API::Sprite::SetupBindShader()
 */
 void API::Sprite::SetupSampler()
 {
-	auto ptex = *m_pTexture.lock();
-	auto psampler = ptex->GetSamplerState();
+	//auto ptex = *m_pTexture.lock();
+	//auto psampler = ptex->GetSamplerState();
 
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
-		0,
-		1,
-		psampler
-	);
+	//Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
+	//	0,
+	//	1,
+	//	psampler
+	//);
 }
 
 /*!
@@ -682,14 +804,14 @@ void API::Sprite::SetupSampler()
 */
 void API::Sprite::SetupSRV()
 {
-	auto ptex = *m_pTexture.lock();
-	auto psrv = ptex->GetShaderResourceView();
+	//auto ptex = *m_pTexture.lock();
+	//auto psrv = ptex->GetShaderResourceView();
 
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
-		0,
-		1,
-		psrv
-	);
+	//Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
+	//	0,
+	//	1,
+	//	psrv
+	//);
 
 }
 
@@ -824,27 +946,37 @@ HRESULT API::Sprite::SetupConstantBuffer()
 	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
 	DirectX::XMMATRIX proj = Camera::GetInstance().GetProjMatrix();
 
-	//world = DirectX::XMMatrixTranspose(world);
-	//view = DirectX::XMMatrixTranspose(view);
-	//proj = DirectX::XMMatrixTranspose(proj);
+	world = DirectX::XMMatrixTranspose(world);
+	view = DirectX::XMMatrixTranspose(view);
+	proj = DirectX::XMMatrixTranspose(proj);
 
-	auto shader = *m_pShader.lock();
-	context->VSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
-	context->PSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
+	//auto shader = *m_pShader.lock();
+	//context->VSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
+	//context->PSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
+	context->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+	context->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
 
 	HRESULT hr;
 
 	D3D11_MAPPED_SUBRESOURCE mapData;
 	hr = context->Map(
-		*shader->GetConstantBuffer(),
+		m_pConstantBuffer.Get(),
 		NULL,
 		D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
 		NULL,
 		&mapData
 	);
+	//hr = context->Map(
+	//	*shader->GetConstantBuffer(),
+	//	NULL,
+	//	D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
+	//	NULL,
+	//	&mapData
+	//);
 	if (FAILED(hr)) {
 		ErrorLog("Texture mapping is failed!");
-		context->Unmap(*shader->GetConstantBuffer(), NULL);
+		//context->Unmap(*shader->GetConstantBuffer(), NULL);
+		context->Unmap(m_pConstantBuffer.Get(), NULL);
 		return E_FAIL;
 	}
 	D3D11::Graphic::Sprite::ConstantBuffer cb;
@@ -862,7 +994,8 @@ HRESULT API::Sprite::SetupConstantBuffer()
 	memcpy_s(mapData.pData, mapData.RowPitch, (void*)(&cb), sizeof(cb));
 
 	//	アクセス許可終了
-	context->Unmap(*shader->GetConstantBuffer(), NULL);
+	//context->Unmap(*shader->GetConstantBuffer(), NULL);
+	context->Unmap(m_pConstantBuffer.Get(), NULL);
 	return S_OK;
 }
 
@@ -921,6 +1054,7 @@ HRESULT API::Sprite::SetupConstantBuffer()
 //}
 #endif
 
+#if 0
 HRESULT API::Sprite::Init()
 {
 	HRESULT hr;
@@ -1161,3 +1295,4 @@ void API::Sprite::Render()
 		NULL
 	);
 }
+#endif // 0

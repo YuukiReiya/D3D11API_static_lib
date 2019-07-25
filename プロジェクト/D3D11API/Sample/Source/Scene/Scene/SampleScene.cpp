@@ -82,6 +82,7 @@ void SampleScene::Initialize()
 	cout << "sample init" << endl;
 
 #pragma region 作り直しSprite
+#if 0
 #define SPRITE_REMAKE
 	g_pSprite = make_shared<Sprite>();
 
@@ -89,11 +90,12 @@ void SampleScene::Initialize()
 	if (FAILED(hr)) { ErrorLog("スプライトの初期化失敗"); }
 
 	auto p = Camera::GetInstance().GetEyePt();
+#endif
 #pragma endregion
 
 
 #pragma region スプライト
-#if 0
+#if 1
 #define SPRITE_EXECUTE
 	g_pSpriteShader = make_shared<D3D11::Graphic::SpriteShader>();
 	g_pSprite		= make_shared<Sprite>();
