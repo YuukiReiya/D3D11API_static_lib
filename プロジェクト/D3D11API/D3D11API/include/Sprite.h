@@ -17,59 +17,59 @@
 #include "Transform.h"
 
 /*! Direct3D11関連の名前空間 */
-namespace D3D11 {
-
-	/*! 描画関連の名前空間に含める */
-	namespace Graphic {
-
-		/****************************************/
-		/*		スプライトで扱う構造体			*/
-		/****************************************/
-
-		/*!
-			@brief	スプライトの頂点構造体
-		*/
-		struct SpriteVertex
-			:public BaseVertex
-		{
-			SpriteVertex(const DirectX::XMFLOAT3 pos, const DirectX::XMFLOAT2 uv) {
-				this->position = pos, m_UV = uv;
-			}
-			/*!
-				@var	m_UV
-				@brief	UV座標
-			*/
-			DirectX::XMFLOAT2 m_UV;
-		};
-
-#pragma pack(push,16)
-		/*!
-			@brief	スプライトのコンスタントバッファ構造体
-		*/
-		struct alignas(16) SpriteShaderBuffer
-			:BaseConstantBuffer
-		{
-			/*!
-				@var	m_DivNum
-				@brief	テクスチャの分割数
-			*/
-			DirectX::XMFLOAT2 m_DivNum;
-
-			/*!
-				@var	m_Index
-				@brief	分割したテクスチャの表示位置
-			*/
-			DirectX::XMFLOAT2 m_Index;
-
-			/*!
-				@var	m_Color
-				@brief	カラー
-			*/
-			DirectX::XMFLOAT4 m_Color;
-		};
-#pragma pack(pop)
-	}
-}
+//namespace D3D11 {
+//
+//	/*! 描画関連の名前空間に含める */
+//	namespace Graphic {
+//
+//		/****************************************/
+//		/*		スプライトで扱う構造体			*/
+//		/****************************************/
+//
+//		/*!
+//			@brief	スプライトの頂点構造体
+//		*/
+//		struct SpriteVertex
+//			:public BaseVertex
+//		{
+//			SpriteVertex(const DirectX::XMFLOAT3 pos, const DirectX::XMFLOAT2 uv) {
+//				this->position = pos, m_UV = uv;
+//			}
+//			/*!
+//				@var	m_UV
+//				@brief	UV座標
+//			*/
+//			DirectX::XMFLOAT2 m_UV;
+//		};
+//
+//#pragma pack(push,16)
+//		/*!
+//			@brief	スプライトのコンスタントバッファ構造体
+//		*/
+//		struct alignas(16) SpriteShaderBuffer
+//			:BaseConstantBuffer
+//		{
+//			/*!
+//				@var	m_DivNum
+//				@brief	テクスチャの分割数
+//			*/
+//			DirectX::XMFLOAT2 m_DivNum;
+//
+//			/*!
+//				@var	m_Index
+//				@brief	分割したテクスチャの表示位置
+//			*/
+//			DirectX::XMFLOAT2 m_Index;
+//
+//			/*!
+//				@var	m_Color
+//				@brief	カラー
+//			*/
+//			DirectX::XMFLOAT4 m_Color;
+//		};
+//#pragma pack(pop)
+//	}
+//}
 
 /*! APIの名前空間に含める */
 namespace API{
@@ -220,13 +220,13 @@ namespace API{
 				@param[in]	画像サイズ
 				@return		成功:S_OK 失敗:E_FAIL
 			*/
-			HRESULT CreateVertex(DirectX::XMINT2 size);
+			//HRESULT CreateVertex(DirectX::XMINT2 size);
 
 			/*!
 				@fn			CreateVertexBuffer
 				@brief		頂点の設定
 			*/
-			void SetupVertex();
+			//void SetupVertex();
 
 			/*!
 				@fn		SetupTopology
@@ -263,13 +263,13 @@ namespace API{
 				@fn		SetupConstantBuffer
 				@brief	コンスタントバッファの設定
 			*/
-			void SetupConstantBuffer();
+			//void SetupConstantBuffer();
 
 			/*!
 				@fn		CreateVertexBuffer
 				@brief	頂点バッファ設定
 			*/
-			void SetupVertexBuffer();
+			//void SetupVertexBuffer();
 
 			/*!
 				@fn		SetupBlendState
@@ -310,6 +310,17 @@ namespace API{
 			/****************************************/
 			/*		　スプライトのパラメータ		*/
 			/****************************************/
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
+
+			struct Vertex
+			{
+				DirectX::XMFLOAT3 position;
+				DirectX::XMFLOAT2 uv;
+			};
+
+			HRESULT SetupConstantBuffer();
+#pragma region OLD
+#if 0
 			/*!
 				@var	m_Size
 				@brief	スプライトで生成する画像のキャッシュ
@@ -328,19 +339,22 @@ namespace API{
 				@detail		頂点構造体を使って、情報を頂点バッファにバインド
 				@return		成功:S_OK 失敗:E_FAIL
 			*/
-			HRESULT CreateIndexBuffer();
-			HRESULT CreateVertexBuffer();
+			//HRESULT CreateIndexBuffer();
+			//HRESULT CreateVertexBuffer();
 
 
 			static constexpr DirectX::XMFLOAT3 c_Vertices[] = {
-				{-0.5f * 100,-0.5f * 100,1},//	左上
-				{ 0.5f * 100,-0.5f * 100,1},//	右上
-				{ 0.5f * 100, 0.5f * 100,1},//	右下
-				{-0.5f * 100, 0.5f * 100,1},//	左下
+				{-0.5f * 100,-0.5f * 100,0},//	左上
+				{ 0.5f * 100,-0.5f * 100,0},//	右上
+				{ 0.5f * 100, 0.5f * 100,0},//	右下
+				{-0.5f * 100, 0.5f * 100,0},//	左下
 			};
 			static constexpr uint8_t c_Indices[] = {
-				0,1,3,1,2,3
+				0,1,2,2,3,0,2 ,
 			};
+#endif // 0
+#pragma endregion
+
 	};
 
 }

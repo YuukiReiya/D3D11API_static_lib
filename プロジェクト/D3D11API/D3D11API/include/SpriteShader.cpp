@@ -3,7 +3,7 @@
 #include <wrl/client.h>
 #include "MyGame.h"
 #include "Direct3D11.h"
-#include "Sprite.h"
+#include "SpriteConstantBuffer.h"
 #include "SpriteCompVS.h"
 #include "SpriteCompPS.h"
 
@@ -199,7 +199,7 @@ HRESULT D3D11::Graphic::SpriteShader::CreateConstantBuffer()
 	D3D11_BUFFER_DESC cb;
 	SecureZeroMemory(&cb, sizeof(cb));
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cb.ByteWidth = sizeof(SpriteShaderBuffer);
+	cb.ByteWidth = sizeof(Sprite::ConstantBuffer);
 	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	cb.Usage = D3D11_USAGE_DYNAMIC;
 

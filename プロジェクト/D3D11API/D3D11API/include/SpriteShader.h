@@ -87,7 +87,7 @@ namespace D3D11
 				@var	c_HLSL
 				@brief	HLSL‚Ìƒtƒ@ƒCƒ‹–¼
 			*/
-			static constexpr std::string_view c_HLSL			= "SpriteShader.hlsl";
+			static constexpr std::string_view c_HLSL = "SpriteShader.hlsl";
 
 			/*!
 				@var	c_VSEntryName

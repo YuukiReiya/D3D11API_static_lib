@@ -14,14 +14,14 @@
 #include "MemoryLeaks.h"
 #include "MyGame.h"
 #include "Debug.h"
-#include "MeshConstantBuffer.h"
+#include "SpriteConstantBuffer.h"
 
 /*!
 	@brief	名前空間
 	@detail	usingディレクティブ
 */
 using namespace D3D11;
-using namespace D3D11::Graphic;
+//using namespace D3D11::Graphic;
 using namespace API;
 
 /*!
@@ -31,13 +31,8 @@ Sprite::Sprite()
 {
 	m_pVertexBuffer		= nullptr;
 	m_pBlendState		= nullptr;
-	//position = { 0,0,0 };
-	//m_Scale = { 1,1 ,0 };
-	//m_Rot = {0,0,0};
-	m_Size = { -1,-1 };
+	//m_Size = { -1,-1 };
 	m_StencilMask = 0xffffffff;
-	//Initialize();
-
 	transform = std::make_shared<Transform>();
 	SetupBlendPreset(BlendPreset::Default);
 }
@@ -57,15 +52,64 @@ Sprite::~Sprite()
 */
 HRESULT Sprite::Initialize()
 {
+#pragma region OLD
 	//	頂点
-	if (FAILED(CreateVertexBuffer())) {
-		ErrorLog("vertex buffer");
-	}
+	//if (FAILED(CreateVertexBuffer())) {
+	//	ErrorLog("vertex buffer");
+	//}
 
 	//	頂点インデックス
-	if (FAILED(CreateIndexBuffer())) {
-		ErrorLog("index buffer");
-	}
+	//if (FAILED(CreateIndexBuffer())) {
+	//	ErrorLog("index buffer");
+	//}
+#pragma endregion
+
+	float x, y;
+	x = 0.5f * 10;
+	y = 0.5f * 10;
+
+	//	頂点
+	Vertex vertices[] =
+	{
+		//	右上
+		{DirectX::XMFLOAT3( x,  y,0), DirectX::XMFLOAT2(1,0)},
+		//	右下
+		{DirectX::XMFLOAT3( x, -y,0), DirectX::XMFLOAT2(1,1)},
+		//	左下
+		{DirectX::XMFLOAT3(-x,  y,0), DirectX::XMFLOAT2(0,1)},
+		//	左上
+		{DirectX::XMFLOAT3(-x, -y,0), DirectX::XMFLOAT2(0,0)},
+	};
+	
+	//	バッファ
+	D3D11_BUFFER_DESC desc;
+	SecureZeroMemory(&desc,sizeof(desc));
+	desc.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(vertices);
+	desc.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_VERTEX_BUFFER;
+
+	//	サブリソース
+	D3D11_SUBRESOURCE_DATA data;
+	SecureZeroMemory(&data, sizeof(data));
+	data.pSysMem = vertices;
+
+	//頂点バッファのリセット
+	m_pVertexBuffer.Reset();
+
+	HRESULT hr;
+	auto device = Direct3D11::GetInstance().GetDevice();
+	auto context = Direct3D11::GetInstance().GetImmediateContext();
+
+	//	頂点生成
+	hr = device->CreateBuffer(&desc, &data, m_pVertexBuffer.GetAddressOf());
+	if (FAILED(hr)) { ErrorLog("failed to vertex generation"); }
+	uint32_t stride = sizeof(Vertex);
+	uint32_t offset = 0;
+	context->IAGetVertexBuffers(
+		0, 1, m_pVertexBuffer.GetAddressOf(),
+		&stride, &offset
+	);
+
 
 	return S_OK;
 }
@@ -78,10 +122,7 @@ HRESULT Sprite::Initialize()
 void Sprite::Finalize()
 {
 	// メンバの初期化
-	//position = { 0,0,0 };
-	//m_Scale = { 1,1 ,0 };
-	//m_Rot = { 0,0,0 };
-	m_Size = { -1,-1 };
+	//m_Size = { -1,-1 };
 	m_StencilMask = 0xffffffff;
 
 	// 開放
@@ -131,29 +172,11 @@ void API::Sprite::Render()
 	//	ブレンドステートのセット
 	SetupBlendState();
 
-	// 頂点バッファセット
-	uint32_t stride = sizeof(SpriteVertex);
-	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
-		0,
-		1,
-		m_pVertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-	);
-
-
 	//	描画
-	//Direct3D11::GetInstance().GetImmediateContext()->Draw(
-	//	4,		// 頂点数(板ポリゴンなので頂点数は4つ)
-	//	NULL
-	//);
-	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(
-		GetArraySize(c_Indices),
-		0,
-		0
+	Direct3D11::GetInstance().GetImmediateContext()->Draw(
+		4,		// 頂点数(板ポリゴンなので頂点数は4つ)
+		NULL
 	);
-
 }
 
 /*!
@@ -325,13 +348,6 @@ void API::Sprite::SetupBlendPreset(BlendPreset preset)
 void API::Sprite::SetupTexture(Texture*  texture)
 {
 	m_pTexture = texture->GetSharedPtr();
-	m_Size = texture->GetSize();
-
-	//	頂点生成
-	SetupVertex();
-
-	//	生成済の頂点から頂点バッファを設定
-	SetupVertexBuffer();
 }
 
 /*!
@@ -342,10 +358,6 @@ void API::Sprite::SetupTexture(Texture*  texture)
 */
 void API::Sprite::SetupShader(D3D11::Graphic::AbstractShader * shader)
 {
-	//m_pVertexShader		= shader->GetVertexShader();
-	//m_pVertexLayout		= shader->GetInputLayout();
-	//m_pPixelShader		= shader->GetPixelShader();
-	//m_pConstantBuffer	= shader->GetConstantBuffer();
 	m_pShader = shader->GetSharedPtr();
 }
 
@@ -356,245 +368,245 @@ void API::Sprite::SetupShader(D3D11::Graphic::AbstractShader * shader)
 	@param[in]	画像サイズ
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
-{
-	// 頂点宣言
-	DirectX::XMFLOAT2 leftTop, rightBottom;			// 頂点座標
-	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;		// UV座標
-
-	// 各頂点定義
-	leftTop.x		= -0.5f*size.x / c_DefaultSize;// 左
-	rightBottom.x	=  0.5f*size.x / c_DefaultSize;// 右
-	leftTop.y		=  0.5f*size.y / c_DefaultSize;// 上
-	rightBottom.y	= -0.5f*size.y / c_DefaultSize;// 下
-
-	// UV定義
-	uvLeftTop.x = uvLeftTop.y = 0;
-	uvRightBottom.x = uvRightBottom.y = 1;
-
-	// 頂点構造体定義
-	SpriteVertex vertices[] = {
-		// 右上
-		{
-			// 頂点
-			DirectX::XMFLOAT3(
-				rightBottom.x,
-				leftTop.y,
-				c_VertexZ
-			),
-			// UV座標
-			DirectX::XMFLOAT2(
-				uvRightBottom.x,
-				uvLeftTop.y
-			),
-	},
-		// 右下
-		{
-			// 頂点
-			DirectX::XMFLOAT3(
-				rightBottom.x,
-				rightBottom.y,
-				c_VertexZ
-			),
-			// UV座標
-			DirectX::XMFLOAT2(
-				uvRightBottom.x,
-				uvRightBottom.y
-			),
-	},
-		// 左上
-		{
-			// 頂点
-			DirectX::XMFLOAT3(
-				leftTop.x,
-				leftTop.y,
-				c_VertexZ
-			),
-			// UV座標
-			DirectX::XMFLOAT2(
-				uvLeftTop.x,
-				uvLeftTop.y
-			),
-	},
-		// 左下
-		{
-			// 頂点
-			DirectX::XMFLOAT3(
-				leftTop.x,
-				rightBottom.y,
-				c_VertexZ
-			),
-			// UV座標
-			DirectX::XMFLOAT2(
-				uvLeftTop.x,
-				uvRightBottom.y
-			),
-	}
-	};
-
-	// 板ポリゴン(四角形ポリゴン)のバッファを定義
-	D3D11_BUFFER_DESC bd;
-	SecureZeroMemory(&bd, sizeof(bd));
-	bd.Usage = D3D11_USAGE_DEFAULT;				// GPUから読み込みと書き込みを許可
-	bd.ByteWidth = sizeof(vertices);			// バッファのサイズ
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	// 頂点バッファとしてレンダリングパイプラインにバインド
-
-	// サブリソースのデータを定義
-	D3D11_SUBRESOURCE_DATA subResourceData;
-	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
-	subResourceData.pSysMem = vertices;			// 初期化データへのポインタ
-
-	// 頂点バッファの開放
-	m_pVertexBuffer.Reset();
-
-	HRESULT hr;
-
-	// 頂点バッファ生成
-	hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-		&bd,
-		&subResourceData,
-		m_pVertexBuffer.GetAddressOf()
-	);
-	if (FAILED(hr)) {
-		std::string error = "SpriteBuffer is not Create!";
-		ErrorLog(error);
-		return E_FAIL;
-	}
-
-	// 頂点バッファセット
-	uint32_t stride = sizeof(SpriteVertex);
-	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
-		0,
-		1,
-		m_pVertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-	);
-
-	return S_OK;
-}
+//HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
+//{
+//	// 頂点宣言
+//	DirectX::XMFLOAT2 leftTop, rightBottom;			// 頂点座標
+//	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;		// UV座標
+//
+//	// 各頂点定義
+//	leftTop.x		= -0.5f*size.x / c_DefaultSize;// 左
+//	rightBottom.x	=  0.5f*size.x / c_DefaultSize;// 右
+//	leftTop.y		=  0.5f*size.y / c_DefaultSize;// 上
+//	rightBottom.y	= -0.5f*size.y / c_DefaultSize;// 下
+//
+//	// UV定義
+//	uvLeftTop.x = uvLeftTop.y = 0;
+//	uvRightBottom.x = uvRightBottom.y = 1;
+//
+//	// 頂点構造体定義
+//	SpriteVertex vertices[] = {
+//		// 右上
+//		{
+//			// 頂点
+//			DirectX::XMFLOAT3(
+//				rightBottom.x,
+//				leftTop.y,
+//				c_VertexZ
+//			),
+//			// UV座標
+//			DirectX::XMFLOAT2(
+//				uvRightBottom.x,
+//				uvLeftTop.y
+//			),
+//	},
+//		// 右下
+//		{
+//			// 頂点
+//			DirectX::XMFLOAT3(
+//				rightBottom.x,
+//				rightBottom.y,
+//				c_VertexZ
+//			),
+//			// UV座標
+//			DirectX::XMFLOAT2(
+//				uvRightBottom.x,
+//				uvRightBottom.y
+//			),
+//	},
+//		// 左上
+//		{
+//			// 頂点
+//			DirectX::XMFLOAT3(
+//				leftTop.x,
+//				leftTop.y,
+//				c_VertexZ
+//			),
+//			// UV座標
+//			DirectX::XMFLOAT2(
+//				uvLeftTop.x,
+//				uvLeftTop.y
+//			),
+//	},
+//		// 左下
+//		{
+//			// 頂点
+//			DirectX::XMFLOAT3(
+//				leftTop.x,
+//				rightBottom.y,
+//				c_VertexZ
+//			),
+//			// UV座標
+//			DirectX::XMFLOAT2(
+//				uvLeftTop.x,
+//				uvRightBottom.y
+//			),
+//	}
+//	};
+//
+//	// 板ポリゴン(四角形ポリゴン)のバッファを定義
+//	D3D11_BUFFER_DESC bd;
+//	SecureZeroMemory(&bd, sizeof(bd));
+//	bd.Usage = D3D11_USAGE_DEFAULT;				// GPUから読み込みと書き込みを許可
+//	bd.ByteWidth = sizeof(vertices);			// バッファのサイズ
+//	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	// 頂点バッファとしてレンダリングパイプラインにバインド
+//
+//	// サブリソースのデータを定義
+//	D3D11_SUBRESOURCE_DATA subResourceData;
+//	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
+//	subResourceData.pSysMem = vertices;			// 初期化データへのポインタ
+//
+//	// 頂点バッファの開放
+//	m_pVertexBuffer.Reset();
+//
+//	HRESULT hr;
+//
+//	// 頂点バッファ生成
+//	hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+//		&bd,
+//		&subResourceData,
+//		m_pVertexBuffer.GetAddressOf()
+//	);
+//	if (FAILED(hr)) {
+//		std::string error = "SpriteBuffer is not Create!";
+//		ErrorLog(error);
+//		return E_FAIL;
+//	}
+//
+//	// 頂点バッファセット
+//	uint32_t stride = sizeof(SpriteVertex);
+//	uint32_t offset = 0;
+//	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+//		0,
+//		1,
+//		m_pVertexBuffer.GetAddressOf(),
+//		&stride,
+//		&offset
+//	);
+//
+//	return S_OK;
+//}
 
 /*!
 	@fn			CreateVertexBuffer
 	@brief		頂点の設定
 */
-void API::Sprite::SetupVertex()
-{
-	// 頂点宣言
-	DirectX::XMFLOAT2 leftTop, rightBottom;				// 頂点座標
-	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;			// UV座標
-
-	// 各頂点定義
-	leftTop.x		= -0.5f*m_Size.x / c_DefaultSize;	// 左
-	rightBottom.x	=  0.5f*m_Size.x / c_DefaultSize;	// 右
-	leftTop.y		=  0.5f*m_Size.y / c_DefaultSize;	// 上
-	rightBottom.y	= -0.5f*m_Size.y / c_DefaultSize;	// 下
-
-	// UV定義
-	uvLeftTop.x = uvLeftTop.y = 0;
-	uvRightBottom.x = uvRightBottom.y = 1;
-
-	// 頂点構造体定義
-	SpriteVertex vertices[] = {
-		// 右上
-		{
-			// 頂点
-			DirectX::XMFLOAT3(
-				rightBottom.x,
-				leftTop.y,
-				c_VertexZ
-			),
-		// UV座標
-		DirectX::XMFLOAT2(
-			uvRightBottom.x,
-			uvLeftTop.y
-		),
-},
-// 右下
-{
-	// 頂点
-	DirectX::XMFLOAT3(
-		rightBottom.x,
-		rightBottom.y,
-		c_VertexZ
-	),
-		// UV座標
-		DirectX::XMFLOAT2(
-			uvRightBottom.x,
-			uvRightBottom.y
-		),
-},
-// 左上
-{
-	// 頂点
-	DirectX::XMFLOAT3(
-		leftTop.x,
-		leftTop.y,
-		c_VertexZ
-	),
-		// UV座標
-		DirectX::XMFLOAT2(
-			uvLeftTop.x,
-			uvLeftTop.y
-		),
-},
-// 左下
-{
-	// 頂点
-	DirectX::XMFLOAT3(
-		leftTop.x,
-		rightBottom.y,
-		c_VertexZ
-	),
-		// UV座標
-		DirectX::XMFLOAT2(
-			uvLeftTop.x,
-			uvRightBottom.y
-		),
-}
-	};
-
-	// 板ポリゴン(四角形ポリゴン)のバッファを定義
-	D3D11_BUFFER_DESC bd;
-	SecureZeroMemory(&bd, sizeof(bd));
-	bd.Usage = D3D11_USAGE_DEFAULT;				// GPUから読み込みと書き込みを許可
-	bd.ByteWidth = sizeof(vertices);			// バッファのサイズ
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	// 頂点バッファとしてレンダリングパイプラインにバインド
-
-	// サブリソースのデータを定義
-	D3D11_SUBRESOURCE_DATA subResourceData;
-	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
-	subResourceData.pSysMem = vertices;			// 初期化データへのポインタ
-
-	// 頂点バッファの開放
-	m_pVertexBuffer.Reset();
-
-	HRESULT hr;
-
-	// 頂点バッファ生成
-	hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-		&bd,
-		&subResourceData,
-		m_pVertexBuffer.GetAddressOf()
-	);
-	if (FAILED(hr)) {
-		std::string error = "SpriteBuffer is not Create!";
-		ErrorLog(error);
-		return;
-	}
-
-	// 頂点バッファセット
-	uint32_t stride = sizeof(SpriteVertex);
-	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
-		0,
-		1,
-		m_pVertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-	);
-}
+//void API::Sprite::SetupVertex()
+//{
+//	// 頂点宣言
+//	DirectX::XMFLOAT2 leftTop, rightBottom;				// 頂点座標
+//	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;			// UV座標
+//
+//	// 各頂点定義
+//	leftTop.x		= -0.5f*m_Size.x / c_DefaultSize;	// 左
+//	rightBottom.x	=  0.5f*m_Size.x / c_DefaultSize;	// 右
+//	leftTop.y		=  0.5f*m_Size.y / c_DefaultSize;	// 上
+//	rightBottom.y	= -0.5f*m_Size.y / c_DefaultSize;	// 下
+//
+//	// UV定義
+//	uvLeftTop.x = uvLeftTop.y = 0;
+//	uvRightBottom.x = uvRightBottom.y = 1;
+//
+//	// 頂点構造体定義
+//	SpriteVertex vertices[] = {
+//		// 右上
+//		{
+//			// 頂点
+//			DirectX::XMFLOAT3(
+//				rightBottom.x,
+//				leftTop.y,
+//				c_VertexZ
+//			),
+//		// UV座標
+//		DirectX::XMFLOAT2(
+//			uvRightBottom.x,
+//			uvLeftTop.y
+//		),
+//},
+//// 右下
+//{
+//	// 頂点
+//	DirectX::XMFLOAT3(
+//		rightBottom.x,
+//		rightBottom.y,
+//		c_VertexZ
+//	),
+//		// UV座標
+//		DirectX::XMFLOAT2(
+//			uvRightBottom.x,
+//			uvRightBottom.y
+//		),
+//},
+//// 左上
+//{
+//	// 頂点
+//	DirectX::XMFLOAT3(
+//		leftTop.x,
+//		leftTop.y,
+//		c_VertexZ
+//	),
+//		// UV座標
+//		DirectX::XMFLOAT2(
+//			uvLeftTop.x,
+//			uvLeftTop.y
+//		),
+//},
+//// 左下
+//{
+//	// 頂点
+//	DirectX::XMFLOAT3(
+//		leftTop.x,
+//		rightBottom.y,
+//		c_VertexZ
+//	),
+//		// UV座標
+//		DirectX::XMFLOAT2(
+//			uvLeftTop.x,
+//			uvRightBottom.y
+//		),
+//}
+//	};
+//
+//	// 板ポリゴン(四角形ポリゴン)のバッファを定義
+//	D3D11_BUFFER_DESC bd;
+//	SecureZeroMemory(&bd, sizeof(bd));
+//	bd.Usage = D3D11_USAGE_DEFAULT;				// GPUから読み込みと書き込みを許可
+//	bd.ByteWidth = sizeof(vertices);			// バッファのサイズ
+//	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	// 頂点バッファとしてレンダリングパイプラインにバインド
+//
+//	// サブリソースのデータを定義
+//	D3D11_SUBRESOURCE_DATA subResourceData;
+//	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
+//	subResourceData.pSysMem = vertices;			// 初期化データへのポインタ
+//
+//	// 頂点バッファの開放
+//	m_pVertexBuffer.Reset();
+//
+//	HRESULT hr;
+//
+//	// 頂点バッファ生成
+//	hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+//		&bd,
+//		&subResourceData,
+//		m_pVertexBuffer.GetAddressOf()
+//	);
+//	if (FAILED(hr)) {
+//		std::string error = "SpriteBuffer is not Create!";
+//		ErrorLog(error);
+//		return;
+//	}
+//
+//	// 頂点バッファセット
+//	uint32_t stride = sizeof(SpriteVertex);
+//	uint32_t offset = 0;
+//	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+//		0,
+//		1,
+//		m_pVertexBuffer.GetAddressOf(),
+//		&stride,
+//		&offset
+//	);
+//}
 
 /*!
 	@fn		SetupTopology
@@ -682,113 +694,112 @@ void API::Sprite::SetupSRV()
 	@fn		SetupConstantBuffer
 	@brief	コンスタントバッファの設定
 */
-void API::Sprite::SetupConstantBuffer()
-{
-	auto shader = *m_pShader.lock();
-	auto& device = Direct3D11::GetInstance();
-
-	//	ワールド行列
-	//DirectX::XMMATRIX world = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z)
-	//	*
-	//	DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z)
-	//	*
-	//	DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-
-	DirectX::XMMATRIX world = transform->GetWorldMatrix();
-	//world = DirectX::XMMatrixTranspose(world);
-
-	//	ビュー行列
-	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
-	//view = DirectX::XMMatrixTranspose(view);
-
-	//	プロジェクション行列
-	DirectX::XMMATRIX proj = Camera::GetInstance().GetProjMatrix();
-	//proj = DirectX::XMMatrixTranspose(proj);
-
-	//	頂点シェーダー用のCバッファ登録
-	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
-		0,
-		1,
-		shader->GetConstantBuffer()
-	);
-
-	//	ピクセルシェーダー用のCバッファ登録
-	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
-		0,
-		1,
-		shader->GetConstantBuffer()
-	);
-
-	//	マッピング用変数の宣言
-	D3D11_MAPPED_SUBRESOURCE pMapData;
-
-	//	バッファへのアクセス(書き換え)許可
-	HRESULT hr;
-	hr = device.GetImmediateContext()->Map(
-		*shader->GetConstantBuffer(),
-		NULL,
-		D3D11_MAP_WRITE_DISCARD,
-		NULL,
-		&pMapData
-	);
-	if (FAILED(hr)) {
-		std::string error = "Texture mapping is failed!";
-		ErrorLog(error);
-		//	アクセス権を閉じて抜ける
-		device.GetImmediateContext()->Unmap(*shader->GetConstantBuffer(), NULL);
-		return;
-	}
-
-	//SpriteShaderBuffer cb;
-	MeshConstantBuffer cb;
-
-	SecureZeroMemory(&cb, sizeof(cb));
-
-	auto ptex = *m_pTexture.lock();
-
-	//	バッファに代入
-	//cb.m_WorldMatrix		= world;
-	//cb.m_ViewMatrix			= view;
-	//cb.m_ProjectionMatrix	= proj;
-	cb.m.world = world;
-	cb.m.view = view;
-	cb.m.proj = proj;
-
-	//cb.m_DivNum = DirectX::XMFLOAT2(
-	//	static_cast<float>(ptex->GetDivCount().x),
-	//	static_cast<float>(ptex->GetDivCount().y));
-	//cb.m_Index = DirectX::XMFLOAT2(
-	//	static_cast<float>(ptex->GetAtlasOffset().x),
-	//	static_cast<float>(ptex->GetAtlasOffset().y));
-	//cb.m_Color				= ptex->color.GetRGBA();
-	cb.color = ptex->color.GetRGBA();
-
-	//	メモリコピー
-	memcpy_s(pMapData.pData, pMapData.RowPitch, (void*)(&cb), sizeof(cb));
-
-	//	アクセス許可終了
-	device.GetImmediateContext()->Unmap(
-		*shader->GetConstantBuffer(),
-		NULL
-	);
-}
+//void API::Sprite::SetupConstantBuffer()
+//{
+//	auto shader = *m_pShader.lock();
+//	auto& device = Direct3D11::GetInstance();
+//
+//	//	ワールド行列
+//	//DirectX::XMMATRIX world = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z)
+//	//	*
+//	//	DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z)
+//	//	*
+//	//	DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+//
+//	DirectX::XMMATRIX world = transform->GetWorldMatrix();
+//	world = DirectX::XMMatrixTranspose(world);
+//
+//	//	ビュー行列
+//	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
+//	view = DirectX::XMMatrixTranspose(view);
+//
+//	//	プロジェクション行列
+//	DirectX::XMMATRIX proj = Camera::GetInstance().GetProjMatrix();
+//	proj = DirectX::XMMatrixTranspose(proj);
+//
+//	//	頂点シェーダー用のCバッファ登録
+//	Direct3D11::GetInstance().GetImmediateContext()->VSSetConstantBuffers(
+//		0,
+//		1,
+//		shader->GetConstantBuffer()
+//	);
+//
+//	//	ピクセルシェーダー用のCバッファ登録
+//	Direct3D11::GetInstance().GetImmediateContext()->PSSetConstantBuffers(
+//		0,
+//		1,
+//		shader->GetConstantBuffer()
+//	);
+//
+//	//	マッピング用変数の宣言
+//	D3D11_MAPPED_SUBRESOURCE pMapData;
+//
+//	//	バッファへのアクセス(書き換え)許可
+//	HRESULT hr;
+//	hr = device.GetImmediateContext()->Map(
+//		*shader->GetConstantBuffer(),
+//		NULL,
+//		D3D11_MAP_WRITE_DISCARD,
+//		NULL,
+//		&pMapData
+//	);
+//	if (FAILED(hr)) {
+//		std::string error = "Texture mapping is failed!";
+//		ErrorLog(error);
+//		//	アクセス権を閉じて抜ける
+//		device.GetImmediateContext()->Unmap(*shader->GetConstantBuffer(), NULL);
+//		return;
+//	}
+//
+//	SpriteShaderBuffer cb;
+//
+//	SecureZeroMemory(&cb, sizeof(cb));
+//
+//	auto ptex = *m_pTexture.lock();
+//
+//	//	バッファに代入
+//	cb.m_WorldMatrix		= world;
+//	cb.m_ViewMatrix			= view;
+//	cb.m_ProjectionMatrix	= proj;
+//	//cb.m.world = world;
+//	//cb.m.view = view;
+//	//cb.m.proj = proj;
+//
+//	cb.m_DivNum = DirectX::XMFLOAT2(
+//		static_cast<float>(ptex->GetDivCount().x),
+//		static_cast<float>(ptex->GetDivCount().y));
+//	cb.m_Index = DirectX::XMFLOAT2(
+//		static_cast<float>(ptex->GetAtlasOffset().x),
+//		static_cast<float>(ptex->GetAtlasOffset().y));
+//	cb.m_Color				= ptex->color.GetRGBA();
+//	//cb.color = ptex->color.GetRGBA();
+//
+//	//	メモリコピー
+//	memcpy_s(pMapData.pData, pMapData.RowPitch, (void*)(&cb), sizeof(cb));
+//
+//	//	アクセス許可終了
+//	device.GetImmediateContext()->Unmap(
+//		*shader->GetConstantBuffer(),
+//		NULL
+//	);
+//}
 
 /*!
 	@fn		CreateVertexBuffer
 	@brief	頂点バッファ設定
 */
-void API::Sprite::SetupVertexBuffer()
-{
-	uint32_t stride = sizeof(SpriteVertex);
-	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
-		0,
-		1,
-		m_pVertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-	);
-}
+//void API::Sprite::SetupVertexBuffer()
+//{
+//	uint32_t stride = sizeof(SpriteVertex);
+//	uint32_t offset = 0;
+//	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+//		0,
+//		1,
+//		m_pVertexBuffer.GetAddressOf(),
+//		&stride,
+//		&offset
+//	);
+//}
 
 /*!
 	@fn		SetupBlendState
@@ -803,56 +814,105 @@ void API::Sprite::SetupBlendState()
 	);
 }
 
-HRESULT API::Sprite::CreateIndexBuffer()
+HRESULT API::Sprite::SetupConstantBuffer()
 {
-	//	バッファの仕様
-	D3D11_BUFFER_DESC bd;
-	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(uint8_t)*GetArraySize(c_Indices);
-	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = NULL;
+	auto context = Direct3D11::GetInstance().GetImmediateContext();
+	DirectX::XMMATRIX world = transform->GetWorldMatrix();
+	DirectX::XMMATRIX view = Camera::GetInstance().GetViewMatrix();
+	DirectX::XMMATRIX proj = Camera::GetInstance().GetProjMatrix();
 
-	//	サブリソースの仕様	
-	D3D11_SUBRESOURCE_DATA sd;
-	SecureZeroMemory(&sd, sizeof(sd));
-	sd.pSysMem = c_Indices;
+	//world = DirectX::XMMatrixTranspose(world);
+	//view = DirectX::XMMatrixTranspose(view);
+	//proj = DirectX::XMMatrixTranspose(proj);
 
-	//	インデックスバッファ作成
-	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-		&bd,
-		&sd,
-		m_pIndexBuffer.GetAddressOf()
+	auto shader = *m_pShader.lock();
+	context->VSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
+	context->PSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
+
+	HRESULT hr;
+
+	D3D11_MAPPED_SUBRESOURCE mapData;
+	hr = context->Map(
+		*shader->GetConstantBuffer(),
+		NULL,
+		D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
+		NULL,
+		&mapData
 	);
-}
+	if (FAILED(hr)) {
+		ErrorLog("Texture mapping is failed!");
+		context->Unmap(*shader->GetConstantBuffer(), NULL);
+		return E_FAIL;
+	}
+	D3D11::Graphic::Sprite::ConstantBuffer cb;
+	SecureZeroMemory(&cb, sizeof(cb));
 
-HRESULT API::Sprite::CreateVertexBuffer()
-{
-	//	バッファの仕様
-	D3D11_BUFFER_DESC bd;
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(D3D11::Graphic::SpriteVertex) * GetArraySize(c_Vertices);
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = NULL;
-
-	//	サブリソースの仕様
-	D3D11_SUBRESOURCE_DATA sd;
-
+	//cb.matrix.world = world;
+	//cb.matrix.view = view;
+	//cb.matrix.proj = proj;
 	
-	D3D11::Graphic::SpriteVertex verttices[] =
-	{
-		{c_Vertices[0],{0,0}},
-		{c_Vertices[1],{1,0}},
-		{c_Vertices[2],{1,1}},
-		{c_Vertices[3],{0,1}},
-	};
-	sd.pSysMem = verttices;
+	cb.world = world;
+	cb.view = view;
+	cb.proj = proj;
 
-	//	頂点バッファ作成
-	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
-		&bd,
-		&sd,
-		m_pVertexBuffer.GetAddressOf()
-	);
+	//	メモリコピー
+	memcpy_s(mapData.pData, mapData.RowPitch, (void*)(&cb), sizeof(cb));
+
+	//	アクセス許可終了
+	context->Unmap(*shader->GetConstantBuffer(), NULL);
+	return S_OK;
 }
+
+//HRESULT API::Sprite::CreateIndexBuffer()
+//{
+//	//	バッファの仕様
+//	D3D11_BUFFER_DESC bd;
+//	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//	bd.Usage = D3D11_USAGE_DEFAULT;
+//	bd.ByteWidth = sizeof(uint32_t)*GetArraySize(c_Indices);
+//	bd.CPUAccessFlags = 0;
+//	bd.MiscFlags = NULL;
+//
+//	//	サブリソースの仕様	
+//	D3D11_SUBRESOURCE_DATA sd;
+//	SecureZeroMemory(&sd, sizeof(sd));
+//	sd.pSysMem = c_Indices;
+//
+//	//	インデックスバッファ作成
+//	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+//		&bd,
+//		&sd,
+//		m_pIndexBuffer.GetAddressOf()
+//	);
+//}
+//
+//HRESULT API::Sprite::CreateVertexBuffer()
+//{
+//	//	バッファの仕様
+//	D3D11_BUFFER_DESC bd;
+//	bd.Usage = D3D11_USAGE_DEFAULT;
+//	bd.ByteWidth = sizeof(D3D11::Graphic::SpriteVertex) * GetArraySize(c_Vertices);
+//	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//	bd.CPUAccessFlags = 0;
+//	bd.MiscFlags = NULL;
+//
+//	//	サブリソースの仕様
+//	D3D11_SUBRESOURCE_DATA sd;
+//
+//	
+//	D3D11::Graphic::SpriteVertex verttices[] =
+//	{
+//		{c_Vertices[0],{0,0}},
+//		{c_Vertices[1],{1,0}},
+//		{c_Vertices[2],{1,1}},
+//		{c_Vertices[3],{0,1}},
+//	};
+//	sd.pSysMem = verttices;
+//
+//	//	頂点バッファ作成
+//	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+//		&bd,
+//		&sd,
+//		m_pVertexBuffer.GetAddressOf()
+//	);
+//}
