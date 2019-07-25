@@ -1163,13 +1163,14 @@ void API::Sprite::Render()
 		&offset
 	);
 
+	auto texture = *m_pTexture.lock();
 
 	//サンプラー
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
 		0,
 		1,
 		//m_pSamplerState.GetAddressOf()
-		pTex->GetSamplerState()
+		texture->GetSamplerState()
 	);
 
 	//SRV
@@ -1177,7 +1178,7 @@ void API::Sprite::Render()
 		0,
 		1,
 		//m_pShaderResourceView.GetAddressOf()
-		pTex->GetShaderResourceView()
+		texture->GetShaderResourceView()
 	);
 
 	//ブレンドステート
@@ -1348,6 +1349,23 @@ void API::Sprite::SetupBlendPreset(BlendPreset preset)
 	}
 }
 
+/*!
+	@fn			SetupTexture
+	@brief		テクスチャの設定
+	@detail		弱参照でバインドし、この時点で頂点生成を行う
+	@param[in]	登録するテクスチャのポインタ
+*/
+void API::Sprite::SetupTexture(Texture * texture)
+{
+	m_pTexture = texture->GetSharedPtr();
+}
+
+/*!
+	@fn			SetupShader
+	@brief		シェーダーの設定
+	@detail		弱参照でバインドする
+	@param[in]	登録するシェーダーのポインタ
+*/
 void API::Sprite::SetupShader(D3D11::Graphic::AbstractShader * shader)
 {
 	m_pShader = shader->GetSharedPtr();

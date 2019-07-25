@@ -436,8 +436,18 @@ namespace API {
 		*/
 		void SetupShader(D3D11::Graphic::AbstractShader* shader);
 
+		/*!
+			@var	transform
+			@brief	トランスフォーム(行列クラス)
+		*/
 		std::shared_ptr<Transform>transform;
-		Texture*pTex;
+
+		/*!
+			@var	color
+			@brief	色の乗算値(※)
+			@detail	計算方法はシェーダーに依存
+		*/
+		Color color;
 	private:
 		/*!
 			@fn		SetupTopology
@@ -488,16 +498,19 @@ namespace API {
 		*/
 		uint32_t m_StencilMask;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pVertexBuffer;
-		//Microsoft::WRL::ComPtr<ID3D11InputLayout>m_pInputLayout;
-		//Microsoft::WRL::ComPtr<ID3D11VertexShader>m_pVertexShader;
-		//Microsoft::WRL::ComPtr<ID3D11PixelShader>m_pPixelShader;
-		//Microsoft::WRL::ComPtr<ID3D11Buffer>m_pConstantBuffer;
+
+		/*!
+			@var	m_pShader
+			@brief	シェーダーオブジェクトの弱参照
+		*/
 		std::weak_ptr<D3D11::Graphic::AbstractShader*>m_pShader;
 
+		/*!
+			@var	m_pTexture
+			@brief	テクスチャオブジェクトの弱参照
+		*/
+		std::weak_ptr<Texture*>m_pTexture;
 
-		Color color;
-		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pShaderResourceView;
 	}; 
 
 

@@ -88,7 +88,7 @@ void SampleScene::Initialize()
 	g_pSpriteShader = make_shared<D3D11::Graphic::SpriteShader>();
 
 	g_pTexture->Initialize("ncc.png");
-	g_pSprite->pTex = g_pTexture.get();
+	g_pSprite->SetupTexture(g_pTexture.get());
 	g_pSpriteShader->Setup();
 	g_pSprite->SetupShader(g_pSpriteShader.get());
 	HRESULT hr = g_pSprite->Init();
