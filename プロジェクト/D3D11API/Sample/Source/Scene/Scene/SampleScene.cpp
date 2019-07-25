@@ -55,16 +55,16 @@ shared_ptr< D3D11::Graphic::AbstractShader>g_pSpriteShader;
 shared_ptr<Mesh>g_pMesh;
 
 /*!
-	@var	g_pShader
+	@var	g_pMeshShader
 	@brief	シェーダー
 */
-//shared_ptr<D3D11::Graphic::AbstractShader>g_pMeshShader;
+shared_ptr<D3D11::Graphic::AbstractShader>g_pMeshShader;
 
 /*!
 	@var	g_pMaterial
 	@brief	マテリアル
 */
-//shared_ptr<API::Material>g_pMaterial;
+shared_ptr<Material>g_pMeshMaterial;
 
 /*!
 	@brief	コンストラクタ
@@ -81,10 +81,10 @@ void SampleScene::Initialize()
 {
 	cout << "sample init" << endl;
 
-	//Camera::GetInstance().SetViewMatrix({0,0,-2});
 #pragma region スプライト
 #if 1
-	g_pSpriteShader = make_shared<D3D11::Graphic::MeshShader>();
+#define SPRITE_EXECUTE
+	g_pSpriteShader = make_shared<D3D11::Graphic::SpriteShader>();
 	g_pSprite		= make_shared<Sprite>();
 	g_pTexture		= make_shared<Texture>();
 
@@ -92,10 +92,6 @@ void SampleScene::Initialize()
 	{
 		if (FAILED(g_pSpriteShader->Setup())) { throw runtime_error("shader init"); }
 		g_pSprite->Initialize();
-		//if (FAILED(g_pTexture->Initialize("ncc.png"))) { throw runtime_error("tex init"); };
-		//g_pTexture->SetupSize({ 400,400 });
-		//if (FAILED(g_pSpriteShader->Setup())) { throw runtime_error("shader init"); }
-		//if (FAILED(g_pSpriteShader->DynamicSetup())) { throw runtime_error("shader init"); }
 		g_pSprite->SetupShader(g_pSpriteShader.get());
 		g_pSprite->SetupTexture(g_pTexture.get());
 	}
@@ -103,6 +99,21 @@ void SampleScene::Initialize()
 	{
 		ErrorLog(e.what());
 	}
+#endif // 1
+#pragma endregion
+
+#pragma region メッシュ
+#if 0
+#define MESH_EXECUTE
+	g_pMesh = make_shared<Mesh>();
+	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
+	g_pMeshMaterial = make_shared<Material>();
+
+	g_pMeshMaterial->SetupTexture("hoge.png");
+	g_pMesh->Initialize("sprite.yfm");
+	g_pMeshShader->Setup();
+	g_pMesh->SetupShader(g_pMeshShader.get());
+	g_pMesh->SetupMaterial(g_pMeshMaterial.get());
 #endif // 1
 #pragma endregion
 
@@ -123,6 +134,13 @@ void SampleScene::Finalize()
 */
 void SampleScene::Update()
 {
+	//auto& trans = g_pSprite->transform;
+	//auto rot->
+
+	/*if (Keyboard::GetButton('a'))
+	{
+		trans->
+	}*/
 }
 
 /*!
@@ -131,7 +149,17 @@ void SampleScene::Update()
 */
 void SampleScene::Render()
 {
-	//if (g_pSprite.get()) {
-		g_pSprite->Render();
-	//}
+#pragma region スプライト
+#ifdef SPRITE_EXECUTE
+	g_pSprite->Render();
+#endif // 
+#pragma endregion
+
+#pragma region メッシュ
+#ifdef MESH_EXECUTE
+	g_pMesh->Render();
+#endif
+#pragma endregion
+
+
 }
