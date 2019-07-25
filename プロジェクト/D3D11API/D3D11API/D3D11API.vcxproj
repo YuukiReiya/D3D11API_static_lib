@@ -178,6 +178,7 @@
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\SpriteCompPS.h" />
     <ClInclude Include="include\SpriteCompVS.h" />
+    <ClInclude Include="include\SpriteConstantBuffer.h" />
     <ClInclude Include="include\SpriteShader.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\StructShaderBase.h" />

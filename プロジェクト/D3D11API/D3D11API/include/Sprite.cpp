@@ -940,6 +940,8 @@ HRESULT API::Sprite::Init()
 	auto device = d3d.GetDevice();
 	auto context = d3d.GetImmediateContext();
 
+#pragma region ABShader
+#if 0
 	//頂点レイアウト
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
 		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
@@ -986,6 +988,8 @@ HRESULT API::Sprite::Init()
 		m_pConstantBuffer.GetAddressOf()
 	);
 	if (FAILED(hr)) { return E_FAIL; }
+#endif // 0
+#pragma endregion
 
 	//頂点バッファ
 	DirectX::XMFLOAT2 leftTop, rightBottom;			// 頂点座標
@@ -1082,19 +1086,24 @@ void API::Sprite::Render()
 		D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
 	);
 
+	auto shader = *m_pShader.lock();
+
 	//頂点レイアウト
 	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
-		m_pInputLayout.Get()
+		//m_pInputLayout.Get()
+		*shader->GetInputLayout()
 	);
 
 	//シェーダーセット
 	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
-		m_pVertexShader.Get(),
+		//m_pVertexShader.Get(),
+		*shader->GetVertexShader(),
 		NULL,
 		NULL
 	);
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
-		m_pPixelShader.Get(),
+		//m_pPixelShader.Get(),
+		*shader->GetPixelShader(),
 		NULL,
 		NULL
 	);
@@ -1105,7 +1114,8 @@ void API::Sprite::Render()
 	D3D11::Graphic::Sprite::ConstantBuffer cb;
 	SecureZeroMemory(&cb, sizeof(cb));
 	HRESULT hr = Direct3D11::GetInstance().GetImmediateContext()->Map(
-		m_pConstantBuffer.Get(),
+		//m_pConstantBuffer.Get(),
+		*shader->GetConstantBuffer(),
 		NULL,
 		D3D11_MAP_WRITE_DISCARD,
 		NULL,
@@ -1113,7 +1123,8 @@ void API::Sprite::Render()
 	);
 	auto context = Direct3D11::GetInstance().GetImmediateContext();
 	if (FAILED(hr)) { 
-		context->Unmap(m_pConstantBuffer.Get(), NULL);
+		//context->Unmap(m_pConstantBuffer.Get(), NULL);
+		context->Unmap(*shader->GetConstantBuffer(), NULL);
 		return; 
 	}
 	DirectX::XMMATRIX w, v, p;
@@ -1126,15 +1137,20 @@ void API::Sprite::Render()
 	cb.world = DirectX::XMMatrixTranspose(w);
 	cb.view = DirectX::XMMatrixTranspose(v);
 	cb.proj = DirectX::XMMatrixTranspose(p);
+	color.a = 0.3f;
 	cb.color = color.GetRGBA();
 
 	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 	Direct3D11::GetInstance().GetImmediateContext()->Unmap(
-		m_pConstantBuffer.Get(),
+		//m_pConstantBuffer.Get(),
+		*shader->GetConstantBuffer(),
 		NULL
 	);
-	context->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
-	context->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+	//context->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+	//context->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+
+	context->VSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
+	context->PSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
 
 	//頂点バッファセット
 	uint32_t stride = sizeof(SpriteVertex);
@@ -1330,4 +1346,9 @@ void API::Sprite::SetupBlendPreset(BlendPreset preset)
 		ErrorLog(error);
 		return;
 	}
+}
+
+void API::Sprite::SetupShader(D3D11::Graphic::AbstractShader * shader)
+{
+	m_pShader = shader->GetSharedPtr();
 }

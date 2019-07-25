@@ -488,10 +488,12 @@ namespace API {
 		*/
 		uint32_t m_StencilMask;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pVertexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11InputLayout>m_pInputLayout;
-		Microsoft::WRL::ComPtr<ID3D11VertexShader>m_pVertexShader;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader>m_pPixelShader;
-		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pConstantBuffer;
+		//Microsoft::WRL::ComPtr<ID3D11InputLayout>m_pInputLayout;
+		//Microsoft::WRL::ComPtr<ID3D11VertexShader>m_pVertexShader;
+		//Microsoft::WRL::ComPtr<ID3D11PixelShader>m_pPixelShader;
+		//Microsoft::WRL::ComPtr<ID3D11Buffer>m_pConstantBuffer;
+		std::weak_ptr<D3D11::Graphic::AbstractShader*>m_pShader;
+
 
 		Color color;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
