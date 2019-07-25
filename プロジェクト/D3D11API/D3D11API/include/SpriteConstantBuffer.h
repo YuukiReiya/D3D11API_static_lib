@@ -9,10 +9,16 @@ namespace D3D11 {
 #pragma pack(push,16)
 			struct alignas(16) ConstantBuffer
 			{
-				//MatrixConstantBuffer matrix;
-				DirectX::XMMATRIX world;
-				DirectX::XMMATRIX view;
-				DirectX::XMMATRIX proj;
+				/*!
+					@var	matrix
+					@brief	WVP‚ğ‚Âs—ñ‚Ì\‘¢‘Ì
+				*/
+				MatrixConstantBuffer matrix;
+
+				/*!
+					@var	color
+					@brief	F
+				*/
 				DirectX::XMFLOAT4 color;
 			};
 #pragma pack(pop)
