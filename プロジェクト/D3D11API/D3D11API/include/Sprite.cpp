@@ -10,11 +10,13 @@
 #include "Sprite.h"
 #include "Direct3D11.h"
 #include "Camera.h"
-#include "ShaderManager.h"
+//#include "ShaderManager.h"
 #include "MemoryLeaks.h"
 #include "MyGame.h"
 #include "Debug.h"
 #include "SpriteConstantBuffer.h"
+#include "SpriteCompVS.h"
+#include "SpriteCompPS.h"
 
 /*!
 	@brief	名前空間
@@ -24,6 +26,7 @@ using namespace D3D11;
 //using namespace D3D11::Graphic;
 using namespace API;
 
+#if 0
 /*!
 	@brief	コンストラクタ
 */
@@ -916,3 +919,245 @@ HRESULT API::Sprite::SetupConstantBuffer()
 //		m_pVertexBuffer.GetAddressOf()
 //	);
 //}
+#endif
+
+HRESULT API::Sprite::Init()
+{
+	HRESULT hr;
+	auto&d3d = Direct3D11::GetInstance();
+	auto device = d3d.GetDevice();
+	auto context = d3d.GetImmediateContext();
+
+	//頂点レイアウト
+	D3D11_INPUT_ELEMENT_DESC layout[] = {
+		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
+	hr = device->CreateInputLayout(
+		layout,
+		GetArraySize(layout),
+		g_vs_main,
+		sizeof(g_vs_main),
+		m_pInputLayout.GetAddressOf()
+	);
+	if (FAILED(hr)) { return E_FAIL; }
+
+	//頂点シェーダー
+	hr = device->CreateVertexShader(
+		&g_vs_main,
+		sizeof(g_vs_main),
+		NULL,
+		m_pVertexShader.GetAddressOf()
+	);
+	if (FAILED(hr)) { return E_FAIL; }
+
+	//ピクセルシェーダー
+	hr = device->CreatePixelShader(
+		&g_ps_main,
+		sizeof(g_ps_main),
+		NULL,
+		m_pPixelShader.GetAddressOf()
+	);
+	if (FAILED(hr)) { return E_FAIL; }
+
+	//コンスタントバッファ
+	D3D11_BUFFER_DESC pcb;
+	pcb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+	pcb.ByteWidth = sizeof(D3D11::Graphic::Sprite::ConstantBuffer);
+	pcb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+	pcb.MiscFlags = 0;
+	pcb.StructureByteStride = 0;
+	pcb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+	hr = device->CreateBuffer(
+		&pcb,
+		NULL,
+		m_pConstantBuffer.GetAddressOf()
+	);
+	if (FAILED(hr)) { return E_FAIL; }
+
+	//頂点バッファ
+	DirectX::XMFLOAT2 leftTop, rightBottom;			// 頂点座標
+	DirectX::XMFLOAT2 uvLeftTop, uvRightBottom;		// UV座標
+	leftTop.x = -0.5f * 10;//size.x / c_NormalizeSize;// 左
+	rightBottom.x = 0.5f * 10;// size.x / c_NormalizeSize;// 右
+	leftTop.y = 0.5f * 10;// size.y / c_NormalizeSize;// 上
+	rightBottom.y = -0.5f * 10;// size.y / c_NormalizeSize;// 下
+	uvLeftTop.x = uvLeftTop.y = 0;
+	uvRightBottom.x = uvRightBottom.y = 1;
+	SpriteVertex vertices[] = {
+		// 右上
+		{
+			// 頂点
+			DirectX::XMFLOAT3(
+				rightBottom.x,
+				leftTop.y,
+				0
+			),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvRightBottom.x,
+			uvLeftTop.y
+		),
+},
+// 右下
+{
+	// 頂点
+	DirectX::XMFLOAT3(
+		rightBottom.x,
+		rightBottom.y,
+		0
+	),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvRightBottom.x,
+			uvRightBottom.y
+		),
+},
+// 左上
+{
+	// 頂点
+	DirectX::XMFLOAT3(
+		leftTop.x,
+		leftTop.y,
+		0
+	),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvLeftTop.x,
+			uvLeftTop.y
+		),
+},
+// 左下
+{
+	// 頂点
+	DirectX::XMFLOAT3(
+		leftTop.x,
+		rightBottom.y,
+		0
+	),
+		// UV座標
+		DirectX::XMFLOAT2(
+			uvLeftTop.x,
+			uvRightBottom.y
+		),
+}
+	};
+	D3D11_BUFFER_DESC bd;
+	SecureZeroMemory(&bd, sizeof(bd));
+	bd.Usage = D3D11_USAGE_DEFAULT;				// GPUから読み込みと書き込みを許可
+	bd.ByteWidth = sizeof(vertices);			// バッファのサイズ
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	// 頂点バッファとしてレンダリングパイプラインにバインド
+	D3D11_SUBRESOURCE_DATA subResourceData;
+	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
+	subResourceData.pSysMem = vertices;			// 初期化データへのポインタ
+	m_pVertexBuffer.Reset();
+	hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&bd,
+		&subResourceData,
+		m_pVertexBuffer.GetAddressOf()
+	);
+	if (FAILED(hr)) { return E_FAIL; }
+
+	transform = std::make_shared<Transform>();
+	return S_OK;
+}
+
+void API::Sprite::Render()
+{
+	//トポロジー
+	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(
+		D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+	);
+
+	//頂点レイアウト
+	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(
+		m_pInputLayout.Get()
+	);
+
+	//シェーダーセット
+	Direct3D11::GetInstance().GetImmediateContext()->VSSetShader(
+		m_pVertexShader.Get(),
+		NULL,
+		NULL
+	);
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShader(
+		m_pPixelShader.Get(),
+		NULL,
+		NULL
+	);
+
+	//コンスタントバッファ
+	D3D11_MAPPED_SUBRESOURCE pData;
+	SecureZeroMemory(&pData, sizeof(pData));
+	D3D11::Graphic::Sprite::ConstantBuffer cb;
+	SecureZeroMemory(&cb, sizeof(cb));
+	HRESULT hr = Direct3D11::GetInstance().GetImmediateContext()->Map(
+		m_pConstantBuffer.Get(),
+		NULL,
+		D3D11_MAP_WRITE_DISCARD,
+		NULL,
+		&pData
+	);
+	auto context = Direct3D11::GetInstance().GetImmediateContext();
+	if (FAILED(hr)) { 
+		context->Unmap(m_pConstantBuffer.Get(), NULL);
+		return; 
+	}
+	DirectX::XMMATRIX w, v, p;
+	w = transform->GetWorldMatrix();
+	v = Camera::GetInstance().GetViewMatrix();
+	p = Camera::GetInstance().GetProjMatrix();
+	//v = DirectX::XMMatrixIdentity();
+	//p = DirectX::XMMatrixIdentity();
+
+	cb.world = DirectX::XMMatrixTranspose(w);
+	cb.view = DirectX::XMMatrixTranspose(v);
+	cb.proj = DirectX::XMMatrixTranspose(p);
+	
+	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
+	Direct3D11::GetInstance().GetImmediateContext()->Unmap(
+		m_pConstantBuffer.Get(),
+		NULL
+	);
+	context->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+	context->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+
+	//頂点バッファセット
+	uint32_t stride = sizeof(SpriteVertex);
+	uint32_t offset = 0;
+	Direct3D11::GetInstance().GetImmediateContext()->IASetVertexBuffers(
+		0,
+		1,
+		m_pVertexBuffer.GetAddressOf(),
+		&stride,
+		&offset
+	);
+
+
+	//サンプラー
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
+		0,
+		1,
+		m_pSamplerState.GetAddressOf()
+	);
+
+	//SRV
+	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
+		0,
+		1,
+		m_pShaderResourceView.GetAddressOf()
+	);
+
+	//ブレンドステート
+	//Direct3D11::GetInstance().GetImmediateContext()->OMSetBlendState(
+	//	m_pBlendState.Get(),
+	//	NULL,
+	//	m_StencilMask
+	//);
+
+	//描画
+	Direct3D11::GetInstance().GetImmediateContext()->Draw(
+		4,
+		NULL
+	);
+}

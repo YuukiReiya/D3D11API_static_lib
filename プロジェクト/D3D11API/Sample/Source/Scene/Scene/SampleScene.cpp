@@ -81,8 +81,19 @@ void SampleScene::Initialize()
 {
 	cout << "sample init" << endl;
 
+#pragma region 作り直しSprite
+#define SPRITE_REMAKE
+	g_pSprite = make_shared<Sprite>();
+
+	HRESULT hr = g_pSprite->Init();
+	if (FAILED(hr)) { ErrorLog("スプライトの初期化失敗"); }
+
+	auto p = Camera::GetInstance().GetEyePt();
+#pragma endregion
+
+
 #pragma region スプライト
-#if 1
+#if 0
 #define SPRITE_EXECUTE
 	g_pSpriteShader = make_shared<D3D11::Graphic::SpriteShader>();
 	g_pSprite		= make_shared<Sprite>();
@@ -134,13 +145,28 @@ void SampleScene::Finalize()
 */
 void SampleScene::Update()
 {
-	//auto& trans = g_pSprite->transform;
-	//auto rot->
-
-	/*if (Keyboard::GetButton('a'))
+	auto& trans = g_pSprite->transform;
+	auto pos = trans->GetPosition();
+	auto rot = trans->GetRotationMatrix();
+	auto scale = trans->GetScale();
+	float val = 0.1f;
+	if (Keyboard::GetButton('a'))
 	{
-		trans->
-	}*/
+		pos.x -= val;
+	}
+	if (Keyboard::GetButton('d'))
+	{
+		pos.x += val;
+	}
+	if (Keyboard::GetButton('w'))
+	{
+		pos.y += val;
+	}
+	if (Keyboard::GetButton('s'))
+	{
+		pos.y -= val;
+	}
+	trans->SetPosition(pos);
 }
 
 /*!
@@ -149,6 +175,14 @@ void SampleScene::Update()
 */
 void SampleScene::Render()
 {
+
+#pragma region スプライトの作り直し
+#ifdef SPRITE_REMAKE
+	g_pSprite->Render();
+#endif // SPRITE_REMAKE
+
+#pragma endregion
+
 #pragma region スプライト
 #ifdef SPRITE_EXECUTE
 	g_pSprite->Render();
