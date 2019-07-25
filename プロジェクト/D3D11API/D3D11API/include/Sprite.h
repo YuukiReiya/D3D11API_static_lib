@@ -361,13 +361,132 @@ namespace API {
 		:public AbstractRender
 	{
 	public:
-		explicit Sprite() {}
+		/*!
+			@enum	BlendPreset
+			@brief	ブレンドモードのプリセット指定用の列挙体
+			@detail	参考:http://maverickproj.web.fc2.com/d3d11_01.html
+		*/
+		enum BlendPreset
+		{
+			/*!
+				@var	Default
+				@brief	デフォルト(ブレンド無し)
+			*/
+			Default,
+
+			/*!
+				@var	Linear
+				@brief	線形合成
+			*/
+			Linear,
+
+			/*!
+				@var	Add
+				@brief	加算合成
+			*/
+			Add,
+
+			/*!
+				@var	Subtraction
+				@brief	減算合成
+			*/
+			Subtraction,
+
+			/*!
+				@var	Multiple
+				@brief	乗算合成
+			*/
+			Multiple
+		};
+
+		explicit Sprite();
 		~Sprite() {}
 
 		HRESULT Init();
 		void Render()override;
 
+		/*!
+			@fn			SetStencilMask
+			@brief		深度マスクの設定
+			@detail		インライン関数
+			@param[in]	設定するマスク値
+		*/
+		inline void SetStencilMask(uint32_t mask) { m_StencilMask = mask; }
+
+		/*!
+			@fn			SetupBlendPreset
+			@brief		指定したプリセットのブレンドステートをメンバに設定する
+			@param[in]	指定するプリセットの列挙体
+		*/
+		void SetupBlendPreset(BlendPreset preset);
+
+		/*!
+			@fn			SetupTexture
+			@brief		テクスチャの設定
+			@detail		弱参照でバインドし、この時点で頂点生成を行う
+			@param[in]	登録するテクスチャのポインタ
+		*/
+		void SetupTexture(Texture* texture);
+
+		/*!
+			@fn			SetupShader
+			@brief		シェーダーの設定
+			@detail		弱参照でバインドする
+			@param[in]	登録するシェーダーのポインタ
+		*/
+		void SetupShader(D3D11::Graphic::AbstractShader* shader);
+
 		std::shared_ptr<Transform>transform;
+
+	private:
+		/*!
+			@fn		SetupTopology
+			@brief	トポロジーの設定
+			@NOTE	スプライトは板ポリゴン実装なので、効率がいいTRIANGLESTRIPを指定
+		*/
+		void SetupTopology();
+
+		/*!
+			@fn		CreateInputLayout
+			@brief	頂点レイアウトの設定
+		*/
+		void SetupInputLayout();
+
+		/*!
+			@fn		SetupBindShader
+			@brief	シェーダーのバインド
+		*/
+		void SetupBindShader();
+
+		/*!
+			@fn		SetupSampler
+			@brief	サンプラーステートの設定
+		*/
+		void SetupSampler();
+
+		/*!
+			@fn		SetupSRV
+			@brief	ShaderResourceViewの設定
+		*/
+		void SetupSRV();
+
+		/*!
+			@fn		SetupConstantBuffer
+			@brief	コンスタントバッファの設定
+		*/
+		//void SetupConstantBuffer();
+
+		/*!
+			@var	m_pBlendState
+			@brief	ブレンドステート
+		*/
+		Microsoft::WRL::ComPtr<ID3D11BlendState>m_pBlendState;
+
+		/*!
+			@var	m_StencilMask
+			@brief	深度マスク
+		*/
+		uint32_t m_StencilMask;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11InputLayout>m_pInputLayout;
 		Microsoft::WRL::ComPtr<ID3D11VertexShader>m_pVertexShader;
