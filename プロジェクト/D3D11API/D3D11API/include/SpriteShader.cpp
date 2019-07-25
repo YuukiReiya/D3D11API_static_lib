@@ -237,9 +237,17 @@ HRESULT D3D11::Graphic::SpriteShader::CreateInputLayout(ID3DBlob*pBlob)
 */
 HRESULT D3D11::Graphic::SpriteShader::CreateInputLayout()
 {
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
+
 	return Direct3D11::GetInstance().GetDevice()->CreateInputLayout(
-		c_InputLayout,
-		GetArraySize(c_InputLayout),
+		//c_InputLayout,
+		layout,
+		GetArraySize(layout),
+		//GetArraySize(c_InputLayout),
 		g_vs_main,
 		sizeof(g_vs_main),
 		m_pVertexLayout.GetAddressOf()
