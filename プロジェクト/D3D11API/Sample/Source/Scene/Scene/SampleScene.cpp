@@ -84,7 +84,10 @@ void SampleScene::Initialize()
 #pragma region 作り直しSprite
 #define SPRITE_REMAKE
 	g_pSprite = make_shared<Sprite>();
+	g_pTexture = make_shared<Texture>();
 
+	g_pTexture->Initialize("ncc.png");
+	g_pSprite->pTex = g_pTexture.get();
 	HRESULT hr = g_pSprite->Init();
 	if (FAILED(hr)) { ErrorLog("スプライトの初期化失敗"); }
 

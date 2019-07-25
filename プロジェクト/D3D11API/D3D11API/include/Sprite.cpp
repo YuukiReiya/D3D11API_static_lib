@@ -1071,6 +1071,7 @@ HRESULT API::Sprite::Init()
 	if (FAILED(hr)) { return E_FAIL; }
 
 	transform = std::make_shared<Transform>();
+	//m_pShaderResourceView = pTex->GetShaderResourceView();
 	return S_OK;
 }
 
@@ -1125,7 +1126,8 @@ void API::Sprite::Render()
 	cb.world = DirectX::XMMatrixTranspose(w);
 	cb.view = DirectX::XMMatrixTranspose(v);
 	cb.proj = DirectX::XMMatrixTranspose(p);
-	
+	cb.color = color.GetRGBA();
+
 	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 	Direct3D11::GetInstance().GetImmediateContext()->Unmap(
 		m_pConstantBuffer.Get(),
@@ -1150,14 +1152,16 @@ void API::Sprite::Render()
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetSamplers(
 		0,
 		1,
-		m_pSamplerState.GetAddressOf()
+		//m_pSamplerState.GetAddressOf()
+		pTex->GetSamplerState()
 	);
 
 	//SRV
 	Direct3D11::GetInstance().GetImmediateContext()->PSSetShaderResources(
 		0,
 		1,
-		m_pShaderResourceView.GetAddressOf()
+		//m_pShaderResourceView.GetAddressOf()
+		pTex->GetShaderResourceView()
 	);
 
 	//ブレンドステート

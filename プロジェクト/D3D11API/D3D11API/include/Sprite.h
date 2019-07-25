@@ -437,7 +437,7 @@ namespace API {
 		void SetupShader(D3D11::Graphic::AbstractShader* shader);
 
 		std::shared_ptr<Transform>transform;
-
+		Texture*pTex;
 	private:
 		/*!
 			@fn		SetupTopology
