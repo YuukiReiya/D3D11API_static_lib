@@ -82,6 +82,7 @@ void SampleScene::Initialize()
 	cout << "sample init" << endl;
 
 #pragma region 作り直しSprite
+#if 0
 #define SPRITE_REMAKE
 	g_pSprite = make_shared<Sprite>();
 	g_pTexture = make_shared<Texture>();
@@ -96,8 +97,8 @@ void SampleScene::Initialize()
 	if (FAILED(hr)) { ErrorLog("スプライトの初期化失敗"); }
 
 	auto p = Camera::GetInstance().GetEyePt();
+#endif // 0
 #pragma endregion
-
 
 #pragma region スプライト
 #if 0
@@ -121,17 +122,18 @@ void SampleScene::Initialize()
 #pragma endregion
 
 #pragma region メッシュ
-#if 0
+#if 1
 #define MESH_EXECUTE
 	g_pMesh = make_shared<Mesh>();
 	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
 	g_pMeshMaterial = make_shared<Material>();
 
-	g_pMeshMaterial->SetupTexture("hoge.png");
-	g_pMesh->Initialize("sprite.yfm");
+	//g_pMeshMaterial->SetupTexture("hoge.png");
+	g_pMesh->Initialize("anim.yfm");
 	g_pMeshShader->Setup();
 	g_pMesh->SetupShader(g_pMeshShader.get());
 	g_pMesh->SetupMaterial(g_pMeshMaterial.get());
+	g_pMesh->transform->SetScale({ 0.01f });
 #endif // 1
 #pragma endregion
 
@@ -152,44 +154,65 @@ void SampleScene::Finalize()
 */
 void SampleScene::Update()
 {
-	auto& trans = g_pSprite->transform;
+	auto& trans = g_pMesh->transform;//g_pSprite->transform;
 	auto pos = trans->GetPosition();
 	static DirectX::XMFLOAT3 rot = { 0,0,0 };
 	auto scale = trans->GetScale();
 	float val = 0.1f;
-	if (Keyboard::GetButton('a'))
-	{
-		pos.x -= val;
+
+	if (Keyboard::GetButton(Keyboard::c_Shift)) {
+		if (Keyboard::GetButton('a') || Keyboard::GetButton(Keyboard::c_Left))
+		{
+			rot.x -= val;
+		}
+		if (Keyboard::GetButton('d') || Keyboard::GetButton(Keyboard::c_Right))
+		{
+			rot.x += val;
+		}
+		if (Keyboard::GetButton('w') || Keyboard::GetButton(Keyboard::c_Up))
+		{
+			rot.y += val;
+		}
+		if (Keyboard::GetButton('s') || Keyboard::GetButton(Keyboard::c_Down))
+		{
+			rot.y -= val;
+		}
+		if (Keyboard::GetButton('q'))
+		{
+			rot.z -= val;
+		}
+		if (Keyboard::GetButton('e'))
+		{
+			rot.z += val;
+		}
 	}
-	if (Keyboard::GetButton('d'))
-	{
-		pos.x += val;
-	}
-	if (Keyboard::GetButton('w'))
-	{
-		pos.y += val;
-	}
-	if (Keyboard::GetButton('s'))
-	{
-		pos.y -= val;
+	else {
+		if (Keyboard::GetButton('a') || Keyboard::GetButton(Keyboard::c_Left))
+		{
+			pos.x -= val;
+		}
+		if (Keyboard::GetButton('d') || Keyboard::GetButton(Keyboard::c_Right))
+		{
+			pos.x += val;
+		}
+		if (Keyboard::GetButton('w') || Keyboard::GetButton(Keyboard::c_Up))
+		{
+			pos.y += val;
+		}
+		if (Keyboard::GetButton('s') || Keyboard::GetButton(Keyboard::c_Down))
+		{
+			pos.y -= val;
+		}
+		if (Keyboard::GetButton('q'))
+		{
+			pos.z -= val;
+		}
+		if (Keyboard::GetButton('e'))
+		{
+			pos.z += val;
+		}
 	}
 	trans->SetPosition(pos);
-	if (Keyboard::GetButton(Keyboard::c_Left))
-	{
-		rot.x -= val;
-	}
-	if (Keyboard::GetButton(Keyboard::c_Right))
-	{
-		rot.x += val;
-	}
-	if (Keyboard::GetButton(Keyboard::c_Up))
-	{
-		rot.y += val;
-	}
-	if (Keyboard::GetButton(Keyboard::c_Down))
-	{
-		rot.y -= val;
-	}
 	trans->SetRotation(rot);
 }
 
