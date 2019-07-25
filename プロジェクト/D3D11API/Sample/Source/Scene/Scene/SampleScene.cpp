@@ -147,7 +147,7 @@ void SampleScene::Update()
 {
 	auto& trans = g_pSprite->transform;
 	auto pos = trans->GetPosition();
-	auto rot = trans->GetRotationMatrix();
+	static DirectX::XMFLOAT3 rot = { 0,0,0 };
 	auto scale = trans->GetScale();
 	float val = 0.1f;
 	if (Keyboard::GetButton('a'))
@@ -167,6 +167,23 @@ void SampleScene::Update()
 		pos.y -= val;
 	}
 	trans->SetPosition(pos);
+	if (Keyboard::GetButton(Keyboard::c_Left))
+	{
+		rot.x -= val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Right))
+	{
+		rot.x += val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Up))
+	{
+		rot.y += val;
+	}
+	if (Keyboard::GetButton(Keyboard::c_Down))
+	{
+		rot.y -= val;
+	}
+	trans->SetRotation(rot);
 }
 
 /*!
