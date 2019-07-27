@@ -175,6 +175,73 @@ void API::Sprite::Render()
 	);
 }
 
+void API::Sprite::RenderBillboard()
+{
+	//トポロジー
+	SetupTopology();
+
+	//	ウィークポインタに有効な参照を持っているか確認
+	try
+	{
+		if (m_pShader.expired()) { throw std::runtime_error("Shader"); }
+		if (m_pTexture.expired()) { throw std::runtime_error("Texture"); }
+		if (m_pBillboardTarget.expired()) { throw std::runtime_error("Billboard Transform"); }
+	}
+	catch (const std::exception&error)
+	{
+		ErrorLog(error.what() + std::string(" reference is broken!"));
+		return;
+	}
+
+	//	シェーダー
+	auto shader = *m_pShader.lock();
+
+	//	頂点レイアウト
+	SetupInputLayout(shader);
+
+	//	シェーダーのバインド
+	SetupBindShader(shader);
+
+	//auto billboardMat = *m_pBillboardTarget.lock();
+	//billboardMat.SetPosition({0,0,0});
+	DirectX::XMMATRIX billboardMat = Camera::GetInstance().GetViewMatrix();
+	billboardMat.r[3].m128_f32[0] = 0;
+	billboardMat.r[3].m128_f32[1] = 0;
+	billboardMat.r[3].m128_f32[2] = 0;
+	billboardMat = DirectX::XMMatrixInverse(NULL, billboardMat);
+
+	//	コンスタントバッファ
+	SetupConstantBuffer(
+		shader,
+		billboardMat*transform->GetWorldMatrix(),
+		//billboardMat.GetWorldMatrix(),
+		//billboardMat,
+		Camera::GetInstance().GetViewMatrix(),
+		Camera::GetInstance().GetProjMatrix()
+		);
+
+	//	頂点バッファセット
+	SetupVertexBuffer();
+
+	//	テクスチャ
+	auto texture = *m_pTexture.lock();
+
+	//サンプラー
+	SetupSampler(texture);
+
+	//SRV
+	SetupSRV(texture);
+
+	//ブレンドステート
+	SetupBlendState();
+
+	//描画
+	Direct3D11::GetInstance().GetImmediateContext()->Draw(
+		4,
+		NULL
+	);
+}
+
 /*!
 	@fn			SetupBlendPreset
 	@brief		指定したプリセットのブレンドステートをメンバに設定する
@@ -442,6 +509,60 @@ void API::Sprite::SetupConstantBuffer(D3D11::Graphic::AbstractShader * shader)
 	//	メモリコピー
 	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 	
+	//	アクセス許可終了
+	Direct3D11::GetInstance().GetImmediateContext()->Unmap(
+		*shader->GetConstantBuffer(),
+		NULL
+	);
+
+	//	シェーダーに定数バッファをバインド
+	context->VSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
+	context->PSSetConstantBuffers(0, 1, shader->GetConstantBuffer());
+}
+
+/*!
+	@fn			SetupConstantBuffer
+	@brief		コンスタントバッファの設定
+	@param[in]	シェーダー
+	@param[in]	ワールド行列
+	@param[in]	ビュー行列
+	@param[in]	プロジェクション行列
+	@note		弱参照で取得したポインタから取得
+*/
+void API::Sprite::SetupConstantBuffer(D3D11::Graphic::AbstractShader * shader, DirectX::XMMATRIX w, DirectX::XMMATRIX v, DirectX::XMMATRIX p)
+{
+	//	マッピング用変数の宣言
+	D3D11_MAPPED_SUBRESOURCE pData;
+	SecureZeroMemory(&pData, sizeof(pData));
+
+	//	バッファへのアクセス(書き換え)許可
+	HRESULT hr = Direct3D11::GetInstance().GetImmediateContext()->Map(
+		*shader->GetConstantBuffer(),
+		NULL,
+		D3D11_MAP_WRITE_DISCARD,
+		NULL,
+		&pData
+	);
+	auto context = Direct3D11::GetInstance().GetImmediateContext();
+	if (FAILED(hr)) {
+		//	アクセス権を閉じて抜ける
+		context->Unmap(*shader->GetConstantBuffer(), NULL);
+		return;
+	}
+
+	//	定数バッファ宣言
+	D3D11::Graphic::Sprite::ConstantBuffer cb;
+	SecureZeroMemory(&cb, sizeof(cb));
+
+	//	定数バッファ用の変数に受け渡し
+	cb.matrix.world = DirectX::XMMatrixTranspose(w);
+	cb.matrix.view = DirectX::XMMatrixTranspose(v);
+	cb.matrix.proj = DirectX::XMMatrixTranspose(p);
+	cb.color = color.GetRGBA();
+
+	//	メモリコピー
+	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
+
 	//	アクセス許可終了
 	Direct3D11::GetInstance().GetImmediateContext()->Unmap(
 		*shader->GetConstantBuffer(),

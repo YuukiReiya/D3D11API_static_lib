@@ -53,6 +53,7 @@ shared_ptr< D3D11::Graphic::AbstractShader>g_pSpriteShader;
 	@brief	メッシュ
 */
 shared_ptr<Mesh>g_pMesh;
+shared_ptr<Transform>g_pT;
 
 /*!
 	@var	g_pMeshShader
@@ -82,7 +83,7 @@ void SampleScene::Initialize()
 	cout << "sample init" << endl;
 
 #pragma region 作り直しSprite
-#if 0
+#if 1
 #define SPRITE_REMAKE
 	g_pSprite = make_shared<Sprite>();
 	g_pTexture = make_shared<Texture>();
@@ -93,10 +94,14 @@ void SampleScene::Initialize()
 	g_pSpriteShader->Setup();
 	g_pSprite->SetupShader(g_pSpriteShader.get());
 
+	g_pT = make_shared<Transform>();
+	g_pSprite->SetupBil(g_pT);
+
+
 	HRESULT hr = g_pSprite->Initialize(g_pTexture.get());
 	if (FAILED(hr)) { ErrorLog("スプライトの初期化失敗"); }
 
-	auto p = Camera::GetInstance().GetEyePt();
+	Camera::GetInstance().SetViewMatrix({-3,5,-10});
 #endif // 0
 #pragma endregion
 
@@ -122,7 +127,7 @@ void SampleScene::Initialize()
 #pragma endregion
 
 #pragma region メッシュ
-#if 1
+#if 0
 #define MESH_EXECUTE
 	g_pMesh = make_shared<Mesh>();
 	g_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
@@ -154,7 +159,8 @@ void SampleScene::Finalize()
 */
 void SampleScene::Update()
 {
-	auto& trans = g_pMesh->transform;//g_pSprite->transform;
+	//auto& trans = g_pMesh->transform;
+	auto& trans = g_pSprite->transform;
 	auto pos = trans->GetPosition();
 	static DirectX::XMFLOAT3 rot = { 0,0,0 };
 	auto scale = trans->GetScale();
@@ -186,6 +192,35 @@ void SampleScene::Update()
 			rot.z += val;
 		}
 	}
+	else if (Keyboard::GetButton(Keyboard::c_Tab))
+	{
+		auto cPos = Camera::GetInstance().GetEyePt();
+		if (Keyboard::GetButton('a') || Keyboard::GetButton(Keyboard::c_Left))
+		{
+			cPos.x -= val;
+		}
+		if (Keyboard::GetButton('d') || Keyboard::GetButton(Keyboard::c_Right))
+		{
+			cPos.x += val;
+		}
+		if (Keyboard::GetButton('w') || Keyboard::GetButton(Keyboard::c_Up))
+		{
+			cPos.y += val;
+		}
+		if (Keyboard::GetButton('s') || Keyboard::GetButton(Keyboard::c_Down))
+		{
+			cPos.y -= val;
+		}
+		if (Keyboard::GetButton('q'))
+		{
+			cPos.z -= val;
+		}
+		if (Keyboard::GetButton('e'))
+		{
+			cPos.z += val;
+		}
+		Camera::GetInstance().SetViewMatrix(cPos);
+	}
 	else {
 		if (Keyboard::GetButton('a') || Keyboard::GetButton(Keyboard::c_Left))
 		{
@@ -212,6 +247,7 @@ void SampleScene::Update()
 			pos.z += val;
 		}
 	}
+
 	trans->SetPosition(pos);
 	trans->SetRotation(rot);
 }
@@ -226,6 +262,7 @@ void SampleScene::Render()
 #pragma region スプライトの作り直し
 #ifdef SPRITE_REMAKE
 	g_pSprite->Render();
+	//g_pSprite->RenderBillboard();
 #endif // SPRITE_REMAKE
 
 #pragma endregion

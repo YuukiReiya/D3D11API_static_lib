@@ -8,10 +8,8 @@
 #pragma once
 #include <string>
 #include <D3D11.h>
-#include "StructShaderBase.h"
 #include <DirectXMath.h>
 #include "Texture.h"
-#include "TextureAtlas.h"
 #include "AbstractRender.h"
 #include "AbstractShader.h"
 #include "Transform.h"
@@ -95,6 +93,12 @@ namespace API {
 		void Render()override;
 
 		/*!
+			@fn		RenderBillboard
+			@brief	ビルボード描画
+		*/
+		void RenderBillboard();
+		
+		/*!
 			@fn			SetStencilMask
 			@brief		深度マスクの設定
 			@detail		インライン関数
@@ -124,7 +128,7 @@ namespace API {
 			@param[in]	登録するシェーダーのポインタ
 		*/
 		void SetupShader(D3D11::Graphic::AbstractShader* shader);
-
+		void SetupBil(std::shared_ptr<Transform>st) { m_pBillboardTarget = st; }
 		/*!
 			@var	transform
 			@brief	トランスフォーム(行列クラス)
@@ -168,6 +172,17 @@ namespace API {
 			@note		弱参照で取得したポインタから取得
 		*/
 		void SetupConstantBuffer(D3D11::Graphic::AbstractShader*shader);
+
+		/*!
+			@fn			SetupConstantBuffer
+			@brief		コンスタントバッファの設定
+			@param[in]	シェーダー
+			@param[in]	ワールド行列
+			@param[in]	ビュー行列
+			@param[in]	プロジェクション行列
+			@note		弱参照で取得したポインタから取得
+		*/
+		void SetupConstantBuffer(D3D11::Graphic::AbstractShader*shader,DirectX::XMMATRIX w, DirectX::XMMATRIX v, DirectX::XMMATRIX p);
 
 		/*!
 			@fn		SetupVertexBuffer
@@ -236,6 +251,12 @@ namespace API {
 		*/
 		std::weak_ptr<Texture*>m_pTexture;
 		
+		/*!
+			@var	m_pBillboardTarget
+			@brief	ビールボード対象のトランスフォーム
+		*/
+		std::weak_ptr<Transform>m_pBillboardTarget;
+
 		/*!
 			@var	c_NormalizeSize
 			@brief	板ポリゴンの基準となるサイズ
