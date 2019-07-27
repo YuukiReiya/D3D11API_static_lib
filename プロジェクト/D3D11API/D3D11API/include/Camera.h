@@ -7,6 +7,8 @@
 */
 #pragma once
 #include <DirectXMath.h>
+#include <memory>
+#include "Transform.h"
 #include "Singleton.h"
 
 /****************************************/
@@ -176,11 +178,17 @@ namespace API {
 			@note		引数のデフォルト引数はメンバに設定された値
 		*/
 		void SetViewMatrix(
-			DirectX::XMFLOAT3 eyePt = VectorToFloat3(GetInstance().m_EyePt),
+			//DirectX::XMFLOAT3 eyePt = VectorToFloat3(GetInstance().m_EyePt),
+			DirectX::XMFLOAT3 eyePt = GetInstance().transform->GetPosition(),
 			DirectX::XMFLOAT3 lookAtPt = VectorToFloat3(GetInstance().m_LookAtPt),
 			DirectX::XMFLOAT3 upVector = VectorToFloat3(GetInstance().m_UpVec)
 		);
-
+		
+		/*!
+			@var	transform
+			@brief	トランスフォーム(行列クラス)
+		*/
+		std::shared_ptr<Transform>transform;
 	private:
 		/*!
 			@brief	コンストラクタ
@@ -197,7 +205,7 @@ namespace API {
 		float m_NearClip;				// デフォルトのクリッピング距離:近
 		float m_FarClip;				// デフォルトのクリッピング距離:遠
 		DirectX::XMINT2 m_WindowSize;	// ウィンドウのサイズ
-		DirectX::XMVECTOR m_EyePt;		// 視点位置
+		//DirectX::XMVECTOR m_EyePt;		// 視点位置
 		DirectX::XMVECTOR m_LookAtPt;	// 注視点
 		DirectX::XMVECTOR m_UpVec;		// 上向きベクトル
 		DirectX::XMMATRIX m_ViewMat;	// ビュー行列

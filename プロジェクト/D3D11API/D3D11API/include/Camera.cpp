@@ -25,7 +25,9 @@ Camera::Camera()
 		m_FieldOfView	= c_FieldOfView;
 		m_NearClip		= c_NearClip;
 		m_FarClip		= c_FarClip;
-		m_EyePt			= DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
+		//m_EyePt			= DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
+		transform = std::make_shared<Transform>();
+		transform->SetPosition({ 0, 0, -10 });
 		m_LookAtPt		= DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 		m_UpVec			= DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 		m_WindowSize	= { 0,0 };
@@ -55,15 +57,24 @@ void Camera::Initialize(DirectX::XMINT2 windowSize, DirectX::XMFLOAT3 eyePt, Dir
 
 	// FLOAT3をVECTOR型に変換
 	{
-		m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0.0f);
+		//m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0.0f);
+		transform->SetPosition(eyePt);
 		m_LookAtPt = DirectX::XMVectorSet(lookPt.x, lookPt.y, lookPt.z, 0.0f);
 		m_UpVec = DirectX::XMVectorSet(upVec.x, upVec.y, upVec.z, 0.0f);
 	}
 
 	// ビュー行列
 	{
+		DirectX::XMVECTOR eyePtVec =
+		{
+			eyePt.x,
+			eyePt.y,
+			eyePt.z,
+			0.0f
+		};
 		m_ViewMat = DirectX::XMMatrixLookAtLH(
-			m_EyePt,							// 視点位置
+			//m_EyePt,							// 視点位置
+			eyePtVec,
 			m_LookAtPt,							// 注視点
 			m_UpVec								// 上向き方向
 		);
@@ -88,9 +99,10 @@ void Camera::Initialize(DirectX::XMINT2 windowSize, DirectX::XMFLOAT3 eyePt, Dir
 DirectX::XMFLOAT3 Camera::GetEyePt() const
 {
 	// VECTOR型をFLOAT3に変換
-	DirectX::XMFLOAT3 ret;
-	DirectX::XMStoreFloat3(&ret, m_EyePt);
-	return ret;
+	//DirectX::XMFLOAT3 ret;
+	//DirectX::XMStoreFloat3(&ret, m_EyePt);
+	//return ret;
+	return transform->GetPosition();
 }
 
 /*!
@@ -176,12 +188,21 @@ void API::Camera::SetViewMatrix(DirectX::XMMATRIX viewMatrix)
 */
 void API::Camera::SetViewMatrix(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookAtPt, DirectX::XMFLOAT3 upVector)
 {
-	m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0.0f);
+	//m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0.0f);
+	transform->SetPosition(eyePt);
+	DirectX::XMVECTOR eyePtVec =
+	{
+		eyePt.x,
+		eyePt.y,
+		eyePt.z,
+		0.0f,
+	};
 	m_LookAtPt = DirectX::XMVectorSet(lookAtPt.x, lookAtPt.y, lookAtPt.z, 0.0f);
 	m_UpVec = DirectX::XMVectorSet(upVector.x, upVector.y, upVector.z, 0.0f);
 
 	m_ViewMat = DirectX::XMMatrixLookAtLH(
-		m_EyePt,							// 視点位置
+		//m_EyePt,							// 視点位置
+		eyePtVec,
 		m_LookAtPt,							// 注視点
 		m_UpVec								// 上向き方向
 	);
