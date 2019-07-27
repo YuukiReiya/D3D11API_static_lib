@@ -99,13 +99,6 @@ namespace API {
 		DirectX::XMMATRIX GetProjMatrix()const { return m_ProjMat; }
 
 		/*!
-			@fn		GetEyePt
-			@brief	視点位置の取得
-			@return	視点位置
-		*/
-		DirectX::XMFLOAT3 GetEyePt()const;
-
-		/*!
 			@fn		GetLookAtPt
 			@brief	注視点の取得
 			@return	注視点
@@ -178,7 +171,6 @@ namespace API {
 			@note		引数のデフォルト引数はメンバに設定された値
 		*/
 		void SetViewMatrix(
-			//DirectX::XMFLOAT3 eyePt = VectorToFloat3(GetInstance().m_EyePt),
 			DirectX::XMFLOAT3 eyePt = GetInstance().transform->GetPosition(),
 			DirectX::XMFLOAT3 lookAtPt = VectorToFloat3(GetInstance().m_LookAtPt),
 			DirectX::XMFLOAT3 upVector = VectorToFloat3(GetInstance().m_UpVec)
@@ -205,7 +197,6 @@ namespace API {
 		float m_NearClip;				// デフォルトのクリッピング距離:近
 		float m_FarClip;				// デフォルトのクリッピング距離:遠
 		DirectX::XMINT2 m_WindowSize;	// ウィンドウのサイズ
-		//DirectX::XMVECTOR m_EyePt;		// 視点位置
 		DirectX::XMVECTOR m_LookAtPt;	// 注視点
 		DirectX::XMVECTOR m_UpVec;		// 上向きベクトル
 		DirectX::XMMATRIX m_ViewMat;	// ビュー行列

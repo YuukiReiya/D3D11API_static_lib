@@ -57,7 +57,6 @@ void Camera::Initialize(DirectX::XMINT2 windowSize, DirectX::XMFLOAT3 eyePt, Dir
 
 	// FLOAT3をVECTOR型に変換
 	{
-		//m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0.0f);
 		transform->SetPosition(eyePt);
 		m_LookAtPt = DirectX::XMVectorSet(lookPt.x, lookPt.y, lookPt.z, 0.0f);
 		m_UpVec = DirectX::XMVectorSet(upVec.x, upVec.y, upVec.z, 0.0f);
@@ -73,10 +72,9 @@ void Camera::Initialize(DirectX::XMINT2 windowSize, DirectX::XMFLOAT3 eyePt, Dir
 			0.0f
 		};
 		m_ViewMat = DirectX::XMMatrixLookAtLH(
-			//m_EyePt,							// 視点位置
-			eyePtVec,
-			m_LookAtPt,							// 注視点
-			m_UpVec								// 上向き方向
+			eyePtVec,	// 視点位置
+			m_LookAtPt,	// 注視点
+			m_UpVec		// 上向き方向
 		);
 	}
 
@@ -89,20 +87,6 @@ void Camera::Initialize(DirectX::XMINT2 windowSize, DirectX::XMFLOAT3 eyePt, Dir
 			m_FarClip																// クリッピング距離:遠
 		);
 	}
-}
-
-/*!
-	@fn		視点位置のゲッター
-	@brief	視点位置の取得
-	@return	視点位置
-*/
-DirectX::XMFLOAT3 Camera::GetEyePt() const
-{
-	// VECTOR型をFLOAT3に変換
-	//DirectX::XMFLOAT3 ret;
-	//DirectX::XMStoreFloat3(&ret, m_EyePt);
-	//return ret;
-	return transform->GetPosition();
 }
 
 /*!
@@ -188,8 +172,9 @@ void API::Camera::SetViewMatrix(DirectX::XMMATRIX viewMatrix)
 */
 void API::Camera::SetViewMatrix(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookAtPt, DirectX::XMFLOAT3 upVector)
 {
-	//m_EyePt = DirectX::XMVectorSet(eyePt.x, eyePt.y, eyePt.z, 0.0f);
 	transform->SetPosition(eyePt);
+
+	//	視点ベクトル
 	DirectX::XMVECTOR eyePtVec =
 	{
 		eyePt.x,
@@ -197,14 +182,18 @@ void API::Camera::SetViewMatrix(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookA
 		eyePt.z,
 		0.0f,
 	};
+
+	//	注視ベクトル
 	m_LookAtPt = DirectX::XMVectorSet(lookAtPt.x, lookAtPt.y, lookAtPt.z, 0.0f);
+
+	//	上方向ベクトル
 	m_UpVec = DirectX::XMVectorSet(upVector.x, upVector.y, upVector.z, 0.0f);
 
+	//	ビュー行列
 	m_ViewMat = DirectX::XMMatrixLookAtLH(
-		//m_EyePt,							// 視点位置
-		eyePtVec,
-		m_LookAtPt,							// 注視点
-		m_UpVec								// 上向き方向
+		eyePtVec,	// 視点位置
+		m_LookAtPt,	// 注視点
+		m_UpVec		// 上向き方向
 	);
 
 }
