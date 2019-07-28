@@ -78,9 +78,14 @@ SampleScene::SampleScene()
 	@fn		Initialize
 	@brief	初期化処理
 */
+#include "BillboardSample.h"
 void SampleScene::Initialize() 
 {
 	cout << "sample init" << endl;
+
+	BillboardSample*ns=new BillboardSample;
+	SceneRoot::GetInstance().SetupNextScene(ns);
+	return;
 
 #pragma region 作り直しSprite
 #if 1
@@ -159,6 +164,7 @@ void SampleScene::Finalize()
 */
 void SampleScene::Update()
 {
+	return;
 	//auto& trans = g_pMesh->transform;
 	auto& trans = g_pSprite->transform;
 	auto pos = trans->GetPosition();
@@ -167,6 +173,7 @@ void SampleScene::Update()
 	float val = 0.1f;
 
 	if (Keyboard::GetButton(Keyboard::c_Shift)) {
+
 		if (Keyboard::GetButton('a') || Keyboard::GetButton(Keyboard::c_Left))
 		{
 			rot.x -= val;
@@ -194,32 +201,34 @@ void SampleScene::Update()
 	}
 	else if (Keyboard::GetButton(Keyboard::c_Tab))
 	{
-		auto cPos = Camera::GetInstance().GetEyePt();
+		auto& cam = Camera::GetInstance().transform;
+		auto camPos = cam->GetPosition();
 		if (Keyboard::GetButton('a') || Keyboard::GetButton(Keyboard::c_Left))
 		{
-			cPos.x -= val;
+			camPos.x -= val;
 		}
 		if (Keyboard::GetButton('d') || Keyboard::GetButton(Keyboard::c_Right))
 		{
-			cPos.x += val;
+			camPos.x += val;
 		}
 		if (Keyboard::GetButton('w') || Keyboard::GetButton(Keyboard::c_Up))
 		{
-			cPos.y += val;
+			camPos.y += val;
 		}
 		if (Keyboard::GetButton('s') || Keyboard::GetButton(Keyboard::c_Down))
 		{
-			cPos.y -= val;
+			camPos.y -= val;
 		}
 		if (Keyboard::GetButton('q'))
 		{
-			cPos.z -= val;
+			camPos.z -= val;
 		}
 		if (Keyboard::GetButton('e'))
 		{
-			cPos.z += val;
+			camPos.z += val;
 		}
-		Camera::GetInstance().SetViewMatrix(cPos);
+		//cam->SetPosition(camPos);
+		Camera::GetInstance().transform->SetPosition(camPos);
 	}
 	else {
 		if (Keyboard::GetButton('a') || Keyboard::GetButton(Keyboard::c_Left))
@@ -261,8 +270,8 @@ void SampleScene::Render()
 
 #pragma region スプライトの作り直し
 #ifdef SPRITE_REMAKE
-	g_pSprite->Render();
-	//g_pSprite->RenderBillboard();
+	//g_pSprite->Render();
+	g_pSprite->RenderBillboard();
 #endif // SPRITE_REMAKE
 
 #pragma endregion
