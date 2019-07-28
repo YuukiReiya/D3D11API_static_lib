@@ -202,9 +202,27 @@ void API::Sprite::RenderBillboard()
 	//	シェーダーのバインド
 	SetupBindShader(shader);
 
-	//auto billboardMat = *m_pBillboardTarget.lock();
-	//billboardMat.SetPosition({0,0,0});
-	DirectX::XMMATRIX billboardMat = Camera::GetInstance().GetViewMatrix();
+	auto pos = m_pBillboardTarget.lock()->GetPosition();
+	DirectX::XMVECTOR vec = { pos.x,pos.y,pos.z,0 };
+	DirectX::XMVECTOR look = {
+		Camera::GetInstance().GetLookAtPt().x,
+		Camera::GetInstance().GetLookAtPt().y,
+		Camera::GetInstance().GetLookAtPt().z,
+		0
+	};
+	DirectX::XMVECTOR upvec = {
+		Camera::GetInstance().GetUpVector().x,
+		Camera::GetInstance().GetUpVector().y,
+		Camera::GetInstance().GetUpVector().z,
+		0
+	};
+	DirectX::XMMATRIX billboardMat = DirectX::XMMatrixLookAtLH(
+		vec,
+		look,
+		upvec
+	);
+	//DirectX::XMMATRIX billboardMat = Camera::GetInstance().GetViewMatrix();
+
 	billboardMat.r[3].m128_f32[0] = 0;
 	billboardMat.r[3].m128_f32[1] = 0;
 	billboardMat.r[3].m128_f32[2] = 0;
