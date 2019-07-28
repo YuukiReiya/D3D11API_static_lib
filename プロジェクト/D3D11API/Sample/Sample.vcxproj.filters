@@ -33,6 +33,9 @@
     <ClInclude Include="Source\Scene\Scene\TransitionTestScene.h">
       <Filter>Scene\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Scene\Scene\BillboardSample.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main\Main.cpp">
@@ -46,6 +49,9 @@
       <Filter>Scene\Root</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene\Scene\TransitionTestScene.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Scene\BillboardSample.cpp">
       <Filter>Scene\Scene</Filter>
     </ClCompile>
   </ItemGroup>
