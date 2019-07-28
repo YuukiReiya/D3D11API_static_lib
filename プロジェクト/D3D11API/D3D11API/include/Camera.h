@@ -104,6 +104,12 @@ namespace API {
 			@return	’‹“_
 		*/
 		DirectX::XMFLOAT3 GetLookAtPt()const;
+		/*!
+			@fn		GetLookAtPt
+			@brief	’‹“_‚Ìæ“¾
+			@return	’‹“_
+		*/
+		DirectX::XMFLOAT3 GetUpVector()const { return VectorToFloat3(GetInstance().m_UpVec); }
 
 		/*!
 			@fn			SetWindowSize

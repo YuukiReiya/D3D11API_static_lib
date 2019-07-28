@@ -25,7 +25,6 @@ Camera::Camera()
 		m_FieldOfView	= c_FieldOfView;
 		m_NearClip		= c_NearClip;
 		m_FarClip		= c_FarClip;
-		//m_EyePt			= DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
 		transform = std::make_shared<Transform>();
 		transform->SetPosition({ 0, 0, -10 });
 		m_LookAtPt		= DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
