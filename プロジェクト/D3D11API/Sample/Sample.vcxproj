@@ -22,14 +22,17 @@
     <ClCompile Include="Source\Entry.cpp" />
     <ClCompile Include="Source\Main\Main.cpp" />
     <ClCompile Include="Source\Scene\Root\SceneRoot.cpp" />
+    <ClCompile Include="Source\Scene\Scene\AnimationSample.cpp" />
     <ClCompile Include="Source\Scene\Scene\BillboardSample.cpp" />
     <ClCompile Include="Source\Scene\Scene\SampleScene.cpp" />
     <ClCompile Include="Source\Scene\Scene\TransitionTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Main\Main.h" />
+    <ClInclude Include="Source\ResorceLoader.h" />
     <ClInclude Include="Source\Scene\Interface\IScene.h" />
     <ClInclude Include="Source\Scene\Root\SceneRoot.h" />
+    <ClInclude Include="Source\Scene\Scene\AnimationSample.h" />
     <ClInclude Include="Source\Scene\Scene\BillboardSample.h" />
     <ClInclude Include="Source\Scene\Scene\SampleScene.h" />
     <ClInclude Include="Source\Scene\Scene\TransitionTestScene.h" />

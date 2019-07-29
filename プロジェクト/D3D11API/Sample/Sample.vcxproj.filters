@@ -36,6 +36,10 @@
     <ClInclude Include="Source\Scene\Scene\BillboardSample.h">
       <Filter>Scene\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Scene\Scene\AnimationSample.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResorceLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main\Main.cpp">
@@ -52,6 +56,9 @@
       <Filter>Scene\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene\Scene\BillboardSample.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Scene\AnimationSample.cpp">
       <Filter>Scene\Scene</Filter>
     </ClCompile>
   </ItemGroup>
