@@ -376,7 +376,7 @@ HRESULT API::AnimationMesh::SetupConstantBuffer()
 		value.m.world = w;
 		value.m.view = v;
 		value.m.proj = p;
-		value.color = {1,0,0,1};
+		value.color = {1,1,1,1};
 
 		//	ÉÅÉÇÉäÉRÉsÅ[
 		memcpy_s(mapped.pData, mapped.RowPitch, (void*)(&value), sizeof(value));

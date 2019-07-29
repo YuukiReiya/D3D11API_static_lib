@@ -98,8 +98,9 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 	if (!ret.vertices.empty()) {
 
 		//’¸“_
-		int index = 0;
-		while (true)
+		//int index = 0;
+		//while (true)
+		for (size_t i = 0; i < ret.vertices.size(); i++)
 		{
 			auto a = buf.find(t);
 			if (a == string::npos) { break; }
@@ -119,7 +120,7 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 				auto e = b.substr(0, d);
 
 				//tmp.position.x = stof(e);
-				ret.vertices[index].position.x = stof(e);
+				ret.vertices[i].position.x = stof(e);
 
 				b = b.substr(d + 1);
 
@@ -128,15 +129,14 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 				auto g = b.substr(0, f + 1);
 
 				//tmp.position.y = stof(g);
-				ret.vertices[index].position.y = stof(g);
+				ret.vertices[i].position.y = stof(g);
 
 				b = b.substr(f + 1);
 
 				//	z
 				//tmp.position.z = stof(b);
-				ret.vertices[index].position.z = stof(b);
+				ret.vertices[i].position.z = stof(b);
 				//ret.vertices.push_back(tmp);
-				index++;
 			}
 
 			buf = buf.substr(a + 1);

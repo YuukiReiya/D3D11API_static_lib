@@ -15,7 +15,7 @@
 #include "Main.h"
 #include <StructShaderBase.h> 
 #include "../Scene/Root/SceneRoot.h"
-
+#include "../ResorceLoader.h"
 /*!
 	@brief	usingディレクティブ
 	@using	D3D11
@@ -77,6 +77,8 @@ bool Main::Init(HINSTANCE hInstance)
 		ErrorLog("Device initialization failed!");
 		return false;
 	}
+	//	リソース生成
+	ResourceLoader::GetInstance();
 
 	//	デバッグコンソール表示
 #if defined DEBUG_CONSOLE

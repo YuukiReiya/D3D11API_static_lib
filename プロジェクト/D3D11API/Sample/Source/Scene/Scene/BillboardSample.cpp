@@ -6,6 +6,8 @@
 #include <GeometryFactor.h>
 #include "../Root/SceneRoot.h"
 #include "AnimationSample.h"
+#include "StaticMeshSample.h"
+#include <MyGame.h>
 using namespace std;
 using namespace API;
 using namespace D3D11::Graphic;
@@ -71,7 +73,7 @@ void BillboardSample::Update()
 {
 	using kb = Keyboard;
 #pragma region ウィンドウ名
-	SetWindowText(GetActiveWindow(), L"ビルボードと画像描画のサンプル");
+	SetWindowText(GetActiveWindow(), const_cast<LPTSTR>(To_TString("ビルボードと画像描画のサンプル").c_str()));
 #pragma endregion
 
 #pragma region カメラ
@@ -331,8 +333,8 @@ void BillboardSample::Update()
 #pragma endregion
 
 	if (kb::GetButtonDown('R')) { Reset(); }
-	AnimationSample*nc = new AnimationSample;
-	if (kb::GetButtonDown('n')) { SceneRoot::GetInstance().SetupNextScene(nc); }
+	if (kb::GetButtonDown('n')) { SceneRoot::GetInstance().SetupNextScene(std::make_unique<AnimationSample>()); }
+	if (kb::GetButtonDown('m')) { SceneRoot::GetInstance().SetupNextScene(std::make_unique<StaticMeshSample>()); }
 }
 
 void BillboardSample::Render()

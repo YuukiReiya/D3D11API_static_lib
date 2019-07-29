@@ -25,6 +25,7 @@
     <ClCompile Include="Source\Scene\Scene\AnimationSample.cpp" />
     <ClCompile Include="Source\Scene\Scene\BillboardSample.cpp" />
     <ClCompile Include="Source\Scene\Scene\SampleScene.cpp" />
+    <ClCompile Include="Source\Scene\Scene\StaticMeshSample.cpp" />
     <ClCompile Include="Source\Scene\Scene\TransitionTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +36,7 @@
     <ClInclude Include="Source\Scene\Scene\AnimationSample.h" />
     <ClInclude Include="Source\Scene\Scene\BillboardSample.h" />
     <ClInclude Include="Source\Scene\Scene\SampleScene.h" />
+    <ClInclude Include="Source\Scene\Scene\StaticMeshSample.h" />
     <ClInclude Include="Source\Scene\Scene\TransitionTestScene.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

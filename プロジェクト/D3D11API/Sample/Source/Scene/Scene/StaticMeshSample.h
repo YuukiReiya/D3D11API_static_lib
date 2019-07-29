@@ -1,15 +1,14 @@
 #pragma once
 #include "../Interface/IScene.h"
-#include <Transform.h>
-#include <AnimationMesh.h>
-#include "BillboardSample.h"
+#include <Mesh.h>
+#include <Material.h>
 
-class AnimationSample
+class StaticMeshSample
 	:public IScene
 {
 public:
-	explicit AnimationSample();
-	~AnimationSample();
+	StaticMeshSample();
+	~StaticMeshSample();
 
 	/*!
 		@fn		Initialize
@@ -36,11 +35,11 @@ public:
 	void IScene::Render();
 
 	void Reset();
+	void SetupMaterial();
 private:
-	std::shared_ptr<API::AnimationMesh>m_pMesh;
 	DirectX::XMFLOAT3 m_MeshRot;
-	int animNo;
-	int animFrame;
-	int elapsedFrame;
-	bool autoAnim;
+	std::vector<std::shared_ptr<API::Mesh>>m_vpMesh;
+	std::vector<std::shared_ptr<API::Material>>m_vpMaterial;
+	std::shared_ptr<D3D11::Graphic::AbstractShader>m_pShader;
+	bool automatic;
 };
