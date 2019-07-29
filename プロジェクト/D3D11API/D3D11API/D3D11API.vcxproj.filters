@@ -120,6 +120,9 @@
     <ClInclude Include="include\SpriteConstantBuffer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="include\GeometryFactor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\Camera.cpp">
@@ -183,6 +186,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="include\Material.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="include\GeometryFactor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
