@@ -49,11 +49,18 @@ public:
 	*/
 	void Reset();
 private:
+	enum EyeType
+	{
+		FPS,
+		TPS,
+	};
+
+	EyeType m_eEyeType;
+	DirectX::XMFLOAT3 m_CameraPos;
+	DirectX::XMFLOAT3 m_MeshRot;
 	std::shared_ptr<API::Mesh>m_pMesh;
 	std::shared_ptr<D3D11::Graphic::AbstractShader>m_pMeshShader;
 	std::shared_ptr<API::Material>m_pMeshMaterial;
-	std::shared_ptr<API::Sprite>m_pBTSprite;
-	std::shared_ptr<API::Texture>m_pBTTexture;
 	std::shared_ptr<API::Texture>m_pTexture;
 	std::shared_ptr<API::Sprite>m_pSprite;
 	std::shared_ptr<D3D11::Graphic::AbstractShader>m_pShader;

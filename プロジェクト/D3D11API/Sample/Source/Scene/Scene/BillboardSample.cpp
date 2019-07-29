@@ -16,28 +16,28 @@ BillboardSample::~BillboardSample()
 {
 }
 
+void BillboardSample::Reset()
+{
+	switch (m_eEyeType)
+	{
+	case BillboardSample::FPS:
+		break;
+	case BillboardSample::TPS:
+		m_CameraPos = { 0,0,-10 };
+		break;
+	default:
+		break;
+	}
+
+	m_pMesh->transform->SetPosition({ -1,0,0 });
+	m_MeshRot = { 0,0,0 };
+}
+
 void BillboardSample::Initialize()
 {
-	m_pBTTexture = make_shared<Texture>();
-	m_pBTSprite = make_shared<Sprite>();
 	m_pTexture = make_shared<Texture>();
 	m_pSprite = make_shared<Sprite>();
 	m_pShader = make_shared<SpriteShader>();
-
-#pragma region ビルボードターゲット
-#if 0
-#define SPRITE_TARGET
-	m_pBTTexture->Initialize("hoge.png", {640,640});
-	m_pBillboradTarget = m_pBTSprite->transform;
-	m_pBTSprite->SetupShader(m_pShader.get());
-	m_pBTSprite->Initialize(m_pBTTexture.get());
-	m_pBTSprite->transform->SetPosition({ -3,0,0 });
-	m_pBTSprite->transform->SetScale({ 0.5f });
-
-	m_pSprite->transform->SetPosition({ 3,0,0 });
-#endif // 1
-#if 1
-#define MESH_TARGET
 	m_pMesh = GeometryFactor::GetInstance().CreateCube();
 	m_pMeshMaterial = make_shared<Material>();
 	m_pMeshShader = make_shared<D3D11::Graphic::MeshShader>();
@@ -45,22 +45,19 @@ void BillboardSample::Initialize()
 	m_pMesh->SetupShader(m_pMeshShader.get());
 	m_pMeshMaterial->SetupTexture("white.png");
 	m_pMesh->SetupMaterial(m_pMeshMaterial.get());
-
-	m_pMesh->transform->SetPosition({ -1,0,0 });
-
 	m_pBillboradTarget = m_pMesh->transform;
-#endif // 1
-
-#pragma endregion
-
-	Camera::GetInstance().transform->SetPosition({ 0,0,-10 });
-
 	m_pSprite->Initialize(m_pTexture.get());
 	m_pShader->Setup();
 	m_pTexture->Initialize("ncc.png", { 400,400 });
 	m_pSprite->SetupShader(m_pShader.get());
 	m_pSprite->SetupBil(m_pBillboradTarget);
-	m_pSprite->transform->SetPosition({ 1,0,0 });
+	m_pSprite->transform->SetPosition({ 5,0,0 });
+	m_eEyeType = EyeType::TPS;
+
+	//	座標データの初期化
+	Reset();
+
+	Camera::GetInstance().transform->SetPosition(m_CameraPos);
 }
 
 void BillboardSample::Finalize()
@@ -71,6 +68,10 @@ void BillboardSample::Finalize()
 void BillboardSample::Update()
 {
 	using kb = Keyboard;
+#pragma region ウィンドウ名
+	SetWindowText(GetActiveWindow(), L"ビルボードと画像描画のサンプル");
+#pragma endregion
+
 #pragma region カメラ
 #if 0
 	auto&camera = Camera::GetInstance();
@@ -219,26 +220,25 @@ void BillboardSample::Update()
 #if 1
 	auto&meshTrans = m_pMesh->transform;
 	auto meshPos = meshTrans->GetPosition();
-	static DirectX::XMFLOAT3 meshRot = { 0,0,0 };
 	float meshValue = 0.1f;
 	if (kb::GetButton(kb::c_Shift)) {
 		if (kb::GetButton('a') || kb::GetButton(kb::c_Left)) {
-			meshRot.x -= meshValue;
+			m_MeshRot.x -= meshValue;
 		}
 		if (kb::GetButton('d') || kb::GetButton(kb::c_Right)) {
-			meshRot.x += meshValue;
+			m_MeshRot.x += meshValue;
 		}
 		if (kb::GetButton('w') || kb::GetButton(kb::c_Up)) {
-			meshRot.y += meshValue;
+			m_MeshRot.y += meshValue;
 		}
 		if (kb::GetButton('s') || kb::GetButton(kb::c_Down)) {
-			meshRot.y -= meshValue;
+			m_MeshRot.y -= meshValue;
 		}
 		if (kb::GetButton('q')) {
-			meshRot.z -= meshValue;
+			m_MeshRot.z -= meshValue;
 		}
 		if (kb::GetButton('e')) {
-			meshRot.z += meshValue;
+			m_MeshRot.z += meshValue;
 		}
 	}
 	else if (kb::GetButton(kb::c_Tab)) {
@@ -282,31 +282,61 @@ void BillboardSample::Update()
 		}
 	}
 	meshTrans->SetPosition(meshPos);
-	meshTrans->SetRotation(meshRot);
+	meshTrans->SetRotation(m_MeshRot);
 #endif // 1
 
 #pragma endregion
+
+#pragma region 視点切り替え
+#if 1
+	switch (m_eEyeType)
+	{
+	case BillboardSample::FPS:
+		DirectX::XMFLOAT3 camPos = m_pMesh->transform->GetPosition();
+		{
+			//	スプライトとメッシュの方向ベクトル
+			DirectX::XMVECTOR dirVec = 
+			{
+				m_pSprite->transform->GetPosition().x - m_pMesh->transform->GetPosition().x,
+				m_pSprite->transform->GetPosition().y - m_pMesh->transform->GetPosition().y,
+				m_pSprite->transform->GetPosition().z - m_pMesh->transform->GetPosition().z,
+			};
+			//	ベクトルを正規化
+			dirVec = DirectX::XMVector3Normalize(dirVec);
+
+			//	スカラー値
+			float scalr = 0.75f;
+			camPos.x += dirVec.m128_f32[0] * scalr;
+			camPos.y += dirVec.m128_f32[1] * scalr;
+			camPos.z += dirVec.m128_f32[2] * scalr;
+
+			DirectX::XMFLOAT3 lookPt = m_pSprite->transform->GetPosition();
+			Camera::GetInstance().SetViewMatrix(camPos, lookPt);
+		}
+
+		break;
+	case BillboardSample::TPS:
+		Camera::GetInstance().SetViewMatrix(m_CameraPos, { 0,0,0 });
+		break;
+	default:
+		break;
+	}
+
+#endif // 1
+	if (kb::GetButtonDown('X')) {
+		m_eEyeType = m_eEyeType == EyeType::FPS ? EyeType::TPS : EyeType::FPS;
+	}
+#pragma endregion
+
+	if (kb::GetButtonDown('R')) {
+		Reset();
+	}
 }
 
 void BillboardSample::Render()
 {
-#pragma region ビルボードテスト
-#ifdef SPRITE_TARGET
-	m_pBTSprite->Render();
-
-	m_pSprite->RenderBillboard();
-#endif // DEBUG
-
-#ifdef MESH_TARGET
 	m_pMesh->Render();
-#endif
-#pragma endregion
-
-	if (!m_pBillboradTarget)
-	{
-	//	m_pSprite->Render();
-	}
-	else
+	if(m_pBillboradTarget)
 	{
 		m_pSprite->RenderBillboard();
 	}
