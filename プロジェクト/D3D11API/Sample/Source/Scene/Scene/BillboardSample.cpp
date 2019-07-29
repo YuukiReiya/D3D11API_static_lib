@@ -4,6 +4,8 @@
 #include <Camera.h>
 #include <Keyboard.h>
 #include <GeometryFactor.h>
+#include "../Root/SceneRoot.h"
+#include "AnimationSample.h"
 using namespace std;
 using namespace API;
 using namespace D3D11::Graphic;
@@ -328,9 +330,9 @@ void BillboardSample::Update()
 	}
 #pragma endregion
 
-	if (kb::GetButtonDown('R')) {
-		Reset();
-	}
+	if (kb::GetButtonDown('R')) { Reset(); }
+	AnimationSample*nc = new AnimationSample;
+	if (kb::GetButtonDown('n')) { SceneRoot::GetInstance().SetupNextScene(nc); }
 }
 
 void BillboardSample::Render()

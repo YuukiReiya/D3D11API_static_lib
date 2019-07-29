@@ -21,7 +21,7 @@ public:
 	/*!
 		@fn		Initialize
 		@brief	‰Šú‰»ˆ—
-*/
+	*/
 	void IScene::Initialize();
 
 	/*!
