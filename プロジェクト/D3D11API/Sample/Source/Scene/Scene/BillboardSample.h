@@ -2,6 +2,7 @@
 #include "../Interface/IScene.h"
 #include <Transform.h>
 #include <Sprite.h>
+#include <Mesh.h>
 
 class BillboardSample
 	:public IScene
@@ -40,7 +41,19 @@ public:
 		@brief	描画処理
 	*/
 	void IScene::Render();
+
+	/*!
+		@fn		Reset
+		@brief	リセット
+		@detail	データ(座標や回転情報)の初期化
+	*/
+	void Reset();
 private:
+	std::shared_ptr<API::Mesh>m_pMesh;
+	std::shared_ptr<D3D11::Graphic::AbstractShader>m_pMeshShader;
+	std::shared_ptr<API::Material>m_pMeshMaterial;
+	std::shared_ptr<API::Sprite>m_pBTSprite;
+	std::shared_ptr<API::Texture>m_pBTTexture;
 	std::shared_ptr<API::Texture>m_pTexture;
 	std::shared_ptr<API::Sprite>m_pSprite;
 	std::shared_ptr<D3D11::Graphic::AbstractShader>m_pShader;
