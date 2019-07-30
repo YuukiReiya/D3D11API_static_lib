@@ -65,4 +65,6 @@ private:
 	std::shared_ptr<API::Sprite>m_pSprite;
 	std::shared_ptr<D3D11::Graphic::AbstractShader>m_pShader;
 	std::shared_ptr<Transform>m_pBillboradTarget;
+	bool automatic;
+	float elapsedCount;
 };

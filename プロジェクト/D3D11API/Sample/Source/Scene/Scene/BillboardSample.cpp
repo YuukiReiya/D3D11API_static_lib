@@ -35,6 +35,7 @@ void BillboardSample::Reset()
 
 	m_pMesh->transform->SetPosition({ -1,0,0 });
 	m_MeshRot = { 0,0,0 };
+	elapsedCount = 0;
 }
 
 void BillboardSample::Initialize()
@@ -57,7 +58,7 @@ void BillboardSample::Initialize()
 	m_pSprite->SetupBil(m_pBillboradTarget);
 	m_pSprite->transform->SetPosition({ 5,0,0 });
 	m_eEyeType = EyeType::TPS;
-
+	automatic = true;
 	//	座標データの初期化
 	Reset();
 
@@ -75,6 +76,7 @@ void BillboardSample::Update()
 #pragma region ウィンドウ名
 	SetWindowText(GetActiveWindow(), const_cast<LPTSTR>(To_TString("ビルボードと画像描画のサンプル").c_str()));
 #pragma endregion
+
 
 #pragma region カメラ
 #if 0
@@ -222,71 +224,81 @@ void BillboardSample::Update()
 
 #pragma region メッシュ
 #if 1
-	auto&meshTrans = m_pMesh->transform;
-	auto meshPos = meshTrans->GetPosition();
-	float meshValue = 0.1f;
-	if (kb::GetButton(kb::c_Shift)) {
-		if (kb::GetButton('a') || kb::GetButton(kb::c_Left)) {
-			m_MeshRot.x -= meshValue;
-		}
-		if (kb::GetButton('d') || kb::GetButton(kb::c_Right)) {
-			m_MeshRot.x += meshValue;
-		}
-		if (kb::GetButton('w') || kb::GetButton(kb::c_Up)) {
-			m_MeshRot.y += meshValue;
-		}
-		if (kb::GetButton('s') || kb::GetButton(kb::c_Down)) {
-			m_MeshRot.y -= meshValue;
-		}
-		if (kb::GetButton('q')) {
-			m_MeshRot.z -= meshValue;
-		}
-		if (kb::GetButton('e')) {
-			m_MeshRot.z += meshValue;
-		}
+	if (automatic)
+	{
+		elapsedCount += 0.05f;
+		auto pos = m_pMesh->transform->GetPosition();
+		pos.y = sin(elapsedCount);
+		m_pMesh->transform->SetPosition(pos);
 	}
-	else if (kb::GetButton(kb::c_Tab)) {
-		if (kb::GetButton('a') || kb::GetButton(kb::c_Left)) {
-
+	else
+	{
+		auto&meshTrans = m_pMesh->transform;
+		auto meshPos = meshTrans->GetPosition();
+		float meshValue = 0.1f;
+		if (kb::GetButton(kb::c_Shift)) {
+			if (kb::GetButton('a') || kb::GetButton(kb::c_Left)) {
+				m_MeshRot.x -= meshValue;
+			}
+			if (kb::GetButton('d') || kb::GetButton(kb::c_Right)) {
+				m_MeshRot.x += meshValue;
+			}
+			if (kb::GetButton('w') || kb::GetButton(kb::c_Up)) {
+				m_MeshRot.y += meshValue;
+			}
+			if (kb::GetButton('s') || kb::GetButton(kb::c_Down)) {
+				m_MeshRot.y -= meshValue;
+			}
+			if (kb::GetButton('q')) {
+				m_MeshRot.z -= meshValue;
+			}
+			if (kb::GetButton('e')) {
+				m_MeshRot.z += meshValue;
+			}
 		}
-		if (kb::GetButton('d') || kb::GetButton(kb::c_Right)) {
+		else if (kb::GetButton(kb::c_Tab)) {
+			if (kb::GetButton('a') || kb::GetButton(kb::c_Left)) {
 
-		}
-		if (kb::GetButton('w') || kb::GetButton(kb::c_Up)) {
+			}
+			if (kb::GetButton('d') || kb::GetButton(kb::c_Right)) {
 
-		}
-		if (kb::GetButton('s') || kb::GetButton(kb::c_Down)) {
+			}
+			if (kb::GetButton('w') || kb::GetButton(kb::c_Up)) {
 
-		}
-		if (kb::GetButton('q')) {
+			}
+			if (kb::GetButton('s') || kb::GetButton(kb::c_Down)) {
 
-		}
-		if (kb::GetButton('e')) {
+			}
+			if (kb::GetButton('q')) {
 
+			}
+			if (kb::GetButton('e')) {
+
+			}
 		}
+		else {
+			if (kb::GetButton('a') || kb::GetButton(kb::c_Left)) {
+				meshPos.x -= meshValue;
+			}
+			if (kb::GetButton('d') || kb::GetButton(kb::c_Right)) {
+				meshPos.x += meshValue;
+			}
+			if (kb::GetButton('w') || kb::GetButton(kb::c_Up)) {
+				meshPos.y += meshValue;
+			}
+			if (kb::GetButton('s') || kb::GetButton(kb::c_Down)) {
+				meshPos.y -= meshValue;
+			}
+			if (kb::GetButton('q')) {
+				meshPos.z -= meshValue;
+			}
+			if (kb::GetButton('e')) {
+				meshPos.z += meshValue;
+			}
+		}
+		meshTrans->SetPosition(meshPos);
+		meshTrans->SetRotation(m_MeshRot);
 	}
-	else {
-		if (kb::GetButton('a') || kb::GetButton(kb::c_Left)) {
-			meshPos.x -= meshValue;
-		}
-		if (kb::GetButton('d') || kb::GetButton(kb::c_Right)) {
-			meshPos.x += meshValue;
-		}
-		if (kb::GetButton('w') || kb::GetButton(kb::c_Up)) {
-			meshPos.y += meshValue;
-		}
-		if (kb::GetButton('s') || kb::GetButton(kb::c_Down)) {
-			meshPos.y -= meshValue;
-		}
-		if (kb::GetButton('q')) {
-			meshPos.z -= meshValue;
-		}
-		if (kb::GetButton('e')) {
-			meshPos.z += meshValue;
-		}
-	}
-	meshTrans->SetPosition(meshPos);
-	meshTrans->SetRotation(m_MeshRot);
 #endif // 1
 
 #pragma endregion
@@ -331,7 +343,7 @@ void BillboardSample::Update()
 		m_eEyeType = m_eEyeType == EyeType::FPS ? EyeType::TPS : EyeType::FPS;
 	}
 #pragma endregion
-
+	if (kb::GetButtonDown('c')) { automatic = !automatic; }
 	if (kb::GetButtonDown('R')) { Reset(); }
 	if (kb::GetButtonDown('n')) { SceneRoot::GetInstance().SetupNextScene(std::make_unique<AnimationSample>()); }
 	if (kb::GetButtonDown('m')) { SceneRoot::GetInstance().SetupNextScene(std::make_unique<StaticMeshSample>()); }
