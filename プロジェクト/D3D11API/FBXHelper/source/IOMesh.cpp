@@ -132,21 +132,23 @@ void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationCl
 	//	頂点インデックス
 	for (auto it : mesh.indices)
 	{
-		ofs << it << c_Space;
+		//ofs << it << c_Space;
+		ofs << it << ",";
 	}
 	ofs << endl;
 
 	//	uv
 	for (auto it : mesh.vertices)
 	{
-			ofs << "{" << it.uv.x << c_Space << it.uv.y << "}";// << endl;
+	//		ofs << "{" << it.uv.x << c_Space << it.uv.y << "}";// << endl;
 	}
 	ofs << endl;
 
 	//頂点
 	for (auto it : mesh.vertices)
 	{
-		ofs << "{" << it.position.x << c_Space << it.position.y << c_Space << it.position.z << "}";// << endl;
+		//ofs << "{" << it.position.x << c_Space << it.position.y << c_Space << it.position.z << "}";// << endl;
+		ofs << "{" << it.position.x << "," << it.position.y << "," << it.position.z << "},";// << endl;
 	}
 	ofs << endl;
 
@@ -161,12 +163,12 @@ void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationCl
 	//}
 	for (auto v : mesh.vertices)
 	{
-		ofs << "{" << c_Space;
-		for (size_t i = 0; i < v.jointsIndex.size(); i++)
-		{
-			ofs << static_cast<int>(v.jointsIndex[i]) << ":" << v.jointsWeight[i] << c_Space;
-		}
-		ofs << "}";
+		//ofs << "{" << c_Space;
+		//for (size_t i = 0; i < v.jointsIndex.size(); i++)
+		//{
+		//	ofs << static_cast<int>(v.jointsIndex[i]) << ":" << v.jointsWeight[i] << c_Space;
+		//}
+		//ofs << "}";
 		
 
 		//	書き出し
@@ -196,17 +198,18 @@ void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationCl
 
 	for (size_t i = 0; i < clip.bonesMatrix.size(); i++)
 	{
-		auto frameCount = clip.frameCount;
-		for (size_t j = 0; j < frameCount; j++)
+		//auto frameCount = clip.frameCount;
+		//for (size_t j = 0; j < frameCount; j++)
+
 		{
-			auto it = clip.bonesMatrix[i][j];
-			
-			ofs << "{"
-				<< it.r[0].m128_f32[0] << c_Space << it.r[0].m128_f32[1] << c_Space << it.r[0].m128_f32[2] << c_Space << it.r[0].m128_f32[3] << c_Space
-				<< it.r[1].m128_f32[0] << c_Space << it.r[1].m128_f32[1] << c_Space << it.r[1].m128_f32[2] << c_Space << it.r[1].m128_f32[3] << c_Space
-				<< it.r[2].m128_f32[0] << c_Space << it.r[2].m128_f32[1] << c_Space << it.r[2].m128_f32[2] << c_Space << it.r[2].m128_f32[3] << c_Space
-				<< it.r[3].m128_f32[0] << c_Space << it.r[3].m128_f32[1] << c_Space << it.r[3].m128_f32[2] << c_Space << it.r[3].m128_f32[3] << 
-				"}";
+			//auto it = clip.bonesMatrix[i][j];
+			//
+			//ofs << "{"
+			//	<< it.r[0].m128_f32[0] << c_Space << it.r[0].m128_f32[1] << c_Space << it.r[0].m128_f32[2] << c_Space << it.r[0].m128_f32[3] << c_Space
+			//	<< it.r[1].m128_f32[0] << c_Space << it.r[1].m128_f32[1] << c_Space << it.r[1].m128_f32[2] << c_Space << it.r[1].m128_f32[3] << c_Space
+			//	<< it.r[2].m128_f32[0] << c_Space << it.r[2].m128_f32[1] << c_Space << it.r[2].m128_f32[2] << c_Space << it.r[2].m128_f32[3] << c_Space
+			//	<< it.r[3].m128_f32[0] << c_Space << it.r[3].m128_f32[1] << c_Space << it.r[3].m128_f32[2] << c_Space << it.r[3].m128_f32[3] << 
+			//	"}";
 		}
 	}
 }

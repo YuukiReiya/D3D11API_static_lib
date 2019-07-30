@@ -369,6 +369,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				{
 					auto index = cluster->GetControlPointIndices()[j];
 					auto weight = cluster->GetControlPointWeights()[j];
+					
 					//auto influence = skinningMatrix * weight;
 
 					//compositeMatrix[index] += influence;
