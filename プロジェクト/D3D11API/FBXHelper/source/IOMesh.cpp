@@ -151,7 +151,7 @@ void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationCl
 		ofs << "{" << it.position.x << "," << it.position.y << "," << it.position.z << "},";// << endl;
 	}
 	ofs << endl;
-
+	
 	//	重み
 	//for (auto it : mesh.vertices) 
 	//{
@@ -211,5 +211,21 @@ void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationCl
 			//	<< it.r[3].m128_f32[0] << c_Space << it.r[3].m128_f32[1] << c_Space << it.r[3].m128_f32[2] << c_Space << it.r[3].m128_f32[3] << 
 			//	"}";
 		}
+	}
+}
+
+void Utility::IOMesh::Write(std::vector<DirectX::XMMATRIX> mat)
+{
+	ofstream ofs;
+	ofs.open("フレーム時合成行列.md", ios::out);
+
+	for (auto it : mat)
+	{
+		ofs << "{" <<
+			it.r[0].m128_f32[0] << "," << it.r[0].m128_f32[1] << "," << it.r[0].m128_f32[2] << "," << it.r[0].m128_f32[3] << "," <<
+			it.r[1].m128_f32[0] << "," << it.r[1].m128_f32[1] << "," << it.r[1].m128_f32[2] << "," << it.r[1].m128_f32[3] << "," <<
+			it.r[2].m128_f32[0] << "," << it.r[2].m128_f32[1] << "," << it.r[2].m128_f32[2] << "," << it.r[2].m128_f32[3] << "," <<
+			it.r[3].m128_f32[0] << "," << it.r[3].m128_f32[1] << "," << it.r[3].m128_f32[2] << "," << it.r[3].m128_f32[3] 
+			<< "},";
 	}
 }
