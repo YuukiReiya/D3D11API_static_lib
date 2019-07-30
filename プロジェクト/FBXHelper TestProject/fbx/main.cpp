@@ -24,7 +24,8 @@ int main()
 
 	//	書き出しファイル
 	//std::string yfmPath = "sd-unity";
-	std::string yfmPath = "Animation/humanoid";
+	//std::string yfmPath = "Animation/humanoid";
+	std::string yfmPath = "humanoid";
 	//std::string yfmPath = "twin";
 	//std::string yfmPath = "test00";
 

@@ -369,19 +369,31 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				{
 					auto index = cluster->GetControlPointIndices()[j];
 					auto weight = cluster->GetControlPointWeights()[j];
-					auto influence = skinningMatrix * weight;
+					//auto influence = skinningMatrix * weight;
 
-					compositeMatrix[index] += influence;
+					//compositeMatrix[index] += influence;
 				}
 
-				//	アニメーション格納(フレーム姿勢の変数に合成行列を代入)
-
-				for (int i = 0; boneCount; ++i) {
-					//outMesh.skeleton.joints[i].invBindPose
-					animClip.bonesMatrix[0][i]
-				}
 
 			}
+			//	アニメーション格納(フレーム姿勢の変数に合成行列を代入)
+			for (int i = 0; i < boneCount; ++i) {
+				animClip.bonesMatrix[i].resize(pMesh->GetControlPointsCount());
+				for (int j = 0; j < pMesh->GetControlPointsCount(); ++j)
+				{
+					//outMesh.skeleton.joints[i].invBindPose
+					auto m = compositeMatrix[i];
+					DirectX::XMMATRIX mat = {
+						(float)m.Get(0,0),(float)m.Get(0,1),(float)m.Get(0,2),(float)m.Get(0,3),
+						(float)m.Get(1,0),(float)m.Get(1,1),(float)m.Get(1,2),(float)m.Get(1,3),
+						(float)m.Get(2,0),(float)m.Get(2,1),(float)m.Get(2,2),(float)m.Get(2,3),
+						(float)m.Get(3,0),(float)m.Get(3,1),(float)m.Get(3,2),(float)m.Get(3,3),
+					};
+					animClip.bonesMatrix[i][j] = mat;
+				}
+			}
+
+
 
 			//	データ格納
 			for (size_t i = 0; i < pMesh->GetControlPointsCount(); i++)
@@ -418,7 +430,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 		cout << "書き出し" << endl;
 
-		//Utility::IOMesh::Output(outName, outMesh,animClip);
+
+		Utility::IOMesh::Output(outName, outMesh,animClip);
 		//Utility::IOMesh::Output(outName, *outMesh);
 
 		cout << "start:" << start.Get() << endl;
