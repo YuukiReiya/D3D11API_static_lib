@@ -4,6 +4,8 @@
 	@author	番場 宥輝
 	@brief	メッシュデータのの入出力関係
 	@detail	シングルトン
+
+	TODO:出力関数に調整必須(変数名、関数分けetc.)
 */
 #pragma once
 #include <fstream>

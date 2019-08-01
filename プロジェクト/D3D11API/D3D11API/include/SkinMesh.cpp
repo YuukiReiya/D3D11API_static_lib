@@ -89,7 +89,6 @@ HRESULT Shader::Setup()
 
 #pragma endregion
 
-
 API::SkinMesh::SkinMesh()
 {
 	transform = make_shared<Transform>();
@@ -199,6 +198,47 @@ void API::SkinMesh::Render()
 
 #pragma region 頂点レイアウト
 	dev.GetImmediateContext()->IASetInputLayout(*m_pShader->GetInputLayout());
+#pragma endregion
+
+#pragma region 頂点計算
+#if 1
+
+
+	hr = dev.GetImmediateContext()->Map(
+		m_pVertexBuffer.Get(),
+		0,
+		D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
+		0,
+		&ms
+	);
+
+	//	頂点宣言
+	vector<SkinnedVertex> vs;
+
+	//	頂点編集
+	for (size_t i = 0; i < GetArraySize(c_CompositeMatrix); i++)
+	{
+		XMVECTOR vec = {
+			c_VerticesPosition[i].x,
+			c_VerticesPosition[i].y,
+			c_VerticesPosition[i].z,
+			1
+		};
+		XMMATRIX m = XMLoadFloat4x4(&c_CompositeMatrix[i]);
+		
+		vec = XMVector4Transform(vec, m);
+		SkinnedVertex v = 
+		{
+			{vec.m128_f32[0],vec.m128_f32[1],vec.m128_f32[2]}
+		};
+		vs.push_back(v);
+	}
+
+	//	メモリコピー
+	memcpy_s(ms.pData, ms.RowPitch, (void*)(vs.data()), sizeof(SkinnedVertex) * GetArraySize(c_VerticesPosition));
+
+	dev.GetImmediateContext()->Unmap(m_pVertexBuffer.Get(), 0);
+#endif // 1
 #pragma endregion
 
 #pragma region 頂点バッファ
