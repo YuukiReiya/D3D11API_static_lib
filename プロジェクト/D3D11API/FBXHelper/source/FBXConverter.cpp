@@ -13,7 +13,8 @@
 #include <fstream>
 #include <algorithm>
 #include <Windows.h>
-
+#include <DirectXMath.h>
+using namespace DirectX;
 #include "FbxMaterial.h"
 #include "AnimationMesh.h"
 Material*g_pMat;
@@ -339,7 +340,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			}
 		}
 
-
+#pragma region コード整形前
+#if 0
 		//	アニメーション
 		FbxArray<FbxString*>animNameArray;
 		(*m_pScene)->FillAnimStackNameArray(animNameArray);
@@ -437,6 +439,127 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				}
 			}
 		}
+#endif // 1
+#pragma endregion
+
+#pragma region コード整形後
+#if 1
+		//	アニメーション
+		FbxArray<FbxString*>animNameArray;
+		(*m_pScene)->FillAnimStackNameArray(animNameArray);
+
+		cout << "anim list" << endl;
+		for (int i = 0; i < animNameArray.GetCount(); ++i) {
+			auto it = animNameArray.GetAt(i);
+			cout << it << endl;
+		}
+		//	アニメーション数
+		animMesh->animCount = animNameArray.GetCount();
+
+		for (size_t animCount = 0; animCount < animMesh->animCount; animCount++)
+		{
+			//	対象のアニメーション
+			auto setAnimData = animNameArray[animCount];
+
+			//	抽出アニメーション情報
+			auto animStack = (*m_pScene)->FindMember<FbxAnimStack>(setAnimData->Buffer());
+		
+			//	アニメーションの設定
+			(*m_pScene)->SetCurrentAnimationStack(animStack);
+
+			auto info = (*m_pScene)->GetTakeInfo(*setAnimData);
+			auto start = info->mLocalTimeSpan.GetStart();
+			auto stop = info->mLocalTimeSpan.GetStop();
+
+			FbxTime frameTime, timeCount;
+			frameTime.SetTime(0, 0, 0, 1, 0, (*m_pScene)->GetGlobalSettings().GetTimeMode());
+
+			const unsigned int frameCount = (unsigned int)(stop.Get() / frameTime.Get());
+
+			animMesh->info[animCount] = { frameCount };
+
+			//	フレーム
+			for (size_t frame = 0; frame < frameCount; frame++)
+			{
+				//取得するフレーム
+				timeCount = frame * frameTime.Get();
+
+				FbxMatrix globalPos = pNode->EvaluateGlobalTransform(timeCount);
+				auto t0 = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+				auto r0 = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+				auto s0 = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+				auto geometryOffset = FbxAMatrix(t0, r0, s0);
+
+				//	スキニング行列
+				FbxMatrix *compositeMatrix = new FbxMatrix[pMesh->GetControlPointsCount()];
+				memset(compositeMatrix, 0, sizeof(FbxMatrix) * pMesh->GetControlPointsCount());
+				auto skinDeformer = (FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin);
+				int clusterCount = skinDeformer->GetClusterCount();
+
+				for (size_t clusterNo = 0; clusterNo < clusterCount; clusterNo++)
+				{
+					auto cluster = skinDeformer->GetCluster(clusterNo);
+
+					//	スキニング行列
+					FbxMatrix skinningMatrix;
+					FbxMatrix clusterGlobalCurrentPosition, clusterRelativeInitPosition, clusterRelativeCurrentPositionInverse;
+					FbxAMatrix referenceGlobalInitPosition, clusterGlobalInitPosition;
+
+					cluster->GetTransformMatrix(referenceGlobalInitPosition);
+					referenceGlobalInitPosition *= geometryOffset;
+					cluster->GetTransformLinkMatrix(clusterGlobalInitPosition);
+					clusterGlobalCurrentPosition = cluster->GetLink()->EvaluateGlobalTransform(timeCount);
+					clusterRelativeInitPosition = clusterGlobalInitPosition.Inverse()*referenceGlobalInitPosition;
+					clusterRelativeCurrentPositionInverse = clusterGlobalCurrentPosition.Inverse()*clusterGlobalCurrentPosition;
+
+					skinningMatrix = clusterRelativeCurrentPositionInverse * clusterRelativeInitPosition;
+
+					//	クラスタが影響を与える頂点インデックスの数
+					auto indicesCount = cluster->GetControlPointIndicesCount();
+					for (size_t j = 0; j < indicesCount; j++)
+					{
+						auto index = cluster->GetControlPointIndices()[j];
+						auto weight = cluster->GetControlPointWeights()[j];
+
+						auto influence = skinningMatrix * weight;
+
+						compositeMatrix[index] += influence;
+					}
+				}
+
+				//	合成行列のスタック
+				vector<XMMATRIX>skinMats;
+				for (size_t i = 0; i < pMesh->GetControlPointsCount(); i++)
+				{
+					auto m = compositeMatrix[i];
+					XMMATRIX mat =
+					{
+						(float)m.Get(0,0),(float)m.Get(0,1),(float)m.Get(0,2),(float)m.Get(0,3),
+						(float)m.Get(1,0),(float)m.Get(1,1),(float)m.Get(1,2),(float)m.Get(1,3),
+						(float)m.Get(2,0),(float)m.Get(2,1),(float)m.Get(2,2),(float)m.Get(2,3),
+						(float)m.Get(3,0),(float)m.Get(3,1),(float)m.Get(3,2),(float)m.Get(3,3),
+					};
+					skinMats.push_back(mat);
+				}
+
+				//	変換後の頂点
+				for (size_t i = 0; i < pMesh->GetControlPointsCount(); i++)
+				{
+					auto v = compositeMatrix[i].MultNormalize(pMesh->GetControlPointAt(i));
+					animMesh->info[animCount].vertices[frame].push_back(
+						{
+							(float)v[0],
+							(float)v[1],
+							(float)v[2],
+						}
+					);
+				}
+			}
+		}
+#endif // 0
+#pragma endregion
+
+
 		//Utility::IOMesh::Output("Animation/", "anim",*animMesh);
 		Utility::IOMesh::Output(*animMesh);
 
