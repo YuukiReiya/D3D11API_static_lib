@@ -307,6 +307,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			//Žæ“¾‚·‚éƒtƒŒ[ƒ€
 			timeCount = frame * frameTime.Get();
 
+			FbxMatrix globalPos = pNode->EvaluateGlobalTransform(timeCount);
 			auto t0 = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
 			auto r0 = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
 			auto s0 = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
@@ -361,8 +362,9 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				cluster->GetTransformLinkMatrix(clusterGlobalInitPosition);
 				clusterGlobalCurrentPosition = cluster->GetLink()->EvaluateGlobalTransform(timeCount);
 				clusterRelativeInitPosition = clusterGlobalInitPosition.Inverse()*referenceGlobalInitPosition;
-				clusterRelativeCurrentPositionInverse = clusterGlobalCurrentPosition.Inverse()*clusterGlobalCurrentPosition;
-				
+				//clusterRelativeCurrentPositionInverse = clusterGlobalCurrentPosition.Inverse()*clusterGlobalCurrentPosition;
+				clusterRelativeCurrentPositionInverse = globalPos.Inverse()*clusterGlobalCurrentPosition;
+
 				skinningMatrix = clusterRelativeCurrentPositionInverse * clusterRelativeInitPosition;
 
 				for (size_t j = 0; j < indicesCount; j++)
