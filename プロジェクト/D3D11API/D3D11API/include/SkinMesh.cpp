@@ -8,6 +8,7 @@
 #include "MeshConstantBuffer.h"
 #include "Camera.h"
 #include "SkinnedVertex.h"
+#include "MeshReadHelper.h"
 
 using namespace API;
 using namespace std;
@@ -106,6 +107,9 @@ void API::SkinMesh::Init()
 	m_pShader = make_shared<Shader>();
 	m_pShader->Setup();
 
+#pragma region 定数読み込み
+#if 1
+#define CONST_READ
 #pragma region インデックスバッファ
 	{
 		D3D11_BUFFER_DESC bd;
@@ -149,6 +153,71 @@ void API::SkinMesh::Init()
 		if (FAILED(hr)) { ErrorLog("vertex"); }
 	}
 #pragma endregion
+#endif // 0
+#pragma endregion
+
+#pragma region 外部ファイル読み込み
+#if 0
+	auto data = Helper::MeshReadHelper::ReadSkin("test.yfm");
+#pragma region インデックスバッファ
+	{
+		D3D11_BUFFER_DESC bd;
+		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(uint32_t)*data.indices.size();
+		bd.CPUAccessFlags = 0;
+		bd.MiscFlags = NULL;
+
+		//	サブリソースの仕様	
+		D3D11_SUBRESOURCE_DATA sd;
+		SecureZeroMemory(&sd, sizeof(sd));
+		sd.pSysMem = data.indices.data();
+		hr = dev.GetDevice()->CreateBuffer(
+			&bd,
+			&sd,
+			m_pIndexBuffer.GetAddressOf()
+		);
+		if (FAILED(hr)) { ErrorLog("index buffer"); }
+	}
+#pragma endregion
+
+#pragma region 頂点バッファ
+	{
+		D3D11_BUFFER_DESC bd;
+		bd.Usage = D3D11_USAGE_DYNAMIC;
+		bd.ByteWidth = sizeof(SkinnedVertex) * data.vertices.size();
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+		bd.MiscFlags = NULL;
+
+		//	サブリソースの仕様
+		D3D11_SUBRESOURCE_DATA sd;
+		sd.pSysMem = data.vertices.data();
+
+		hr = dev.GetDevice()->CreateBuffer(
+			&bd,
+			&sd,
+			m_pVertexBuffer.GetAddressOf()
+		);
+		if (FAILED(hr)) { ErrorLog("vertex"); }
+	}
+#pragma endregion
+
+#pragma region 合成行列
+	m_CompositeMatrix.resize(data.vertices.size());
+	//	フレーム数
+	for (size_t i = 0; i < data.vertices[0].compMat.size(); i++)
+	{
+		//	頂点数
+		for (size_t j = 0; j < data.vertices.size(); j++)
+		{
+			m_CompositeMatrix[i].push_back(data.vertices[j].compMat[i]);
+		}
+	}
+#pragma endregion
+#endif // 0
+#pragma endregion
+
 }
 
 void API::SkinMesh::Render()
@@ -224,7 +293,11 @@ void API::SkinMesh::Render()
 			c_VerticesPosition[i].z,
 			1
 		};
+#ifdef CONST_READ
 		XMMATRIX m = XMLoadFloat4x4(&c_CompositeMatrix[i]);
+#else
+		XMMATRIX m = XMLoadFloat4x4(&m_CompositeMatrix[frameIndex][i]);
+#endif // DEBUG
 		
 		vec = XMVector4Transform(vec, m);
 		SkinnedVertex v = 

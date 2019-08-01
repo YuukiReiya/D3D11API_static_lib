@@ -302,6 +302,10 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 #pragma endregion
 
 #pragma region スキニング行列
+		//	書き出す合成行列
+		std::vector < std::vector<DirectX::XMMATRIX>>frameMats;
+		frameMats.resize(c_Frame);
+
 		for (size_t frame = 0; frame < c_Frame; frame++)
 		{
 			//取得するフレーム
@@ -362,7 +366,6 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				cluster->GetTransformLinkMatrix(clusterGlobalInitPosition);
 				clusterGlobalCurrentPosition = cluster->GetLink()->EvaluateGlobalTransform(timeCount);
 				clusterRelativeInitPosition = clusterGlobalInitPosition.Inverse()*referenceGlobalInitPosition;
-				//clusterRelativeCurrentPositionInverse = clusterGlobalCurrentPosition.Inverse()*clusterGlobalCurrentPosition;
 				clusterRelativeCurrentPositionInverse = globalPos.Inverse()*clusterGlobalCurrentPosition;
 
 				skinningMatrix = clusterRelativeCurrentPositionInverse * clusterRelativeInitPosition;
@@ -376,7 +379,6 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 					compositeMatrix[index] += influence;
 				}
-
 
 			}
 		
@@ -397,7 +399,6 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			//	}
 			//}
 
-			std::vector<DirectX::XMMATRIX>frameMats;
 			for (size_t i = 0; i < pMesh->GetControlPointsCount(); i++)
 			{
 				auto m = compositeMatrix[i];
@@ -407,9 +408,9 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 					(float)m.Get(2,0),(float)m.Get(2,1),(float)m.Get(2,2),(float)m.Get(2,3),
 					(float)m.Get(3,0),(float)m.Get(3,1),(float)m.Get(3,2),(float)m.Get(3,3),
 				};
-				frameMats.push_back(mat);
+				frameMats[frame].push_back(mat);
 			}
-			Utility::IOMesh::Write(frameMats);
+
 			//	データ格納
 			for (size_t i = 0; i < pMesh->GetControlPointsCount(); i++)
 			{
@@ -445,8 +446,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 		cout << "書き出し" << endl;
 
-
-		Utility::IOMesh::Output(outName, outMesh,animClip);
+		Utility::IOMesh::Output(outName, outMesh, frameMats);
+		//Utility::IOMesh::Output(outName, outMesh,animClip);
 		//Utility::IOMesh::Output(outName, *outMesh);
 
 		cout << "start:" << start.Get() << endl;

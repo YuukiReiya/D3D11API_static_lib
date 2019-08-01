@@ -185,7 +185,7 @@ MeshReadHelper::ReadBuffer D3D11::Helper::MeshReadHelper::Read(std::string path)
 }
 
 float GetMatrixElement(string& str) {
-	auto offset = str.find(" ");
+	auto offset = str.find(",");
 	auto element = stof(str.substr(0, offset));
 	str = str.substr(offset + 1);
 	return element;
@@ -309,10 +309,11 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 
 	//getline(ifs, buf);
 	//ret.maxBonesElementsCount = stoi(buf);
-	getline(ifs, buf);
+	//getline(ifs, buf);
 
 	//	重み
 	index = 0;
+#if 0
 	while (true)
 	{
 		auto a = buf.find("}");
@@ -350,10 +351,12 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 		index++;
 		buf = buf.substr(a + 1);
 	}
+#endif // 0
 
 	//	バッファに文字列獲得
-	getline(ifs, buf);
+	//getline(ifs, buf);
 
+#if 0
 	//	初期姿勢
 	while (true)
 	{
@@ -426,8 +429,9 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 		//	文字列更新
 		buf = buf.substr(a + 1);
 	}
+#endif // 0
 
-	getline(ifs, buf);
+	//getline(ifs, buf);
 
 	//	アニメーションフレーム
 	const unsigned int c_frame = stoi(buf);
@@ -489,6 +493,225 @@ D3D11::Helper::MeshReadHelper::SkeltonMesh D3D11::Helper::MeshReadHelper::ReadAn
 			buf = buf.substr(a + 1);
 		}
 		ret.frameMatrix.push_back(tmp);
+	}
+
+	return ret;
+}
+
+D3D11::Helper::MeshReadHelper::SkinMesh D3D11::Helper::MeshReadHelper::ReadSkin(std::string path)
+{
+	ifstream ifs(path);
+	if (ifs.fail()) {
+		string error = "Failed to read \"" + path + "\" file.";
+		ErrorLog(error);
+		return SkinMesh();
+	}
+
+	SkinMesh ret;
+	string buf;
+	getline(ifs, buf);
+
+	//インデックス
+	while (true)
+	{
+		auto a = buf.find(",");
+		if (a == string::npos) { break; }
+		auto b = buf.substr(0, a);
+
+		ret.indices.push_back(stoi(b));
+
+		buf = buf.substr(a + 1);
+	}
+
+	//uv
+	getline(ifs, buf);
+#pragma region UV
+#if 0
+	while (true)
+	{
+		string t = "}";
+		auto a = buf.find(t);
+		if (a == string::npos) { break; }
+
+		//	{1 1
+		auto b = buf.substr(0, a);
+
+		//	 1 1
+		auto c = b.find("{");
+		if (c != string::npos) {
+			b = b.substr(c + 1);
+		}
+
+		//	保存用の一時バッファ
+		SkeltonMesh::Vertex tmp;
+
+		//	x
+		auto d = b.find(" ");
+		auto e = b.substr(0, d);
+
+		b = b.substr(d + 1);
+
+		//	y
+		tmp.uv =
+		{
+			stof(e),
+			stof(b)
+		};
+
+		buf = buf.substr(a + 1);
+	}
+#endif // 0
+#pragma endregion
+
+	//	バッファに文字列獲得
+	getline(ifs, buf);
+	
+	//頂点
+	int index = 0;
+	ret.vertices.resize(1605);
+	string c_Delimiter = ",";
+	while (true)
+	{
+		auto a = buf.find("}");
+		if (a == string::npos) { break; }
+
+		//	{1 1 1
+		auto b = buf.substr(0, a);
+
+		auto c = b.find("{");
+		if (c != string::npos) {
+			b = b.substr(c + 1);
+		}
+		//	1 1 1
+		{
+			//Graphic::MeshVertex& tmp = ret.vertices[index++];
+			//	x
+			auto d = b.find(c_Delimiter);
+			auto e = b.substr(0, d);
+
+			//tmp.position.x = stof(e);
+			ret.vertices[index].position.x = stof(e);
+
+			b = b.substr(d + 1);
+
+			//	y
+			auto f = b.find(c_Delimiter);
+			auto g = b.substr(0, f + 1);
+
+			//tmp.position.y = stof(g);
+			ret.vertices[index].position.y = stof(g);
+
+			b = b.substr(f + 1);
+
+			//	z
+			//tmp.position.z = stof(b);
+			ret.vertices[index].position.z = stof(b);
+			//ret.vertices.push_back(tmp);
+			index++;
+		}
+
+		buf = buf.substr(a + 1);
+	}
+
+	//	アニメーションフレーム
+	getline(ifs, buf);
+	const unsigned int c_frame = stoi(buf);
+
+	const int c_vertexCount = ret.vertices.size();
+	c_Delimiter = " ";
+	//	合成行列
+	for (size_t i = 0; i < c_frame; i++)
+	{
+		if (buf.empty()) { break; }
+		for (size_t j = 0; j < c_vertexCount; j++)
+		{
+			auto a = buf.find("}");
+			if (a == string::npos) { break; }
+
+			DirectX::XMFLOAT4X4 m;
+
+			auto b = buf.substr(1, a);
+
+			auto c = b.find("{");
+			if (c != string::npos) {
+				b = b.substr(c + 1);
+			}
+
+			//	v[0]
+			auto offset = b.find(c_Delimiter);//エラー処理を省く
+			auto str = b.substr(0, offset);
+			m._11 = stof(str);
+			b = b.substr(offset + 1);
+
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._12 = stof(str);
+			b = b.substr(offset + 1);
+
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._13 = stof(str);
+			b = b.substr(offset + 1);
+
+			m._14 = 0;
+
+			//	v[1]
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._21 = stof(str);
+			b = b.substr(offset + 1);
+
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._22 = stof(str);
+			b = b.substr(offset + 1);
+
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._23 = stof(str);
+			b = b.substr(offset + 1);
+
+			m._24 = 0;
+
+			//	v[2]
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._31 = stof(str);
+			b = b.substr(offset + 1);
+
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._32 = stof(str);
+			b = b.substr(offset + 1);
+
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._33 = stof(str);
+			b = b.substr(offset + 1);
+
+			m._34 = 0;
+
+			//	v[3]
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._41 = stof(str);
+			b = b.substr(offset + 1);
+
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._42 = stof(str);
+			b = b.substr(offset + 1);
+
+			offset = b.find(c_Delimiter);//エラー処理を省く
+			str = b.substr(0, offset);
+			m._43 = stof(str);
+			b = b.substr(offset + 1);
+
+			m._44 = 1;
+
+			ret.vertices[j].compMat.push_back(m);
+		}
+		getline(ifs, buf);
 	}
 
 	return ret;

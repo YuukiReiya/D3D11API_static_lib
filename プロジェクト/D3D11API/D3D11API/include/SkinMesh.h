@@ -19,10 +19,16 @@ namespace API
 		void Init();
 		void Render()override;
 		std::shared_ptr<Transform>transform;
+		void AddAnim()
+		{
+			frameIndex = frameIndex == 28 ? 0 : frameIndex + 1;
+		}
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pVertexBuffer;
 		std::shared_ptr<D3D11::Graphic::AbstractShader>m_pShader;
+		int frameIndex = 0;
+		std::vector<std::vector<DirectX::XMFLOAT4X4>>m_CompositeMatrix;
 
 		static constexpr uint32_t c_Indices[] =
 		{

@@ -62,6 +62,11 @@ void SampleScene::Finalize()
 */
 void SampleScene::Update()
 {
+	using kb = Keyboard;
+	if (kb::GetButton('M'))
+	{
+		g_pMesh->AddAnim();
+	}
 }
 
 /*!

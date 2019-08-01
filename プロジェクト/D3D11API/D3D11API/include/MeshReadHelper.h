@@ -78,6 +78,18 @@ namespace D3D11 {
 			};
 
 			static SkeltonMesh ReadAnim(std::string path);
+
+			struct SkinMesh
+			{
+				struct Vertex
+				{
+					DirectX::XMFLOAT3 position;
+					std::vector<DirectX::XMFLOAT4X4>compMat;
+				};
+				std::vector<Vertex>vertices;
+				std::vector<uint32_t>indices;
+			};
+			static SkinMesh ReadSkin(std::string path);
 		private:
 			MeshReadHelper() = delete;
 			~MeshReadHelper() = delete;
