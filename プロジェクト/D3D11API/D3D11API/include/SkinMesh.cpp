@@ -108,7 +108,7 @@ void API::SkinMesh::Init()
 	m_pShader->Setup();
 
 #pragma region 定数読み込み
-#if 1
+#if 0
 #define CONST_READ
 #pragma region インデックスバッファ
 	{
@@ -157,7 +157,7 @@ void API::SkinMesh::Init()
 #pragma endregion
 
 #pragma region 外部ファイル読み込み
-#if 0
+#if 1
 	auto data = Helper::MeshReadHelper::ReadSkin("test.yfm");
 #pragma region インデックスバッファ
 	{

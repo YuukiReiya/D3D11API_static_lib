@@ -710,6 +710,7 @@ D3D11::Helper::MeshReadHelper::SkinMesh D3D11::Helper::MeshReadHelper::ReadSkin(
 			m._44 = 1;
 
 			ret.vertices[j].compMat.push_back(m);
+			buf = buf.substr(a + 1);
 		}
 		getline(ifs, buf);
 	}
