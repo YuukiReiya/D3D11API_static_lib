@@ -26,28 +26,33 @@ using namespace D3D11::Graphic;
 */
 using namespace Microsoft::WRL;
 
+/*!
+	@brief	コンストラクタ
+*/
 MeshShader::MeshShader()
 	:AbstractShader()
 	, m_Directory("")
 {
 }
 
-
+/*!
+	@brief	デストラクタ
+*/
 MeshShader::~MeshShader()
 {
 }
 
+/*!
+	@fn		Setup
+	@brief	プリコンパイル済みシェーダーファイルを利用してセットアップを行う
+	@detail	オーバーライド
+*/
 HRESULT D3D11::Graphic::MeshShader::Setup()
 {
 	HRESULT hr;
 	auto& dev = Direct3D11::GetInstance();
 	//	頂点レイアウト
 	{
-		//D3D11_INPUT_ELEMENT_DESC desc[]
-		//{
-		//	{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,	0,							 0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		//	{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,		0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		//};
 		D3D11_INPUT_ELEMENT_DESC desc[] = {
 	{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 	{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,   0,	D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
@@ -100,18 +105,7 @@ HRESULT D3D11::Graphic::MeshShader::Setup()
 
 	//	コンスタントバッファ
 	{
-		D3D11_BUFFER_DESC pcb;
-		pcb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
-		pcb.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
-		pcb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-		pcb.MiscFlags = 0;
-		pcb.StructureByteStride = 0;
-		pcb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
-		hr = dev.GetDevice()->CreateBuffer(
-			&pcb,
-			NULL,
-			m_pConstantBuffer.GetAddressOf()
-		);
+		hr = CreateConstantBuffer();
 		if (FAILED(hr)) {
 			std::string error = "\"MeshShader\" ConstantBuffer is not create!";
 			ErrorLog(error);
@@ -121,6 +115,11 @@ HRESULT D3D11::Graphic::MeshShader::Setup()
 	return S_OK;
 }
 
+/*!
+	@fn		DynamicSetup
+	@brief	動的コンパイルを利用したセットアップを行う
+	@detail	オーバーライド
+*/
 HRESULT D3D11::Graphic::MeshShader::DynamicSetup()
 {
 	//	パス
@@ -191,17 +190,26 @@ HRESULT D3D11::Graphic::MeshShader::DynamicSetup()
 */
 HRESULT D3D11::Graphic::MeshShader::CreateConstantBuffer()
 {
-	//D3D11_BUFFER_DESC pcb;
-	//SecureZeroMemory(&pcb, sizeof(pcb));
-	//pcb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//pcb.ByteWidth = sizeof(MeshShaderBuffer);
-	//pcb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//pcb.Usage = D3D11_USAGE_DYNAMIC;
-
-	return NULL;
-	//return Direct3D11::GetInstance().GetDevice()->CreateBuffer(&pcb, NULL, m_pConstantBuffer.GetAddressOf());
+	D3D11_BUFFER_DESC pcb;
+	pcb.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+	pcb.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
+	pcb.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+	pcb.MiscFlags = 0;
+	pcb.StructureByteStride = 0;
+	pcb.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+	return Direct3D11::GetInstance().GetDevice()->CreateBuffer(
+		&pcb,
+		NULL,
+		m_pConstantBuffer.GetAddressOf()
+	);
 }
 
+/*!
+	@fn			CreateInputLayout
+	@brief		頂点レイアウトの作成
+	@param[in]	コンパイル済みブロブ
+	@return		S_OK:成功 E_FAIL:失敗
+*/
 HRESULT D3D11::Graphic::MeshShader::CreateInputLayout(ID3DBlob * pBlob)
 {
 	// 頂点インプットレイアウト定義

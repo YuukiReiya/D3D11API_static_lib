@@ -76,7 +76,7 @@ bool Wave::Load(std::string filePath)
 	// ファイルポインタをRIFFチャンクの先頭にセット
 	mmioDescend(hMmio, &riffChunkInfo, NULL, 0);
 
-	// ファイルポインタを'f' 'm' 't' ' ' チャンクにセットする
+	// ファイルポインタを'f' 'matrix' 't' ' ' チャンクにセットする
 	chunkInfo.ckid = mmioFOURCC('f', 'm', 't', ' ');
 	mmioDescend(hMmio, &chunkInfo, &riffChunkInfo, MMIO_FINDCHUNK);
 

@@ -19,10 +19,8 @@ namespace D3D11 {
 			:public BaseVertex
 		{
 			/*!
-				@brief	デフォルトコンストラクタ
+				@brief	コンストラクタ
 			*/
-			//MeshVertex() = default;
-
 			MeshVertex() :BaseVertex(), uv({ -1,-1 }) {}
 
 			/*!
@@ -31,8 +29,10 @@ namespace D3D11 {
 			*/
 			MeshVertex(DirectX::XMFLOAT3 position) :BaseVertex(position), uv({ -1,-1 }) {}
 
-
-			//TODO:コメントをしっかり書く
+			/*!
+				@var	uv
+				@brief	テクセル座標
+			*/
 			DirectX::XMFLOAT2 uv;
 		};
 

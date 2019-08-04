@@ -37,11 +37,34 @@ namespace D3D11 {
 				*/
 				std::vector<uint32_t>indices;
 			};
-			static ReadBuffer Read(std::string path);
-			static D3D11::Graphic::FrameAnimationMesh ReadFrameAnim(std::string path);
 
+			/*!
+				@fn			Read
+				@brief		外部ファイルの読み込み
+				@param[in]	読み込みパス
+				@return		成功:情報が格納された構造体
+							失敗:空の構造体
+			*/
+			static ReadBuffer Read(std::string path);
+
+			/*!
+				@fn		ReadFrameAnim
+				@brief	フレームアニメーションメッシュの外部ファイル読み込み
+				@param[in]	読み込みパス
+				@return		成功:情報が格納された構造体
+							失敗:空の構造体
+			*/
+			static D3D11::Graphic::FrameAnimationMesh ReadFrameAnim(std::string path);
 		private:
+
+			/*!
+				@brief	コンストラクタ
+			*/
 			MeshReadHelper() = delete;
+
+			/*!
+				@brief	デストラクタ
+			*/
 			~MeshReadHelper() = delete;
 
 		};

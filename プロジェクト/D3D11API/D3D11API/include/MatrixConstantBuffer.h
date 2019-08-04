@@ -11,10 +11,29 @@
 namespace D3D11 {
 	namespace Graphic {
 
+		/*!
+			@struct	MatrixConstantBuffer
+			@brief	行列情報をまとめたコンスタントバッファ用の構造体
+			@detail	定数バッファのため16バイト境界にアライメントしておく。
+		*/
 		struct alignas(16) MatrixConstantBuffer
 		{
+			/*!
+				@var	world
+				@brief	ワールド行列
+			*/
 			DirectX::XMMATRIX world;
+
+			/*!
+				@var	view
+				@brief	ビュー行列
+			*/
 			DirectX::XMMATRIX view;
+
+			/*!
+				@var	proj
+				@brief	プロジェクション行列
+			*/
 			DirectX::XMMATRIX proj;
 		};
 	}

@@ -51,7 +51,7 @@ namespace Utility{
 
 		/*!
 			@brief	“ÆŽ©Œ`Ž®‚ÌŠg’£Žq
-			@detail	y(uuki)f(ormat)m(esh)
+			@detail	y(uuki)f(ormat)matrix(esh)
 		*/
 		static constexpr std::string_view c_Extension = "yfm";
 	};

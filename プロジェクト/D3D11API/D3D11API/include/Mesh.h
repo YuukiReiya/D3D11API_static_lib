@@ -80,9 +80,21 @@ namespace API{
 			SetupShader(this, shader);
 		}
 
+		/*!
+			@fn			SetupMaterial
+			@brief		マテリアルの参照をセット
+			@param[in]	設定先のメッシュ
+			@param[in]	設定元のマテリアル
+		*/
 		static inline void SetupMaterial(Mesh*mesh, Material*material) {
 			mesh->m_pMaterial = material->GetSharedPtr();
 		}
+
+		/*!
+			@fn			SetupMaterial
+			@brief		マテリアルの参照をセット
+			@param[in]	設定元のマテリアル
+		*/
 		inline void SetupMaterial(Material*material) {
 			SetupMaterial(this, material);
 		}
@@ -212,19 +224,10 @@ namespace API{
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
 
 		/*!
-			@var	m_pSamplerState
-			@brief	サンプラーステート
-			@detail	ComPtr
+			@var	m_pMaterial
+			@brief	Meshクラスで使用するマテリアルの弱参照
+			@detail	weak_ptr
 		*/
-		//Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
-
-		/*!
-			@var	m_pSRV
-			@brief	シェーダーリソースビュー
-			@detail	ComPtr
-		*/
-		//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
-
 		std::weak_ptr<Material*>m_pMaterial;
 	};
 }

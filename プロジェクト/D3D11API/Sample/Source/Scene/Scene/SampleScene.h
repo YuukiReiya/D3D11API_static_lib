@@ -7,6 +7,10 @@
 */
 #pragma once
 #include "../Interface/IScene.h"
+#include <AnimationMesh.h>
+#include <Mesh.h>
+#include <AbstractShader.h>
+#include <Material.h>
 
 class SampleScene 
 	:public IScene
@@ -40,5 +44,16 @@ public:
 		@brief	•`‰æˆ—
 	*/
 	void IScene::Render();
+
+private:
+#if 1
+#define ANIMATION_MESH
+	std::shared_ptr<API::AnimationMesh>m_pRender;
+#elif 0
+#define STATIC_MESH
+	std::shared_ptr<API::Mesh>m_pRender;
+	std::shared_ptr<API::Material>m_pMaterial;
+	std::shared_ptr<D3D11::Graphic::AbstractShader>m_pShader;
+#endif // 1
 
 };

@@ -3,6 +3,9 @@
 	@date	2019/05/04
 	@author	番場 宥輝
 	@brief	メッシュのデフォルトシェーダー
+
+	TODO:	動的セットアップとコンパイル済みセットアップで頂点レイアウトやコンスタントバッファの宣言が違うかも…
+			基本的にコンパイル済みを使ってくれればOK！
 */
 #pragma once
 #include "AbstractShader.h"
@@ -27,7 +30,6 @@ namespace D3D11 {
 				@fn		Setup
 				@brief	プリコンパイル済みシェーダーファイルを利用してセットアップを行う
 				@detail	オーバーライド
-				@TODO	読み込めない.csoファイルが存在し、動作が安定しない。
 			*/
 			HRESULT Setup()override final;
 

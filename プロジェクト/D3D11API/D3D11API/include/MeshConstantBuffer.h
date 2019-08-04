@@ -10,20 +10,20 @@
 
 namespace D3D11 {
 	namespace Graphic {
-
 		struct alignas(16) MeshConstantBuffer
-			//:public MatrixConstantBuffer
 		{
+
+			/*!
+				@var	matrix
+				@brief	WVPÇÃçsóÒ
+			*/
+			MatrixConstantBuffer matrix;
+
 			/*!
 				@var	color
 				@brief	êF
 			*/
-			MatrixConstantBuffer m;
 			DirectX::XMFLOAT4 color;
-			//DirectX::XMMATRIX world;
-			//DirectX::XMMATRIX view;
-			//DirectX::XMMATRIX proj;
-			//MatrixConstantBuffer m;
 		};
 
 	}

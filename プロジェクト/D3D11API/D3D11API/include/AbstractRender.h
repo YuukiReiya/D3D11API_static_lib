@@ -16,15 +16,6 @@ namespace API
 	class AbstractRender abstract
 	{
 	public :
-		/*!
-			@brief	コンストラクタ
-		*/
-		//AbstractRender();
-
-		/*!
-			@brief	デストラクタ
-		*/
-		//~AbstractRender();
 
 		/*!
 			@fn		Render

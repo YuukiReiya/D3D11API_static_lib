@@ -47,7 +47,7 @@ Main::~Main()
 }
 
 /*!
-	@fn			Init
+	@fn			Initialize
 	@brief		初期化
 	@param[in]	インスタンスハンドラ
 	@return		true:成功 false:失敗
@@ -77,8 +77,6 @@ bool Main::Init(HINSTANCE hInstance)
 		ErrorLog("Device initialization failed!");
 		return false;
 	}
-	//	リソース生成
-	ResourceLoader::GetInstance();
 
 	//	デバッグコンソール表示
 #if defined DEBUG_CONSOLE

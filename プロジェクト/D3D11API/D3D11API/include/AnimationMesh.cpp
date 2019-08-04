@@ -1,3 +1,9 @@
+/*!
+	@file	AnimationMesh.cpp
+	@date	2019/08/04
+	@author	番場 宥輝
+	@brief	フレームアニメーションメッシュ
+*/
 #include "stdafx.h"
 #include "AnimationMesh.h"
 #include "Direct3D11.h"
@@ -5,96 +11,27 @@
 #include "MyGame.h"
 #include "MeshReadHelper.h"
 #include "MeshShader.h"
-
-#pragma region シェーダー
-#include <d3dcompiler.h>
 #include "MeshConstantBuffer.h"
 
-using namespace D3D11::Graphic;
+/*!
+	@brief	usingディレクティブ
+	@using	D3D11
+*/
 using namespace D3D11;
-class AnimMeshShader
-	:public AbstractShader
-{
-public:
-	AnimMeshShader();
-	~AnimMeshShader();
 
-	HRESULT Setup()override final { return E_FAIL; }
-	HRESULT DynamicSetup()override final;
+/*!
+	@brief	usingディレクティブ
+	@using	D3D11::Graphic
+*/
+using namespace Graphic;
 
-private:
-
-};
-
-AnimMeshShader::AnimMeshShader()
-	:AbstractShader()
-{
-}
-
-AnimMeshShader::~AnimMeshShader()
-{
-}
-
-HRESULT AnimMeshShader::DynamicSetup()
-{
-	auto&dev = Direct3D11::GetInstance();
-	HRESULT hr;
-
-	//	パス
-	auto path = L"shader.hlsl";
-	
-	//	シェーダー生成
-	ID3DBlob *pCompileVS = NULL;
-	ID3DBlob *pCompilePS = NULL;
-	hr = D3DCompileFromFile(path, 0, 0, "VS", "vs_5_0", 0, 0, &pCompileVS, 0);
-	if (FAILED(hr)) {
-		return E_FAIL;
-	}
-	hr = dev.GetDevice()->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), 0, m_pVertexShader.GetAddressOf());
-	if (FAILED(hr)) {
-		return E_FAIL;
-	}
-	hr = D3DCompileFromFile(path, 0, 0, "PS", "ps_5_0", 0, 0, &pCompilePS, 0);
-	if (FAILED(hr)) {
-		return E_FAIL;
-	}
-	hr = dev.GetDevice()->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), 0, m_pPixelShader.GetAddressOf());
-	if (FAILED(hr)) {
-		return E_FAIL;
-	}
-	//	頂点レイアウト
-	D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	hr = dev.GetDevice()->CreateInputLayout(layout, GetArraySize(layout), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), m_pVertexLayout.GetAddressOf());
-	if (FAILED(hr)) {
-		pCompileVS->Release();
-		pCompilePS->Release();
-		return E_FAIL;
-	}
-	pCompileVS->Release();
-	pCompilePS->Release();
-
-	//	コンスタントバッファ
-	D3D11_BUFFER_DESC cb;
-	cb.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
-	cb.Usage = D3D11_USAGE_DYNAMIC;
-	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cb.MiscFlags = 0;
-	cb.StructureByteStride = 0;
-	hr = dev.GetDevice()->CreateBuffer(&cb, 0, m_pConstantBuffer.GetAddressOf());
-	if (FAILED(hr)) {
-		return E_FAIL;
-	}
-	return S_OK;
-}
-
-
-#pragma endregion
-
-
-HRESULT API::AnimationMesh::Init(std::string path)
+/*!
+	@fn			Initialize
+	@brief		初期化
+	@param[in]	読み込みパス
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::AnimationMesh::Initialize(std::string path)
 {
 	m_pShader = std::make_shared<MeshShader>();
 	if (FAILED(m_pShader->Setup())) {
@@ -102,49 +39,18 @@ HRESULT API::AnimationMesh::Init(std::string path)
 	}
 
 	HRESULT hr;
-	
 	auto device = Direct3D11::GetInstance().GetDevice();
 	auto context = Direct3D11::GetInstance().GetImmediateContext();
-
-	//auto mesh = Helper::MeshReadHelper::ReadAnim(path);
 	auto mesh = Helper::MeshReadHelper::ReadFrameAnim(path);
 	m_IndexCount = mesh.indices.size();
 	m_VertexCount = mesh.vertices[0][0].size();
 
-	//for (int i = 0; i < mesh.animCount; ++i) {
-	//	for (int j = 0; j < mesh.frameCount[i]; ++j) {
-	//		m_VertexList[i][j] = mesh.vertices[i][j];
-	//	}
-	//}
-	
 	for (int i = 0; i < mesh.vertices.size(); ++i) {
 		for (int j = 0; j < mesh.vertices[i].size(); ++j) {
 			m_VertexList[i][j] = mesh.vertices[i][j];
 		}
 	}
 	
-#pragma region 頂点生成
-	//D3D11_BUFFER_DESC vBD;
-	//vBD.ByteWidth = sizeof(VERTEX) * m_VertexCount;
-	//vBD.Usage = D3D11_USAGE_DYNAMIC;
-	//vBD.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//vBD.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//vBD.MiscFlags = 0;
-	//vBD.StructureByteStride = 0;
-	////	サブリソースの仕様
-	//D3D11_SUBRESOURCE_DATA sd;
-	////sd.pSysMem = mesh.vertices[0].v[0].data();
-
-	//sd.pSysMem = m_VertexList[0][0].data();
-	//hr = device->CreateBuffer(&vBD, &sd, m_pVertexBuffer.GetAddressOf());
-	////hr = device->CreateBuffer(&vBD, 0, m_pVertexBuffer.GetAddressOf());
-	//if (FAILED(hr)) {
-	//	return E_FAIL;
-	//}
-
-	//if (FAILED(CreateVertexBuffer(m_VertexList[0][0]))) {
-	//	ErrorLog("anim vertex");
-	//}
 	std::vector<MeshVertex> vertices;
 	for (size_t i = 0; i < mesh.vertices[0][0].size(); i++)
 	{
@@ -158,47 +64,15 @@ HRESULT API::AnimationMesh::Init(std::string path)
 		vertices.push_back(v);
 	}
 
-
-	if (FAILED(CreateVertexBuffer(vertices))) {
-		ErrorLog("anim vertex");
-	}
-#pragma endregion
-
-#pragma region 頂点インデックス
-	//D3D11_BUFFER_DESC iBD;
-	//iBD.ByteWidth = sizeof(m_IndexCount) * m_IndexCount;
-	//iBD.Usage = D3D11_USAGE_DEFAULT;
-	//iBD.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	//iBD.CPUAccessFlags = 0;
-	//iBD.MiscFlags = 0;
-	//iBD.StructureByteStride = 0;
-	//D3D11_SUBRESOURCE_DATA iData;
-	//iData.pSysMem = mesh.indices.data();//頂点インデックス配列
-	//hr = device->CreateBuffer(&iBD, &iData, m_pIndexBuffer.GetAddressOf());
-	//if (FAILED(hr)) {
-	//	return E_FAIL;
-	//}
-
-	if (FAILED(CreateIndexBuffer(mesh.indices))) {
-		ErrorLog("anim index");
-	}
-#pragma endregion
-
-#pragma region 設定
-	//UINT stride = sizeof(VERTEX);
-	//UINT offset = 0;
-	//context->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
-	//context->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	//context->IASetInputLayout(*m_pShader->GetInputLayout());
-	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//context->VSSetConstantBuffers(0, 1, m_pShader->GetConstantBuffer());
-	//context->PSSetConstantBuffers(0, 1, m_pShader->GetConstantBuffer());
-	//context->VSSetShader(*m_pShader->GetVertexShader(), NULL, 0);
-	//context->PSSetShader(*m_pShader->GetPixelShader(), NULL, 0);
-#pragma endregion
+	if (FAILED(CreateVertexBuffer(vertices))) { return E_FAIL; }
+	if (FAILED(CreateIndexBuffer(mesh.indices))) { return E_FAIL; }
 	return S_OK;
 }
 
+/*!
+	@fn		Render
+	@brief	描画
+*/
 void API::AnimationMesh::Render()
 {
 	//	トポロジー
@@ -219,15 +93,16 @@ void API::AnimationMesh::Render()
 	//	インデックスバッファのセットアップ
 	SetupIndexBuffer();
 
-	//	テクスチャ
-	SetupTexture();
-
 	//	描画命令
 	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_IndexCount, 0, 0);
-
-
 }
 
+/*!
+	@fn			CreateVertexBuffer
+	@brief		頂点バッファの作成
+	@param[in]	可変長配列に格納した頂点情報
+	@return		成功:S_OK 失敗:E_FAIL
+*/
 HRESULT API::AnimationMesh::CreateVertexBuffer(std::vector<MeshVertex> verttices)
 {
 	//	バッファの仕様
@@ -250,6 +125,12 @@ HRESULT API::AnimationMesh::CreateVertexBuffer(std::vector<MeshVertex> verttices
 	);
 }
 
+/*!
+	@fn			CreateIndexBuffer
+	@brief		インデックスバッファの作成
+	@param[in]	可変長配列に格納したインデックス情報
+	@return		成功:S_OK 失敗:E_FAIL
+*/
 HRESULT API::AnimationMesh::CreateIndexBuffer(std::vector<uint32_t> indices)
 {
 	//	頂点数保持
@@ -276,11 +157,19 @@ HRESULT API::AnimationMesh::CreateIndexBuffer(std::vector<uint32_t> indices)
 	);
 }
 
+/*!
+	@fn		SetupTopology
+	@brief	トポロジーの設定
+*/
 void API::AnimationMesh::SetupTopology()
 {
 	Direct3D11::GetInstance().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
+/*!
+	@fn		SetupInputLayout
+	@brief	頂点レイアウトの設定
+*/
 void API::AnimationMesh::SetupInputLayout()
 {
 	try
@@ -303,6 +192,10 @@ void API::AnimationMesh::SetupInputLayout()
 	}
 }
 
+/*!
+	@fn		SetupIndexBuffer
+	@brief	インデックスバッファの設定
+*/
 void API::AnimationMesh::SetupIndexBuffer()
 {
 	static constexpr uint32_t indexBufferOffset = 0;
@@ -314,6 +207,10 @@ void API::AnimationMesh::SetupIndexBuffer()
 
 }
 
+/*!
+	@fn		SetupVertexBuffer
+	@brief	頂点バッファの設定
+*/
 void API::AnimationMesh::SetupVertexBuffer()
 {
 	uint32_t stride = sizeof(MeshVertex);
@@ -325,9 +222,13 @@ void API::AnimationMesh::SetupVertexBuffer()
 		&stride,
 		&vertexBufferOffset
 	);
-
 }
 
+/*!
+	@fn		SetupConstantBuffer
+	@brief	コンスタントバッファの設定
+	@return	成功:S_OK 失敗:E_FAIL
+*/
 HRESULT API::AnimationMesh::SetupConstantBuffer()
 {
 	try
@@ -373,9 +274,9 @@ HRESULT API::AnimationMesh::SetupConstantBuffer()
 		}
 
 		//	データの格納
-		value.m.world = w;
-		value.m.view = v;
-		value.m.proj = p;
+		value.matrix.world = w;
+		value.matrix.view = v;
+		value.matrix.proj = p;
 		value.color = {1,1,1,1};
 
 		//	メモリコピー
@@ -399,7 +300,7 @@ HRESULT API::AnimationMesh::SetupConstantBuffer()
 		for (size_t i = 0; i < m_UV.size(); i++)
 		{
 			MeshVertex v;
-			v.position = m_VertexList[animIndex.x][animIndex.y][i];
+			v.position = m_VertexList[m_AnimIndex.x][m_AnimIndex.y][i];
 			v.uv = m_UV[i];
 			vVertList.push_back(v);
 		}
@@ -440,6 +341,10 @@ HRESULT API::AnimationMesh::SetupConstantBuffer()
 	return S_OK;
 }
 
+/*!
+	@fn		SetupBindShader
+	@brief	シェーダーの設定
+*/
 void API::AnimationMesh::SetupBindShader()
 {
 	try
@@ -475,8 +380,3 @@ void API::AnimationMesh::SetupBindShader()
 	}
 
 }
-
-void API::AnimationMesh::SetupTexture()
-{
-}
-

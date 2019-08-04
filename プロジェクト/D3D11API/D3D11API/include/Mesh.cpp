@@ -342,9 +342,9 @@ HRESULT API::Mesh::SetupConstantBuffer()
 		}
 
 		//	データの格納
-		value.m.world = w;
-		value.m.view = v;
-		value.m.proj = p;
+		value.matrix.world = w;
+		value.matrix.view = v;
+		value.matrix.proj = p;
 		value.color = color.GetRGBA();
 
 		//	メモリコピー

@@ -77,9 +77,22 @@ namespace API {
 		*/
 		void SetVolume(float vol);
 	private:
-
+		/*!
+			@var	m_pSourceVoice
+			@brief	音データ
+		*/
 		IXAudio2SourceVoice* m_pSourceVoice;
+
+		/*!
+			@var	m_pWaveBuffer
+			@brief	バッファ情報
+		*/
 		BYTE* m_pWaveBuffer;
+
+		/*!
+			@var	m_dwWaveSize
+			@brief	データサイズ
+		*/
 		DWORD m_dwWaveSize;
 	};
 

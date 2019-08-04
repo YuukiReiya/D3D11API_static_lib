@@ -26,7 +26,7 @@ public:
 	~Main();
 
 	/*!
-		@fn			Init
+		@fn			Initialize
 		@brief		初期化
 		@param[in]	インスタンスハンドラ
 		@return		true:成功 false:失敗
