@@ -97,15 +97,6 @@ namespace Converter {
 		*/
 		static void LoadToStore(fbxsdk::FbxMesh*from, Utility::Mesh*to);
 
-		static void SetupMaterial(fbxsdk::FbxSurfaceMaterial*material);
-		static void SetupMaterial(fbxsdk::FbxMesh* from);
-
-		static void SetupTextures(fbxsdk::FbxSurfaceMaterial * material);
-
-		static void SetupLayerTextures(fbxsdk::FbxProperty*prop, fbxsdk::FbxLayeredTexture*layerdTexture);
-
-		static void SetupTexture(fbxsdk::FbxFileTexture*texture);
-
 		/*!
 			@fn			SetupVertexIndices
 			@brief		頂点インデックスのセットアップ
