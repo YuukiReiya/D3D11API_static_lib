@@ -294,7 +294,7 @@ void API::SkinMesh::Render()
 		for (size_t j = 0; j < GetArraySize(c_Joints[i]); j++)
 		{
 			uint32_t jointIndex = c_Joints[i][j].index;
-			auto skMat = XMLoadFloat4x4(&c_SkinMats[0][jointIndex]);
+			auto skMat = XMLoadFloat4x4(&c_SkinMats[frameIndex][jointIndex]);
 			float w = c_Joints[i][j].weight;
 			compMat[i] += skMat * w;
 		}
