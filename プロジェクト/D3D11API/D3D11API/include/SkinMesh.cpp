@@ -284,7 +284,47 @@ void API::SkinMesh::Render()
 	//	頂点宣言
 	vector<SkinnedVertex> vs;
 
-	//	頂点編集
+#pragma region スキニング計算
+#if 0
+	vector<XMMATRIX> compMat;
+	compMat.resize(GetArraySize(c_VerticesPosition));
+	for (size_t i = 0; i < GetArraySize(c_VerticesPosition); i++)
+	{
+		//ボーン
+		for (size_t j = 0; j < GetArraySize(c_Joints[i]); j++)
+		{
+			uint32_t jointIndex = c_Joints[i][j].index;
+			auto skMat = XMLoadFloat4x4(&c_SkinMats[0][jointIndex]);
+			float w = c_Joints[i][j].weight;
+			compMat[i] += skMat * w;
+		}
+	}
+
+	for (size_t i = 0; i < GetArraySize(c_VerticesPosition); i++)
+	{
+		XMVECTOR vec = {
+		c_VerticesPosition[i].x,
+		c_VerticesPosition[i].y,
+		c_VerticesPosition[i].z,
+		1
+		};
+		vec= XMVector4Transform(vec, compMat[i]);
+		SkinnedVertex v =
+		{
+			{vec.m128_f32[0],vec.m128_f32[1],vec.m128_f32[2]}
+		};
+		vs.push_back(v);
+	}
+
+#endif // 1
+
+#pragma endregion
+
+
+#pragma region 合成行列
+#if 1
+	
+//	頂点編集
 	for (size_t i = 0; i < GetArraySize(c_CompositeMatrix); i++)
 	{
 		XMVECTOR vec = {
@@ -306,6 +346,8 @@ void API::SkinMesh::Render()
 		};
 		vs.push_back(v);
 	}
+#endif // 0
+#pragma endregion
 
 	//	メモリコピー
 	memcpy_s(ms.pData, ms.RowPitch, (void*)(vs.data()), sizeof(SkinnedVertex) * GetArraySize(c_VerticesPosition));
