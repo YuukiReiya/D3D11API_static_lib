@@ -139,12 +139,13 @@ void Utility::IOMesh::WriteJ(std::vector<std::vector<Joint>> js)
 {
 	ofstream ofs;
 	ofs.open("ƒWƒ‡ƒCƒ“ƒgW&M.md", ios::out);
-	for (auto v:js)
+	for (size_t i = 0; i < js.size(); i++)
 	{
 		ofs << "{";
-		for (auto it : v)
+		for (size_t j = 0; j < js[i].size(); j++)
 		{
-			ofs << "{" << it.index << "," << it.weight << "},";
+			auto joint = js[i][j];
+			ofs << "{" << joint.index << "," << joint.weight << "},";
 		}
 		ofs << "},";
 	}
