@@ -446,7 +446,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 
 		cout << "‘‚«o‚µ" << endl;
 
-		Utility::IOMesh::Output(outName, outMesh, frameMats);
+		//Utility::IOMesh::Output(outName, outMesh, frameMats);
 		//Utility::IOMesh::Output(outName, outMesh,animClip);
 		//Utility::IOMesh::Output(outName, *outMesh);
 

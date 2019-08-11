@@ -119,164 +119,6 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 	}
 }
 
-void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationClip clip)
-{
-	string path = fileName + c_Delimiter.data() + c_Extension.data();
-
-	ofstream ofs;
-	ofs.open(path, ios::out);
-
-	//	書き込み
-	const string c_Space = " ";
-
-	//	頂点インデックス
-	for (auto it : mesh.indices)
-	{
-		//ofs << it << c_Space;
-		ofs << it << ",";
-	}
-	ofs << endl;
-
-	//	uv
-	for (auto it : mesh.vertices)
-	{
-	//		ofs << "{" << it.uv.x << c_Space << it.uv.y << "}";// << endl;
-	}
-	ofs << endl;
-
-	//頂点
-	for (auto it : mesh.vertices)
-	{
-		//ofs << "{" << it.position.x << c_Space << it.position.y << c_Space << it.position.z << "}";// << endl;
-		ofs << "{" << it.position.x << "," << it.position.y << "," << it.position.z << "},";// << endl;
-	}
-	ofs << endl;
-	
-	//	重み
-	//for (auto it : mesh.vertices) 
-	//{
-	//	ofs << "{ "
-	//		<< static_cast<int>(it.joijntIndex[0]) << ":" << it.jointWeights[0] << c_Space 
-	//		<< static_cast<int>(it.joijntIndex[1]) << ":" << it.jointWeights[1] << c_Space
-	//		<< static_cast<int>(it.joijntIndex[2]) << ":" << it.jointWeights[2] << c_Space
-	//		<< "}";
-	//}
-#if 0
-	for (auto v : mesh.vertices)
-	{
-		//ofs << "{" << c_Space;
-		//for (size_t i = 0; i < v.jointsIndex.size(); i++)
-		//{
-		//	ofs << static_cast<int>(v.jointsIndex[i]) << ":" << v.jointsWeight[i] << c_Space;
-		//}
-		//ofs << "}";
-		
-
-		//	書き出し
-		//	{ x y z }{...になるはず
-	}
-	ofs << endl;
-#endif // 0
-
-	//	初期姿勢(逆行列)
-#if 0
-	//for (size_t i = 0; i < mesh.skeleton.jointCount; i++)
-	for (size_t i = 0; i < mesh.skeleton.joints.size(); i++)
-	{
-		auto& m = mesh.skeleton.joints[i].invBindPose;
-		ofs << "{" <<
-			m._11 << c_Space << m._12 << c_Space << m._13 << c_Space <<
-			m._21 << c_Space << m._22 << c_Space << m._23 << c_Space <<
-			m._31 << c_Space << m._32 << c_Space << m._33 << c_Space <<
-			m._41 << c_Space << m._42 << c_Space << m._43 << c_Space <<
-			"}";
-	}
-#endif // 0
-
-	//	アニメフレーム
-#if 0
-	ofs << endl;
-	ofs << clip.frameCount << endl;
-#endif // 0
-
-	//	フレーム行列
-	//※1アニメ
-#if 0
-	for (size_t i = 0; i < clip.bonesMatrix.size(); i++)
-	{
-		//auto frameCount = clip.frameCount;
-		//for (size_t j = 0; j < frameCount; j++)
-
-		{
-			//auto it = clip.bonesMatrix[i][j];
-			//
-			//ofs << "{"
-			//	<< it.r[0].m128_f32[0] << c_Space << it.r[0].m128_f32[1] << c_Space << it.r[0].m128_f32[2] << c_Space << it.r[0].m128_f32[3] << c_Space
-			//	<< it.r[1].m128_f32[0] << c_Space << it.r[1].m128_f32[1] << c_Space << it.r[1].m128_f32[2] << c_Space << it.r[1].m128_f32[3] << c_Space
-			//	<< it.r[2].m128_f32[0] << c_Space << it.r[2].m128_f32[1] << c_Space << it.r[2].m128_f32[2] << c_Space << it.r[2].m128_f32[3] << c_Space
-			//	<< it.r[3].m128_f32[0] << c_Space << it.r[3].m128_f32[1] << c_Space << it.r[3].m128_f32[2] << c_Space << it.r[3].m128_f32[3] << 
-			//	"}";
-		}
-	}
-#endif // 0
-
-	//	合成行列
-
-}
-
-void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh, std::vector<std::vector<DirectX::XMMATRIX>> compMats)
-{
-	string path = fileName + c_Delimiter.data() + c_Extension.data();
-
-	ofstream ofs;
-	ofs.open(path, ios::out);
-
-	//	書き込み
-	const string c_Space = " ";
-
-	//	頂点インデックス
-	for (auto it : mesh.indices)
-	{
-		//ofs << it << c_Space;
-		ofs << it << ",";
-	}
-	ofs << endl;
-
-	//	uv
-	for (auto it : mesh.vertices)
-	{
-		//		ofs << "{" << it.uv.x << c_Space << it.uv.y << "}";// << endl;
-	}
-	ofs << endl;
-
-	//頂点
-	for (auto it : mesh.vertices)
-	{
-		//ofs << "{" << it.position.x << c_Space << it.position.y << c_Space << it.position.z << "}";// << endl;
-		ofs << "{" << it.position.x << "," << it.position.y << "," << it.position.z << "},";// << endl;
-	}
-	ofs << endl;
-
-	//	フレーム数
-	ofs << 30 << endl;
-
-	//	合成行列
-	for (size_t frame = 0; frame < compMats.size(); frame++)
-	{
-		for (size_t v = 0; v < compMats[frame].size(); v++)
-		{
-			auto m = compMats[frame][v];
-			ofs << "{" <<
-				m.r[0].m128_f32[0] << c_Space << m.r[0].m128_f32[1] << c_Space << m.r[0].m128_f32[2] << c_Space <<
-				m.r[1].m128_f32[0] << c_Space << m.r[1].m128_f32[1] << c_Space << m.r[1].m128_f32[2] << c_Space <<
-				m.r[2].m128_f32[0] << c_Space << m.r[2].m128_f32[1] << c_Space << m.r[2].m128_f32[2] << c_Space <<
-				m.r[3].m128_f32[0] << c_Space << m.r[3].m128_f32[1] << c_Space << m.r[3].m128_f32[2] << c_Space <<
-				"}";
-		}
-		ofs << endl;
-	}
-}
-
 void Utility::IOMesh::Write(std::vector<DirectX::XMMATRIX> mat)
 {
 	ofstream ofs;
@@ -290,5 +132,40 @@ void Utility::IOMesh::Write(std::vector<DirectX::XMMATRIX> mat)
 			it.r[2].m128_f32[0] << "," << it.r[2].m128_f32[1] << "," << it.r[2].m128_f32[2] << "," << it.r[2].m128_f32[3] << "," <<
 			it.r[3].m128_f32[0] << "," << it.r[3].m128_f32[1] << "," << it.r[3].m128_f32[2] << "," << it.r[3].m128_f32[3] 
 			<< "},";
+	}
+}
+
+void Utility::IOMesh::WriteJ(std::vector<std::vector<Joint>> js)
+{
+	ofstream ofs;
+	ofs.open("ジョイントW&M.md", ios::out);
+	for (auto v:js)
+	{
+		ofs << "{";
+		for (auto it : v)
+		{
+			ofs << "{" << it.index << "," << it.weight << "},";
+		}
+		ofs << "},";
+	}
+}
+
+void Utility::IOMesh::WriteM(std::vector<std::vector<DirectX::XMMATRIX>> mats)
+{
+	ofstream ofs;
+	ofs.open("フレーム時スキン行列.md", ios::out);
+	for (auto fm : mats)
+	{
+		ofs << "{";
+		for (auto it : fm)
+		{
+			ofs << "{" <<
+				it.r[0].m128_f32[0] << "," << it.r[0].m128_f32[1] << "," << it.r[0].m128_f32[2] << "," << it.r[0].m128_f32[3] << "," <<
+				it.r[1].m128_f32[0] << "," << it.r[1].m128_f32[1] << "," << it.r[1].m128_f32[2] << "," << it.r[1].m128_f32[3] << "," <<
+				it.r[2].m128_f32[0] << "," << it.r[2].m128_f32[1] << "," << it.r[2].m128_f32[2] << "," << it.r[2].m128_f32[3] << "," <<
+				it.r[3].m128_f32[0] << "," << it.r[3].m128_f32[1] << "," << it.r[3].m128_f32[2] << "," << it.r[3].m128_f32[3]
+				<< "},";
+		}
+		ofs << "},";
 	}
 }

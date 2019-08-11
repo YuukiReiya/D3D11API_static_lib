@@ -39,10 +39,16 @@ namespace Utility{
 
 		//static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
 
-		static void Output(std::string fileName,SkeletonMesh mesh,AnimationClip clip);
-		static void Output(std::string fileName, SkeletonMesh mesh, std::vector<std::vector<DirectX::XMMATRIX>>compMats);
-
 		static void Write(std::vector<DirectX::XMMATRIX>mat);
+
+		struct Joint
+		{
+			uint32_t index;
+			float weight;
+		};
+
+		static void WriteJ(std::vector<std::vector<Joint>>js);
+		static void WriteM(std::vector<std::vector<DirectX::XMMATRIX>>mats);
 	private:
 		/*!
 			@brief	コンストラクタ削除
