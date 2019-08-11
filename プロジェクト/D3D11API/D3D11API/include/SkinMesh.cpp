@@ -285,7 +285,7 @@ void API::SkinMesh::Render()
 	vector<SkinnedVertex> vs;
 
 #pragma region スキニング計算
-#if 0
+#if 1
 	vector<XMMATRIX> compMat;
 	compMat.resize(GetArraySize(c_VerticesPosition));
 	for (size_t i = 0; i < GetArraySize(c_VerticesPosition); i++)
@@ -322,7 +322,7 @@ void API::SkinMesh::Render()
 
 
 #pragma region 合成行列
-#if 1
+#if 0
 	
 //	頂点編集
 	for (size_t i = 0; i < GetArraySize(c_CompositeMatrix); i++)
