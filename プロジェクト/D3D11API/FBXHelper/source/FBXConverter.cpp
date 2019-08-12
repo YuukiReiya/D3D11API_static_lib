@@ -5,6 +5,7 @@
 #include "WinConsoleExpansion.h"
 #include "IOMesh.h"
 #include <fbxsdk.h>
+#include <fbxsdk/core/fbxobject.h>
 #include <iostream>
 #if defined DEBUG || defined _DEBUG
 #define _CRTDBG_MAP_ALLOC
@@ -201,6 +202,39 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			cout << "メッシュが複数です" << endl;
 		}
 
+#pragma region アニメーション
+	//参考:http://whaison.jugem.jp/?eid=969
+		int animStackCount = (*m_pScene.get())->GetSrcObjectCount<FbxAnimStack>();
+		cout << "anim stack count = " << animStackCount << endl;
+		for (int i = 0; i < animStackCount; ++i)
+		{
+			//	アニメーションスタック
+			auto pAnimStack = FbxCast<FbxAnimStack>((*m_pScene.get())->GetSrcObject<FbxAnimStack>(i));
+
+			int animLayerCount = pAnimStack->GetMemberCount();
+			cout << "as index = " << i << ",al count = " << animLayerCount << endl;
+			for (int j = 0; j < animLayerCount; j++)
+			{
+				//	アニメーションレイヤー
+				auto animLayer = pAnimStack->GetMember<FbxAnimLayer>(j);
+
+				int animNodeCount = animLayer->GetMemberCount<FbxAnimCurveNode>();
+				cout << "anim node count = " << animNodeCount << endl;
+
+				for (int k = 0; k < animNodeCount; k++)
+				{
+					//	アニメーションノード
+					auto animNode = animLayer->GetMember<FbxAnimCurveNode>(k);
+
+					int animCurveCount = animNode->GetCurveCount(j);
+					cout << "anim curve count = " << animCurveCount << endl;
+
+				}
+			}
+		}
+#pragma endregion
+
+
 		//	単一仮定
 		auto pMesh = (*m_pScene.get())->GetSrcObject<fbxsdk::FbxMesh>(0);
 		auto pNode = pMesh->GetNode();
@@ -264,7 +298,6 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		cout << "頂点数 = " << vertexCount << endl;
 #pragma endregion
 
-
 #pragma region 頂点インデックス
 		//	ポリゴン数
 		auto polygonCount = pMesh->GetPolygonCount();
@@ -326,7 +359,7 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				auto s0 = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
 				auto geometryOffset = FbxAMatrix(t0, r0, s0);
 
-				cout << "geometryOffset" << endl;
+				//cout << "geometryOffset" << endl;
 				if (t0.mData[0] != 0 || t0.mData[1] != 0 || t0.mData[2] != 0 || t0.mData[3] != 1)
 				{
 					cout << "T = " << t0.mData[0] << "," << t0.mData[1] << "," << t0.mData[2] << "," << t0.mData[3] << "," << endl;
@@ -384,7 +417,6 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 		}
 #pragma endregion
 
-
 #pragma region スキニング行列
 		//	書き出す合成行列
 		for (size_t frame = 0; frame < c_Frame; frame++)
@@ -397,6 +429,9 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 			auto r0 = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
 			auto s0 = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
 			auto geometryOffset = FbxAMatrix(t0, r0, s0);
+
+#pragma region GeometryOffset
+#if 0
 
 			cout << "geometryOffset" << endl;
 			if (t0.mData[0] != 0 || t0.mData[1] != 0 || t0.mData[2] != 0 || t0.mData[3] != 1)
@@ -414,6 +449,8 @@ void Converter::FBXConverter::Execute(std::string fbxPath, std::string outName)
 				cout << "S = " << s0.mData[0] << "," << s0.mData[1] << "," << s0.mData[2] << "," << s0.mData[3] << "," << endl;
 				system("pause");
 			}
+#endif
+#pragma endregion
 
 			FbxMatrix *compositeMatrix = new FbxMatrix[pMesh->GetControlPointsCount()];
 			memset(compositeMatrix, 0, sizeof(FbxMatrix) * pMesh->GetControlPointsCount());
