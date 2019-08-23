@@ -163,6 +163,7 @@
     <ClInclude Include="include\Debug.h" />
     <ClInclude Include="include\Direct3D11.h" />
     <ClInclude Include="include\GamePad.h" />
+    <ClInclude Include="include\Joint.h" />
     <ClInclude Include="include\Material.h" />
     <ClInclude Include="include\MatrixConstantBuffer.h" />
     <ClInclude Include="include\Keyboard.h" />
@@ -179,8 +180,6 @@
     <ClInclude Include="include\SimpleCompPixel.h" />
     <ClInclude Include="include\SimpleCompVertex.h" />
     <ClInclude Include="include\Singleton.h" />
-    <ClInclude Include="include\Skeleton.h" />
-    <ClInclude Include="include\SkeletonMesh.h" />
     <ClInclude Include="include\SkinMesh.h" />
     <ClInclude Include="include\SkinnedVertex.h" />
     <ClInclude Include="include\Sprite.h" />
@@ -197,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\AbstractShader.cpp" />
+    <ClCompile Include="include\AnimationClip.cpp" />
     <ClCompile Include="include\AudioMaster.cpp" />
     <ClCompile Include="include\Camera.cpp" />
     <ClCompile Include="include\Color.cpp" />

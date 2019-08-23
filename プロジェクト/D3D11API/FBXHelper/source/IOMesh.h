@@ -12,8 +12,9 @@
 #include <string_view>
 #include <iostream>
 #include "Mesh.h"
-#include <SkeletonMesh.h>
 #include <AnimationClip.h>
+#include <SkinnedVertex.h>
+#include <Joint.h>
 
 namespace Utility{
 	class IOMesh
@@ -37,11 +38,26 @@ namespace Utility{
 		*/
 		static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
 
-		//static void Output(std::string directoryPath, std::string fileName, Mesh mesh);
+		/*!
+			@fn			OutputSkinMesh
+			@brief		独自形式のスキンメッシュを出力
+			@param[in]	ファイルパス
+			@param[in]	頂点インデックス
+			@param[in]	頂点情報
+			@param[in]	ジョイント
+		*/
+		//static void OutputSkinMesh(std::string filePath, std::vector<uint32_t>indices, std::vector<D3D11::Graphic::SkinnedVertex>vertices, std::vector<D3D11::Graphic::Joint>joints);
 
-		static void Output(std::string fileName,SkeletonMesh mesh,AnimationClip clip);
-		static void Output(std::string fileName, SkeletonMesh mesh, std::vector<std::vector<DirectX::XMMATRIX>>compMats);
+		/*!
+			@fn			OutputSkinMesh
+			@brief		独自形式のスキンメッシュを出力
+			@param[in]	ファイルパス
+			@param[in]	頂点インデックス
+			@param[in]	頂点情報
+		*/
+		static void OutputSkinMesh(std::string filePath, std::vector<uint32_t>indices, std::vector<D3D11::Graphic::SkinnedVertex>vertices);
 
+		static void OutputAnimation(std::string filePath, API::AnimationClip clips);
 		static void Write(std::vector<DirectX::XMMATRIX>mat);
 	private:
 		/*!

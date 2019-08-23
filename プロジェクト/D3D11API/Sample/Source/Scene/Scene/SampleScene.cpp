@@ -26,6 +26,7 @@ using namespace std;
 using namespace API;
 
 shared_ptr<SkinMesh>g_pMesh;
+shared_ptr<AnimationClip>g_pAnimClip;
 
 /*!
 	@brief	コンストラクタ
@@ -45,6 +46,10 @@ void SampleScene::Initialize()
 	g_pMesh = make_shared<SkinMesh>();
 	g_pMesh->Init();
 	g_pMesh->transform->SetScale(0.01f);
+	g_pAnimClip = make_shared<AnimationClip>();
+	if (g_pAnimClip->Load("anim-0.ac")) {
+		g_pMesh->SetupAnimation(g_pAnimClip);
+	}
 }
 
 /*!

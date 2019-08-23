@@ -1,23 +1,50 @@
+/*
+	@file	AnimationClip.h
+	@date	2019/08/14
+	@author	番場 宥輝
+	@brief	アニメーションのフレーム姿勢情報格納用の構造体(行列パレット)
+*/
 #pragma once
 #include <vector>
 #include <DirectXMath.h>
 #include <memory>
-#include "Skeleton.h"
 
-//NOTE:メンバが増えないなら別名定義でいい
-//using AnimationJoints = std::vector<DirectX::XMMATRIX>;
-//struct FrameMatrix
-//{
-//	std::vector<DirectX::XMMATRIX>FrameMatrix;
-//
-//};
-using FrameMatrix = std::vector<DirectX::XMMATRIX>;
-
-struct AnimationClip
+namespace API
 {
-	Skeleton*pSkeleton;//関連スケルトン
-	uint32_t frameCount;//	フレーム数
-	//std::vector<DirectX::XMMATRIX>jointsMatrix;//フレーム行列
-	std::vector<FrameMatrix>bonesMatrix;//ボーン毎のフレーム行列が入っている
+	/*!
+		@using	MatrixPalette
+		@brief	別名定義
+	*/
+	using MatrixPalette = std::vector<DirectX::XMMATRIX>;
 
-};
+	/*!
+		@struct	AnimationClip
+		@brief	スキンアニメーションのフレーム姿勢情報
+	*/
+	struct AnimationClip
+	{
+		/*!
+			@var	matrixPalette
+			@brief	フレーム姿勢の行列パレット
+			@detail	matrixPalette[ジョイント番号][フレーム]
+		*/
+		std::vector<MatrixPalette>matrixPalette;
+
+		/*!
+			@fn			Load
+			@brief		アニメーションデータの読み込み
+			@param[in]	バインドするアニメーションクリップ
+			@param[in]	ファイルパス
+			@return		true:成功 false:失敗
+		*/
+		static bool Load(AnimationClip*animClip, std::string filePath);
+
+		/*!
+			@fn			Load
+			@brief		アニメーションデータの読み込み
+			@param[in]	ファイルパス
+			@return		true:成功 false:失敗
+		*/
+		inline bool Load(std::string filePath) { return Load(this, filePath); }
+	};
+}

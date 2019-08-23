@@ -28,6 +28,11 @@ using namespace ConsoleExpansion;
 */
 using wic = ConsoleExpansion::WinConsoleExpansion;
 
+static constexpr string_view c_Comma = ",";
+static constexpr string_view c_Space = " ";
+static constexpr string_view c_Colon = ":";
+static constexpr string_view c_Slash = "/";
+
 /*!
 	@fn			Delete
 	@brief		yfmファイル削除
@@ -119,159 +124,47 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 	}
 }
 
-void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh,AnimationClip clip)
+void Utility::IOMesh::OutputSkinMesh(std::string filePath, std::vector<uint32_t> indices, std::vector<D3D11::Graphic::SkinnedVertex> vertices)
 {
-	string path = fileName + c_Delimiter.data() + c_Extension.data();
-
 	ofstream ofs;
-	ofs.open(path, ios::out);
-
-	//	書き込み
-	const string c_Space = " ";
+	ofs.open(filePath, ios::out);
 
 	//	頂点インデックス
-	for (auto it : mesh.indices)
-	{
-		//ofs << it << c_Space;
-		ofs << it << ",";
-	}
+	for (auto it : indices) { ofs << it << c_Comma; }
 	ofs << endl;
 
-	//	uv
-	for (auto it : mesh.vertices)
-	{
-	//		ofs << "{" << it.uv.x << c_Space << it.uv.y << "}";// << endl;
-	}
+	//	UV
+	for (auto it : vertices) { ofs << it.uv.x << c_Comma << it.uv.y << c_Space; }
 	ofs << endl;
 
-	//頂点
-	for (auto it : mesh.vertices)
-	{
-		//ofs << "{" << it.position.x << c_Space << it.position.y << c_Space << it.position.z << "}";// << endl;
-		ofs << "{" << it.position.x << "," << it.position.y << "," << it.position.z << "},";// << endl;
-	}
+	//	頂点座標
+	for (auto it : vertices) { ofs << it.position.x << c_Comma << it.position.y << c_Comma << it.position.z << c_Space; }
 	ofs << endl;
-	
+
 	//	重み
-	//for (auto it : mesh.vertices) 
-	//{
-	//	ofs << "{ "
-	//		<< static_cast<int>(it.joijntIndex[0]) << ":" << it.jointWeights[0] << c_Space 
-	//		<< static_cast<int>(it.joijntIndex[1]) << ":" << it.jointWeights[1] << c_Space
-	//		<< static_cast<int>(it.joijntIndex[2]) << ":" << it.jointWeights[2] << c_Space
-	//		<< "}";
-	//}
-#if 0
-	for (auto v : mesh.vertices)
-	{
-		//ofs << "{" << c_Space;
-		//for (size_t i = 0; i < v.jointsIndex.size(); i++)
-		//{
-		//	ofs << static_cast<int>(v.jointsIndex[i]) << ":" << v.jointsWeight[i] << c_Space;
-		//}
-		//ofs << "}";
-		
-
-		//	書き出し
-		//	{ x y z }{...になるはず
-	}
-	ofs << endl;
-#endif // 0
-
-	//	初期姿勢(逆行列)
-#if 0
-	//for (size_t i = 0; i < mesh.skeleton.jointCount; i++)
-	for (size_t i = 0; i < mesh.skeleton.joints.size(); i++)
-	{
-		auto& m = mesh.skeleton.joints[i].invBindPose;
-		ofs << "{" <<
-			m._11 << c_Space << m._12 << c_Space << m._13 << c_Space <<
-			m._21 << c_Space << m._22 << c_Space << m._23 << c_Space <<
-			m._31 << c_Space << m._32 << c_Space << m._33 << c_Space <<
-			m._41 << c_Space << m._42 << c_Space << m._43 << c_Space <<
-			"}";
-	}
-#endif // 0
-
-	//	アニメフレーム
-#if 0
-	ofs << endl;
-	ofs << clip.frameCount << endl;
-#endif // 0
-
-	//	フレーム行列
-	//※1アニメ
-#if 0
-	for (size_t i = 0; i < clip.bonesMatrix.size(); i++)
-	{
-		//auto frameCount = clip.frameCount;
-		//for (size_t j = 0; j < frameCount; j++)
-
+	for (auto v : vertices) {
+		for (auto joint : v.joints)
 		{
-			//auto it = clip.bonesMatrix[i][j];
-			//
-			//ofs << "{"
-			//	<< it.r[0].m128_f32[0] << c_Space << it.r[0].m128_f32[1] << c_Space << it.r[0].m128_f32[2] << c_Space << it.r[0].m128_f32[3] << c_Space
-			//	<< it.r[1].m128_f32[0] << c_Space << it.r[1].m128_f32[1] << c_Space << it.r[1].m128_f32[2] << c_Space << it.r[1].m128_f32[3] << c_Space
-			//	<< it.r[2].m128_f32[0] << c_Space << it.r[2].m128_f32[1] << c_Space << it.r[2].m128_f32[2] << c_Space << it.r[2].m128_f32[3] << c_Space
-			//	<< it.r[3].m128_f32[0] << c_Space << it.r[3].m128_f32[1] << c_Space << it.r[3].m128_f32[2] << c_Space << it.r[3].m128_f32[3] << 
-			//	"}";
+			ofs << joint.index << c_Colon << joint.weight << c_Comma;
 		}
+		ofs << endl;
 	}
-#endif // 0
-
-	//	合成行列
-
 }
 
-void Utility::IOMesh::Output(std::string fileName, SkeletonMesh mesh, std::vector<std::vector<DirectX::XMMATRIX>> compMats)
+void Utility::IOMesh::OutputAnimation(std::string filePath, API::AnimationClip clips)
 {
-	string path = fileName + c_Delimiter.data() + c_Extension.data();
-
 	ofstream ofs;
-	ofs.open(path, ios::out);
+	ofs.open(filePath, ios::out);
 
-	//	書き込み
-	const string c_Space = " ";
-
-	//	頂点インデックス
-	for (auto it : mesh.indices)
+	for (auto joint : clips.matrixPalette)
 	{
-		//ofs << it << c_Space;
-		ofs << it << ",";
-	}
-	ofs << endl;
-
-	//	uv
-	for (auto it : mesh.vertices)
-	{
-		//		ofs << "{" << it.uv.x << c_Space << it.uv.y << "}";// << endl;
-	}
-	ofs << endl;
-
-	//頂点
-	for (auto it : mesh.vertices)
-	{
-		//ofs << "{" << it.position.x << c_Space << it.position.y << c_Space << it.position.z << "}";// << endl;
-		ofs << "{" << it.position.x << "," << it.position.y << "," << it.position.z << "},";// << endl;
-	}
-	ofs << endl;
-
-	//	フレーム数
-	ofs << 30 << endl;
-
-	//	合成行列
-	for (size_t frame = 0; frame < compMats.size(); frame++)
-	{
-		for (size_t v = 0; v < compMats[frame].size(); v++)
+		for (auto matrix : joint)
 		{
-			auto m = compMats[frame][v];
-			ofs << "{" <<
-				m.r[0].m128_f32[0] << c_Space << m.r[0].m128_f32[1] << c_Space << m.r[0].m128_f32[2] << c_Space <<
-				m.r[1].m128_f32[0] << c_Space << m.r[1].m128_f32[1] << c_Space << m.r[1].m128_f32[2] << c_Space <<
-				m.r[2].m128_f32[0] << c_Space << m.r[2].m128_f32[1] << c_Space << m.r[2].m128_f32[2] << c_Space <<
-				m.r[3].m128_f32[0] << c_Space << m.r[3].m128_f32[1] << c_Space << m.r[3].m128_f32[2] << c_Space <<
-				"}";
+			ofs <<
+				matrix.r[0].m128_f32[0] << c_Comma << matrix.r[0].m128_f32[1] << c_Comma << matrix.r[0].m128_f32[2] << c_Comma << matrix.r[0].m128_f32[3] << c_Comma <<
+				matrix.r[1].m128_f32[0] << c_Comma << matrix.r[1].m128_f32[1] << c_Comma << matrix.r[1].m128_f32[2] << c_Comma << matrix.r[1].m128_f32[3] << c_Comma <<
+				matrix.r[2].m128_f32[0] << c_Comma << matrix.r[2].m128_f32[1] << c_Comma << matrix.r[2].m128_f32[2] << c_Comma << matrix.r[2].m128_f32[3] << c_Comma <<
+				matrix.r[3].m128_f32[0] << c_Comma << matrix.r[3].m128_f32[1] << c_Comma << matrix.r[3].m128_f32[2] << c_Comma << matrix.r[3].m128_f32[3] << c_Space;
 		}
 		ofs << endl;
 	}

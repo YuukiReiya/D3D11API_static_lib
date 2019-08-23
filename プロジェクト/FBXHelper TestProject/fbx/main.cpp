@@ -25,13 +25,17 @@ int main()
 	//	書き出しファイル
 	//std::string yfmPath = "sd-unity";
 	//std::string yfmPath = "Animation/humanoid";
-	std::string yfmPath = "humanoid";
+	std::string yfmPath = "newSample.yfm";
 	//std::string yfmPath = "twin";
 	//std::string yfmPath = "test00";
 
 	//	コンバート
 	Converter::FBXConverter::Setup();
-	FBXConverter::Execute(fbxPath, yfmPath);
+	//FBXConverter::Execute(fbxPath, yfmPath);
+
+	FBXConverter::Execute(FBXConverter::OutputType::SKIN, fbxPath, yfmPath);
+
+
 	FBXConverter::Teardown();
 	system("pause");
 	return 0;

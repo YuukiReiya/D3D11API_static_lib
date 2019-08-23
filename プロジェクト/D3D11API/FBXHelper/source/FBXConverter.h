@@ -14,6 +14,13 @@
 #include <fbxsdk/fileio/fbximporter.h>
 #include <fbxsdk/scene/shading/fbxlayeredtexture.h>
 #include <fbxsdk/scene/shading/fbxfiletexture.h>
+#include <fbxsdk/scene/geometry/fbxskin.h>
+#include <fbxsdk/core/math/fbxmatrix.h>
+#include <fbxsdk/core/math/fbxaffinematrix.h>
+#include <DirectXMath.h>
+#include <AnimationClip.h>
+#include <Joint.h>
+#include <SkinnedVertex.h>
 namespace Converter {
 	class FBXConverter
 	{
@@ -51,6 +58,34 @@ namespace Converter {
 		*/
 		static void Execute(std::string fbxPath,std::string outName);
 
+		/*!
+			@enum	OutputType
+			@brief	書き出すメッシュのタイプ
+		*/
+		enum OutputType
+		{
+			/*!
+				@var	STATIC
+				@brief	静的メッシュ
+			*/
+			STATIC,
+
+			/*!
+				@var	SKIN
+				@brief	スキンメッシュ
+			*/
+			SKIN,
+		};
+
+		/*!
+			@fn			Execute
+			@brief		実行処理
+			@detail		FBXを読み込み外部ファイルに書き出す。
+			@param[in]	書き出すメッシュのタイプ
+			@param[in]	FBXのパス
+			@param[in]	出力先のファイルパス
+		*/
+		static void Execute(OutputType type,std::string fbxPath,std::string outputName);
 	private:
 		/*!
 			@fn		Triangulate
@@ -115,12 +150,22 @@ namespace Converter {
 		static void SetupVertexIndices(fbxsdk::FbxMesh* from, Utility::Mesh*to);
 
 		/*!
+			@fn			SetupVertexIndices
+			@brief		頂点インデックスのセットアップ
+			@param[in]	FBXメッシュ
+			@param[in]	頂点インデックス格納用の可変長配列
+		*/
+		static void SetupVertexIndices(fbxsdk::FbxMesh& mesh, std::vector<uint32_t>&indices);
+
+		/*!
 			@fn			SetupVertices
 			@brief		頂点のセットアップ
 			@param[in]	参照元のfbxメッシュ
 			@param[in]	バインド先のメッシュ
 		*/
 		static void SetupVertices(fbxsdk::FbxMesh*from, Utility::Mesh*to);
+
+		static void SetupVertices(fbxsdk::FbxMesh&mesh, std::vector<D3D11::Graphic::SkinnedVertex>&vertices);
 
 		/*!
 			@fn			SetupUV
@@ -132,6 +177,15 @@ namespace Converter {
 		static void SetupUV(fbxsdk::FbxMesh* from, Utility::Mesh*to);
 
 		/*!
+			@fn			SetupUV
+			@brief		UVのセットアップ
+			@detail		頂点インデックスに対応したUVが格納される。
+			@param[in]	FBXメッシュ
+			@param[in]	UV格納用の可変長配列
+		*/
+		static void SetupUV(fbxsdk::FbxMesh& from, std::vector<DirectX::XMFLOAT2>&uv);
+
+		/*!
 			@fn			AlignVerticesToUV
 			@brief		頂点をUVに揃える。
 			@detail		事前に他の情報をそろえておく必要がある
@@ -139,6 +193,14 @@ namespace Converter {
 		*/
 		static void AlignVerticesToUV(Utility::Mesh*mesh);
 
+		/*!
+			@fn		SetupJoint
+			@brief	ジョインと情報のセットアップ
+			@detail	※事前に
+		*/
+		static void SetupJoint(fbxsdk::FbxMesh&mesh, std::vector<D3D11::Graphic::Joint>&joints);
+		static void SetupAnimation(fbxsdk::FbxMesh&mesh,std::vector<API::AnimationClip>& clip);
+		static void SetupCluster(fbxsdk::FbxSkin&skin, fbxsdk::FbxMatrix evaluateGlobalTimeMatrix, fbxsdk::FbxAMatrix geometryOffset, fbxsdk::FbxTime animTime, API::MatrixPalette& matrixPalette);
 		/*!
 			@var	m_pManager
 			@brief	FbxManagerのポインタ
