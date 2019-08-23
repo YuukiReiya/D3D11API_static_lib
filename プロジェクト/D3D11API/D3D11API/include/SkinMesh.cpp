@@ -642,7 +642,7 @@ void API::SkinMesh::SoftwareSkinning()
 			{
 				uint32_t jointIndex = m_Vertices[i].joints[j].index;
 				float weight = m_Vertices[i].joints[j].weight;
-				XMMATRIX skinningMat = animClip.get()->matrixPalette[j][frameIndex];
+				XMMATRIX skinningMat = animClip.get()->matrixPalette[jointIndex][frameIndex];
 				compMats[i] += (skinningMat * weight);
 			}
 		}
