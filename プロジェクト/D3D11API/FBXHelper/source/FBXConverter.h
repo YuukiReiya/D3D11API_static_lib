@@ -193,12 +193,6 @@ namespace Converter {
 		*/
 		static void AlignVerticesToUV(Utility::Mesh*mesh);
 
-		/*!
-			@fn		SetupJoint
-			@brief	ジョインと情報のセットアップ
-			@detail	※事前に
-		*/
-		static void SetupJoint(fbxsdk::FbxMesh&mesh, std::vector<D3D11::Graphic::Joint>&joints);
 		static void SetupAnimation(fbxsdk::FbxMesh&mesh,std::vector<API::AnimationClip>& clip);
 		static void SetupCluster(fbxsdk::FbxSkin&skin, fbxsdk::FbxMatrix evaluateGlobalTimeMatrix, fbxsdk::FbxAMatrix geometryOffset, fbxsdk::FbxTime animTime, API::MatrixPalette& matrixPalette);
 		/*!

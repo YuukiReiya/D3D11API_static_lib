@@ -59,7 +59,6 @@ namespace API{
 		HRESULT Initialize(std::string meshPath, std::string texPath);
 
 		/*!
-			@fn			SetupShader
 			@brief		シェーダーの参照のセット
 			@detail		静的関数で作っておけばループ文で回せる
 			@param[in]	設定先のメッシュ

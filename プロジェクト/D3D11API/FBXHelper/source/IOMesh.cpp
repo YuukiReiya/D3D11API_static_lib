@@ -126,8 +126,28 @@ void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Ut
 
 void Utility::IOMesh::OutputSkinMesh(std::string filePath, std::vector<uint32_t> indices, std::vector<D3D11::Graphic::SkinnedVertex> vertices)
 {
+	string fileName = filePath;
+	string buf = "";
+
+	//	ディレクトリ生成
+	while (true)
+	{
+		auto slashOffset = fileName.find(c_Slash);
+		if (slashOffset == string::npos) { break; }
+		string directryName = buf + fileName.substr(0, slashOffset);
+		if (!filesystem::exists(directryName)) {
+			wic::SetColor(Red);
+			cout << "Directory not found." << endl;
+			wic::SetColor(White);
+			if (!filesystem::create_directory(directryName))throw runtime_error("Failed to create directory");
+			cout << "Created a directory!" << endl;
+		}
+		buf += directryName + c_Slash.data();
+		fileName = fileName.substr(slashOffset + 1);
+	}
+
 	ofstream ofs;
-	ofs.open(filePath, ios::out);
+	ofs.open(filePath + c_Delimiter.data() + c_Extension.data(), ios::out);
 
 	//	頂点インデックス
 	for (auto it : indices) { ofs << it << c_Comma; }
@@ -153,8 +173,27 @@ void Utility::IOMesh::OutputSkinMesh(std::string filePath, std::vector<uint32_t>
 
 void Utility::IOMesh::OutputAnimation(std::string filePath, API::AnimationClip clips)
 {
+	string fileName = filePath;
+	string buf = "";
+	//	ディレクトリ生成
+	while (true)
+	{
+		auto slashOffset = fileName.find(c_Slash);
+		if (slashOffset == string::npos) { break; }
+		string directryName = buf + fileName.substr(0, slashOffset);
+		if (!filesystem::exists(directryName)) {
+			wic::SetColor(Red);
+			cout << "Directory not found." << endl;
+			wic::SetColor(White);
+			if (!filesystem::create_directory(directryName))throw runtime_error("Failed to create directory");
+			cout << "Created a directory!" << endl;
+		}
+		buf += directryName + c_Slash.data();
+		fileName = fileName.substr(slashOffset + 1);
+	}
+
 	ofstream ofs;
-	ofs.open(filePath, ios::out);
+	ofs.open(filePath + c_Delimiter.data() + c_AnimExtension.data(), ios::out);
 
 	for (auto joint : clips.matrixPalette)
 	{

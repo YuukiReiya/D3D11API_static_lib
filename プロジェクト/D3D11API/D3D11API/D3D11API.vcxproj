@@ -180,6 +180,7 @@
     <ClInclude Include="include\SimpleCompPixel.h" />
     <ClInclude Include="include\SimpleCompVertex.h" />
     <ClInclude Include="include\Singleton.h" />
+    <ClInclude Include="include\SkinCompVS.h" />
     <ClInclude Include="include\SkinMesh.h" />
     <ClInclude Include="include\SkinnedVertex.h" />
     <ClInclude Include="include\Sprite.h" />

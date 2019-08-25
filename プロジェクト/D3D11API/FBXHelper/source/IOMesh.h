@@ -81,5 +81,11 @@ namespace Utility{
 			@detail	y(uuki)f(ormat)m(esh)
 		*/
 		static constexpr std::string_view c_Extension = "yfm";
+
+		/*!
+			@brief	アニメーションデータの独自拡張子
+			@detail	a(nimation)c(lip)
+		*/
+		static constexpr std::string_view c_AnimExtension = "ac";
 	};
 }

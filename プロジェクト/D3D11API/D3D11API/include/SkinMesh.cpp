@@ -9,7 +9,6 @@
 #include "Camera.h"
 #include "SkinnedVertex.h"
 #include "MeshReadHelper.h"
-#include <algorithm>
 
 using namespace API;
 using namespace std;
@@ -91,337 +90,100 @@ HRESULT Shader::Setup()
 
 
 #pragma endregion
-
+/*!
+	@brief	コンストラクタ
+*/
 API::SkinMesh::SkinMesh()
 	: m_pIndexBuffer(NULL)
 	, m_pVertexBuffer(NULL)
+	, frameIndex(0)
 {
 	transform = make_shared<Transform>();
 }
 
+/*!
+	@brief	デストラクタ
+*/
 API::SkinMesh::~SkinMesh()
 {
 }
 
-void API::SkinMesh::Init()
+/*!
+	@fn			Initialize
+	@brief		初期化
+	@param[in]	読み込み用のファイルパス
+	@return		S_OK:成功 E_FAIL:失敗
+*/
+HRESULT API::SkinMesh::Initialize(std::string path)
 {
 	auto&dev = Direct3D11::GetInstance();
 	HRESULT hr = E_FAIL;
 
-	m_pShader = make_shared<Shader>();
-	m_pShader->Setup();
-
-#pragma region 定数読み込み
-#if 0
-#define CONST_READ
-#pragma region インデックスバッファ
+	try
 	{
-		D3D11_BUFFER_DESC bd;
-		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(uint32_t)*GetArraySize(c_Indices);
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = NULL;
+		///////////////////////////////////
+		//	
+		m_pShader = make_shared<Shader>();
+		if (FAILED(m_pShader->Setup())) { throw runtime_error("shader setup"); }
+		///////////////////////////////////
 
-		//	サブリソースの仕様	
-		D3D11_SUBRESOURCE_DATA sd;
-		SecureZeroMemory(&sd, sizeof(sd));
-		sd.pSysMem = c_Indices;
-		hr = dev.GetDevice()->CreateBuffer(
-			&bd,
-			&sd,
-			m_pIndexBuffer.GetAddressOf()
-		);
-		if (FAILED(hr)) { ErrorLog("index buffer"); }
+		//	ファイル読み込み
+		if (!Load(this, path)) { throw runtime_error("load to file"); }
+
+		//	スキニングの指定(ソフトウェアスキニング or シェーダー)
+		static constexpr uint32_t c_ShaderJointCount = 4;
+		m_eSkinningMode = m_Vertices.end() != std::find_if(
+			m_Vertices.begin(), m_Vertices.end(),
+			[](SkinnedVertex v)-> bool { return v.joints.size() > c_ShaderJointCount; }
+		) ? SkinningMode::SOFTWARE : SkinningMode::SHADER;
+
+		//	インデックスバッファ作成
+		if (FAILED(CreateIndexBuffer())) { throw runtime_error("create index buffer"); }
+
+		//	頂点バッファ作成
+		if (FAILED(CreateVertexBuffer())) { throw runtime_error("create vertex buffer"); }
 	}
-#pragma endregion
-
-#pragma region 頂点バッファ
+	catch (const std::exception&e)
 	{
-		D3D11_BUFFER_DESC bd;
-		bd.Usage = D3D11_USAGE_DYNAMIC;
-		bd.ByteWidth = sizeof(SkinnedVertex) * GetArraySize(c_VerticesPosition);
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-		bd.MiscFlags = NULL;
-
-		//	サブリソースの仕様
-		D3D11_SUBRESOURCE_DATA sd;
-		sd.pSysMem = c_VerticesPosition;
- 
-		hr =dev.GetDevice()->CreateBuffer(
-			&bd,
-			&sd,
-			m_pVertexBuffer.GetAddressOf()
-		);
-		if (FAILED(hr)) { ErrorLog("vertex"); }
+		string error = "\"" + path + "\" " + "Failed to " + e.what() + ".";
+		ErrorLog(error);
+		return E_FAIL;
 	}
-#pragma endregion
-#endif // 0
-#pragma endregion
-
-#pragma region 外部ファイル読み込み
-#if 0
-	auto data = Helper::MeshReadHelper::ReadSkin("newSample.yfm");
-#pragma region インデックスバッファ
-	{
-		D3D11_BUFFER_DESC bd;
-		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(uint32_t)*data.indices.size();
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = NULL;
-
-		//	サブリソースの仕様	
-		D3D11_SUBRESOURCE_DATA sd;
-		SecureZeroMemory(&sd, sizeof(sd));
-		sd.pSysMem = data.indices.data();
-		hr = dev.GetDevice()->CreateBuffer(
-			&bd,
-			&sd,
-			m_pIndexBuffer.GetAddressOf()
-		);
-		if (FAILED(hr)) { ErrorLog("index buffer"); }
-	}
-#pragma endregion
-
-#pragma region 頂点バッファ
-	{
-		D3D11_BUFFER_DESC bd;
-		bd.Usage = D3D11_USAGE_DYNAMIC;
-		bd.ByteWidth = sizeof(SkinnedVertex) * data.vertices.size();
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-		bd.MiscFlags = NULL;
-
-		//	サブリソースの仕様
-		D3D11_SUBRESOURCE_DATA sd;
-		sd.pSysMem = data.vertices.data();
-
-		hr = dev.GetDevice()->CreateBuffer(
-			&bd,
-			&sd,
-			m_pVertexBuffer.GetAddressOf()
-		);
-		if (FAILED(hr)) { ErrorLog("vertex"); }
-	}
-#pragma endregion
-
-#pragma region 合成行列
-	m_CompositeMatrix.resize(data.vertices.size());
-	//	フレーム数
-	for (size_t i = 0; i < data.vertices[0].compMat.size(); i++)
-	{
-		//	頂点数
-		for (size_t j = 0; j < data.vertices.size(); j++)
-		{
-			m_CompositeMatrix[i].push_back(data.vertices[j].compMat[i]);
-		}
-	}
-#pragma endregion
-#endif // 0
-#pragma endregion
-
-#pragma region 新ファイル読み込み
-	if (!Load(this, "newSample.yfm")) {
-		ErrorLog("読み込み失敗");
-	}
-
-	//	
-	static constexpr uint32_t c_ShaderJointCount = 4;
-	m_eSkinningMode = m_Vertices.end() != std::find_if(
-		m_Vertices.begin(), m_Vertices.end(),
-		[](SkinnedVertex v)-> bool { return v.joints.size() > c_ShaderJointCount; }
-	) ? SkinningMode::SOFTWARE : SkinningMode::SHADER;
-	if (FAILED(CreateIndexBuffer())) { return; }
-	if (FAILED(CreateVertexBuffer())) { 
-		ErrorLog("vertex");
-	}
-#pragma endregion
-
-
+	return S_OK;
 }
 
-//void API::SkinMesh::Render()
-//{
-//	HRESULT hr = E_FAIL;
-//	auto& dev = Direct3D11::GetInstance();
-//
-//#pragma region トポロジー
-//	dev.GetImmediateContext()->IASetPrimitiveTopology(
-//		D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
-//	);
-//#pragma endregion
-//
-//#pragma region 定数バッファ
-//	auto&camera = Camera::GetInstance();
-//	XMMATRIX w, v, p;
-//	w = XMMatrixTranspose(transform->GetWorldMatrix());
-//	v = XMMatrixTranspose(camera.GetViewMatrix());
-//	p = XMMatrixTranspose(camera.GetProjMatrix());
-//
-//	D3D11_MAPPED_SUBRESOURCE ms;
-//	D3D11::Graphic::MeshConstantBuffer cb;
-//
-//	hr = dev.GetImmediateContext()->Map(
-//		*m_pShader->GetConstantBuffer(),
-//		NULL,
-//		D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
-//		NULL,
-//		&ms
-//	);
-//	if (FAILED(hr)) { ErrorLog("map"); }
-//	cb.m.world = w;
-//	cb.m.view = v;
-//	cb.m.proj = p;
-//	cb.color = { 1,1,1,1 };
-//
-//	memcpy_s(ms.pData, ms.RowPitch, (void*)(&cb), sizeof(cb));
-//	dev.GetImmediateContext()->Unmap(*m_pShader->GetConstantBuffer(), NULL);
-//#pragma endregion
-//
-//#pragma region シェーダー
-//	dev.GetImmediateContext()->VSSetConstantBuffers(0, 1, m_pShader->GetConstantBuffer());
-//	dev.GetImmediateContext()->PSSetConstantBuffers(0, 1, m_pShader->GetConstantBuffer());
-//	dev.GetImmediateContext()->VSSetShader(*m_pShader->GetVertexShader(), 0, 0);
-//	dev.GetImmediateContext()->PSSetShader(*m_pShader->GetPixelShader(), 0, 0);
-//#pragma endregion
-//
-//#pragma region 頂点レイアウト
-//	dev.GetImmediateContext()->IASetInputLayout(*m_pShader->GetInputLayout());
-//#pragma endregion
-//
-//#pragma region 頂点計算
-//#if 1
-//
-//
-//	hr = dev.GetImmediateContext()->Map(
-//		m_pVertexBuffer.Get(),
-//		0,
-//		D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
-//		0,
-//		&ms
-//	);
-//
-//	//	頂点宣言
-//	vector<SkinnedVertex> vs;
-//
-//#pragma region スキニング計算
-//#if 1
-//	vector<XMMATRIX> compMat;
-//	compMat.resize(GetArraySize(c_VerticesPosition));
-//	for (size_t i = 0; i < GetArraySize(c_VerticesPosition); i++)
-//	{
-//		//ボーン
-//		for (size_t j = 0; j < GetArraySize(c_Joints[i]); j++)
-//		{
-//			uint32_t jointIndex = c_Joints[i][j].index;
-//			auto skMat = XMLoadFloat4x4(&c_SkinMats[frameIndex][jointIndex]);
-//			float w = c_Joints[i][j].weight;
-//			compMat[i] += skMat * w;
-//		}
-//	}
-//
-//	for (size_t i = 0; i < GetArraySize(c_VerticesPosition); i++)
-//	{
-//		XMVECTOR vec = {
-//		c_VerticesPosition[i].x,
-//		c_VerticesPosition[i].y,
-//		c_VerticesPosition[i].z,
-//		1
-//		};
-//		vec= XMVector4Transform(vec, compMat[i]);
-//		SkinnedVertex v =
-//		{
-//			{vec.m128_f32[0],vec.m128_f32[1],vec.m128_f32[2]}
-//		};
-//		vs.push_back(v);
-//	}
-//
-//#endif // 1
-//
-//#pragma endregion
-//
-//
-//#pragma region 合成行列
-//#if 0
-//	
-////	頂点編集
-//	for (size_t i = 0; i < GetArraySize(c_CompositeMatrix); i++)
-//	{
-//		XMVECTOR vec = {
-//			c_VerticesPosition[i].x,
-//			c_VerticesPosition[i].y,
-//			c_VerticesPosition[i].z,
-//			1
-//		};
-//#ifdef CONST_READ
-//		XMMATRIX m = XMLoadFloat4x4(&c_CompositeMatrix[i]);
-//#else
-//		XMMATRIX m = XMLoadFloat4x4(&m_CompositeMatrix[frameIndex][i]);
-//#endif // DEBUG
-//		
-//		vec = XMVector4Transform(vec, m);
-//		SkinnedVertex v = 
-//		{
-//			{vec.m128_f32[0],vec.m128_f32[1],vec.m128_f32[2]}
-//		};
-//		vs.push_back(v);
-//	}
-//#endif // 0
-//#pragma endregion
-//
-//	//	メモリコピー
-//	memcpy_s(ms.pData, ms.RowPitch, (void*)(vs.data()), sizeof(SkinnedVertex) * GetArraySize(c_VerticesPosition));
-//
-//	dev.GetImmediateContext()->Unmap(m_pVertexBuffer.Get(), 0);
-//#endif // 1
-//#pragma endregion
-//
-//#pragma region 頂点バッファ
-//	uint32_t stride = sizeof(SkinnedVertex);
-//	static constexpr uint32_t vertexBufferOffset = 0;
-//	dev.GetImmediateContext()->IASetVertexBuffers(
-//		0,
-//		1,
-//		m_pVertexBuffer.GetAddressOf(),
-//		&stride,
-//		&vertexBufferOffset
-//	);
-//#pragma endregion
-//
-//#pragma region 頂点インデックス
-//	static constexpr uint32_t indexBufferOffset = 0;
-//	dev.GetImmediateContext()->IASetIndexBuffer(
-//		m_pIndexBuffer.Get(),
-//		DXGI_FORMAT_R32_UINT,
-//		indexBufferOffset
-//	);
-//#pragma endregion
-//
-//	dev.GetImmediateContext()->DrawIndexed(GetArraySize(c_Indices), 0, 0);
-//}
-
+/*!
+	@fn		Render
+	@brief	描画
+*/
 void API::SkinMesh::Render()
 {
+	//	トポロジー
 	SetupTopology();
 
-	switch (m_eSkinningMode)
-	{
-	case API::SkinMesh::SOFTWARE:SoftwareSkinning(); break;
-	case API::SkinMesh::SHADER:
-		break;
-	default:
-		break;
-	}
+	//switch (m_eSkinningMode)
+	//{
+	//case API::SkinMesh::SOFTWARE:SoftwareSkinning(); break;
+	//case API::SkinMesh::SHADER:
+	//	break;
+	//default:
+	//	break;
+	//}
 
+	//	ソフトウェアスキニング
+	SoftwareSkinning();
+
+	//	頂点レイアウト
 	SetupInputLayout();
+
+	//	頂点バッファ
 	SetupVertexBuffer();
+
+	//	インデックスバッファ
 	SetupIndexBuffer();
 
 	Direct3D11::GetInstance().GetImmediateContext()->DrawIndexed(m_Indices.size(), 0, 0);
 }
-
 
 /*!
 	@fn		SetupTopology
@@ -443,6 +205,10 @@ void API::SkinMesh::SetupInputLayout()
 	Direct3D11::GetInstance().GetImmediateContext()->IASetInputLayout(*m_pShader->GetInputLayout());
 }
 
+/*!
+	@fn		SetupVertexBuffer
+	@brief	頂点バッファのセットアップ
+*/
 void API::SkinMesh::SetupVertexBuffer()
 {
 	uint32_t stride = sizeof(SkinnedVertex);
@@ -456,6 +222,10 @@ void API::SkinMesh::SetupVertexBuffer()
 	);
 }
 
+/*!
+	@fn		SetupIndexBuffer
+	@brief	インデックスバッファのセットアップ
+*/
 void API::SkinMesh::SetupIndexBuffer()
 {
 	static constexpr uint32_t indexBufferOffset = 0;
@@ -667,7 +437,7 @@ void API::SkinMesh::SoftwareSkinning()
 		}
 
 		//	メモリコピー
-		memcpy_s(ms.pData, ms.RowPitch, (void*)(vertices.data()), sizeof(SkinnedVertex) * GetArraySize(c_VerticesPosition));
+		memcpy_s(ms.pData, ms.RowPitch, (void*)(vertices.data()), sizeof(SkinnedVertex) * m_Vertices.size());
 		dev.GetImmediateContext()->Unmap(m_pVertexBuffer.Get(), 0);
 	}
 #pragma endregion
@@ -678,6 +448,11 @@ void API::SkinMesh::SoftwareSkinning()
 #pragma endregion
 }
 
+/*!
+	@fn		CreateIndexBuffer
+	@brief	インデックスバッファの作成
+	@return	S_OK:成功 E_FAIL:失敗
+*/
 HRESULT API::SkinMesh::CreateIndexBuffer()
 {
 	D3D11_BUFFER_DESC bd;
@@ -697,6 +472,11 @@ HRESULT API::SkinMesh::CreateIndexBuffer()
 	);
 }
 
+/*!
+	@fn		CreateVertexBuffer
+	@brief	頂点バッファの作成
+	@return	S_OK:成功 E_FAIL:失敗
+*/
 HRESULT API::SkinMesh::CreateVertexBuffer()
 {
 	D3D11_BUFFER_DESC bd;

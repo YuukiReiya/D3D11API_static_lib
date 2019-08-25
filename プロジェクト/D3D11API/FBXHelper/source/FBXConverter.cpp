@@ -491,10 +491,23 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 		//	メッシュの総数
 		int meshCount = (*m_pScene.get())->GetSrcObjectCount<FbxMesh>();
 
+		//	書き出し数
+		uint32_t outputCount = 0;
+
 		for (int i = 0; i < meshCount; ++i)
 		{
 			auto pMesh= (*m_pScene.get())->GetSrcObject<FbxMesh>(i);
-			
+		
+			//	スキンメッシュ設定でスキンが無い場合、次
+			if (type == OutputType::SKIN&&pMesh->GetDeformerCount(FbxDeformer::EDeformerType::eSkin) <= 0) { continue; }
+
+			//	書き出し数カウント
+			outputCount++;
+
+			//	書き出し名
+			std::string outputFullPath = outputName + "/";
+			outputFullPath += meshCount == 1 ? outputName : to_string(outputCount) + "/";
+
 			//	頂点インデックス
 			vector<uint32_t>indices;
 			SetupVertexIndices(*pMesh, indices);
@@ -517,20 +530,23 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 			SetupAnimation(*pMesh,clips);
 
 			//	書き出し
-			Utility::IOMesh::OutputSkinMesh(outputName, indices, vertices);
+			Utility::IOMesh::OutputSkinMesh(outputFullPath + outputName, indices, vertices);
+
+			//	スキン設定じゃなければアニメーションは書き出さない
+			if (type != OutputType::SKIN) { continue; }
 
 			const bool isMultiAnimation = clips.size() != 1;
 			if (isMultiAnimation)
 			{
 				for (int animCount = 0; animCount < clips.size(); ++animCount)
 				{
-					string fileName;
-					Utility::IOMesh::OutputAnimation("anim-"+to_string(animCount)+".ac",clips[animCount]);
+					string fileName = outputFullPath + "anim-" + to_string(animCount);
+					Utility::IOMesh::OutputAnimation(fileName, clips[animCount]);
 				}
 
 			}
 			else {
-				Utility::IOMesh::OutputAnimation("anim.ac", clips[0]);
+				Utility::IOMesh::OutputAnimation(outputName + "/" + "anim", clips[0]);
 			}
 		}
 	}
@@ -538,6 +554,7 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 	{
 		wic::SetColor(Red);
 		cout << "ERROR" << endl;
+		cout << e.what() << endl;
 	}
 
 
