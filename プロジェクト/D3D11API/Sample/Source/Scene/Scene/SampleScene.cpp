@@ -76,7 +76,7 @@ void SampleScene::Initialize()
 		sm->SetupMaterial(mat);
 		g_pMats.push_back(mat);
 
-		//sm->SetupAnimation(ac);
+		sm->SetupAnimation(ac);
 		g_pMeshs.push_back(sm);
 
 	}

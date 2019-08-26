@@ -371,7 +371,8 @@ void API::SkinMesh::SoftwareSkinning()
 			vec = XMVector4Transform(vec, compMats[i]);
 			SkinnedVertex v=
 			{
-				{ vec.m128_f32[0],vec.m128_f32[1],vec.m128_f32[2] }
+				{ vec.m128_f32[0],vec.m128_f32[1],vec.m128_f32[2] },
+				{ m_Vertices[i].uv }
 			};
 			vertices.push_back(v);
 		}
