@@ -142,7 +142,7 @@ void Utility::IOMesh::OutputSkinMesh(std::string filePath, std::vector<uint32_t>
 			if (!filesystem::create_directory(directryName))throw runtime_error("Failed to create directory");
 			cout << "Created a directory!" << endl;
 		}
-		buf += directryName + c_Slash.data();
+		buf = directryName + c_Slash.data();
 		fileName = fileName.substr(slashOffset + 1);
 	}
 
@@ -188,7 +188,7 @@ void Utility::IOMesh::OutputAnimation(std::string filePath, API::AnimationClip c
 			if (!filesystem::create_directory(directryName))throw runtime_error("Failed to create directory");
 			cout << "Created a directory!" << endl;
 		}
-		buf += directryName + c_Slash.data();
+		buf = directryName + c_Slash.data();
 		fileName = fileName.substr(slashOffset + 1);
 	}
 
