@@ -10,86 +10,146 @@
 #include "SkinnedVertex.h"
 #include "MeshReadHelper.h"
 
+/*!
+	@brief	usingディレクティブ
+	@using	API
+*/
 using namespace API;
+
+/*!
+	@brief	usingディレクティブ
+	@using	std
+*/
 using namespace std;
+
+/*!
+	@brief	usingディレクティブ
+	@using	D3D11
+*/
 using namespace D3D11;
+
+/*!
+	@brief	usingディレクティブ
+	@using	D3D11::Graphic
+*/
 using namespace D3D11::Graphic;
+
+/*!
+	@brief	usingディレクティブ
+	@using	DirectX
+*/
 using namespace DirectX;
 
 #pragma region シェーダー
+/*!
+	@class	Shader
+	@brief	ソフトウェアスキニング用のシェーダー
+*/
 class Shader
 	:public Graphic::AbstractShader
 {
 public:
+	/*!
+		@brief	コンストラクタ
+	*/
 	explicit Shader() :AbstractShader() {}
+
+	/*!
+		@brief	デストラクタ
+	*/
 	~Shader() {}
+
+	/*!
+		@fn		Setup
+		@brief	初期化
+		@return	S_OK:成功 E_FAIL:失敗
+	*/
 	HRESULT Setup()override final;
+
+	/*!
+		@fn		DynamicSetup
+		@brief	初期化(動的)
+		@note	未使用なので空定義
+	*/
 	HRESULT DynamicSetup()override { return E_FAIL; }
 private:
 
 };
+
+/*!
+	@fn		Setup
+	@brief	初期化
+	@return	S_OK:成功 E_FAIL:失敗
+*/
 HRESULT Shader::Setup()
 {
 	auto&dev = Direct3D11::GetInstance();
 	HRESULT	hr = E_FAIL;
+	try
+	{
 #pragma region 頂点レイアウト
+		D3D11_INPUT_ELEMENT_DESC desc[] = {
+			{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		};
 
-	D3D11_INPUT_ELEMENT_DESC desc[] = {
-		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-	};
-
-	hr = dev.GetDevice()->CreateInputLayout(
-		desc,
-		GetArraySize(desc),
-		g_vs_main,
-		sizeof(g_vs_main),
-		m_pVertexLayout.GetAddressOf()
-	);
-	if (FAILED(hr)) { ErrorLog("input layout"); }
+		hr = dev.GetDevice()->CreateInputLayout(
+			desc,
+			GetArraySize(desc),
+			g_vs_main,
+			sizeof(g_vs_main),
+			m_pVertexLayout.GetAddressOf()
+		);
+		if (FAILED(hr)) { throw runtime_error("create input layout"); }
 #pragma endregion
 
 #pragma region 頂点シェーダー
-	hr = dev.GetDevice()->CreateVertexShader(
-		&g_vs_main,
-		sizeof(g_vs_main),
-		NULL,
-		m_pVertexShader.GetAddressOf()
-	);
-	if (FAILED(hr)) { ErrorLog("vertex shader"); }
+		hr = dev.GetDevice()->CreateVertexShader(
+			&g_vs_main,
+			sizeof(g_vs_main),
+			NULL,
+			m_pVertexShader.GetAddressOf()
+		);
+		if (FAILED(hr)) { throw runtime_error("create vertex shader"); }
 #pragma endregion
 
 #pragma region ピクセルシェーダー
-	hr = dev.GetDevice()->CreatePixelShader(
-		&g_ps_main,
-		sizeof(g_ps_main),
-		NULL,
-		m_pPixelShader.GetAddressOf()
-	);
-	if (FAILED(hr)) { ErrorLog("pixel shader"); }
+		hr = dev.GetDevice()->CreatePixelShader(
+			&g_ps_main,
+			sizeof(g_ps_main),
+			NULL,
+			m_pPixelShader.GetAddressOf()
+		);
+		if (FAILED(hr)) { throw runtime_error("create pixel shader"); }
 #pragma endregion
 
 #pragma region 定数バッファ
-	D3D11_BUFFER_DESC bd;
-	bd.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
-	bd.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-	bd.MiscFlags = 0;
-	bd.StructureByteStride = 0;
-	bd.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+		D3D11_BUFFER_DESC bd;
+		bd.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+		bd.ByteWidth = sizeof(D3D11::Graphic::MeshConstantBuffer);
+		bd.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+		bd.MiscFlags = 0;
+		bd.StructureByteStride = 0;
+		bd.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
 
-	hr = dev.GetDevice()->CreateBuffer(
-		&bd,
-		NULL,
-		m_pConstantBuffer.GetAddressOf()
-	);
-	if (FAILED(hr)) { ErrorLog("constant buffer"); }
+		hr = dev.GetDevice()->CreateBuffer(
+			&bd,
+			NULL,
+			m_pConstantBuffer.GetAddressOf()
+		);
+		if (FAILED(hr)) { throw runtime_error("constant buffer"); }
 #pragma endregion
-
+	}
+	catch (const std::exception&e)
+	{
+		
+		string error = "Failed to ";
+		ErrorLog(error + e.what() + ".");
+		return E_FAIL;
+	}
 	return S_OK;
 }
-
-
 #pragma endregion
+
 /*!
 	@brief	コンストラクタ
 */
