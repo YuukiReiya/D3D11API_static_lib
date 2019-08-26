@@ -29,6 +29,18 @@ namespace D3D11
 				@brief	重み
 			*/
 			float weight;
+
+			/*!
+				@operator ==
+				@brief	等演算子
+				@detail	左辺 == 右辺 でメンバの完全一致かどうか返す。
+				@return	true:メンバが完全一致 false:メンバが一つでも違う
+				@note	STLのアルゴリズム用に定義
+			*/
+			bool operator==(Joint self)
+			{
+				return this->index == self.index&&this->weight == self.weight;
+			}
 		};
 	}
 }

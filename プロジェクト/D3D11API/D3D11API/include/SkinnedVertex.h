@@ -34,6 +34,20 @@ namespace D3D11
 				@brief	1頂点が関わる関節情報
 			*/
 			std::vector<Joint> joints;
+
+			/*!
+				@operator ==
+				@brief	等演算子
+				@detail	左辺 == 右辺 でメンバの完全一致かどうか返す。
+				@return	true:メンバが完全一致 false:メンバが一つでも違う
+				@note	STLのアルゴリズム用に定義
+			*/
+			bool operator==(SkinnedVertex self)
+			{
+				return this->uv.x == self.uv.x&&this->uv.y == self.uv.y&&
+					this->position.x == self.position.x&&this->position.y == self.position.y&&this->position.z == self.position.z&&
+					std::equal(this->joints.begin(), this->joints.end(), self.joints.begin(), self.joints.end());
+			}
 		};
 	}
 }

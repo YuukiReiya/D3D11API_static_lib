@@ -183,7 +183,7 @@ namespace Converter {
 			@param[in]	FBXメッシュ
 			@param[in]	UV格納用の可変長配列
 		*/
-		static void SetupUV(fbxsdk::FbxMesh& from, std::vector<DirectX::XMFLOAT2>&uv);
+		static void SetupUV(fbxsdk::FbxMesh& mesh, std::vector<DirectX::XMFLOAT2>&uv);
 
 		/*!
 			@fn			AlignVerticesToUV
@@ -192,6 +192,8 @@ namespace Converter {
 			@param[in]	対象のメッシュ
 		*/
 		static void AlignVerticesToUV(Utility::Mesh*mesh);
+
+		static void AlignVerticesToUV(std::vector<uint32_t>&indices, std::vector<DirectX::XMFLOAT2>&uv, std::vector<D3D11::Graphic::SkinnedVertex>&vertices);
 
 		static void SetupAnimation(fbxsdk::FbxMesh&mesh,std::vector<API::AnimationClip>& clip);
 		static void SetupCluster(fbxsdk::FbxSkin&skin, fbxsdk::FbxMatrix evaluateGlobalTimeMatrix, fbxsdk::FbxAMatrix geometryOffset, fbxsdk::FbxTime animTime, API::MatrixPalette& matrixPalette);

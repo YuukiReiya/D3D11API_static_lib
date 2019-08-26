@@ -69,7 +69,7 @@ void SampleScene::Initialize()
 			ErrorLog("“Ç‚Ýž‚ÝŽ¸”s");
 		}
 
-		sm->SetupAnimation(ac);
+		//sm->SetupAnimation(ac);
 		g_pMeshs.push_back(sm);
 
 	}

@@ -525,6 +525,8 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 			//SetupJoint(*pMesh, joints);
 			//	頂点整合処理
 
+			AlignVerticesToUV(indices, uv, vertices);
+
 			//	アニメーション
 			vector<API::AnimationClip> clips;
 			SetupAnimation(*pMesh,clips);
@@ -555,6 +557,7 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 		wic::SetColor(Red);
 		cout << "ERROR" << endl;
 		cout << e.what() << endl;
+		return;
 	}
 
 
@@ -568,6 +571,7 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 		break;
 	}
 
+	wic::SetColor(Green);
 	cout << "Completed this program." << endl;
 	cout << "Quit the program." << endl;
 
@@ -940,7 +944,6 @@ void Converter::FBXConverter::SetupVertices(fbxsdk::FbxMesh & mesh, std::vector<
 {
 	auto vertexCount = mesh.GetControlPointsCount();
 	FbxVector4*controlPoints = mesh.GetControlPoints();
-	
 	//	座標
 	for (int i = 0; i < vertexCount; ++i)
 	{
@@ -1045,8 +1048,29 @@ void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh * from, Utility::Mesh * to
 	}
 }
 
-void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh & from, std::vector<DirectX::XMFLOAT2>& uv)
+void Converter::FBXConverter::SetupUV(fbxsdk::FbxMesh & mesh, std::vector<DirectX::XMFLOAT2>& uv)
 {
+	//	UVセット数
+	FbxStringList uvSetNameList;
+	mesh.GetUVSetNames(uvSetNameList);
+	const int c_UVSetCount = uvSetNameList.GetCount();
+	if (c_UVSetCount < 0 || c_UVSetCount>1) {
+		wic::SetColor(Yellow);
+		cout << "Warning" << endl << "マテリアル分割が上手く行われていません。" << endl;
+		cout << "※意図しないUV座標になる場合があります。" << endl;
+	}
+	FbxArray<FbxVector2>positions;
+	const string c_UVSetName = uvSetNameList.GetStringAt(0);
+	mesh.GetPolygonVertexUVs(c_UVSetName.c_str(), positions);
+	for (int j = 0; j < positions.Size(); ++j)
+	{
+		uv.push_back(
+			{
+				static_cast<float>(positions[j][0]),
+				1.0f - static_cast<float>(positions[j][1]),
+			}
+		);
+	}
 }
 
 /*!
@@ -1239,6 +1263,43 @@ void Converter::FBXConverter::AlignVerticesToUV(Utility::Mesh * mesh)
 	}
 }
 
+void Converter::FBXConverter::AlignVerticesToUV(std::vector<uint32_t>& indices, std::vector<DirectX::XMFLOAT2>& uv, std::vector<D3D11::Graphic::SkinnedVertex>& vertices)
+{
+	//	頂点順に格納
+	vector<D3D11::Graphic::SkinnedVertex>skinVertices;
+	for (int i = 0; i < indices.size(); ++i)
+	{
+		D3D11::Graphic::SkinnedVertex val = vertices[indices[i]];
+		val.uv = uv[i];
+		skinVertices.push_back(val);
+	}
+
+	//	インデックスのCpyバッファ
+	auto indicesCpy = indices;
+
+	//	情報をクリア
+	indices.clear();
+	vertices.clear();
+
+	//	一意な頂点
+	vector<D3D11::Graphic::SkinnedVertex>uniqueSkinVertices;
+	for (int i = 0; i < indicesCpy.size(); ++i)
+	{
+		auto v = skinVertices[i];
+		auto itr = find(uniqueSkinVertices.begin(), uniqueSkinVertices.end(), v);
+		if (uniqueSkinVertices.end() != itr)
+		{
+			indices.push_back(std::distance(uniqueSkinVertices.begin(), itr));
+			continue;
+		}
+		uniqueSkinVertices.push_back(v);
+		indices.push_back(uniqueSkinVertices.size() - 1);
+	}
+
+	//	コピー
+	vertices = uniqueSkinVertices;
+}
+
 void Converter::FBXConverter::SetupAnimation(FbxMesh&mesh, std::vector<API::AnimationClip>& clips)
 {
 	auto animStackCount = (*m_pScene.get())->GetSrcObjectCount<FbxAnimStack>();
@@ -1347,4 +1408,3 @@ void Converter::FBXConverter::SetupCluster(fbxsdk::FbxSkin & skin, FbxMatrix eva
 		matrixPalette.push_back(mat);
 	}
 }
-
