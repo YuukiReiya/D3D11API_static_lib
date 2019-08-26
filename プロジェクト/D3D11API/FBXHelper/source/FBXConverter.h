@@ -50,15 +50,6 @@ namespace Converter {
 		static void Teardown();
 
 		/*!
-			@fn			Execute
-			@brief		実行処理
-			@detail		FBXを読み込み外部ファイルに書き出す。
-			@param[in]	FBXのパス
-			@param[in]	出力先のファイルパス
-		*/
-		static void Execute(std::string fbxPath,std::string outName);
-
-		/*!
 			@enum	OutputType
 			@brief	書き出すメッシュのタイプ
 		*/
@@ -124,14 +115,6 @@ namespace Converter {
 		*/
 		static bool SetupScene(std::string fbxPath);
 
-		/*!
-			@fn			LoadToStore
-			@brief		fbxのデータを格納
-			@param[in]	抽出元のデータ
-			@param[in]	格納先メッシュ
-		*/
-		static void LoadToStore(fbxsdk::FbxMesh*from, Utility::Mesh*to);
-
 		static void SetupMaterial(fbxsdk::FbxSurfaceMaterial*material);
 		static void SetupMaterial(fbxsdk::FbxMesh* from);
 
@@ -140,14 +123,6 @@ namespace Converter {
 		static void SetupLayerTextures(fbxsdk::FbxProperty*prop, fbxsdk::FbxLayeredTexture*layerdTexture);
 
 		static void SetupTexture(fbxsdk::FbxFileTexture*texture);
-
-		/*!
-			@fn			SetupVertexIndices
-			@brief		頂点インデックスのセットアップ
-			@param[in]	参照元のfbxメッシュ
-			@param[in]	バインド先のメッシュ
-		*/
-		static void SetupVertexIndices(fbxsdk::FbxMesh* from, Utility::Mesh*to);
 
 		/*!
 			@fn			SetupVertexIndices
@@ -161,20 +136,9 @@ namespace Converter {
 			@fn			SetupVertices
 			@brief		頂点のセットアップ
 			@param[in]	参照元のfbxメッシュ
-			@param[in]	バインド先のメッシュ
+			@param[in]	頂点情報格納用の可変長配列
 		*/
-		static void SetupVertices(fbxsdk::FbxMesh*from, Utility::Mesh*to);
-
 		static void SetupVertices(fbxsdk::FbxMesh&mesh, std::vector<D3D11::Graphic::SkinnedVertex>&vertices);
-
-		/*!
-			@fn			SetupUV
-			@brief		UVのセットアップ
-			@detail		頂点インデックスに対応したUVが格納される。
-			@param[in]	参照元のfbxメッシュ
-			@param[in]	バインド先のメッシュ
-		*/
-		static void SetupUV(fbxsdk::FbxMesh* from, Utility::Mesh*to);
 
 		/*!
 			@fn			SetupUV
@@ -191,11 +155,25 @@ namespace Converter {
 			@detail		事前に他の情報をそろえておく必要がある
 			@param[in]	対象のメッシュ
 		*/
-		static void AlignVerticesToUV(Utility::Mesh*mesh);
-
 		static void AlignVerticesToUV(std::vector<uint32_t>&indices, std::vector<DirectX::XMFLOAT2>&uv, std::vector<D3D11::Graphic::SkinnedVertex>&vertices);
 
+		/*!
+			@fn			SetupAnimation
+			@brief		アニメーション情報のセットアップ
+			@param[in]	FBXメッシュ
+			@param[in]	アニメーションの情報を格納するアニメーションクリップ
+		*/
 		static void SetupAnimation(fbxsdk::FbxMesh&mesh,std::vector<API::AnimationClip>& clip);
+
+		/*!
+			@fn			SetupCluster
+			@brief		クラスタ(ジョイント)のセットアップ
+			@param[in]	メッシュのスキン
+			@param[in]	指定時間のグローバルオフセット行列
+			@param[in]	メッシュのオフセット(TRS)
+			@param[in]	アニメーションの時間
+			@param[in]	スキン行列を格納する行列パレット
+		*/
 		static void SetupCluster(fbxsdk::FbxSkin&skin, fbxsdk::FbxMatrix evaluateGlobalTimeMatrix, fbxsdk::FbxAMatrix geometryOffset, fbxsdk::FbxTime animTime, API::MatrixPalette& matrixPalette);
 		/*!
 			@var	m_pManager
@@ -230,7 +208,6 @@ namespace Converter {
 			@brief	外部ファイルの主力先ディレクトリ
 		*/
 		static constexpr std::string_view c_OutputDirectory = "Output/";
-
 	};
 
 }
