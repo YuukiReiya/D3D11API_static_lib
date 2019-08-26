@@ -31,6 +31,7 @@ using namespace API;
 
 vector<shared_ptr<SkinMesh>>g_pMeshs;
 vector<shared_ptr<AnimationClip>>g_pAnimClips;
+vector< shared_ptr<Material>>g_pMats;
 /*!
 	@brief	コンストラクタ
 */
@@ -68,6 +69,12 @@ void SampleScene::Initialize()
 		{
 			ErrorLog("読み込み失敗");
 		}
+
+		//マテリアル
+		shared_ptr<Material>mat = make_shared<Material>();
+		mat->SetupTexture("Wolf_Body.jpg");
+		sm->SetupMaterial(mat);
+		g_pMats.push_back(mat);
 
 		//sm->SetupAnimation(ac);
 		g_pMeshs.push_back(sm);

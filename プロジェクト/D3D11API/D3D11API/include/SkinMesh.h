@@ -14,6 +14,7 @@
 #include "Transform.h"
 #include "Joint.h"
 #include "AnimationClip.h"
+#include "Material.h"
 #include <algorithm>
 
 namespace API
@@ -61,8 +62,8 @@ namespace API
 		*/
 		void AddAnimationFrame(bool isLoop = true)
 		{
-			if (m_AnimClip.expired()) { return; }
-			auto ptr = m_AnimClip.lock();
+			if (m_pAnimClip.expired()) { return; }
+			auto ptr = m_pAnimClip.lock();
 			frameIndex = frameIndex < ptr->matrixPalette[0].size() - 1 ? ++frameIndex : isLoop ? 0 : ptr->matrixPalette[0].size() - 1;
 		}
 
@@ -75,8 +76,8 @@ namespace API
 		*/
 		void SetupAnimationFrame(uint32_t frame)
 		{
-			if (m_AnimClip.expired()) { return; }
-			auto ptr = m_AnimClip.lock();
+			if (m_pAnimClip.expired()) { return; }
+			auto ptr = m_pAnimClip.lock();
 			frameIndex = std::clamp(frame, static_cast<uint32_t>(0), static_cast<uint32_t>(ptr->matrixPalette[0].size() - 1));
 		}
 
@@ -86,8 +87,17 @@ namespace API
 			@param[in]	登録するアニメーションクリップの共有ポインタ
 		*/
 		void SetupAnimation(std::shared_ptr<API::AnimationClip> clip) {
-			m_AnimClip = clip;
+			m_pAnimClip = clip;
 		};
+
+		/*!
+			@fn		SetupMaterial
+			@brief	マテリアルの設定
+			@param[in]	登録するマテリアルの共有ポインタ
+		*/
+		void SetupMaterial(std::shared_ptr<API::Material> material) {
+			m_pMaterial = material;
+		}
 	private:
 		/*!
 			@enum	SkinningMode
@@ -151,10 +161,16 @@ namespace API
 		std::vector<D3D11::Graphic::SkinnedVertex>m_Vertices;
 
 		/*!
-			@var	m_AnimClip
+			@var	m_pAnimClip
 			@brief	アニメーションクリップの弱参照
 		*/
-		std::weak_ptr<API::AnimationClip>m_AnimClip;
+		std::weak_ptr<API::AnimationClip>m_pAnimClip;
+
+		/*!
+			@var	m_pMaterial
+			@brief	マテリアルの弱参照
+		*/
+		std::weak_ptr<API::Material>m_pMaterial;
 
 		/*!
 			@fn		SetupTopology
@@ -179,6 +195,13 @@ namespace API
 			@brief	インデックスバッファのセットアップ
 		*/
 		void SetupIndexBuffer();
+
+		/*!
+			@fn		SetupTexture
+			@brief	テクスチャ情報のセットアップ
+			@detail	SRVとサンプラーをピクセルシェーダーにセットする
+		*/
+		void SetupTexture();
 
 		/*!
 			@fn			Load
