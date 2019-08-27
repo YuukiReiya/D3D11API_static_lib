@@ -28,9 +28,28 @@ using namespace ConsoleExpansion;
 */
 using wic = ConsoleExpansion::WinConsoleExpansion;
 
+/*!
+	@var	c_Comma
+	@brief	コンマ
+*/
 static constexpr string_view c_Comma = ",";
+
+/*!
+	@var	c_Space
+	@brief	スペース
+*/
 static constexpr string_view c_Space = " ";
+
+/*!
+	@var	c_Colon
+	@brief	コロン
+*/
 static constexpr string_view c_Colon = ":";
+
+/*!
+	@var	c_Slash
+	@brief	スラッシュ
+*/
 static constexpr string_view c_Slash = "/";
 
 /*!
@@ -63,68 +82,13 @@ void Utility::IOMesh::Delete(std::string directoryPath, std::string fileName)
 }
 
 /*!
-	@fn			Output
-	@brief		独自形式の出力
-	@param[in]	ファイルのディレクトリ
-	@param[in]	ファイル名(※拡張子除く)
-	@param[in]	メッシュ情報
+	@fn			OutputMesh
+	@brief		独自形式のスキンメッシュを出力
+	@param[in]	出力ファイルパス
+	@param[in]	頂点インデックス
+	@param[in]	頂点情報
 */
-void Utility::IOMesh::Output(std::string directoryPath, std::string fileName, Utility::Mesh mesh)
-{
-	string path = directoryPath + fileName + c_Delimiter.data() + c_Extension.data();
-	
-	try
-	{
-		if (!filesystem::exists(directoryPath)) {
-			wic::SetColor(Red);
-			cout << "Directory not found" << endl;
-			wic::SetColor(White);
-			if (!filesystem::create_directory(directoryPath))throw runtime_error("Failed to create directory");
-			cout << "Created a directory!" << endl;
-		}
-	}
-	catch (exception& error)
-	{
-		wic::SetColor(Red);
-		cout << error.what() << endl;
-		cout << "This program has failed." << endl;
-		cout << "this program exit here!" << endl;
-		wic::SetColor(White);
-		system("pause");
-		exit(NULL);
-	}
-	
-	ofstream ofs;
-	ofs.open(path, ios::out);
-
-	//	書き込み
-	const string c_Space = " ";
-
-	//	頂点インデックス
-	//ofs << "//i" << endl;
-	for (auto it : mesh.vertexIndices)
-	{
-		ofs << it << c_Space;
-	}
-	ofs << endl;
-
-	//	uv
-	//ofs << "//uv" << endl;
-	for (auto it : mesh.uv)
-	{
-		for (auto item : it.second)
-			ofs << "{" << item.uv.x << c_Space << item.uv.y << "}";// << endl;
-	}
-	ofs << endl;
-
-	//頂点
-	for (auto it : mesh.vertices)
-	{
-		ofs << "{" << it.x << c_Space << it.y << c_Space << it.z << "}";// << endl;
-	}
-}
-
-void Utility::IOMesh::OutputSkinMesh(std::string filePath, std::vector<uint32_t> indices, std::vector<D3D11::Graphic::SkinnedVertex> vertices)
+void Utility::IOMesh::OutputMesh(std::string filePath, std::vector<uint32_t> indices, std::vector<D3D11::Graphic::SkinnedVertex> vertices)
 {
 	string fileName = filePath;
 	string buf = "";
@@ -171,6 +135,12 @@ void Utility::IOMesh::OutputSkinMesh(std::string filePath, std::vector<uint32_t>
 	}
 }
 
+/*!
+	@fn			OutputAnimation
+	@brief		独自形式のアニメーションを出力
+	@param[in]	出力ファイルパス
+	@param[in]	アニメーションクリップ
+*/
 void Utility::IOMesh::OutputAnimation(std::string filePath, API::AnimationClip clips)
 {
 	string fileName = filePath;
@@ -209,18 +179,39 @@ void Utility::IOMesh::OutputAnimation(std::string filePath, API::AnimationClip c
 	}
 }
 
-void Utility::IOMesh::Write(std::vector<DirectX::XMMATRIX> mat)
+/*!
+	@fn			OutputTextureName
+	@brief		使用されているテクスチャ名を.iniファイルとして書き出す
+	@param[in]	出力ファイルパス
+	@param[in]	使用されているテクスチャの可変長配列
+*/
+void Utility::IOMesh::OutputTextureName(std::string filePath, std::vector<std::string> textureNames)
 {
-	ofstream ofs;
-	ofs.open("フレーム時合成行列.md", ios::out);
-
-	for (auto it : mat)
+	string fileName = filePath;
+	string buf = "";
+	//	ディレクトリ生成
+	while (true)
 	{
-		ofs << "{" <<
-			it.r[0].m128_f32[0] << "," << it.r[0].m128_f32[1] << "," << it.r[0].m128_f32[2] << "," << it.r[0].m128_f32[3] << "," <<
-			it.r[1].m128_f32[0] << "," << it.r[1].m128_f32[1] << "," << it.r[1].m128_f32[2] << "," << it.r[1].m128_f32[3] << "," <<
-			it.r[2].m128_f32[0] << "," << it.r[2].m128_f32[1] << "," << it.r[2].m128_f32[2] << "," << it.r[2].m128_f32[3] << "," <<
-			it.r[3].m128_f32[0] << "," << it.r[3].m128_f32[1] << "," << it.r[3].m128_f32[2] << "," << it.r[3].m128_f32[3] 
-			<< "},";
+		auto slashOffset = fileName.find(c_Slash);
+		if (slashOffset == string::npos) { break; }
+		string directryName = buf + fileName.substr(0, slashOffset);
+		if (!filesystem::exists(directryName)) {
+			wic::SetColor(Red);
+			cout << "Directory not found." << endl;
+			wic::SetColor(White);
+			if (!filesystem::create_directory(directryName))throw runtime_error("Failed to create directory");
+			cout << "Created a directory!" << endl;
+		}
+		buf = directryName + c_Slash.data();
+		fileName = fileName.substr(slashOffset + 1);
+	}
+
+	ofstream ofs;
+	ofs.open(filePath + c_Delimiter.data() + c_IniExtension.data(), ios::out);
+
+	ofs << "メッシュに使用されているテクスチャ名" << endl;
+	for (auto it : textureNames)
+	{
+		ofs << it << endl;
 	}
 }

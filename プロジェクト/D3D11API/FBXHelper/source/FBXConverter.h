@@ -6,8 +6,6 @@
 	@detail	シングルトン
 */
 #pragma once
-#include "Mesh.h"
-#include "OriginalFormatMath.h"
 #include <fbxsdk/scene/geometry/fbxmesh.h>
 #include <fbxsdk/scene/geometry/fbxlayer.h>
 #include <fbxsdk/core/fbxmanager.h>
@@ -115,15 +113,6 @@ namespace Converter {
 		*/
 		static bool SetupScene(std::string fbxPath);
 
-		static void SetupMaterial(fbxsdk::FbxSurfaceMaterial*material);
-		static void SetupMaterial(fbxsdk::FbxMesh* from);
-
-		static void SetupTextures(fbxsdk::FbxSurfaceMaterial * material);
-
-		static void SetupLayerTextures(fbxsdk::FbxProperty*prop, fbxsdk::FbxLayeredTexture*layerdTexture);
-
-		static void SetupTexture(fbxsdk::FbxFileTexture*texture);
-
 		/*!
 			@fn			SetupVertexIndices
 			@brief		頂点インデックスのセットアップ
@@ -175,6 +164,15 @@ namespace Converter {
 			@param[in]	スキン行列を格納する行列パレット
 		*/
 		static void SetupCluster(fbxsdk::FbxSkin&skin, fbxsdk::FbxMatrix evaluateGlobalTimeMatrix, fbxsdk::FbxAMatrix geometryOffset, fbxsdk::FbxTime animTime, API::MatrixPalette& matrixPalette);
+		
+		/*!
+			@fn			ExportTextureName
+			@brief		メッシュに使用されているテクスチャの出力
+			@param[in]	Fbxメッシュ
+			@param[in]	出力ファイルパス
+		*/
+		static void ExportTextureName(fbxsdk::FbxMesh&mesh,std::string filePath);
+		
 		/*!
 			@var	m_pManager
 			@brief	FbxManagerのポインタ

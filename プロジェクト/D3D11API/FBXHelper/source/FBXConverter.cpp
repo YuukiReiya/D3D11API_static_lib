@@ -69,23 +69,6 @@ shared_ptr<fbxsdk::FbxScene*>		FBXConverter::m_pScene		= nullptr;
 shared_ptr<fbxsdk::FbxImporter*>	FBXConverter::m_pImporter	= nullptr;
 
 /*!
-	@fn			ConvertRelativePathToFileName
-	@brief		相対パスをファイル名に変換
-	@param[in]	相対パス
-	@return		変換後のファイル名
-*/
-static string ConvertRelativePathToFileName(string relativePath)
-{
-	string fileName = "";
-	auto offset = relativePath.rfind("\\");
-	if (offset == string::npos) {
-		offset = relativePath.rfind("/");
-	}
-	fileName = relativePath.substr(offset + 1);
-	return fileName;
-}
-
-/*!
 	@brief	コンストラクタ
 */
 Converter::FBXConverter::FBXConverter()
@@ -216,12 +199,15 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 			//	頂点の整合
 			AlignVerticesToUV(indices, uv, vertices);
 
+			//	テクスチャ情報の出力
+			ExportTextureName(*pMesh, outputFullPath + outputName);
+
 			//	アニメーション
 			vector<API::AnimationClip> clips;
 			SetupAnimation(*pMesh,clips);
 
 			//	書き出し
-			Utility::IOMesh::OutputSkinMesh(outputFullPath + outputName, indices, vertices);
+			Utility::IOMesh::OutputMesh(outputFullPath + outputName, indices, vertices);
 
 			//	スキン設定じゃなければアニメーションは書き出さない
 			if (type != OutputType::SKIN) { continue; }
@@ -237,7 +223,7 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 
 			}
 			else {
-				Utility::IOMesh::OutputAnimation(outputName + "/" + "anim", clips[0]);
+				Utility::IOMesh::OutputAnimation(outputFullPath + "anim", clips[0]);
 			}
 		}
 	}
@@ -315,174 +301,6 @@ void Converter::FBXConverter::TeardownImporter()
 bool Converter::FBXConverter::SetupScene(std::string fbxPath)
 {
 	return (*m_pImporter.get())->Import(*m_pScene.get());
-}
-
-void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxSurfaceMaterial * material)
-{
-
-}
-
-void Converter::FBXConverter::SetupMaterial(fbxsdk::FbxMesh * from)
-{
-	//	メッシュのルートノード取得
-	auto node = from->GetNode();
-	if (node == 0) { return; }
-
-	//	マテリアル数
-	auto matCount = node->GetMaterialCount();
-	if (matCount == 0) { return; }
-
-	//	マテリアル情報を取得
-	for (int i = 0; i < matCount; i++)
-	{
-		auto material = node->GetMaterial(i);
-		if (material == 0) { continue; }
-
-#pragma region //ダウンキャスト
-		//	ここの設計はFBXSDKに合わせている
-
-		FbxSurfaceLambert*lambert=nullptr;
-		FbxSurfacePhong* phong = nullptr;
-
-		//	lambert
-		if (material->GetClassId().Is(FbxSurfaceLambert::ClassId)) {
-			lambert = (FbxSurfaceLambert*)material;
-		}
-
-		//	phong
-		if (material->GetClassId().Is(FbxSurfacePhong::ClassId)) {
-			phong = (FbxSurfacePhong*)material;
-		}
-
-		auto castMat = material->GetClassId().Is(FbxSurfacePhong::ClassId) ?
-			(FbxSurfacePhong*)material :
-			material->GetClassId().Is(FbxSurfaceLambert::ClassId) ?
-			(FbxSurfaceLambert*)material : nullptr;
-		if (castMat == nullptr) {
-			cout << "やばいバグ" << endl;
-			system("pause");
-			exit(NULL);
-		}
-#pragma endregion
-		////	アンビエント
-		//g_pMat->ambient =
-		//{
-		//	(float)castMat->Ambient.Get()[0],
-		//	(float)castMat->Ambient.Get()[1],
-		//	(float)castMat->Ambient.Get()[2]
-		//};
-
-		////	ディフューズ
-		//g_pMat->diffuse =
-		//{
-		//	(float)castMat->Diffuse.Get()[0],
-		//	(float)castMat->Diffuse.Get()[1],
-		//	(float)castMat->Diffuse.Get()[2],
-		//};
-
-		////	エミッシブ
-		//g_pMat->emissive =
-		//{
-		//	(float)castMat->Emissive.Get()[0],
-		//	(float)castMat->Emissive.Get()[1],
-		//	(float)castMat->Emissive.Get()[2],
-		//};
-
-		////	バンプマップ
-		//g_pMat->bumpMap =
-		//{
-		//	(float)castMat->Bump.Get()[0],
-		//	(float)castMat->Bump.Get()[1],
-		//	(float)castMat->Bump.Get()[2],
-		//};
-
-		////	透過度
-		//g_pMat->transparent = static_cast<float>(castMat->TransparencyFactor.Get());
-
-		////	マテリアルが"Phong"なら
-		//if (castMat->GetClassId().Is(FbxSurfacePhong::ClassId)) {
-
-		//	//	スペキュラー
-		//	Math::FLOAT4 sp =
-		//	{
-		//		(float)phong->Specular.Get()[0],
-		//		(float)phong->Specular.Get()[1],
-		//		(float)phong->Specular.Get()[2],
-		//	};
-		//	g_pMat->specular = { &sp };
-
-		//	//	光沢
-		//	float sh = (float)phong->Shininess.Get();
-		//	g_pMat->shiniess = { &sh };
-
-		//	//	反射
-		//	float refl = (float)phong->ReflectionFactor.Get();
-		//	g_pMat->reflection = { &refl };
-		//}
-
-	}
-}
-
-/*!
-	@note	そのマテリアルに使用しているテクスチャデータのセットアップ
-	
-*/
-void Converter::FBXConverter::SetupTextures(fbxsdk::FbxSurfaceMaterial * material)
-{
-	//	ディフューズ
-	auto prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
-
-	//	複数のテクスチャをブレンドしたもの(レイヤーテクスチャ)
-	auto layerTexCount = prop.GetSrcObjectCount<FbxLayeredTexture>();
-	for (int i = 0; i < layerTexCount; ++i)
-	{
-		auto layeredTexture = prop.GetSrcObject<FbxLayeredTexture>(i);
-		wic::SetColor(Purple);
-		SetupLayerTextures(&prop, layeredTexture);
-	}
-
-	//	単一のもの
-	auto texCount = prop.GetSrcObjectCount<FbxFileTexture>();
-	for (int i = 0; i < texCount; i++)
-	{
-		auto tex = prop.GetSrcObject<FbxFileTexture>(i);
-		wic::SetColor(Purple);
-		if (!tex) { continue; }
-		cout << "Texture " << i << ":";
-		SetupTexture(tex);
-	}
-
-	//TODO: これが成り立つのが"layerTexCount = texCount = 0"の時のみ
-	//		分かりにくいので"layerTexCount == 0 && texCount == 0"がいいかも...
-	//NOTE:	ここに入るのは".tga"などテクスチャ読み込みに失敗したもの
-	if (layerTexCount == texCount)
-	{
-		
-	}
-	
-}
-
-void Converter::FBXConverter::SetupLayerTextures(fbxsdk::FbxProperty * prop, fbxsdk::FbxLayeredTexture * layerdTexture)
-{
-	auto texCount = layerdTexture->GetSrcObjectCount<FbxFileTexture>();
-	for (int i = 0; i < texCount; ++i)
-	{
-		auto texture = prop->GetSrcObject<FbxFileTexture>(i);
-		wic::SetColor(Purple);
-		if (!texture) { continue; }
-		cout << "Layered Texture " << i << ":";
-		SetupTexture(texture);
-	}
-}
-
-void Converter::FBXConverter::SetupTexture(fbxsdk::FbxFileTexture * texture)
-{
-	//TODO:マテリアル内のテクスチャ情報取得処理
-
-	//FbxMaterialConverter
-	//	ファイル名の表示
-	wic::SetColor(White);
-	cout << ConvertRelativePathToFileName(texture->GetRelativeFileName()) << endl;
 }
 
 /*!
@@ -759,5 +577,57 @@ void Converter::FBXConverter::SetupCluster(fbxsdk::FbxSkin & skin, FbxMatrix eva
 		};
 
 		matrixPalette.push_back(mat);
+	}
+}
+
+/*!
+	@fn			ExportTextureName
+	@brief		メッシュに使用されているテクスチャの出力
+	@param[in]	Fbxメッシュ
+	@param[in]	出力ファイルパス
+*/
+void Converter::FBXConverter::ExportTextureName(fbxsdk::FbxMesh & mesh, std::string filePath)
+{
+	//	マテリアル
+	auto node = mesh.GetNode();
+	if (node == NULL) { return; }
+
+	int materialCount = node->GetMaterialCount();
+	for (int i = 0; i < materialCount; ++i)
+	{
+		auto material = node->GetMaterial(i);
+		if (material == NULL) { continue; }
+
+		//	テクスチャ
+		auto prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+		if (!prop.IsValid()) { continue; }
+
+		//	レイヤー数
+		int layerCount = prop.GetSrcObjectCount<FbxLayeredTexture>();
+
+		//	通常のテクスチャ1枚
+		if (layerCount == 0)
+		{
+			int textureCount = prop.GetSrcObjectCount<FbxFileTexture>();
+			vector<string>textureNames;
+			for (int j = 0; j < textureCount; ++j)
+			{
+				auto texture = prop.GetSrcObject<FbxFileTexture>(j);
+				if (texture == NULL) { continue; }
+
+				string texturePath = texture->GetFileName();
+				constexpr string_view c_Slash = "/";
+				auto slashOffset = texturePath.rfind(c_Slash);
+				if (slashOffset != string::npos) {
+					texturePath = texturePath.substr(slashOffset);
+				}
+				textureNames.push_back(texturePath);
+			}
+			Utility::IOMesh::OutputTextureName(filePath, textureNames);
+		}
+		//	ブレンド数
+		else {
+
+		}
 	}
 }

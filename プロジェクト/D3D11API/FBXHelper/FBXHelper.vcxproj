@@ -164,12 +164,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\Common.h" />
-    <ClInclude Include="source\FbxMaterial.h" />
     <ClInclude Include="source\WinConsoleExpansion.h" />
     <ClInclude Include="source\FBXConverter.h" />
     <ClInclude Include="source\IOMesh.h" />
-    <ClInclude Include="source\Mesh.h" />
-    <ClInclude Include="source\OriginalFormatMath.h" />
     <ClInclude Include="source\targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -179,7 +176,6 @@
     </ClCompile>
     <ClCompile Include="source\FBXConverter.cpp" />
     <ClCompile Include="source\IOMesh.cpp" />
-    <ClCompile Include="source\Mesh.cpp" />
     <ClCompile Include="source\WinConsoleExpansion.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
