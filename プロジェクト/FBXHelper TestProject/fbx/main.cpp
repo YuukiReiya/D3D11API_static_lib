@@ -13,30 +13,34 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif // DEBUG||_DEBUG
 
-	//	読み込みファイル
-	//std::string fbxPath = "SD_unitychan_humanoid.fbx";
-	//std::string fbxPath = "ao_twinte_chan.fbx"; 
-	std::string fbxPath = "Spider_3.fbx";
-	//std::string fbxPath = "Kouhai_chan.fbx";
-	//std::string fbxPath = "JNT_00100_anathema_H.fbx";
-	//std::string fbxPath = "Pikachu.fbx";
-	//std::string fbxPath = "humanoid.fbx";
-	//std::string fbxPath = "Wolf_with_Animations.fbx";
+	/////////////////////////////////////////////////
+	//	ファイル読み込み
+	/////////////////////////////////////////////////
+	
+	//	読み込む.fbxファイルのパスを指定します。
+	std::string fbxPath = "";
+	fbxPath = "Spider_3.fbx";
 
-	//	書き出しファイル
-	//std::string yfmPath = "sd-unity";
-	//std::string yfmPath = "Animation/humanoid";
-	//std::string yfmPath = "newWolf";
-	std::string yfmPath = "spider";
-	//std::string yfmPath = "test00";
+	//	書き出すファイルの名前を指定します。
+	std::string yfmPath = "";
+	yfmPath = "spider";
 
+	/////////////////////////////////////////////////
 	//	コンバート
-	Converter::FBXConverter::Setup();
-	//FBXConverter::Execute(fbxPath, yfmPath);
+	/////////////////////////////////////////////////
 
+	//	初期化
+	Converter::FBXConverter::Setup();
+
+	//	実行
 	FBXConverter::Execute(FBXConverter::OutputType::SKIN, fbxPath, yfmPath);
 
+	//	破棄
 	FBXConverter::Teardown();
+
+	/////////////////////////////////////////////////
+	//	完了時操作
+	/////////////////////////////////////////////////
 	system("pause");
 	return 0;
 }
