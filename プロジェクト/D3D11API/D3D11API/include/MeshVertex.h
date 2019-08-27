@@ -31,6 +31,12 @@ namespace D3D11 {
 			*/
 			MeshVertex(DirectX::XMFLOAT3 position) :BaseVertex(position), uv({ -1,-1 }) {}
 
+			/*!
+				@brief		引数付きコンストラクタ
+				@param[in]	座標
+				@param[in]	UV座標
+			*/
+			MeshVertex(DirectX::XMFLOAT3 position, DirectX::XMFLOAT2 uv) :BaseVertex(position), uv(uv) {}
 
 			//TODO:コメントをしっかり書く
 			DirectX::XMFLOAT2 uv;

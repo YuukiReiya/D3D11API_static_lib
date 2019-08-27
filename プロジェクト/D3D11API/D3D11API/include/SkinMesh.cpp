@@ -7,7 +7,6 @@
 #include "MeshConstantBuffer.h"
 #include "Camera.h"
 #include "SkinnedVertex.h"
-#include "MeshReadHelper.h"
 
 /*!
 	@brief	usingディレクティブ
@@ -383,12 +382,13 @@ void API::SkinMesh::SoftwareSkinning()
 	}
 #pragma endregion
 
-#pragma region 
-
-
-#pragma endregion
 }
 
+/*!
+	@fn		SetupTexture
+	@brief	テクスチャ情報のセットアップ
+	@detail	SRVとサンプラーをピクセルシェーダーにセットする
+*/
 void API::SkinMesh::SetupTexture()
 {
 	auto material = m_pMaterial.lock();

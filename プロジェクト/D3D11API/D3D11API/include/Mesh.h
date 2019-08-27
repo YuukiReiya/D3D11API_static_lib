@@ -16,6 +16,7 @@
 #include "Transform.h"
 #include "Color.h"
 #include "Material.h"
+#include "MeshVertex.h"
 
 /*! APIの名前空間に含める */
 namespace API{
@@ -49,16 +50,6 @@ namespace API{
 		HRESULT Initialize(std::string path);
 
 		/*!
-			@fn			Initialize
-			@brief		初期化
-			@detail		モデルとテクスチャを同時に生成する
-			@param[in]	外部ファイルのパス
-			@param[in]	割り当てるテクスチャのパス
-			@return	S_OK:成功 E_FAIL:失敗
-		*/
-		HRESULT Initialize(std::string meshPath, std::string texPath);
-
-		/*!
 			@brief		シェーダーの参照のセット
 			@detail		静的関数で作っておけばループ文で回せる
 			@param[in]	設定先のメッシュ
@@ -79,9 +70,21 @@ namespace API{
 			SetupShader(this, shader);
 		}
 
+		/*!
+			@fn			SetupMaterial
+			@brief		マテリアルの参照のセット
+			@param[in]	設定先のメッシュ
+			@param[in]	設定元のマテリアル
+		*/
 		static inline void SetupMaterial(Mesh*mesh, Material*material) {
 			mesh->m_pMaterial = material->GetSharedPtr();
 		}
+
+		/*!
+			@fn			SetupMaterial
+			@brief		マテリアルの参照のセット
+			@param[in]	設定元のマテリアル
+		*/
 		inline void SetupMaterial(Material*material) {
 			SetupMaterial(this, material);
 		}
@@ -184,6 +187,15 @@ namespace API{
 		void SetupTexture();
 
 		/*!
+			@fn			Load
+			@brief		ファイルの読み込み
+			@param[in]	ファイルのパス
+			@param[in]	インデックスを格納する可変長配列
+			@param[in]	頂点を格納する可変長配列
+		*/
+		bool Load(std::string filePath, std::vector<uint32_t>&indices, std::vector<D3D11::Graphic::MeshVertex>&vertices);
+
+		/*!
 			@var	m_IndexCount
 			@brief	頂点インデックスのインデックス数
 		*/
@@ -211,19 +223,10 @@ namespace API{
 		Microsoft::WRL::ComPtr<ID3D11Buffer>m_pIndexBuffer;
 
 		/*!
-			@var	m_pSamplerState
-			@brief	サンプラーステート
-			@detail	ComPtr
+			@var	m_pMaterial
+			@brief	Meshクラスで使用するマテリアルの弱参照
+			@detail	weak_ptr
 		*/
-		//Microsoft::WRL::ComPtr<ID3D11SamplerState>m_pSamplerState;
-
-		/*!
-			@var	m_pSRV
-			@brief	シェーダーリソースビュー
-			@detail	ComPtr
-		*/
-		//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pSRV;
-
 		std::weak_ptr<Material*>m_pMaterial;
 	};
 }
