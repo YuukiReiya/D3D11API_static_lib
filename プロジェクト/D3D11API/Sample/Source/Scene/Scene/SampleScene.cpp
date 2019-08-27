@@ -13,6 +13,8 @@
 #include <SkinMesh.h>
 #include <Camera.h>
 #include <MyGame.h>
+#include <Mesh.h>
+#include <MeshShader.h>
 
 /*!
 	@brief	usingディレクティブ
@@ -32,6 +34,11 @@ using namespace API;
 vector<shared_ptr<SkinMesh>>g_pMeshs;
 vector<shared_ptr<AnimationClip>>g_pAnimClips;
 vector< shared_ptr<Material>>g_pMats;
+
+
+shared_ptr<Mesh>g_stMesh;
+shared_ptr<D3D11::Graphic::MeshShader>g_stShader;
+shared_ptr<Material>g_stMat;
 /*!
 	@brief	コンストラクタ
 */
@@ -80,6 +87,18 @@ void SampleScene::Initialize()
 		g_pMeshs.push_back(sm);
 
 	}
+
+	////////////////////////////////////////////////////
+	//	STATIC 
+	g_stMat = make_shared<Material>();
+	g_stMesh = make_shared<Mesh>();
+	g_stShader = make_shared<D3D11::Graphic::MeshShader>();
+	g_stShader->Setup();
+	g_stMesh->Initialize("Miku/Miku.yfm");
+	g_stMat->SetupTexture("hoge.png");
+
+	g_stMesh->SetupMaterial(g_stMat.get());
+	g_stMesh->SetupShader(g_stShader.get());
 }
 
 /*!
@@ -143,8 +162,9 @@ void SampleScene::Render()
 {
 	//g_pMesh->Render();
 
-	for(auto it:g_pMeshs)
-	{
-		it->Render();
-	}
+	//for(auto it:g_pMeshs)
+	//{
+	//	it->Render();
+	//}
+	g_stMesh->Render();
 }

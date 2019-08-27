@@ -172,7 +172,6 @@
     <ClInclude Include="include\MeshCompPS.h" />
     <ClInclude Include="include\MeshCompVS.h" />
     <ClInclude Include="include\MeshConstantBuffer.h" />
-    <ClInclude Include="include\MeshReadHelper.h" />
     <ClInclude Include="include\MeshShader.h" />
     <ClInclude Include="include\MeshVertex.h" />
     <ClInclude Include="include\MyGame.h" />
@@ -208,7 +207,6 @@
     <ClCompile Include="include\Keyboard.cpp" />
     <ClCompile Include="include\Material.cpp" />
     <ClCompile Include="include\Mesh.cpp" />
-    <ClCompile Include="include\MeshReadHelper.cpp" />
     <ClCompile Include="include\MeshShader.cpp" />
     <ClCompile Include="include\SkinMesh.cpp" />
     <ClCompile Include="include\Sprite.cpp" />
