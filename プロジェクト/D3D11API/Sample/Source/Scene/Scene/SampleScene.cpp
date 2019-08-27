@@ -88,14 +88,30 @@ void SampleScene::Initialize()
 		g_pMeshs.push_back(sm);
 	}
 
+	string texPath[14] =
+	{
+		"skin.png",
+		"face.png",
+		"eye.png",
+		"face.png",
+		"face.png",
+		"face.png",
+		"face.png",
+		"face.png",
+		"face.png",
+		"hair.png",
+		"eye.png",
+		"clothes.png",
+		"clothes.png",
+		"facial.png",
+	};
+
+
 	for (int i = 0; i < c_MeshCount; ++i)
 	{
 		shared_ptr<Material>mat = make_shared<Material>();
 		string path = "kouhai/";
-		if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7 || i == 8 || i == 9 || i == 10 || i == 11 || i == 12 || i == 13)
-		{
-			path += "facial.png";
-		}
+		path += texPath[i];
 		mat->SetupTexture(path);
 		g_pMats.push_back(mat);
 		g_pMeshs[i]->SetupMaterial(mat);
