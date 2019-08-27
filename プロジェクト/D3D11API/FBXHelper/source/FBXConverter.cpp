@@ -182,7 +182,7 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 
 			//	書き出し名
 			std::string outputFullPath = outputName + "/";
-			outputFullPath += meshCount == 1 ? outputName : to_string(outputCount) + "/";
+			outputFullPath += meshCount == 1 ? "" : to_string(outputCount) + "/";
 
 			//	頂点インデックス
 			vector<uint32_t>indices;
@@ -202,12 +202,12 @@ void Converter::FBXConverter::Execute(OutputType type, std::string fbxPath, std:
 			//	テクスチャ情報の出力
 			ExportTextureName(*pMesh, outputFullPath + outputName);
 
+			//	書き出し
+			Utility::IOMesh::OutputMesh(outputFullPath + outputName, indices, vertices);
+
 			//	アニメーション
 			vector<API::AnimationClip> clips;
 			SetupAnimation(*pMesh,clips);
-
-			//	書き出し
-			Utility::IOMesh::OutputMesh(outputFullPath + outputName, indices, vertices);
 
 			//	スキン設定じゃなければアニメーションは書き出さない
 			if (type != OutputType::SKIN) { continue; }
