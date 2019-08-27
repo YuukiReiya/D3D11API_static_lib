@@ -16,6 +16,7 @@
 #include <fbxsdk/core/math/fbxmatrix.h>
 #include <fbxsdk/core/math/fbxaffinematrix.h>
 #include <DirectXMath.h>
+#include <string_view>
 #include <AnimationClip.h>
 #include <Joint.h>
 #include <SkinnedVertex.h>
