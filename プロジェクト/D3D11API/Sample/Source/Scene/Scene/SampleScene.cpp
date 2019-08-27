@@ -62,16 +62,18 @@ void SampleScene::Initialize()
 	//	g_pMesh->SetupAnimation(g_pAnimClip);
 	//}
 
-	constexpr int c_MeshCount = 5;
-	constexpr string_view c_MeshName = "newWolf";
+	constexpr int c_MeshCount = 14;
+	constexpr string_view c_MeshName = "kouhai";
 	for (int i = 1; i <= c_MeshCount; ++i)
 	{
+#if 0
 		shared_ptr<AnimationClip>ac = make_shared<AnimationClip>();
 		if (!ac->Load(string(c_MeshName.data()) + "/" + to_string(i) + "/anim-0.ac"))
 		{
 			ErrorLog("アニメーション読み込み失敗");
 		}
 		g_pAnimClips.push_back(ac);
+#endif // 0
 
 		shared_ptr<SkinMesh>sm = make_shared<SkinMesh>();
 		if (FAILED(sm->Initialize(string(c_MeshName.data()) + "/" + to_string(i) + "/" + c_MeshName.data() + ".yfm")))
@@ -79,19 +81,24 @@ void SampleScene::Initialize()
 			ErrorLog("読み込み失敗");
 		}
 
-		if (i == 1) {
-			//マテリアル
-			shared_ptr<Material>mat = make_shared<Material>();
-			string texPath = "newWolf/Wolf_Body.jpg";
-			mat->SetupTexture(texPath);
-			sm->SetupMaterial(mat);
-			g_pMats.push_back(mat);
-		}
+		//sm->transform->SetScale(0.1f);
 
 		//	設定
-		sm->SetupAnimation(ac);
+		//sm->SetupAnimation(ac);
 		g_pMeshs.push_back(sm);
+	}
 
+	for (int i = 0; i < c_MeshCount; ++i)
+	{
+		shared_ptr<Material>mat = make_shared<Material>();
+		string path = "kouhai/";
+		if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7 || i == 8 || i == 9 || i == 10 || i == 11 || i == 12 || i == 13)
+		{
+			path += "facial.png";
+		}
+		mat->SetupTexture(path);
+		g_pMats.push_back(mat);
+		g_pMeshs[i]->SetupMaterial(mat);
 	}
 	cout << "e" << g_pMeshs.size();
 
@@ -128,23 +135,87 @@ void SampleScene::Update()
 	//{
 	//	g_pMesh->AddAnimationFrame();
 	//}
-	float val = 0.1;
-	static DirectX::XMFLOAT3 rot = { 0,0,0 };
+	float val = 0.01;
+	float tVal = 0.1f;
 	if (kb::GetButton('a'))
 	{
-		rot.x -= val;
+		for (auto it : g_pMeshs)
+		{
+			auto pos = it->transform->GetPosition();
+			pos.x -= tVal;
+			it->transform->SetPosition(pos);
+		}
 	}
 	if (kb::GetButton('d'))
 	{
-		rot.x += val;
+		for (auto it : g_pMeshs)
+		{
+			auto pos = it->transform->GetPosition();
+			pos.x += tVal;
+			it->transform->SetPosition(pos);
+		}
 	}
 	if (kb::GetButton('s'))
 	{
-		rot.y -= val;
+		for (auto it : g_pMeshs)
+		{
+			auto pos = it->transform->GetPosition();
+			pos.y -= tVal;
+			it->transform->SetPosition(pos);
+		}
 	}
 	if (kb::GetButton('w'))
 	{
+		for (auto it : g_pMeshs)
+		{
+			auto pos = it->transform->GetPosition();
+			pos.y += tVal;
+			it->transform->SetPosition(pos);
+		}
+	}
+	if (kb::GetButton('q'))
+	{
+		for (auto it : g_pMeshs)
+		{
+			auto pos = it->transform->GetPosition();
+			pos.z -= tVal;
+			it->transform->SetPosition(pos);
+		}
+	}
+	if (kb::GetButton('e'))
+	{
+		for (auto it : g_pMeshs)
+		{
+			auto pos = it->transform->GetPosition();
+			pos.z += tVal;
+			it->transform->SetPosition(pos);
+		}
+	}
+
+	static DirectX::XMFLOAT3 rot = { 0,0,0 };
+	if (kb::GetButton('j'))
+	{
+		rot.x -= val;
+	}
+	if (kb::GetButton('l'))
+	{
+		rot.x += val;
+	}
+	if (kb::GetButton('k'))
+	{
+		rot.y -= val;
+	}
+	if (kb::GetButton('i'))
+	{
 		rot.y += val;
+	}
+	if (kb::GetButton('u'))
+	{
+		rot.z -= val;
+	}
+	if (kb::GetButton('o'))
+	{
+		rot.z += val;
 	}
 
 	if (kb::GetButton('m'))
@@ -173,4 +244,5 @@ void SampleScene::Render()
 	{
 		it->Render();
 	}
+
 }
