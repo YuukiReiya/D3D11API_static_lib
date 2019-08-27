@@ -62,43 +62,50 @@ void SampleScene::Initialize()
 	//	g_pMesh->SetupAnimation(g_pAnimClip);
 	//}
 
-	for (int i = 1; i <= 5; ++i)
+	constexpr int c_MeshCount = 5;
+	constexpr string_view c_MeshName = "newWolf";
+	for (int i = 1; i <= c_MeshCount; ++i)
 	{
 		shared_ptr<AnimationClip>ac = make_shared<AnimationClip>();
-		if (!ac->Load("newWolf/" + to_string(i) + "/anim-0.ac"))
+		if (!ac->Load(string(c_MeshName.data()) + "/" + to_string(i) + "/anim-0.ac"))
 		{
 			ErrorLog("アニメーション読み込み失敗");
 		}
 		g_pAnimClips.push_back(ac);
 
 		shared_ptr<SkinMesh>sm = make_shared<SkinMesh>();
-		if (FAILED(sm->Initialize("newWolf/" + to_string(i) + "/newWolf.yfm")))
+		if (FAILED(sm->Initialize(string(c_MeshName.data()) + "/" + to_string(i) + "/" + c_MeshName.data() + ".yfm")))
 		{
 			ErrorLog("読み込み失敗");
 		}
 
-		//マテリアル
-		shared_ptr<Material>mat = make_shared<Material>();
-		mat->SetupTexture("Wolf_Body.jpg");
-		sm->SetupMaterial(mat);
-		g_pMats.push_back(mat);
+		if (i == 1) {
+			//マテリアル
+			shared_ptr<Material>mat = make_shared<Material>();
+			string texPath = "newWolf/Wolf_Body.jpg";
+			mat->SetupTexture(texPath);
+			sm->SetupMaterial(mat);
+			g_pMats.push_back(mat);
+		}
 
+		//	設定
 		sm->SetupAnimation(ac);
 		g_pMeshs.push_back(sm);
 
 	}
+	cout << "e" << g_pMeshs.size();
 
 	////////////////////////////////////////////////////
 	//	STATIC 
-	g_stMat = make_shared<Material>();
-	g_stMesh = make_shared<Mesh>();
-	g_stShader = make_shared<D3D11::Graphic::MeshShader>();
-	g_stShader->Setup();
-	g_stMesh->Initialize("Miku/Miku.yfm");
-	g_stMat->SetupTexture("hoge.png");
+	//g_stMat = make_shared<Material>();
+	//g_stMesh = make_shared<Mesh>();
+	//g_stShader = make_shared<D3D11::Graphic::MeshShader>();
+	//g_stShader->Setup();
+	//g_stMesh->Initialize("Miku/Miku.yfm");
+	//g_stMat->SetupTexture("hoge.png");
 
-	g_stMesh->SetupMaterial(g_stMat.get());
-	g_stMesh->SetupShader(g_stShader.get());
+	//g_stMesh->SetupMaterial(g_stMat.get());
+	//g_stMesh->SetupShader(g_stShader.get());
 }
 
 /*!
@@ -162,9 +169,8 @@ void SampleScene::Render()
 {
 	//g_pMesh->Render();
 
-	//for(auto it:g_pMeshs)
-	//{
-	//	it->Render();
-	//}
-	g_stMesh->Render();
+	for(auto it:g_pMeshs)
+	{
+		it->Render();
+	}
 }

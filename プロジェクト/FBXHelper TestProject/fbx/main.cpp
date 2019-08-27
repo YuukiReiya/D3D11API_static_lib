@@ -15,7 +15,8 @@ int main()
 
 	//	読み込みファイル
 	//std::string fbxPath = "SD_unitychan_humanoid.fbx";
-	std::string fbxPath = "ao_twinte_chan.fbx"; 
+	//std::string fbxPath = "ao_twinte_chan.fbx"; 
+	std::string fbxPath = "Spider_3.fbx";
 	//std::string fbxPath = "Kouhai_chan.fbx";
 	//std::string fbxPath = "JNT_00100_anathema_H.fbx";
 	//std::string fbxPath = "Pikachu.fbx";
@@ -26,7 +27,7 @@ int main()
 	//std::string yfmPath = "sd-unity";
 	//std::string yfmPath = "Animation/humanoid";
 	//std::string yfmPath = "newWolf";
-	std::string yfmPath = "Miku";
+	std::string yfmPath = "spider";
 	//std::string yfmPath = "test00";
 
 	//	コンバート
@@ -34,7 +35,6 @@ int main()
 	//FBXConverter::Execute(fbxPath, yfmPath);
 
 	FBXConverter::Execute(FBXConverter::OutputType::SKIN, fbxPath, yfmPath);
-
 
 	FBXConverter::Teardown();
 	system("pause");
