@@ -13,7 +13,6 @@
 #include "MeshCompPS.h"
 #include "WICTextureLoader.h"
 #include "MeshConstantBuffer.h"
-#include "MeshReadHelper.h"
 #include "Camera.h"
 
 /*!
@@ -80,62 +79,26 @@ HRESULT Mesh::Initialize(std::string path)
 {
 	try
 	{
+		vector<uint32_t>indices;
+		vector<MeshVertex>vertices;
 		//	外部ファイルの読み取り
-		auto rd = Helper::MeshReadHelper::Read(path);
-
-		//	サンプラー
-		/*if (FAILED(CreateSamplerState(this))) {
-			string error = "\"" + path + "\" (mesh sampler) is not create!";
-			throw error;
-		}*/
+		if (!Load(path, indices, vertices)) { throw runtime_error("load to file"); }
 
 		//	頂点バッファ作成
-		if (FAILED(CreateVertexBuffer(this, rd.vertices))) {
-			string error = "\"" + path + "\" (mesh vertex) is not create!";
-			throw error;
-		}
+		if (FAILED(CreateVertexBuffer(this, vertices))) { throw runtime_error("create vertex buffer"); }
 
 		//	インデックスバッファ作成
-		if (FAILED(CreateIndexBuffer(this, rd.indices))) {
-			string error = "\"" + path + "\" (mesh index) is not create!";
-			throw error;
-		}
+		if (FAILED(CreateIndexBuffer(this,indices))) { throw runtime_error("create index buffer"); }
+
+		//	インデックス数保持
+		m_IndexCount = indices.size();
 	}
-	catch (const string error)
+	catch (const std::exception&e)
 	{
+		string error = "\"" + path + "\" " + "Failed to " + e.what() + ".";
 		ErrorLog(error);
 		return E_FAIL;
 	}
-	return S_OK;
-}
-
-/*!
-	@fn			Initialize
-	@brief		初期化
-	@detail		モデルとテクスチャを同時に生成する
-	@param[in]	外部ファイルのパス
-	@param[in]	割り当てるテクスチャのパス
-	@return	S_OK:成功 E_FAIL:失敗
-*/
-HRESULT API::Mesh::Initialize(std::string meshPath, std::string texPath)
-{
-	HRESULT hr;
-	hr = Initialize(meshPath);
-	
-	//	SRV
-	//hr = CreateTexture(texPath);
-
-	//if (FAILED(hr)) {
-	//	string error = "\"" + texPath + "\" (mesh shader resource view) is not create!";
-	//	ErrorLog(error);
-	//	return E_FAIL;
-	//}
-
-	//if (FAILED(hr)) {
-	//	//	メッシュの初期化に失敗
-	//	return E_FAIL;
-	//}
-
 	return S_OK;
 }
 
@@ -452,6 +415,84 @@ void API::Mesh::SetupTexture()
 		1,
 		(*material)->GetShaderResourceView()
 	);
+}
+
+bool API::Mesh::Load(std::string filePath, std::vector<uint32_t>& indices, std::vector<D3D11::Graphic::MeshVertex>& vertices)
+{
+	ifstream ifs(filePath);
+	if (ifs.fail()) {
+		string error = "Failed to read \"" + filePath + "\" file.";
+		ErrorLog(error);
+		return false;
+	}
+	string buf;
+
+	//	定数宣言
+	static constexpr string_view c_Comma = ",";
+	static constexpr string_view c_Space = " ";
+
+	//	頂点インデックス
+	getline(ifs, buf);
+	while (true)
+	{
+		auto commaOffset = buf.find(c_Comma);
+		if (commaOffset == string::npos) { break; }
+		uint32_t index = stoi(buf.substr(0, commaOffset));
+		indices.push_back(index);
+		buf = buf.substr(commaOffset + 1);
+	}
+
+	//	UV
+	getline(ifs, buf);
+	while (true)
+	{
+		auto commaOffset = buf.find(c_Comma);
+		if (commaOffset == string::npos) { break; }
+		float u = stof(buf.substr(0, commaOffset));
+		buf = buf.substr(commaOffset + 1);
+		auto spaceOffset = buf.find(c_Space);
+		if (spaceOffset == string::npos) { break; }
+		float v = stof(buf.substr(0, spaceOffset));
+		buf = buf.substr(spaceOffset + 1);
+
+		MeshVertex vertex;
+		vertex.uv = { u,v };
+		vertices.push_back(vertex);
+	}
+
+	const bool uvEmpty = vertices.empty();
+	int index = -1;
+
+	//	頂点
+	getline(ifs, buf);
+	while (true)
+	{
+		auto xOffset = buf.find(c_Comma);
+		if (xOffset == string::npos) { break; }
+		float x = stof(buf.substr(0, xOffset));
+		buf = buf.substr(xOffset + 1);
+
+		auto yOffset = buf.find(c_Comma);
+		if (yOffset == string::npos) { break; }
+		float y = stof(buf.substr(0, yOffset));
+		buf = buf.substr(yOffset + 1);
+
+		auto zOffset = buf.find(c_Space);
+		if (zOffset == string::npos) { break; }
+		float z = stof(buf.substr(0, zOffset));
+		buf = buf.substr(zOffset + 1);
+
+		//	UV無し
+		if (uvEmpty) {
+			vertices.push_back({ {x,y,z} ,{ -1,-1 } });
+			continue;
+		}
+
+		//	UV有り
+		++index;
+		vertices[index].position = { x,y,z };
+	}
+	return true;
 }
 
 /*!
