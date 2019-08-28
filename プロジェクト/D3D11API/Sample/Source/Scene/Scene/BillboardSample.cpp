@@ -58,7 +58,7 @@ void BillboardSample::Initialize()
 	m_pSprite->SetupBil(m_pBillboradTarget);
 	m_pSprite->transform->SetPosition({ 5,0,0 });
 	m_eEyeType = EyeType::TPS;
-	automatic = true;
+	automatic = false;
 	//	座標データの初期化
 	Reset();
 

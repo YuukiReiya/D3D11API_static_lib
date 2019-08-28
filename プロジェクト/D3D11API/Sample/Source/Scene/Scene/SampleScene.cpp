@@ -12,6 +12,7 @@
 #include "../Root/SceneRoot.h"
 #include <MyGame.h>
 #include <Camera.h>
+#include "BillboardSample.h"
 
 /*!
 	@brief	usingディレクティブ
@@ -67,7 +68,7 @@ void SampleScene::Finalize()
 void SampleScene::Update()
 {
 	Transform* tmp = new Transform;
-
+	SceneRoot::GetInstance().SetupNextScene(make_unique<BillboardSample>());
 #ifdef ANIMATION_MESH
 	auto& trans =  m_pRender->transform;
 #else
